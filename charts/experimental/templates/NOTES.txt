@@ -1,0 +1,13 @@
+Thank you for installing the {{ .Chart.Name }} Authelia Chart.
+
+The helm release name is {{ .Release.Name }}.
+
+{{- if (include "authelia.ingress" .) }}
+You have selected to use a regular ingress.
+{{- else -}}
+    {{- if (include "authelia.ingressTraefik" .) }}
+You have selected the Traefik CRD to deploy the ingress. You can apply the {{ .Values.ingress.traefikCRD.authMiddlewareNameOverride | default (printf "%s-auth" (include "authelia.name" .)) }} middleware to any Traefik ingress type in order to use Authelia auth with that ingress.
+    {{- else -}}
+You have not installed an ingress which you can do manually by specifying {{ printf "http://%s:%s" (include "authelia.name" .) .Values.service.port }} as the endpoint.
+    {{- end -}}
+{{- end -}}

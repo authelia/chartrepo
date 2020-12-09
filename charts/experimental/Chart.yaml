@@ -3,9 +3,8 @@ name: experimental
 version: 0.1.0
 kubeVersion: 
 description: Authelia Experimental Chart
-type: 1
-keywords:
-  - 1
+type: application
+keywords: []
 home: https://www.authelia.com
 sources:
   - https://www.github.com/authelia/chartrepo/charts/experimental/

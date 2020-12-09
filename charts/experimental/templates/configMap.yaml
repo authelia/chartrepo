@@ -5,55 +5,61 @@ metadata:
   name: {{ include "authelia.name" . }}
   labels:
 {{- include "authelia.labels" . | nindent 4 }}
-{{- if include "authelia.annotations" . }}
-annotations:
+{{- with .Values.configMap.extraLabels -}}
+{{ toYaml . | nindent 4 }}
+{{- end -}}
+{{- if or (include "authelia.annotations" .) .Values.configMap.extraAnnotations }}
+  annotations:
 {{- include "authelia.annotations" . | nindent 4 }}
+{{- with .Values.configMap.extraAnnotations -}}
+{{ toYaml . | nindent 4 }}
+{{- end -}}
 {{- end }}
 data:
   configuration.yml: |
     host: 0.0.0.0
-    port: {{ .Values.authelia.config.port | default "9091" }}
-    log_level: {{ .Values.authelia.config.log_level | default "info" }}
-    default_redirection_url: {{ .Values.authelia.config.default_redirection_url | default (printf "https://%s" .Values.authelia.config.domain) }}
+    port: {{ .Values.configMap.port | default "9091" }}
+    log_level: {{ .Values.configMap.log_level | default "info" }}
+    default_redirection_url: {{ .Values.configMap.default_redirection_url | default (printf "https://www.%s" .Values.configMap.domain) }}
     server:
-{{ toYaml .Values.authelia.config.server | indent 6 }}
+{{ toYaml .Values.configMap.server | indent 6 }}
     totp:
-      issuer: {{ .Values.authelia.config.totp.issuer | default .Values.authelia.config.domain }}
-      period: {{ .Values.authelia.config.totp.period | default "30" }}
-      skew: {{ .Values.authelia.config.totp.skew | default "1" }}
-{{- if .Values.authelia.config.duo_api }}
+      issuer: {{ .Values.configMap.totp.issuer | default .Values.configMap.domain }}
+      period: {{ .Values.configMap.totp.period | default "30" }}
+      skew: {{ .Values.configMap.totp.skew | default "1" }}
+{{- with .Values.configMap.duo_api }}
     duo_api:
-{{ toYaml .Values.authelia.config.duo_api | nindent 6 }}
+{{ toYaml . | nindent 6 }}
 {{- end }}
     authentication_backend:
-      disable_reset_password: {{ .Values.authelia.config.authentication_backend.disable_reset_password }}
+      disable_reset_password: {{ .Values.configMap.authentication_backend.disable_reset_password }}
       ldap:
-{{ toYaml .Values.authelia.config.authentication_backend.ldap | indent 8 }}
+{{ toYaml .Values.configMap.authentication_backend.ldap | indent 8 }}
     session:
-      name: {{ .Values.authelia.config.session.name | default "authelia_session" }}
-      domain: {{ .Values.authelia.config.domain }}
-      expiration: {{ .Values.authelia.config.session.expiration | default "1M" }}
-      inactivity: {{ .Values.authelia.config.session.inactivity | default "5m" }}
-      remember_me_duration: {{ .Values.authelia.config.session.remember_me_duration | default "1M" }}
-{{- if .Values.authelia.config.session.redis }}
+      name: {{ .Values.configMap.session.name | default "authelia_session" }}
+      domain: {{ .Values.configMap.domain }}
+      expiration: {{ .Values.configMap.session.expiration | default "1M" }}
+      inactivity: {{ .Values.configMap.session.inactivity | default "5m" }}
+      remember_me_duration: {{ .Values.configMap.session.remember_me_duration | default "1M" }}
+{{- with .Values.configMap.session.redis }}
       redis:
-{{ toYaml .Values.authelia.config.session.redis | indent 8 }}
+{{ toYaml . | indent 8 }}
 {{- end }}
     regulation:
-{{ toYaml .Values.authelia.config.regulation | indent 6 }}
+{{ toYaml .Values.configMap.regulation | indent 6 }}
     storage:
-{{- if .Values.authelia.config.storage.mysql }}
+{{- with .Values.configMap.storage.mysql }}
       mysql:
-{{ toYaml .Values.authelia.config.storage.mysql | indent 8 }}
+{{ toYaml . | indent 8 }}
 {{- end }}
-{{- if .Values.authelia.config.storage.postgres }}
+{{- with .Values.configMap.storage.postgres }}
       postgres:
-{{ toYaml .Values.authelia.config.storage.postgres | indent 8 }}
+{{ toYaml . | indent 8 }}
 {{- end }}
+{{- with .Values.configMap.notifier.smtp }}
     notifier:
-{{- if .Values.authelia.config.notifier.smtp }}
       smtp:
-{{ toYaml .Values.authelia.config.notifier.smtp | indent 8 }}
+{{ toYaml . | indent 8 }}
 {{- end }}
     access_control:
-{{ toYaml .Values.authelia.config.access_control | indent 6 }}
+{{ toYaml .Values.configMap.access_control | indent 6 }}

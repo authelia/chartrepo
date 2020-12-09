@@ -1,0 +1,69 @@
+{{ if (include "authelia.ingressTraefik" .) -}}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ printf "forwardauth-%s" (include "authelia.name" .) }}
+  labels:
+{{- include "authelia.labels" . | nindent 4 }}
+{{- with (include "authelia.annotations" .) }}
+  annotations:
+{{- . | nindent 4 }}
+{{- end }}
+spec:
+  forwardAuth:
+    address: {{ printf "http://%s/api/verify?rd=https://%s#/" (include "authelia.name" .) (include "authelia.ingressHostWithPath" .) }}
+    trustForwardHeader: true
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ printf "headers-%s" (include "authelia.name" .) }}
+  labels:
+{{- include "authelia.labels" . | nindent 4 }}
+{{- with  (include "authelia.annotations" .) }}
+  annotations:
+{{- . | nindent 4 }}
+{{- end }}
+spec:
+  headers:
+    browserXssFilter: true
+    contentTypeNosniff: true
+    customFrameOptionsValue: "SAMEORIGIN"
+    customResponseHeaders:
+      Cache-Control: "no-store"
+      Pragma: "no-cache"
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ .Values.ingress.traefikCRD.authMiddlewareNameOverride | default (printf "%s-auth" (include "authelia.name" .)) }}
+  labels:
+{{- include "authelia.labels" . | nindent 4 }}
+{{- with  (include "authelia.annotations" .) }}
+  annotations:
+{{- . | nindent 4 }}
+{{- end }}
+spec:
+  chain:
+    middlewares:
+      - name: {{ printf "forwardauth-%s" (include "authelia.name" .) }}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "authelia.name" . }}
+  labels:
+{{- include "authelia.labels" . | nindent 4 }}
+{{- with (include "authelia.annotations" .) }}
+  annotations:
+{{- . | nindent 4 }}
+{{- end }}
+spec:
+  chain:
+    middlewares:
+    - name: {{ printf "headers-%s" (include "authelia.name" .) }}
+{{- with .Values.ingress.traefikCRD.extraMiddlewares }}
+{{- toYaml . | nindent 4 }}
+{{- end }}
+{{- end -}}

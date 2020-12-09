@@ -35,9 +35,25 @@ Return the name for this chart
 Returns if we should generate the secret
 */}}
 {{- define "authelia.generateSecret" -}}
-{{- if .Values.authelia.secret.existingSecretName -}}
-    {{- false -}}
-{{- else -}}
+{{- if (not .Values.secret.existingSecretName) -}}
+    {{- true -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Returns if we should create the Ingress kind
+*/}}
+{{- define "authelia.ingress" -}}
+{{- if and .Values.ingress.enabled (not .Values.ingress.traefikCRD.enabled) -}}
+    {{- true -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Returns if we should create the TraefikCRD kinds
+*/}}
+{{- define "authelia.ingressTraefik" -}}
+{{- if and .Values.ingress.enabled .Values.ingress.traefikCRD.enabled -}}
     {{- true -}}
 {{- end -}}
 {{- end -}}
@@ -47,18 +63,18 @@ Returns the common labels
 */}}
 {{- define "authelia.labels" -}}
 {{ include "authelia.matchLabels" . }}
-helm.sh/chart: {{ include "authelia.chart" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- if .Values.extraLabels -}}
+helm.sh/chart: {{ include "authelia.chart" . }}
+{{- if .Values.extraLabels }}
 {{ toYaml .Values.extraLabels }}
-{{- end -}}
+{{- end }}
 {{- end -}}
 
 {{/*
 Returns the match labels
 */}}
 {{- define "authelia.matchLabels" -}}
-app.kubernetes.io/name: {{ default .Chart.Name .Values.appNameOverride | trunc 63 | trimSuffix "-" }}
+app.kubernetes.io/name: {{ .Values.appNameOverride | default .Chart.Name | trunc 63 | trimSuffix "-" }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
@@ -66,18 +82,18 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Returns the common annotations
 */}}
 {{- define "authelia.annotations" -}}
-{{- if .Values.extraLabels -}}
-{{ toYaml .Values.extraLabels }}
-{{- end -}}
+{{- if .Values.extraAnnotations -}}
+{{ toYaml .Values.extraAnnotations }}
+{{- end }}
 {{- end -}}
 
 
 {{/*
 Returns the jwt token or a randomly generated one
 */}}
-{{- define "authelia.jwt_token" -}}
-{{- if .Values.authelia.secret.jwt.value -}}
-    {{- .Values.authelia.secret.jwt.value | b64enc -}}
+{{- define "authelia.jwtToken" -}}
+{{- if .Values.secret.jwt.value -}}
+    {{- .Values.secret.jwt.value | b64enc -}}
 {{- else -}}
     {{- randAlphaNum 128 | b64enc -}}
 {{- end -}}
@@ -86,9 +102,9 @@ Returns the jwt token or a randomly generated one
 {{/*
 Returns the session encryption key or a randomly generated one
 */}}
-{{- define "authelia.session_encryption_key" -}}
-{{- if .Values.authelia.secret.session.value -}}
-    {{- .Values.authelia.secret.session.value | b64enc -}}
+{{- define "authelia.sessionEncryptionKey" -}}
+{{- if .Values.secret.session.value -}}
+    {{- .Values.secret.session.value | b64enc -}}
 {{- else -}}
     {{- randAlphaNum 128 | b64enc -}}
 {{- end -}}
@@ -97,9 +113,9 @@ Returns the session encryption key or a randomly generated one
 {{/*
 Returns the ldap password or a randomly generated one
 */}}
-{{- define "authelia.ldap_password" -}}
-{{- if .Values.authelia.secret.ldap.value -}}
-    {{- .Values.authelia.secret.ldap.value | b64enc -}}
+{{- define "authelia.ldapPassword" -}}
+{{- if .Values.secret.ldap.value -}}
+    {{- .Values.secret.ldap.value | b64enc -}}
 {{- else -}}
     {{- randAlphaNum 128 | b64enc -}}
 {{- end -}}
@@ -108,9 +124,9 @@ Returns the ldap password or a randomly generated one
 {{/*
 Returns the storage password or a randomly generated one
 */}}
-{{- define "authelia.storage_password" -}}
-{{- if .Values.authelia.secret.storage.value -}}
-    {{- .Values.authelia.secret.storage.value | b64enc -}}
+{{- define "authelia.storagePassword" -}}
+{{- if .Values.secret.storage.value -}}
+    {{- .Values.secret.storage.value | b64enc -}}
 {{- else -}}
     {{- randAlphaNum 128 | b64enc -}}
 {{- end -}}
@@ -119,9 +135,9 @@ Returns the storage password or a randomly generated one
 {{/*
 Returns the redis password or a randomly generated one
 */}}
-{{- define "authelia.redis_password" -}}
-{{- if .Values.authelia.secret.redis.value -}}
-    {{- .Values.authelia.secret.redis.value | b64enc -}}
+{{- define "authelia.redisPassword" -}}
+{{- if .Values.secret.redis.value -}}
+    {{- .Values.secret.redis.value | b64enc -}}
 {{- else -}}
     {{- randAlphaNum 128 | b64enc -}}
 {{- end -}}
@@ -130,10 +146,49 @@ Returns the redis password or a randomly generated one
 {{/*
 Returns the smtp password or a randomly generated one
 */}}
-{{- define "authelia.smtp_password" -}}
-{{- if .Values.authelia.secret.smtp.value -}}
-    {{- .Values.authelia.secret.smtp.value | b64enc -}}
+{{- define "authelia.smtpPassword" -}}
+{{- if .Values.secret.smtp.value -}}
+    {{- .Values.secret.smtp.value | b64enc -}}
 {{- else -}}
     {{- randAlphaNum 128 | b64enc -}}
 {{- end -}}
+{{- end -}}
+
+{{/*
+Returns the smtp password or a randomly generated one
+*/}}
+{{- define "authelia.deploymentStrategy" -}}
+    {{- if .Values.deployment.strategy -}}
+        {{- if .Values.deployment.strategy.type -}}
+            {{- if .Values.deployment.useDaemonSet -}}
+                {{- if or (eq .Values.deployment.strategy.type "RollingUpdate") (eq .Values.deployment.strategy.type "OnDelete") -}}
+                    {{- .Values.deployment.strategy.type -}}
+                {{- else -}}
+                    {{- "RollingUpdate" -}}
+                {{- end -}}
+            {{- else -}}
+                {{- if or (eq .Values.deployment.strategy.type "RollingUpdate") (eq .Values.deployment.strategy.type "Recreate") -}}
+                    {{- .Values.deployment.strategy.type -}}
+                {{- else -}}
+                    {{- "RollingUpdate" -}}
+                {{- end -}}
+            {{- end -}}
+        {{- end -}}
+    {{- else -}}
+        {{- "RollingUpdate" -}}
+    {{- end -}}
+{{- end -}}
+
+{{/*
+Returns the ingress hostname
+*/}}
+{{- define "authelia.ingressHost" -}}
+    {{- printf "%s.%s" (.Values.ingress.subdomain | default "auth") .Values.configMap.domain -}}
+{{- end -}}
+
+{{/*
+Returns the ingress hostname with the path
+*/}}
+{{- define "authelia.ingressHostWithPath" -}}
+    {{- printf "%s%s" (include "authelia.ingressHost" . ) (.Values.configMap.path | default "/") -}}
 {{- end -}}

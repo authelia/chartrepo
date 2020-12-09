@@ -1,0 +1,41 @@
+{{- if (include "authelia.ingress" .) }}
+---
+{{- if semverCompare "<1.14-0" .Capabilities.KubeVersion.GitVersion }}
+apiVersion: extensions/v1beta1
+{{- else }}
+apiVersion: networking.k8s.io/v1beta1
+{{- end }}
+kind: Ingress
+metadata:
+  name: {{ include "authelia.name" . }}
+  labels:
+{{- include "authelia.labels" . | nindent 4 }}
+{{- with .Values.ingress.extraLabels }}
+{{- toYaml . | nindent 4 }}
+{{- end }}
+{{- if or .Values.ingress.certManager .Values.ingress.annotations (include "authelia.annotations" .) }}
+  annotations:
+{{- if .Values.ingress.certManager }}
+    kubernetes.io/tls-acme: "true"
+{{- end }}
+{{- include "authelia.annotations" . | nindent 4 }}
+{{- with .Values.ingress.extraAnnotations }}
+{{- toYaml . | nindent 4 }}
+{{- end }}
+{{- end }}
+spec:
+  rules:
+  - host: {{ include "authelia.ingressHost" . }}
+    http:
+      paths:
+      - path: {{ .Values.configMap.path | default "/" }}
+        backend:
+          serviceName: {{ include "authelia.name" . }}
+          servicePort: http
+{{- if .Values.ingress.tls }}
+  tls:
+  - hosts:
+    - {{ include "authelia.ingressHost" . }}
+    secretName: {{ .Values.ingress.tlsSecret }}
+{{- end -}}
+{{- end -}}

@@ -1,0 +1,35 @@
+{{ if (include "authelia.ingressTraefik" .) -}}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "authelia.name" . }}
+  labels:
+{{- include "authelia.labels" . | nindent 4 }}
+{{- with .Values.ingress.extraLabels }}
+{{- toYaml . | nindent 4 }}
+{{- end }}
+{{- if  or (include "authelia.annotations" .) .Values.ingress.extraAnnotations }}
+  annotations:
+{{- include "authelia.annotations" . | nindent 4 }}
+{{- with .Values.ingress.extraAnnotations }}
+{{- toYaml . | nindent 4 }}
+{{- end }}
+{{- end }}
+spec:
+  entryPoints:
+{{- with .Values.ingress.traefikCRD.entryPoints }}
+{{- toYaml . | nindent 2 }}
+{{- else }}
+  - http
+{{- end }}
+  routes:
+  - match: {{ printf "Host(`%s`) && PathPrefix(`%s`)" (include "authelia.ingressHost" .) (.Values.configMap.path | default "/") }}
+    kind: Rule
+    priority: 1
+    middlewares:
+    - name: {{ include "authelia.name" . }}
+    services:
+    - name: {{ include "authelia.name" . }}
+      port: http
+{{- end -}}
