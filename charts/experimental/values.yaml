@@ -1,0 +1,564 @@
+## Image Parameters
+## ref: https://hub.docker.com/r/authelia/authelia/tags/
+##
+image:
+  registry: docker.io
+  repository: authelia/authelia
+  tag: 4.24.0
+  pullPolicy: IfNotPresent
+  # pullSecrets:
+  #   - myPullSecretName
+
+# ingress
+
+# nameOverride: authelia-deployment-name
+# appNameOverride: authelia
+
+##
+## extra labels/annotations applied to all resources
+##
+extraLabels: {}
+extraAnnotations: {}
+
+authelia:
+  ## Deployment or DaemonSet
+  # replicaSetType: Deployment
+  replicaSetType: DaemonSet
+
+  deployment:
+    replicaCount: 1
+    updateStrategy: RollingUpdate
+
+  daemonSet:
+
+  securityContext:
+    runAsUser: 2000
+    runAsGroup: 2000
+    fsGroup: 2000
+
+  podSecurityContext:
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    privileged: false
+
+  podDisruptionBudget:
+    enabled: false
+    minAvailable: 1
+    maxUnavailable: 2
+
+  selectors:
+    # nodeName: worker-1
+
+    nodeSelector: {}
+    # disktype: ssd
+    # kubernetes.io/hostname: worker-1
+
+    affinity:
+      nodeAffinity: {}
+      #   requiredDuringSchedulingIgnoredDuringExecution:
+      #     nodeSelectorTerms:
+      #     - matchExpressions:
+      #       - key: kubernetes.io/hostname
+      #         operator: In
+      #         values:
+      #         - worker-1
+      #         - worker-2
+      #   preferredDuringSchedulingIgnoredDuringExecution:
+      #     - weight: 1
+      #       preference:
+      #         matchExpressions:
+      #         - key: node-label-key
+      #           operator: NotIn
+      #           values:
+      #           - not-this
+      podAffinity: {}
+      #   requiredDuringSchedulingIgnoredDuringExecution:
+      #   - labelSelector:
+      #     matchExpressions:
+      #     - key: security
+      #       operator: In
+      #       values:
+      #       - S1
+      #     topologyKey: topology.kubernetes.io/zone
+      podAntiAffinity: {}
+      #     preferredDuringSchedulingIgnoredDuringExecution:
+      #     - weight: 100
+      #       podAffinityTerm:
+      #         labelSelector:
+      #           matchExpressions:
+      #           - key: security
+      #             operator: In
+      #             values:
+      #             - S2
+      #       topologyKey: topology.kubernetes.io/zone
+
+  extraEnv: []
+  # - name: TZ
+  #   value: Australia/Melbourne
+
+  resources:
+    limits: {}
+    # cpu: "4.00"
+    # memory: 40Mi
+    requests: {}
+    # cpu: "0.25"
+    # memory: 30Mi
+
+  probes:
+    ## The probe http path to use. Default is recommended.
+    # path: /api/health
+
+    liveness:
+      initialDelaySeconds: 30
+      periodSeconds: 30
+      timeoutSeconds: 5
+      successThreshold: 2
+      failureThreshold: 5
+
+    readiness:
+      initialDelaySeconds: 10
+      periodSeconds: 5
+      timeoutSeconds: 5
+      successThreshold: 2
+      failureThreshold: 5
+
+    ## Note: Startup Probes are generally not enabled unless you enable them manually in the kubelet.
+    # startup:
+    #   initialDelaySeconds: 5
+    #   periodSeconds: 5
+    #   timeoutSeconds: 5
+    #   successThreshold: 1
+    #   failureThreshold: 6
+
+  ##
+  ## extra labels/annotations applied to the authelia deployment/daemonset
+  ##
+  extraLabels: {}
+  extraAnnotations: {}
+
+  ##
+  ## Authelia Config Map Generator
+  ##
+  config:
+
+    ##
+    ## Port sets the configured port for the daemon, service, and the probes.
+    ## Default is 9091 and should not need to be changed.
+    ##
+    # port: 9091
+
+    ##
+    ## Domain is used to set the domain for the session, and defaults for the default_redirection_url, and totp issuer.
+    ##
+    domain: example.com
+
+    ## Configuration options specific to the internal http server
+    server:
+      ## Buffers usually should be configured to be the same value.
+      ## Explanation at https://docs.authelia.com/configuration/server.html
+      ## Read buffer size configures the http server's maximum incoming request size in bytes.
+      read_buffer_size: 4096
+      ## Write buffer size configures the http server's maximum outgoing response size in bytes.
+      write_buffer_size: 4096
+      ## Set the single level path Authelia listens on, must be alphanumeric chars and should not contain any slashes.
+      path: ""
+
+    ## Level of verbosity for logs: info, debug, trace
+    log_level: info
+    ## Format the logs are written as: json, text
+    log_format: text
+
+    ## Default redirection URL
+    ##
+    ## If user tries to authenticate without any referer, Authelia
+    ## does not know where to redirect the user to at the end of the
+    ## authentication process.
+    ## This parameter allows you to specify the default redirection
+    ## URL Authelia will use in such a case.
+    ##
+    ## Note: this parameter is optional. If not provided, user won't
+    ## be redirected upon successful authentication.
+    ## Default is https://<config.domain> (value above in this chart).
+    ##
+    # default_redirection_url: https://example.com
+
+    ## TOTP Settings
+    ##
+    ## Parameters used for TOTP generation
+    totp: {}
+      ## The issuer name displayed in the Authenticator application of your choice
+      ## See: https://github.com/google/google-authenticator/wiki/Key-Uri-Format for more info on issuer names
+      ## Defaults to <config.domain>.
+      ##
+      # issuer: example.com
+
+      ## The period in seconds a one-time password is current for. Changing this will require all users to register
+      ## their TOTP applications again.
+      ## Warning: before changing period read the docs link below.
+      # period: 30
+
+      ## The skew controls number of one-time passwords either side of the current one that are valid.
+      ## Warning: before changing skew read the docs link below.
+      # skew: 1
+
+      ##  See: https://docs.authelia.com/configuration/one-time-password.html#period-and-skew to read the documentation.
+
+    ##
+    ## Duo Push API
+    ##
+    ## Parameters used to contact the Duo API. Those are generated when you protect an application
+    ## of type "Partner Auth API" in the management panel.
+    # duo_api:
+      # hostname: api-123456789.example.com
+      # integration_key: ABCDEF
+
+    ## The authentication backend to use for verifying user passwords
+    ## and retrieve information such as email address and groups
+    ## users belong to.
+    ##
+    ## There are two supported backends: 'ldap' and 'file'.
+    authentication_backend:
+      ## Disable both the HTML element and the API for reset password functionality
+      disable_reset_password: false
+
+      ## The amount of time to wait before we refresh data from the authentication backend. Uses duration notation.
+      ## To disable this feature set it to 'disable', this will slightly reduce security because for Authelia, users
+      ## will always belong to groups they belonged to at the time of login even if they have been removed from them in LDAP.
+      ## To force update on every request you can set this to '0' or 'always', this will increase processor demand.
+      ## See the below documentation for more information.
+      ## Duration Notation docs:  https://docs.authelia.com/configuration/index.html#duration-notation-format
+      ## Refresh Interval docs: https://docs.authelia.com/configuration/authentication/ldap.html#refresh-interval
+      refresh_interval: 5m
+
+      ## LDAP backend configuration.
+      ##
+      ## This backend allows Authelia to be scaled to more
+      ## than one instance and therefore is recommended for
+      ## production.
+      ldap:
+        ## The LDAP implementation, this affects elements like the attribute utilised for resetting a password.
+        ## Acceptable options are as follows:
+        ## - 'activedirectory' - For Microsoft Active Directory.
+        ## - 'custom' - For custom specifications of attributes and filters.
+        ## This currently defaults to 'custom' to maintain existing behaviour.
+        ##
+        ## Depending on the option here certain other values in this section have a default value, notably all
+        ## of the attribute mappings have a default value that this config overrides, you can read more
+        ## about these default values at https://docs.authelia.com/configuration/authentication/ldap.html#defaults
+        # implementation: custom
+
+        ## The url to the ldap server. Scheme can be ldap or ldaps in the format (port optional) <scheme>://<address>[:<port>].
+        url: ldap://openldap.default.cluster.local
+
+        ## Skip verifying the server certificate (to allow a self-signed certificate).
+        # skip_verify: false
+
+        ## Use StartTLS with the LDAP connection.
+        # start_tls: false
+
+        ## Minimum TLS version for either Secure LDAP or LDAP StartTLS.
+        # minimum_tls_version: TLS1.2
+
+        ## The base dn for every entries.
+        base_dn: dc=example,dc=com
+
+        ## The attribute holding the username of the user. This attribute is used to populate
+        ## the username in the session information. It was introduced due to #561 to handle case
+        ## insensitive search queries.
+        ## For you information, Microsoft Active Directory usually uses 'sAMAccountName' and OpenLDAP
+        ## usually uses 'uid'
+        ## Beware that this attribute holds the unique identifiers for the users binding the user and the configuration
+        ## stored in database. Therefore only single value attributes are allowed and the value
+        ## must never be changed once attributed to a user otherwise it would break the configuration
+        ## for that user. Technically, non-unique attributes like 'mail' can also be used but we don't recommend using
+        ## them, we instead advise to use the attributes mentioned above (sAMAccountName and uid) to follow
+        ## https://www.ietf.org/rfc/rfc2307.txt.
+        ## username_attribute: uid
+
+        ## An additional dn to define the scope to all users.
+        additional_users_dn: ou=users
+
+        ## The users filter used in search queries to find the user profile based on input filled in login form.
+        ## Various placeholders are available to represent the user input and back reference other options of the configuration:
+        ## - {input} is a placeholder replaced by what the user inputs in the login form.
+        ## - {username_attribute} is a mandatory placeholder replaced by what is configured in `username_attribute`.
+        ## - {mail_attribute} is a placeholder replaced by what is configured in `mail_attribute`.
+        ##
+        ## Recommended settings are as follows:
+        ## - Microsoft Active Directory: (&({username_attribute}={input})(objectCategory=person)(objectClass=user))
+        ## - OpenLDAP: (&({username_attribute}={input})(objectClass=person))' or '(&({username_attribute}={input})(objectClass=inetOrgPerson))
+        ##
+        ## To allow sign in both with username and email, one can use a filter like
+        ## (&(|({username_attribute}={input})({mail_attribute}={input}))(objectClass=person))
+        # users_filter: (&({username_attribute}={input})(objectClass=person))
+
+        ## An additional dn to define the scope of groups.
+        additional_groups_dn: ou=groups
+
+        ## The groups filter used in search queries to find the groups of the user.
+        ## - {input} is a placeholder replaced by what the user inputs in the login form.
+        ## - {username} is a placeholder replace by the username stored in LDAP (based on `username_attribute`).
+        ## - {dn} is a matcher replaced by the user distinguished name, aka, user DN.
+        ## - {username_attribute} is a placeholder replaced by what is configured in `username_attribute`.
+        ## - {mail_attribute} is a placeholder replaced by what is configured in `mail_attribute`.
+        groups_filter: (&(member={dn})(objectclass=groupOfNames))
+
+        ## The attribute holding the name of the group
+        ## group_name_attribute: cn
+
+        ## The attribute holding the mail address of the user. If multiple email addresses are defined for a user, only the first
+        ## one returned by the LDAP server is used.
+        ## mail_attribute: mail
+
+        ## The attribute holding the display name of the user. This will be used to greet an authenticated user.
+        ## display_name_attribute: displayname
+
+        ## The username and password of the admin user.
+        user: cn=admin,dc=example,dc=com
+    ##
+    ## Access Control
+    ##
+    ## Access control is a list of rules defining the authorizations applied for one
+    ## resource to users or group of users.
+    ##
+    ## If 'access_control' is not defined, ACL rules are disabled and the 'bypass'
+    ## rule is applied, i.e., access is allowed to anyone. Otherwise restrictions follow
+    ## the rules defined.
+    ##
+    ## Note: One can use the wildcard * to match any subdomain.
+    ## It must stand at the beginning of the pattern. (example: *.mydomain.com)
+    ##
+    ## Note: You must put patterns containing wildcards between simple quotes for the YAML
+    ## to be syntactically correct.
+    ##
+    ## Definition: A 'rule' is an object with the following keys: 'domain', 'subject',
+    ## 'policy' and 'resources'.
+    ##
+    ## - 'domain' defines which domain or set of domains the rule applies to.
+    ##
+    ## - 'subject' defines the subject to apply authorizations to. This parameter is
+    ##    optional and matching any user if not provided. If provided, the parameter
+    ##    represents either a user or a group. It should be of the form 'user:<username>'
+    ##    or 'group:<groupname>'.
+    ##
+    ## - 'policy' is the policy to apply to resources. It must be either 'bypass',
+    ##   'one_factor', 'two_factor' or 'deny'.
+    ##
+    ## - 'resources' is a list of regular expressions that matches a set of resources to
+    ##    apply the policy to. This parameter is optional and matches any resource if not
+    ##    provided.
+    ##
+    ## Note: the order of the rules is important. The first policy matching
+    ## (domain, resource, subject) applies.
+    access_control:
+      ## Default policy can either be 'bypass', 'one_factor', 'two_factor' or 'deny'.
+      ## It is the policy applied to any resource if there is no policy to be applied
+      ## to the user.
+      default_policy: deny
+
+      rules:
+        ## Rules applied to everyone
+        - domain: public.example.com
+          policy: bypass
+
+        - domain: secure.example.com
+          policy: one_factor
+          ## Network based rule, if not provided any network matches.
+          networks:
+            - 192.168.1.0/24
+
+        - domain:
+            - secure.example.com
+            - private.example.com
+          policy: two_factor
+
+        - domain: singlefactor.example.com
+          policy: one_factor
+
+        ## Rules applied to 'admins' group
+        - domain: "mx2.mail.example.com"
+          subject: "group:admins"
+          policy: deny
+
+        - domain: "*.example.com"
+          subject:
+            - "group:admins"
+            - "group:moderators"
+          policy: two_factor
+
+        ## Rules applied to 'dev' group
+        - domain: dev.example.com
+          resources:
+            - "^/groups/dev/.*$"
+          subject: "group:dev"
+          policy: two_factor
+
+        ## Rules applied to user 'john'
+        - domain: dev.example.com
+          resources:
+            - "^/users/john/.*$"
+          subject: "user:john"
+          policy: two_factor
+
+        ## Rules applied to user 'harry'
+        - domain: dev.example.com
+          resources:
+            - "^/users/harry/.*$"
+          subject: "user:harry"
+          policy: two_factor
+
+        ## Rules applied to user 'bob'
+        - domain: "*.mail.example.com"
+          subject: "user:bob"
+          policy: two_factor
+        - domain: "dev.example.com"
+          resources:
+            - "^/users/bob/.*$"
+          subject: "user:bob"
+          policy: two_factor
+
+    ##
+    ## Configuration of session cookies
+    ##
+    ## The session cookies identify the user once logged in.
+    ##
+    session:
+      ##
+      ## The name of the session cookie. (default: authelia_session).
+      ##
+      name: authelia_session
+
+      ##
+      ## Duration notation is mentioned in the following section: https://docs.authelia.com/configuration/index.html#duration-notation-format
+      ##
+
+      ##
+      ## The time in seconds or duration notation before the cookie expires and session is reset.
+      ##
+      expiration: 1h
+
+      ##
+      ## The inactivity time in seconds or duration notation before the session is reset.
+      ##
+      inactivity: 5m
+
+      ## The remember me duration.
+      ## Value is in seconds or duration notation. Value of 0 disables remember me.
+      ## Longer periods are considered less secure because a stolen cookie will last longer giving attackers more time to spy
+      ## or attack. Currently the default is 1M or 1 month.
+      remember_me_duration: 1M
+
+      ##
+      ## The redis connection details
+      ##
+      redis:
+        host: redis.databases.cluster.local
+        port: 6379
+        ## This is the Redis DB Index https://redis.io/commands/select (sometimes referred to as database number, DB, etc).
+        database_index: 0
+
+    ## Configuration of the authentication regulation mechanism.
+    ##
+    ## This mechanism prevents attackers from brute forcing the first factor.
+    ## It bans the user if too many attempts are done in a short period of
+    ## time.
+    regulation:
+      ## The number of failed login attempts before user is banned.
+      ## Set it to 0 to disable regulation.
+      max_retries: 3
+
+      ## The time range during which the user can attempt login before being banned.
+      ## The user is banned if the authentication failed 'max_retries' times in a 'find_time' seconds window.
+      ## Value is in seconds or duration notation.
+      find_time: 2m
+
+      ## The length of time before a banned user can login again.
+      ## Value is in seconds or duration notation.
+      ban_time: 5m
+
+    ## Configuration of the storage backend used to store data and secrets.
+    ##
+    ## You must use only an available configuration: local, mysql, postgres
+    storage:
+      ## Settings to connect to MySQL server
+      mysql:
+        host: mysql.databases.cluster.local
+        port: 3306
+        database: authelia
+        username: authelia
+
+      ## Settings to connect to PostgreSQL server
+      # postgres:
+      #   host: postgres.databases.cluster.local
+      #   port: 5432
+      #   database: authelia
+      #   username: authelia
+      #   sslmode: disable
+
+    ## Configuration of the notification system.
+    ##
+    ## Notifications are sent to users when they require a password reset, a u2f
+    ## registration or a TOTP registration.
+    notifier:
+      ## You can disable the notifier startup check by setting this to true.
+      disable_startup_check: false
+
+      ## Use a SMTP server for sending notifications. Authelia uses PLAIN or LOGIN method to authenticate.
+      ## [Security] By default Authelia will:
+      ##   - force all SMTP connections over TLS including unauthenticated connections
+      ##      - use the disable_require_tls boolean value to disable this requirement (only works for unauthenticated connections)
+      ##   - validate the SMTP server x509 certificate during the TLS handshake against the hosts trusted certificates
+      ##     - trusted_cert option:
+      ##       - this is a string value, that may specify the path of a PEM format cert, it is completely optional
+      ##       - if it is not set, a blank string, or an invalid path; will still trust the host machine/containers cert store
+      ##     - defaults to the host machine (or docker container's) trusted certificate chain for validation
+      ##     - use the trusted_cert string value to specify the path of a PEM format public cert to trust in addition to the hosts trusted certificates
+      ##     - use the disable_verify_cert boolean value to disable the validation (prefer the trusted_cert option as it's more secure)
+      smtp:
+        username: test
+        host: smtp.example.com
+        port: 25
+        sender: admin@example.com
+        ## HELO/EHLO Identifier. Some SMTP Servers may reject the default of localhost.
+        # identifier: localhost
+        ## Subject configuration of the emails sent.
+        ## {title} is replaced by the text from the notifier
+        # subject: "[Authelia] {title}"
+        ## This address is used during the startup check to verify the email configuration is correct. It's not important what it is except if your email server only allows local delivery.
+        startup_check_address: test@authelia.com
+        # disable_require_tls: false
+        # disable_verify_cert: false
+        # disable_html_emails: false
+
+  ##
+  ## Authelia Secret Generator.
+  ##
+  ## If both the values and the existingSecretNames are not defined, this chart randomly generates a new secret on each
+  ## install. It is recommended that you use something like sealed-secrets (https://github.com/bitnami-labs/sealed-secrets)
+  ## and use the existingSecrets. All secrets can be stored in a single k8s secret if desired using the key option.
+  ##
+  secret:
+    # existingSecretName: authelia
+    jwt:
+      key: JWT_TOKEN
+      # value:
+    ldap:
+      key: LDAP_PASSWORD
+      # value:
+    storage:
+      key: STORAGE_PASSWORD
+      # value:
+    session:
+      key: SESSION_ENCRYPTION_KEY
+      # value:
+    duo:
+      key: DUO_API_KEY
+      # value:
+    redis:
+      enabled: false
+      key: REDIS_PASSWORD
+      # value:
+    smtp:
+      enabled: false
+      key: SMTP_PASSWORD
+      # value:
