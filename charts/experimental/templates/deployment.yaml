@@ -1,15 +1,11 @@
 
 ---
-{{- if semverCompare "^1.16-0" .Capabilities.KubeVersion.GitVersion }}
-apiVersion: apps/v1
+{{- if .Values.deployment.enableDaemonSet }}
+apiVersion: {{ include "capabilities.apiVersion.daemonSet" . }}
 {{- else }}
-apiVersion: apps/v1beta1
+apiVersion: {{ include "capabilities.apiVersion.deployment" . }}
 {{- end }}
-{{- if .Values.deployment.useDaemonSet }}
-kind: DaemonSet
-{{- else }}
-kind: Deployment
-{{- end }}
+kind: {{ .Values.deployment.enableDaemonSet | ternary  "DaemonSet" "Deployment" }}
 metadata:
   name: {{ include "authelia.name" . }}
   labels:
@@ -28,11 +24,12 @@ spec:
   selector:
     matchLabels:
 {{- include "authelia.matchLabels" . | nindent 6 }}
-{{- if .Values.deployment.useDaemonSet }}
+  revisionHistoryLimit: {{ default 5 .Values.deployment.revisionHistoryLimit }}
+{{- if .Values.deployment.enableDaemonSet }}
   updateStrategy:
     type: {{ include "authelia.deploymentStrategy" . }}
 {{- else }}
-  replicas: {{ .Values.deployment.replicas }}
+  replicas: {{ default 1 .Values.deployment.replicas }}
 {{- if and .Values.deployment.strategy }}
   strategy:
     type: {{ include "authelia.deploymentStrategy" . }}
@@ -41,10 +38,6 @@ spec:
 {{ toYaml .Values.deployment.strategy.rollingUpdate | indent 6 }}
 {{- end }}
 {{- end }}
-{{- end }}
-{{- with .Values.deployment.tolerations }}
-  tolerations:
-{{ toYaml . | indent 2 }}
 {{- end }}
   template:
     metadata:
@@ -61,6 +54,10 @@ spec:
 {{- end -}}
 {{- end }}
     spec:
+{{- with .Values.deployment.tolerations }}
+      tolerations:
+{{ toYaml . | indent 6 }}
+{{- end }}
       hostNetwork: false
       hostPID: false
       hostIPC: false
@@ -106,7 +103,6 @@ spec:
 {{- end }}
 {{- if .Values.configMap.storage.mysql }}
         - name: AUTHELIA_STORAGE_MYSQL_PASSWORD_FILE
-        - name: AUTHELIA_STORAGE_MYSQL_PASSWORD_FILE
           value: /usr/app/secrets/STORAGE_PASSWORD
 {{- end }}
 {{- if .Values.secret.smtp.enabled }}
@@ -126,12 +122,12 @@ spec:
 {{- end }}
         ports:
         - name: http
-          containerPort: {{ .Values.configMap.port | default "9091" }}
+          containerPort: {{ default 9091  .Values.configMap.port }}
           protocol: TCP
 {{- with .Values.deployment.probes.startup }}
         startupProbe:
           httpGet:
-            path: {{ $.Values.deployment.probes.path | default "/api/health" }}
+            path: {{ default "/api/health" $.Values.deployment.probes.path }}
             port: http
             scheme: HTTP
 {{ toYaml . | indent 10 }}
@@ -139,7 +135,7 @@ spec:
 {{- with .Values.deployment.probes.liveness }}
         livenessProbe:
           httpGet:
-            path: {{ $.Values.deployment.probes.path | default "/api/health" }}
+            path: {{ default "/api/health" $.Values.deployment.probes.path }}
             port: http
             scheme: HTTP
 {{ toYaml . | indent 10 }}
@@ -147,7 +143,7 @@ spec:
 {{- with .Values.deployment.probes.readiness }}
         readinessProbe:
           httpGet:
-            path: {{ $.Values.deployment.probes.path | default "/api/health" }}
+            path: {{ default "/api/health" $.Values.deployment.probes.path }}
             port: http
             scheme: HTTP
 {{ toYaml . | indent 10 }}
@@ -175,26 +171,26 @@ spec:
               path: configuration.yml
       - name: secrets
         secret:
-          secretName: {{ .Values.secret.existingSecretName | default (include "authelia.name" .) }}
+          secretName: {{ default (include "authelia.name" .) .Values.secret.existingSecretName }}
           items:
-          - key: {{ .Values.secret.jwt.key | default "JWT_TOKEN" }}
+          - key: {{ default "JWT_TOKEN" .Values.secret.jwt.key }}
             path: JWT_TOKEN
-          - key: {{ .Values.secret.ldap.key | default "LDAP_PASSWORD" }}
+          - key: {{ default "LDAP_PASSWORD" .Values.secret.ldap.key }}
             path: LDAP_PASSWORD
-          - key: {{ .Values.secret.session.key | default "SESSION_ENCRYPTION_KEY" }}
+          - key: {{ default "SESSION_ENCRYPTION_KEY" .Values.secret.session.key }}
             path: SESSION_ENCRYPTION_KEY
-          - key: {{ .Values.secret.storage.key | default "STORAGE_PASSWORD" }}
+          - key: {{ default "STORAGE_PASSWORD" .Values.secret.storage.key }}
             path: STORAGE_PASSWORD
 {{- if .Values.secret.smtp.enabled }}
-          - key: {{ .Values.secret.smtp.key | default "SMTP_PASSWORD" }}
+          - key: {{ default "SMTP_PASSWORD" .Values.secret.smtp.key }}
             path: SMTP_PASSWORD
 {{- end }}
 {{- if and (.Values.configMap.session.redis) (.Values.secret.redis.enabled) }}
-          - key: {{ .Values.secret.redis.key | default "REDIS_PASSWORD" }}
+          - key: {{ default "REDIS_PASSWORD" .Values.secret.redis.key }}
             path: REDIS_PASSWORD
 {{- end }}
 {{- if .Values.configMap.duo_api }}
-          - key: {{ .Values.secret.duo.key | default "DUO_API_KEY" }}
+          - key: {{ default "DUO_API_KEY" .Values.secret.duo.key }}
             path: DUO_API_KEY
 {{- end }}
 {{- with .Values.deployment.extraVolumes }}

@@ -1,10 +1,6 @@
 {{- if (include "authelia.ingress" .) }}
 ---
-{{- if semverCompare "<1.14-0" .Capabilities.KubeVersion.GitVersion }}
-apiVersion: extensions/v1beta1
-{{- else }}
-apiVersion: networking.k8s.io/v1beta1
-{{- end }}
+apiVersion: {{ include "capabilities.apiVersion.ingress" . }}
 kind: Ingress
 metadata:
   name: {{ include "authelia.name" . }}
@@ -28,10 +24,17 @@ spec:
   - host: {{ include "authelia.ingressHost" . }}
     http:
       paths:
-      - path: {{ .Values.configMap.path | default "/" }}
+      - path: {{ default "/" .Values.configMap.path }}
         backend:
+{{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress" }}
+          service:
+            name: {{ include "authelia.name" . }}
+            port:
+              number: {{ default 80 .Values.service.port }}
+{{- else }}
           serviceName: {{ include "authelia.name" . }}
-          servicePort: http
+          servicePort: {{ default 80 .Values.service.port }}
+{{- end }}
 {{- if .Values.ingress.tls }}
   tls:
   - hosts:

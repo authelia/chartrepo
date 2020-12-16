@@ -26,9 +26,9 @@ spec:
   ports:
   - name: http
     protocol: TCP
-    port: {{ .Values.service.port }}
+    port: {{ default 80 .Values.service.port }}
 {{- if or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer") }}
-    nodePort: {{- .Values.service.nodePort | default .Values.service.port }}
+    nodePort: {{ default (default 80 .Values.service.port) .Values.service.nodePort }}
 {{- end }}
     targetPort: http
   selector:

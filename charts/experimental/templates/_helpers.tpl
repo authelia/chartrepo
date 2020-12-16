@@ -183,12 +183,56 @@ Returns the smtp password or a randomly generated one
 Returns the ingress hostname
 */}}
 {{- define "authelia.ingressHost" -}}
-    {{- printf "%s.%s" (.Values.ingress.subdomain | default "auth") .Values.configMap.domain -}}
+    {{- printf "%s.%s" (default "auth" .Values.ingress.subdomain) .Values.configMap.domain -}}
 {{- end -}}
 
 {{/*
 Returns the ingress hostname with the path
 */}}
 {{- define "authelia.ingressHostWithPath" -}}
-    {{- printf "%s%s" (include "authelia.ingressHost" . ) (.Values.configMap.path | default "/") -}}
+    {{- printf "%s%s" (include "authelia.ingressHost" . ) (default "/" .Values.configMap.path) -}}
+{{- end -}}
+
+
+{{/*
+Returns applicable deployment API version
+*/}}
+{{- define "capabilities.apiVersion.deployment" -}}
+{{- if .Capabilities.APIVersions.Has "apps/v1/Deployment" -}}
+{{- print "apps/v1" -}}
+{{- else if .Capabilities.APIVersions.Has "apps/v1beta2/Deployment" -}}
+{{- print "apps/v1beta2" -}}
+{{- else if .Capabilities.APIVersions.Has "apps/v1beta1/Deployment" -}}
+{{- print "apps/v1beta1" -}}
+{{- else -}}
+{{- print "extensions/v1beta1" -}}
+{{- end }}
+{{- end -}}
+
+{{/*
+Returns applicable daemonset API version
+*/}}
+{{- define "capabilities.apiVersion.daemonSet" -}}
+{{- if .Capabilities.APIVersions.Has "apps/v1/DaemonSet" -}}
+{{- print "apps/v1" -}}
+{{- else if .Capabilities.APIVersions.Has "apps/v1beta2/DaemonSet" -}}
+{{- print "apps/v1beta2" -}}
+{{- else if .Capabilities.APIVersions.Has "apps/v1beta1/DaemonSet" -}}
+{{- print "apps/v1beta1" -}}
+{{- else -}}
+{{- print "extensions/v1beta1" -}}
+{{- end }}
+{{- end -}}
+
+{{/*
+Returns applicable ingress API version
+*/}}
+{{- define "capabilities.apiVersion.ingress" -}}
+{{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress" -}}
+{{- print "networking.k8s.io/v1" -}}
+{{- else if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1/Ingress" -}}
+{{- print "networking.k8s.io/v1beta1" -}}
+{{- else -}}
+{{- print "extensions/v1beta1" -}}
+{{- end }}
 {{- end -}}

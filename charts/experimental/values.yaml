@@ -4,12 +4,11 @@
 image:
   registry: docker.io
   repository: authelia/authelia
-  tag: 4.24.0
+  tag: 4.24.1
   pullPolicy: IfNotPresent
+  pullSecrets: []
   # pullSecrets:
   #   - myPullSecretName
-
-# ingress
 
 # nameOverride: authelia-deployment-name
 # appNameOverride: authelia
@@ -80,10 +79,11 @@ ingress:
     #   namespace: default
 
 deployment:
-  useDaemonSet: true
-
-  replicas: 1
+  enableDaemonSet: true
   
+  replicas: 1
+  revisionHistoryLimit: 5
+
   updateStrategy: RollingUpdate
 
   containerSecurityContext:
@@ -95,11 +95,6 @@ deployment:
     readOnlyRootFilesystem: true
     allowPrivilegeEscalation: false
     privileged: false
-
-  podDisruptionBudget:
-    enabled: false
-    minAvailable: 1
-    maxUnavailable: 2
 
   tolerations: []
   # tolerations:
@@ -129,22 +124,22 @@ deployment:
       #         - worker-1
       #         - worker-2
       #   preferredDuringSchedulingIgnoredDuringExecution:
-      #     - weight: 1
-      #       preference:
-      #         matchExpressions:
-      #         - key: node-label-key
-      #           operator: NotIn
-      #           values:
-      #           - not-this
+      #   - weight: 1
+      #     preference:
+      #       matchExpressions:
+      #       - key: node-label-key
+      #         operator: NotIn
+      #         values:
+      #         - not-this
       podAffinity: {}
       # podAffinity:
       #   requiredDuringSchedulingIgnoredDuringExecution:
       #   - labelSelector:
-      #     matchExpressions:
-      #     - key: security
-      #       operator: In
-      #       values:
-      #       - S1
+      #       matchExpressions:
+      #       - key: security
+      #         operator: In
+      #         values:
+      #         - S1
       #     topologyKey: topology.kubernetes.io/zone
       podAntiAffinity: {}
       # podAntiAffinity:
@@ -157,7 +152,7 @@ deployment:
       #             operator: In
       #             values:
       #             - S2
-      #       topologyKey: topology.kubernetes.io/zone
+      #         topologyKey: topology.kubernetes.io/zone
 
   extraEnv: []
   # - name: TZ

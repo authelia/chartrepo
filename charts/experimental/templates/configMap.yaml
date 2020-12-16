@@ -18,15 +18,15 @@ metadata:
 data:
   configuration.yml: |
     host: 0.0.0.0
-    port: {{ .Values.configMap.port | default "9091" }}
-    log_level: {{ .Values.configMap.log_level | default "info" }}
-    default_redirection_url: {{ .Values.configMap.default_redirection_url | default (printf "https://www.%s" .Values.configMap.domain) }}
+    port: {{ default 9091 .Values.configMap.port }}
+    log_level: {{ default "info" .Values.configMap.log_level  }}
+    default_redirection_url: {{ default (printf "https://www.%s" .Values.configMap.domain) .Values.configMap.default_redirection_url }}
     server:
 {{ toYaml .Values.configMap.server | indent 6 }}
     totp:
-      issuer: {{ .Values.configMap.totp.issuer | default .Values.configMap.domain }}
-      period: {{ .Values.configMap.totp.period | default "30" }}
-      skew: {{ .Values.configMap.totp.skew | default "1" }}
+      issuer: {{ default .Values.configMap.domain .Values.configMap.totp.issuer }}
+      period: {{ default 30 .Values.configMap.totp.period }}
+      skew: {{ default 1 .Values.configMap.totp.skew }}
 {{- with .Values.configMap.duo_api }}
     duo_api:
 {{ toYaml . | nindent 6 }}
@@ -36,11 +36,11 @@ data:
       ldap:
 {{ toYaml .Values.configMap.authentication_backend.ldap | indent 8 }}
     session:
-      name: {{ .Values.configMap.session.name | default "authelia_session" }}
+      name: {{ default "authelia_session" .Values.configMap.session.name }}
       domain: {{ .Values.configMap.domain }}
-      expiration: {{ .Values.configMap.session.expiration | default "1M" }}
-      inactivity: {{ .Values.configMap.session.inactivity | default "5m" }}
-      remember_me_duration: {{ .Values.configMap.session.remember_me_duration | default "1M" }}
+      expiration: {{ default "1M" .Values.configMap.session.expiration }}
+      inactivity: {{ default "5m" .Values.configMap.session.inactivity }}
+      remember_me_duration: {{ default "1M" .Values.configMap.session.remember_me_duration }}
 {{- with .Values.configMap.session.redis }}
       redis:
 {{ toYaml . | indent 8 }}
@@ -58,6 +58,7 @@ data:
 {{- end }}
 {{- with .Values.configMap.notifier.smtp }}
     notifier:
+      disable_startup_check: {{ $.Values.configMap.notifier.disable_startup_check }}
       smtp:
 {{ toYaml . | indent 8 }}
 {{- end }}

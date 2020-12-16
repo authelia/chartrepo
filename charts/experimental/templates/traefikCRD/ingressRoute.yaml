@@ -24,7 +24,7 @@ spec:
   - http
 {{- end }}
   routes:
-  - match: {{ printf "Host(`%s`) && PathPrefix(`%s`)" (include "authelia.ingressHost" .) (.Values.configMap.path | default "/") }}
+  - match: {{ printf "Host(`%s`) && PathPrefix(`%s`)" (include "authelia.ingressHost" .) (default "/" .Values.configMap.path ) }}
     kind: Rule
     priority: 1
     middlewares:

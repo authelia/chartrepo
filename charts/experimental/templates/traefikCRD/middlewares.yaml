@@ -37,7 +37,7 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: {{ .Values.ingress.traefikCRD.authMiddlewareNameOverride | default (printf "%s-auth" (include "authelia.name" .)) }}
+  name: {{ default (printf "%s-auth" (include "authelia.name" .)) .Values.ingress.traefikCRD.authMiddlewareNameOverride }}
   labels:
 {{- include "authelia.labels" . | nindent 4 }}
 {{- with  (include "authelia.annotations" .) }}
