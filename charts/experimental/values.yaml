@@ -78,6 +78,12 @@ ingress:
     # - name: extra-ingress-middleware-for-authelia
     #   namespace: default
 
+    authResponseHeaders:
+    - Remote-User
+    - Remote-Name
+    - Remote-Email
+    - Remote-Groups
+
 deployment:
   enableDaemonSet: true
   

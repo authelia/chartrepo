@@ -14,6 +14,10 @@ spec:
   forwardAuth:
     address: {{ printf "http://%s/api/verify?rd=https://%s#/" (include "authelia.name" .) (include "authelia.ingressHostWithPath" .) }}
     trustForwardHeader: true
+{{- with .Values.ingress.traefikCRD.authResponseHeaders }}
+    authResponseHeaders:
+{{- toYaml . | nindent 4 }}
+{{- end }}
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
