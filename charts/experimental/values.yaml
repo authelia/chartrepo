@@ -71,12 +71,34 @@ ingress:
 
   traefikCRD:
     enabled: false
-    entrypoints: []
-    # authMiddlewareNameOverride: authelia-auth
 
-    extraMiddlewares: []
-    # - name: extra-ingress-middleware-for-authelia
-    #   namespace: default
+    entrypoints: []
+    # entrypoints:
+    # - http
+
+    # authMiddlewareNameOverride: authelia-auth
+    extraMiddlewares:
+      middleware:
+        before: []
+        # before:
+        # - name: extra-forward-auth-middleware-for-authelia
+        #   namespace: default
+
+        after: []
+        # after:
+        # - name: extra-forward-auth-middleware-for-authelia
+        #   namespace: default
+
+      ingress:
+        before: []
+        # before:
+        # - name: extra-ingress-middleware-for-authelia
+        #   namespace: default
+
+        after: []
+        # after:
+        # - name: extra-ingress-middleware-for-authelia
+        #   namespace: default
 
     authResponseHeaders:
     - Remote-User
@@ -182,14 +204,14 @@ deployment:
       initialDelaySeconds: 30
       periodSeconds: 30
       timeoutSeconds: 5
-      successThreshold: 2
+      successThreshold: 1
       failureThreshold: 5
 
     readiness:
       initialDelaySeconds: 10
       periodSeconds: 5
       timeoutSeconds: 5
-      successThreshold: 2
+      successThreshold: 1
       failureThreshold: 5
 
     ## Note: Startup Probes are generally not enabled unless you enable them manually in the kubelet.
@@ -334,7 +356,7 @@ configMap:
       # implementation: custom
 
       ## The url to the ldap server. Scheme can be ldap or ldaps in the format (port optional) <scheme>://<address>[:<port>].
-      url: ldap://openldap.default.cluster.local
+      url: ldap://openldap.default.svc.cluster.local
 
       ## Skip verifying the server certificate (to allow a self-signed certificate).
       # skip_verify: false
@@ -346,7 +368,7 @@ configMap:
       # minimum_tls_version: TLS1.2
 
       ## The base dn for every entries.
-      base_dn: dc=example,dc=com
+      base_dn: DC=example,DC=com
 
       ## The attribute holding the username of the user. This attribute is used to populate
       ## the username in the session information. It was introduced due to #561 to handle case
@@ -362,7 +384,7 @@ configMap:
       ## username_attribute: uid
 
       ## An additional dn to define the scope to all users.
-      additional_users_dn: ou=users
+      # additional_users_dn: OU=Users
 
       ## The users filter used in search queries to find the user profile based on input filled in login form.
       ## Various placeholders are available to represent the user input and back reference other options of the configuration:
@@ -379,7 +401,7 @@ configMap:
       # users_filter: (&({username_attribute}={input})(objectClass=person))
 
       ## An additional dn to define the scope of groups.
-      additional_groups_dn: ou=groups
+      # additional_groups_dn: OU=Groups
 
       ## The groups filter used in search queries to find the groups of the user.
       ## - {input} is a placeholder replaced by what the user inputs in the login form.
@@ -387,7 +409,7 @@ configMap:
       ## - {dn} is a matcher replaced by the user distinguished name, aka, user DN.
       ## - {username_attribute} is a placeholder replaced by what is configured in `username_attribute`.
       ## - {mail_attribute} is a placeholder replaced by what is configured in `mail_attribute`.
-      groups_filter: (&(member={dn})(objectclass=groupOfNames))
+      # groups_filter: (&(member={dn})(objectclass=groupOfNames))
 
       ## The attribute holding the name of the group
       ## group_name_attribute: cn
@@ -538,7 +560,7 @@ configMap:
     ## The redis connection details
     ##
     redis:
-      host: redis.databases.cluster.local
+      host: redis.databases.svc.cluster.local
       port: 6379
       ## This is the Redis DB Index https://redis.io/commands/select (sometimes referred to as database number, DB, etc).
       database_index: 0
@@ -568,14 +590,14 @@ configMap:
   storage:
     ## Settings to connect to MySQL server
     mysql:
-      host: mysql.databases.cluster.local
+      host: mysql.databases.svc.cluster.local
       port: 3306
       database: authelia
       username: authelia
 
     ## Settings to connect to PostgreSQL server
     # postgres:
-    #   host: postgres.databases.cluster.local
+    #   host: postgres.databases.svc.cluster.local
     #   port: 5432
     #   database: authelia
     #   username: authelia
@@ -602,7 +624,7 @@ configMap:
     ##     - use the disable_verify_cert boolean value to disable the validation (prefer the trusted_cert option as it's more secure)
     smtp:
       username: test
-      host: smtp.example.com
+      host: smtp.mail.svc.cluster.local
       port: 25
       sender: admin@example.com
       ## HELO/EHLO Identifier. Some SMTP Servers may reject the default of localhost.

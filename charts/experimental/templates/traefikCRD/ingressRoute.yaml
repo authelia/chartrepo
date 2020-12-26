@@ -29,7 +29,8 @@ spec:
     priority: 1
     middlewares:
     - name: {{ include "authelia.name" . }}
+      namespace: {{ .Release.Namespace }}
     services:
     - name: {{ include "authelia.name" . }}
-      port: http
+      port: {{ default 80 .Values.service.port }}
 {{- end -}}

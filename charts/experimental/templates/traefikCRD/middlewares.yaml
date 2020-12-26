@@ -51,7 +51,14 @@ metadata:
 spec:
   chain:
     middlewares:
-      - name: {{ printf "forwardauth-%s" (include "authelia.name" .) }}
+{{- with .Values.ingress.traefikCRD.extraMiddlewares.middleware.before }}
+{{- toYaml . | nindent 4 }}
+{{- end }}
+    - name: {{ printf "forwardauth-%s" (include "authelia.name" .) }}
+      namespace: {{ .Release.Namespace }}
+{{- with .Values.ingress.traefikCRD.extraMiddlewares.middleware.after }}
+{{- toYaml . | nindent 4 }}
+{{- end }}
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
@@ -66,8 +73,12 @@ metadata:
 spec:
   chain:
     middlewares:
+{{- with .Values.ingress.traefikCRD.extraMiddlewares.ingress.before }}
+{{- toYaml . | nindent 4 }}
+{{- end }}
     - name: {{ printf "headers-%s" (include "authelia.name" .) }}
-{{- with .Values.ingress.traefikCRD.extraMiddlewares }}
+      namespace: {{ .Release.Namespace }}
+{{- with .Values.ingress.traefikCRD.extraMiddlewares.ingress.after }}
 {{- toYaml . | nindent 4 }}
 {{- end }}
 {{- end -}}
