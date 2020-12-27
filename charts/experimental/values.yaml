@@ -76,6 +76,18 @@ ingress:
     # entrypoints:
     # - http
 
+    # priority: 10
+
+    # weight: 10
+
+    sticky: true
+
+    # stickyCookieNameOverride: authelia_traefik_lb
+
+    # strategy: RoundRobin
+
+    # responseForwardingFlushInterval: 100ms
+
     # authMiddlewareNameOverride: authelia-auth
     extraMiddlewares:
       middleware:
@@ -105,6 +117,30 @@ ingress:
     - Remote-Name
     - Remote-Email
     - Remote-Groups
+
+    tls: {}
+    # tls:
+    #   secretName: traefik-example-com-wildcard
+    #  existingOptions
+    #       name: default-traefik-options
+    #       namespace: default
+    #   options:
+    #     nameOverride: authelia-tls-options
+    #     minVersion: VersionTLS12
+    #     maxVersion: VersionTLS13
+    #     curvePreferences:
+    #     - CurveP521
+    #     - CurveP384
+    #     cipherSuites:
+    #     - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+    #     - TLS_RSA_WITH_AES_256_GCM_SHA384
+    #     sniStrict: true
+    #   certResolver: default
+    #   domains:
+    #   - main: example.com
+    #     sans:
+    #     - *.example.com
+    #
 
 deployment:
   enableDaemonSet: true

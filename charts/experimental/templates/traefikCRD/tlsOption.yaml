@@ -1,0 +1,28 @@
+{{ if (include "authelia.ingress.traefikCRD.createTLSOption" .) -}}
+apiVersion: traefik.containo.us/v1alpha1
+kind: TLSOption
+metadata:
+  name: {{ default (include "authelia.name" .) .nameOverride }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{- include "authelia.labels" . | nindent 4 }}
+{{- if  (include "authelia.annotations" .)}}
+  annotations:
+{{- include "authelia.annotations" . | nindent 4 }}
+{{- end }}
+spec:
+  minVersion: {{ default "VersionTLS12" .Values.ingress.traefikCRD.tls.options.minVersion }}
+  maxVersion: {{ default "VersionTLS13" .Values.ingress.traefikCRD.tls.options.maxVersion }}
+{{- with .Values.ingress.traefikCRD.tls.options.curvePreferences }}
+  curvePreferences:
+{{ toYaml . | nindent 2 }}
+{{- end }}
+  cipherSuites:
+{{- if .Values.ingress.traefikCRD.tls.options.cipherSuites }}
+{{ toYaml .Values.ingress.traefikCRD.tls.options.cipherSuites | nindent 2 }}
+{{- else }}
+  - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+  - TLS_RSA_WITH_AES_256_GCM_SHA384
+{{- end }}
+  sniStrict: {{ default true .Values.ingress.traefikCRD.tls.options.sniStrict }}
+{{- end -}}

@@ -44,7 +44,7 @@ Returns if we should generate the secret
 Returns if we should create the Ingress kind
 */}}
 {{- define "authelia.ingress" -}}
-{{- if and .Values.ingress.enabled (not .Values.ingress.traefikCRD.enabled) -}}
+{{- if and .Values.ingress.enabled (not (include "authelia.ingress.traefikCRD.enabled" .)) -}}
     {{- true -}}
 {{- end -}}
 {{- end -}}
@@ -52,11 +52,30 @@ Returns if we should create the Ingress kind
 {{/*
 Returns if we should create the TraefikCRD kinds
 */}}
-{{- define "authelia.ingressTraefik" -}}
+{{- define "authelia.ingress.traefikCRD.enabled" -}}
 {{- if and .Values.ingress.enabled .Values.ingress.traefikCRD.enabled -}}
     {{- true -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Returns if we should use existing TraefikCRD TLSOption
+*/}}
+{{- define "authelia.ingress.traefikCRD.existingTLSOption" -}}
+{{- if and .Values.ingress.traefikCRD.tls.existingOptions -}}
+    {{- true -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Returns if we should create the TraefikCRD TLSOption
+*/}}
+{{- define "authelia.ingress.traefikCRD.createTLSOption" -}}
+{{- if and .Values.ingress.traefikCRD.tls (include "authelia.ingress.traefikCRD.enabled" .) (not (include "authelia.ingress.traefikCRD.existingTLSOption" .)) -}}
+    {{- true -}}
+{{- end -}}
+{{- end -}}
+
 
 {{/*
 Returns the common labels
