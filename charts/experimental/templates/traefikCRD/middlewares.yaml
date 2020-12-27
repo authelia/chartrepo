@@ -32,7 +32,6 @@ metadata:
 spec:
   headers:
     browserXssFilter: true
-    contentTypeNosniff: true
     customFrameOptionsValue: "SAMEORIGIN"
     customResponseHeaders:
       Cache-Control: "no-store"

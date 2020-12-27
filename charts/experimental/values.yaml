@@ -121,9 +121,9 @@ ingress:
     tls: {}
     # tls:
     #   secretName: traefik-example-com-wildcard
-    #  existingOptions
-    #       name: default-traefik-options
-    #       namespace: default
+    #   existingOptions
+    #     name: default-traefik-options
+    #     namespace: default
     #   options:
     #     nameOverride: authelia-tls-options
     #     minVersion: VersionTLS12
@@ -160,6 +160,11 @@ deployment:
     allowPrivilegeEscalation: false
     privileged: false
 
+  # podDisruptionBudget: {}
+  podDisruptionBudget:
+    minAvailable: 1
+    maxUnavailable: 1
+  
   tolerations: []
   # tolerations:
   # - key: key1
@@ -219,6 +224,7 @@ deployment:
       #         topologyKey: topology.kubernetes.io/zone
 
   extraEnv: []
+  # extraEnv:
   # - name: TZ
   #   value: Australia/Melbourne
 
@@ -271,6 +277,27 @@ deployment:
 
   extraVolumeMounts: []
   extraVolumes: []
+
+
+##
+## Kubernetes Network Policy
+##
+networkPolicy:
+  enabled: false
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          authelia.com/network-policy: namespace
+    - podSelector:
+        matchLabels:
+          authelia.com/network-policy: pod
+    ports:
+    - protocol: TCP
+      port: 9091
+
 
 ##
 ## Authelia Config Map Generator
@@ -458,7 +485,7 @@ configMap:
       ## display_name_attribute: displayname
 
       ## The username and password of the admin user.
-      user: cn=admin,dc=example,dc=com
+      user: CN=Authelia,DC=example,DC=com
   ##
   ## Access Control
   ##

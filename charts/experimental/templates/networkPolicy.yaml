@@ -1,0 +1,27 @@
+{{- if .Values.networkPolicy.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "authelia.name" . }}
+  labels:
+{{- include "authelia.labels" . | nindent 4 }}
+{{- if (include "authelia.annotations" .) }}
+  annotations:
+{{- include "authelia.annotations" . | nindent 4 }}
+{{- end }}
+spec:
+  podSelector:
+    matchLabels:
+{{- include "authelia.matchLabels" . | nindent 6 }}
+  policyTypes:
+{{ toYaml .Values.networkPolicy.policyTypes | nindent 2 }}
+{{- with .Values.networkPolicy.ingress }}
+  ingress:
+{{- toYaml . | nindent 4 }}
+{{- end }}
+{{- with .Values.networkPolicy.egress }}
+  egress:
+{{- toYaml . | nindent 4 }}
+{{- end }}
+{{- end -}}

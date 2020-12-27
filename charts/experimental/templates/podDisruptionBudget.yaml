@@ -1,0 +1,20 @@
+{{- if .Values.deployment.podDisruptionBudget }}
+---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "authelia.name" . }}
+  labels:
+{{- include "authelia.labels" . | nindent 4 }}
+{{- if (include "authelia.annotations" .) }}
+  annotations:
+{{- include "authelia.annotations" . | nindent 4 }}
+{{- end }}
+spec:
+{{- with .Values.deployment.podDisruptionBudget }}
+{{- toYaml . | nindent 2 }}
+{{- end }}
+  selector:
+    matchLabels:
+{{- include "authelia.matchLabels" . | nindent 6 }}
+{{- end -}}
