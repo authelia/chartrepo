@@ -43,7 +43,7 @@ service:
   ## loadBalancerIP is used with the LoadBalancer type.
   ##
   # nodePort: 9091
-  # clusterIP: 
+  # clusterIP:
   # loadBalancerIP:
 
 
@@ -80,7 +80,7 @@ ingress:
 
     # weight: 10
 
-    sticky: true
+    sticky: false
 
     # stickyCookieNameOverride: authelia_traefik_lb
 
@@ -160,10 +160,10 @@ deployment:
     allowPrivilegeEscalation: false
     privileged: false
 
-  # podDisruptionBudget: {}
-  podDisruptionBudget:
-    minAvailable: 1
-    maxUnavailable: 1
+  podDisruptionBudget: {}
+  # podDisruptionBudget:
+  #   minAvailable: 1
+  #   maxUnavailable: 1
   
   tolerations: []
   # tolerations:

@@ -214,7 +214,7 @@ Returns the ingress hostname with the path
 
 
 {{/*
-Returns applicable deployment API version
+Returns applicable Deployment API version
 */}}
 {{- define "capabilities.apiVersion.deployment" -}}
 {{- if .Capabilities.APIVersions.Has "apps/v1/Deployment" -}}
@@ -223,13 +223,15 @@ Returns applicable deployment API version
 {{- print "apps/v1beta2" -}}
 {{- else if .Capabilities.APIVersions.Has "apps/v1beta1/Deployment" -}}
 {{- print "apps/v1beta1" -}}
-{{- else -}}
+{{- else if .Capabilities.APIVersions.Has "extensions/v1beta1" -}}
 {{- print "extensions/v1beta1" -}}
+{{- else -}}
+{{- print "apps/v1" -}}
 {{- end }}
 {{- end -}}
 
 {{/*
-Returns applicable daemonset API version
+Returns applicable DaemonSet API version
 */}}
 {{- define "capabilities.apiVersion.daemonSet" -}}
 {{- if .Capabilities.APIVersions.Has "apps/v1/DaemonSet" -}}
@@ -238,20 +240,24 @@ Returns applicable daemonset API version
 {{- print "apps/v1beta2" -}}
 {{- else if .Capabilities.APIVersions.Has "apps/v1beta1/DaemonSet" -}}
 {{- print "apps/v1beta1" -}}
-{{- else -}}
+{{- else if .Capabilities.APIVersions.Has "extensions/v1beta1" -}}
 {{- print "extensions/v1beta1" -}}
+{{- else -}}
+{{- print "apps/v1" -}}
 {{- end }}
 {{- end -}}
 
 {{/*
-Returns applicable ingress API version
+Returns applicable Ingress API version
 */}}
 {{- define "capabilities.apiVersion.ingress" -}}
 {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress" -}}
 {{- print "networking.k8s.io/v1" -}}
 {{- else if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1/Ingress" -}}
 {{- print "networking.k8s.io/v1beta1" -}}
-{{- else -}}
+{{- else if .Capabilities.APIVersions.Has "extensions/v1beta1" -}}
 {{- print "extensions/v1beta1" -}}
+{{- else -}}
+{{- print "networking.k8s.io/v1" -}}
 {{- end }}
 {{- end -}}
