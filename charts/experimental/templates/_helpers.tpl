@@ -223,8 +223,6 @@ Returns applicable Deployment API version
 {{- print "apps/v1beta2" -}}
 {{- else if .Capabilities.APIVersions.Has "apps/v1beta1/Deployment" -}}
 {{- print "apps/v1beta1" -}}
-{{- else if .Capabilities.APIVersions.Has "extensions/v1beta1" -}}
-{{- print "extensions/v1beta1" -}}
 {{- else -}}
 {{- print "apps/v1" -}}
 {{- end }}
@@ -240,8 +238,6 @@ Returns applicable DaemonSet API version
 {{- print "apps/v1beta2" -}}
 {{- else if .Capabilities.APIVersions.Has "apps/v1beta1/DaemonSet" -}}
 {{- print "apps/v1beta1" -}}
-{{- else if .Capabilities.APIVersions.Has "extensions/v1beta1" -}}
-{{- print "extensions/v1beta1" -}}
 {{- else -}}
 {{- print "apps/v1" -}}
 {{- end }}
@@ -255,8 +251,6 @@ Returns applicable Ingress API version
 {{- print "networking.k8s.io/v1" -}}
 {{- else if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1/Ingress" -}}
 {{- print "networking.k8s.io/v1beta1" -}}
-{{- else if .Capabilities.APIVersions.Has "extensions/v1beta1" -}}
-{{- print "extensions/v1beta1" -}}
 {{- else -}}
 {{- print "networking.k8s.io/v1" -}}
 {{- end }}

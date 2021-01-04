@@ -4,7 +4,7 @@
 image:
   registry: docker.io
   repository: authelia/authelia
-  tag: 4.24.1
+  tag: 4.25.0
   pullPolicy: IfNotPresent
   pullSecrets: []
   # pullSecrets:
@@ -17,11 +17,11 @@ image:
 ## extra labels/annotations applied to all resources
 ##
 extraLabels: {}
-# extraLabels: 
+# extraLabels:
 #   myLabel: myValue
 
 extraAnnotations: {}
-# extraAnnotations: 
+# extraAnnotations:
 #   myAnnotation: myValue
 
 service:
@@ -29,11 +29,11 @@ service:
   type: ClusterIP
 
   extraLabels: {}
-  # extraLabels: 
+  # extraLabels:
   #   myLabel: myValue
 
   extraAnnotations: {}
-  # extraAnnotations: 
+  # extraAnnotations:
   #   myAnnotation: myValue
 
   port: 80
@@ -53,9 +53,9 @@ ingress:
   rewriteTarget: true
 
   ## Subdomain is the only thing required since we specify the domain as part of the configuration section.
-  ## Example: To get Authelia to listen on https://auth.example.com specify 'auth' for subdomain, 
+  ## Example: To get Authelia to listen on https://auth.example.com specify 'auth' for subdomain,
   ## and specify example.com for the configuration.domain.
-  
+
   subdomain: auth
   tls: true
   tlsSecret: authelia-tls
@@ -144,7 +144,7 @@ ingress:
 
 deployment:
   enableDaemonSet: true
-  
+
   replicas: 1
   revisionHistoryLimit: 5
 
@@ -164,7 +164,7 @@ deployment:
   # podDisruptionBudget:
   #   minAvailable: 1
   #   maxUnavailable: 1
-  
+
   tolerations: []
   # tolerations:
   # - key: key1
@@ -232,11 +232,11 @@ deployment:
     limits: {}
     # limits:
     #   cpu: "4.00"
-    #   memory: 40Mi
+    #   memory: 125Mi
     requests: {}
     # requests:
     #   cpu: "0.25"
-    #   memory: 30Mi
+    #   memory: 50Mi
 
   probes:
     ## The probe http path to use. Default is recommended.
@@ -268,11 +268,11 @@ deployment:
   ## extra labels/annotations applied to the authelia deployment/daemonset
   ##
   extraLabels: {}
-  # extraLabels: 
+  # extraLabels:
   #   myLabel: myValue
 
   extraAnnotations: {}
-  # extraAnnotations: 
+  # extraAnnotations:
   #   myAnnotation: myValue
 
   extraVolumeMounts: []
@@ -305,11 +305,11 @@ networkPolicy:
 configMap:
 
   extraLabels: {}
-  # extraLabels: 
+  # extraLabels:
   #   myLabel: myValue
 
   extraAnnotations: {}
-  # extraAnnotations: 
+  # extraAnnotations:
   #   myAnnotation: myValue
 
   ##
@@ -421,14 +421,13 @@ configMap:
       ## The url to the ldap server. Scheme can be ldap or ldaps in the format (port optional) <scheme>://<address>[:<port>].
       url: ldap://openldap.default.svc.cluster.local
 
-      ## Skip verifying the server certificate (to allow a self-signed certificate).
-      # skip_verify: false
-
       ## Use StartTLS with the LDAP connection.
       # start_tls: false
 
-      ## Minimum TLS version for either Secure LDAP or LDAP StartTLS.
-      # minimum_tls_version: TLS1.2
+      # tls:
+      #   server_name: openldap.default.svc.cluster.local
+      #   minimum_version: TLS1.2
+      #   skip_verify: false
 
       ## The base dn for every entries.
       base_dn: DC=example,DC=com
@@ -698,8 +697,12 @@ configMap:
       ## This address is used during the startup check to verify the email configuration is correct. It's not important what it is except if your email server only allows local delivery.
       startup_check_address: test@authelia.com
       # disable_require_tls: false
-      # disable_verify_cert: false
       # disable_html_emails: false
+      # tls:
+      #   server_name: smtp.mail.svc.cluster.local
+      #   minimum_version: TLS1.2
+      #   skip_verify: false
+
 
 ##
 ## Authelia Secret Generator.
@@ -712,11 +715,11 @@ secret:
   # existingSecretName: authelia
 
   extraLabels: {}
-  # extraLabels: 
+  # extraLabels:
   #   myLabel: myValue
 
   extraAnnotations: {}
-  # extraAnnotations: 
+  # extraAnnotations:
   #   myAnnotation: myValue
 
   jwt:
