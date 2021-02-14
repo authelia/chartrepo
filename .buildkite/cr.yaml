@@ -1,3 +1,12 @@
+git-base-url: https://api.github.com
+git-upload-url: https://uploads.github.com
+charts-repo: https://authelia.github.io/chartrepo
 owner: authelia
 git-repo: chartrepo
-package-path:
+index-path: .cr-index/index.yaml
+package-path: .cr-release-packages
+pages-branch: gh-pages
+release-name-template: "{{ .Name }}-{{ .Version }}"
+remote: origin
+sign: false
+key: ''
