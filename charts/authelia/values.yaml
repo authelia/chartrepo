@@ -25,6 +25,13 @@ extraLabels: { }
 # extraLabels:
 #   myLabel: myValue
 
+## Authelia Domain
+## Should be the root domain you want to protect.
+## For example if you have apps app1.example.com and app2.example.com it should be example.com
+## This affects the ingress (partially sets the domain used) and configMap.
+## Authelia must be served from the domain or a subdomain under it.
+domain: example.com
+
 service:
   annotations: { }
   # annotations:
@@ -54,11 +61,11 @@ ingress:
   certManager: false
   rewriteTarget: true
 
-  ## Subdomain is the only thing required since we specify the domain as part of the configuration section.
-  ## Example: To get Authelia to listen on https://auth.example.com specify 'auth' for subdomain,
-  ## and specify example.com for the configuration.domain.
-
+  ## Subdomain is the only thing required since we specify the domain as part of the root values of the chart.
+  ## Example: To get Authelia to listen on https://auth.example.com specify 'auth' for ingress.subdomain,
+  ## and specify example.com for the domain.
   subdomain: auth
+
   tls: true
   tlsSecret: authelia-tls
 
@@ -350,11 +357,6 @@ configMap:
   ##
   # port: 9091
 
-  ##
-  ## Domain is used to set the domain for the session, and defaults for the default_redirection_url, and totp issuer.
-  ##
-  domain: example.com
-
   ## Configuration options specific to the internal http server
   server:
     ## Buffers usually should be configured to be the same value.
@@ -381,7 +383,7 @@ configMap:
   ##
   ## Note: this parameter is optional. If not provided, user won't
   ## be redirected upon successful authentication.
-  ## Default is https://<config.domain> (value above in this chart).
+  ## Default is https://www.<domain> (value at the top of the values.yaml).
   ##
   # default_redirection_url: https://example.com
 
@@ -391,7 +393,7 @@ configMap:
   totp: { }
     ## The issuer name displayed in the Authenticator application of your choice
     ## See: https://github.com/google/google-authenticator/wiki/Key-Uri-Format for more info on issuer names
-    ## Defaults to <config.domain>.
+    ## Defaults to <domain>.
     ##
     # issuer: example.com
 

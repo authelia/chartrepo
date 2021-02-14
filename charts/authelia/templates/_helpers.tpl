@@ -198,7 +198,11 @@ Returns the smtp password or a randomly generated one
 Returns the ingress hostname
 */}}
 {{- define "authelia.ingressHost" -}}
-    {{- printf "%s.%s" (default "auth" .Values.ingress.subdomain) .Values.configMap.domain -}}
+    {{- if .Values.ingress.subdomain -}}
+        {{- printf "%s.%s" (default "auth" .Values.ingress.subdomain) .Values.domain -}}
+    {{- else -}}
+        {{- .Values.domain -}}
+    {{- end -}}
 {{- end -}}
 
 {{/*

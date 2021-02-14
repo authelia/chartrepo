@@ -14,13 +14,13 @@ data:
     port: {{ default 9091 .Values.configMap.port }}
     theme: {{ default "light" .Values.configMap.theme }}
     log_level: {{ default "info" .Values.configMap.log_level  }}
-    default_redirection_url: {{ default (printf "https://www.%s" .Values.configMap.domain) .Values.configMap.default_redirection_url }}
+    default_redirection_url: {{ default (printf "https://www.%s" .Values.domain) .Values.configMap.default_redirection_url }}
     {{- if (include "authelia.enabled.certificatesSecret" .) }}
     certificates_directory: /usr/app/certificates
     {{- end }}
     server: {{ toYaml .Values.configMap.server | nindent 6 }}
     totp:
-      issuer: {{ .Values.configMap.domain }}
+      issuer: {{ .Values.domain }}
       period: {{ default 30 .Values.configMap.totp.period }}
       skew: {{ default 1 .Values.configMap.totp.skew }}
     {{- with $duoApi := .Values.configMap.duo_api }}
@@ -36,7 +36,7 @@ data:
     {{- end }}
     session:
       name: {{ default "authelia_session" .Values.configMap.session.name }}
-      domain: {{ .Values.configMap.domain }}
+      domain: {{ .Values.domain }}
       expiration: {{ default "1M" .Values.configMap.session.expiration }}
       inactivity: {{ default "5m" .Values.configMap.session.inactivity }}
       remember_me_duration: {{ default "1M" .Values.configMap.session.remember_me_duration }}
