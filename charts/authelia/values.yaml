@@ -265,13 +265,14 @@ pod:
       successThreshold: 1
       failureThreshold: 5
 
-    ## Note: Startup Probes are generally not enabled unless you enable them manually in the kubelet.
-    # startup:
-    #   initialDelaySeconds: 20
-    #   periodSeconds: 5
-    #   timeoutSeconds: 5
-    #   successThreshold: 1
-    #   failureThreshold: 6
+    ## Note: Startup Probes are a Kubernetes feature gate which must be manually enabled pre-1.18.
+    ## Ref: https://kubernetes.io/docs/reference/command-line-tools-reference/feature-gates/
+    startup:
+      initialDelaySeconds: 20
+      periodSeconds: 5
+      timeoutSeconds: 5
+      successThreshold: 1
+      failureThreshold: 6
 
   extraVolumeMounts: [ ]
   extraVolumes: [ ]

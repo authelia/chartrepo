@@ -1,10 +1,18 @@
 apiVersion: v2
 name: authelia
-version: 0.1.0
+version: 0.1.1
 kubeVersion: ">= 1.13.0"
-description: Authelia Chart
+description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
-keywords: []
+keywords:
+- SSO
+- Authentication
+- Security
+- Two-Factor
+- U2F
+- YubiKey
+- Push Notifications
+- LDAP
 home: https://www.authelia.com
 sources:
 - https://github.com/authelia/chartrepo/tree/master/charts/authelia
