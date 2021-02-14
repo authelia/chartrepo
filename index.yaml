@@ -1,0 +1,24 @@
+apiVersion: v1
+entries:
+  authelia:
+  - apiVersion: v2
+    appVersion: 4.26.1
+    created: "2021-02-14T13:07:48.0370072+11:00"
+    description: Authelia Chart
+    digest: abce47b2cb616a168b85ffb0cc986e5196ab536d6f11141d13742529c1d76ab6
+    home: https://www.authelia.com
+    icon: https://avatars2.githubusercontent.com/u/59122411?s=200&v=4
+    kubeVersion: '>= 1.13.0'
+    maintainers:
+    - email: james-d-elliott@users.noreply.github.com
+      name: james-d-elliott
+      url: https://github.com/james-d-elliott
+    name: authelia
+    sources:
+    - https://www.github.com/authelia/chartrepo/charts/authelia/
+    - https://www.github.com/authelia/authelia
+    type: application
+    urls:
+    - https://github.com/authelia/chartrepo/releases/download/authelia-0.1.0/authelia-0.1.0.tgz
+    version: 0.1.0
+generated: "2021-02-14T13:07:47.6884023+11:00"
