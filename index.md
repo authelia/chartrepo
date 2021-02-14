@@ -4,18 +4,17 @@ layout: default
 
 ## Getting Started
 
-{{ site.description }}
+**{{ site.description }}**
 
-Make sure [Helm](https://helm.sh) is [installed](https://helm.sh/docs/intro/install/).
+1. Make sure [Helm](https://helm.sh) is [installed](https://helm.sh/docs/intro/install/).
 
-You can then add this repository to your local helm configuration as follows:
-
+2. You can then add this repository to your local helm configuration as follows:
 ```console
 $ helm repo add {{ site.repo_name }} {{ site.url }}
 $ helm repo update
 ```
-You can then see the charts in our repository [here](#charts) or using the following command:
 
+3. You can then see the charts in our repository in the [Charts](#charts) section of this page or using the following command:
 ```console
 $ helm search repo authelia
 ```
