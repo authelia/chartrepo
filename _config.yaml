@@ -1,0 +1,10 @@
+# _config.yaml
+title: Authelia Helm Chart Repository
+description: A chart repo for storing charts.
+theme: minima
+url: "https://charts.authelia.com"
+repo_name: authelia
+exclude:
+- Gemfile
+- Gemfile.lock
+- .gitignore

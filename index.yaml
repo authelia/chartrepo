@@ -15,7 +15,7 @@ entries:
       url: https://github.com/james-d-elliott
     name: authelia
     sources:
-    - https://www.github.com/authelia/chartrepo/charts/authelia/
+    - https://github.com/authelia/chartrepo/tree/master/charts/authelia
     - https://www.github.com/authelia/authelia
     type: application
     urls:
