@@ -41,11 +41,11 @@ $ helm search repo authelia
 $ helm install {{ site.repo_name }}/{{ latest_chart.name }} --name myrelease --version {{ latest_chart.version }}
 ```
 
-| Chart Version | App Version | API Version | Date |
-|---------------|-------------|-------------|------|
+| Chart Version | App Version | [API Version](https://helm.sh/docs/topics/charts/#the-apiversion-field) | Date |
+|---------------|-------------|-------------------------------------------------------------------------|------|
 {% for chart in all_charts -%}
 {% unless chart.version contains "-" -%}
-| [{{ chart.version }}]({{ chart.urls[0] }}) | {{ chart.appVersion }} | {{ chart.apiVersion }} | {{ chart.created | date_to_rfc822 }} |
+| [{{ chart.version }}]({{ chart.urls[0] }}) | [{{ chart.appVersion }}]({{ chart.sources[1]}}/releases/tag/v{{chart.appVersion}}) | {{ chart.apiVersion }} | {{ chart.created | date_to_rfc822 }} |
 {% endunless -%}
 {% endfor -%}
 {% endfor %}
