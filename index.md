@@ -6,11 +6,18 @@ layout: default
 
 {{ site.description }}
 
-You can add this repository to your local helm configuration as follows :
+Make sure [Helm](https://helm.sh) is [installed](https://helm.sh/docs/intro/install/).
+
+You can then add this repository to your local helm configuration as follows:
 
 ```console
 $ helm repo add {{ site.repo_name }} {{ site.url }}
 $ helm repo update
+```
+You can then see the charts in our repository [here](#charts) or using the following command:
+
+```console
+$ helm search repo authelia
 ```
 
 ## Charts
@@ -27,7 +34,7 @@ $ helm repo update
   {{ title }}
 </h3>
 
-[Home]({{ latest_chart.home }}) \| [Source]({{ latest_chart.sources[0] }})
+[Home]({{ latest_chart.home }}) \| [Chart Source]({{ latest_chart.sources[0] }}) \| [Application Source]({{ latest_chart.sources[1] }})
 
 {{ latest_chart.description }}
 
@@ -42,5 +49,4 @@ $ helm install {{ site.repo_name }}/{{ latest_chart.name }} --name myrelease --v
 | [{{ chart.version }}]({{ chart.urls[0] }}) | {{ chart.appVersion }} | {{ chart.created | date_to_rfc822 }} |
 {% endunless -%}
 {% endfor -%}
-
 {% endfor %}
