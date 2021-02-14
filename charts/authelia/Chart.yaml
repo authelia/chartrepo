@@ -7,7 +7,7 @@ type: application
 keywords: []
 home: https://www.authelia.com
 sources:
-- https://www.github.com/authelia/chartrepo/charts/authelia/
+- https://github.com/authelia/chartrepo/tree/master/charts/authelia
 - https://www.github.com/authelia/authelia
 dependencies: []
 maintainers:

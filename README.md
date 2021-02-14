@@ -7,16 +7,4 @@ development.
 
 ## Getting Started
 
-Make sure [Helm](https://helm.sh) is [installed](https://helm.sh/docs/intro/install/).
-
-Once you've installed [Helm](https://helm.sh):
-
-```console
-helm repo add authelia https://authelia.github.io/chartrepo
-```
-
-You can then the following command to see the charts in our repository:
-
-```console
-helm search repo authelia
-```
+Visit the [Helm Repository](https://charts.authelia.com) for instructions.
