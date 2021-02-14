@@ -6,7 +6,7 @@ layout: default
 
 {{ site.description }}
 
-You can add this repository to your local helm configuration as follows:
+You can add this repository to your local helm configuration as follows :
 
 ```console
 $ helm repo add {{ site.repo_name }} {{ site.url }}
@@ -39,7 +39,7 @@ $ helm install {{ site.repo_name }}/{{ latest_chart.name }} --name myrelease --v
 |---------------|-------------|------|
 {% for chart in all_charts -%}
 {% unless chart.version contains "-" -%}
-| [{{ chart.name }}-{{ chart.version }}]({{ chart.urls[0] }}) | {{ chart.appVersion }} | {{ chart.created | date_to_rfc822 }} |
+| [{{ chart.version }}]({{ chart.urls[0] }}) | {{ chart.appVersion }} | {{ chart.created | date_to_rfc822 }} |
 {% endunless -%}
 {% endfor -%}
 
