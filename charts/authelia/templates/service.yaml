@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "authelia.name" . }}
+  labels: {{ include "authelia.labels" (merge (dict "Labels" .Values.service.labels) .) | nindent 4 }}
+  {{- with $annotations := include "authelia.annotations" (merge (dict "Annotations" .Values.service.annotations) .) }}
+  annotations: {{ $annotations | nindent 4 }}
+  {{- end }}
+spec:
+  type: ClusterIP
+  {{- with $ip := .Values.service.clusterIP }}
+  clusterIP: {{ $ip }}
+  {{- end }}
+  selector: {{- include "authelia.matchLabels" . | nindent 4 }}
+  ports:
+  - name: http
+    protocol: TCP
+    port: {{ include "authelia.service.port" . }}
+    targetPort: http

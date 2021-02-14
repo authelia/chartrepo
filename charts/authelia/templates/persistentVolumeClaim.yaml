@@ -1,0 +1,22 @@
+{{- if include "authelia.generate.persistentVolumeClaim" . }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "authelia.name" . }}
+  labels: {{ include "authelia.labels" (merge (dict "Labels" .Values.persistence.labels) .) | nindent 4 }}
+  {{- with $annotations := include "authelia.annotations" (merge (dict "Annotations" .Values.persistence.annotations) .) }}
+  annotations: {{ $annotations | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes: {{ toYaml (default (list "ReadWriteOnce") .Values.persistence.accessModes) | nindent 2 }}
+  {{- with $storageClass := .Values.persistence.storageClass }}
+  storageClassName: {{ $storageClass }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ default "100Mi" .Values.persistence.size }}
+  {{- with $selector := .Values.persistence.selector }}
+  selector: {{ toYaml $selector | nindent 4 }}
+  {{- end }}
+  {{- end }}

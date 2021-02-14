@@ -1,21 +1,20 @@
 apiVersion: v2
 name: authelia
-version: 0.1.1
+version: 0.1.0
 kubeVersion: ">= 1.13.0"
-description: Authelia Experimental Chart
+description: Authelia Chart
 type: application
 keywords: []
 home: https://www.authelia.com
 sources:
-  - https://www.github.com/authelia/chartrepo/charts/experimental/
-  - https://www.github.com/authelia/authelia
+- https://www.github.com/authelia/chartrepo/charts/authelia/
+- https://www.github.com/authelia/authelia
 dependencies: []
 maintainers:
   - name: james-d-elliott
     email: james-d-elliott@users.noreply.github.com
     url: https://github.com/james-d-elliott
 icon: https://avatars2.githubusercontent.com/u/59122411?s=200&v=4
-appVersion: 4.25.0
+appVersion: 4.26.1
 deprecated: false
-annotations:
-  alpha: "true"
+annotations: { }

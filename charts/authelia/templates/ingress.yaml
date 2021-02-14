@@ -1,0 +1,33 @@
+{{- if (include "authelia.enabled.ingress.standard" .) }}
+---
+apiVersion: {{ include "capabilities.apiVersion.ingress" . }}
+kind: Ingress
+metadata:
+  name: {{ include "authelia.name" . }}
+  labels: {{ include "authelia.labels" (merge (dict "Labels" .Values.ingress.labels) .) | nindent 4 }}
+  {{- with $annotations := (include "authelia.ingress.annotations" .) }}
+  annotations: {{ $annotations | nindent 4 }}
+  {{- end }}
+spec:
+  rules:
+  - host: {{ include "authelia.ingressHost" . }}
+    http:
+      paths:
+      - path: {{ (include "authelia.path" .) }}
+        backend:
+          {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress" }}
+          service:
+            name: {{ include "authelia.name" . }}
+            port:
+              number: {{ include "authelia.service.port" . }}
+          {{- else }}
+          serviceName: {{ include "authelia.name" . }}
+          servicePort: {{ include "authelia.service.port" . }}
+  {{- end }}
+{{- if .Values.ingress.tls }}
+  tls:
+  - hosts:
+    - {{ include "authelia.ingressHost" . }}
+    secretName: {{ .Values.ingress.tlsSecret }}
+{{- end -}}
+{{- end -}}

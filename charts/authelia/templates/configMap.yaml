@@ -1,0 +1,63 @@
+{{- if (include "authelia.generate.configMap" .) }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "authelia.name" . }}
+  labels: {{ include "authelia.labels" (merge (dict "Labels" .Values.configMap.labels) .) | nindent 4 }}
+  {{- with $annotations := include "authelia.annotations" (merge (dict "Annotations" .Values.configMap.annotations) .) }}
+  annotations: {{ $annotations | nindent 4 }}
+  {{- end }}
+data:
+  {{ default "configuration.yml" .Values.configMap.key }}: |
+    host: 0.0.0.0
+    port: {{ default 9091 .Values.configMap.port }}
+    theme: {{ default "light" .Values.configMap.theme }}
+    log_level: {{ default "info" .Values.configMap.log_level  }}
+    default_redirection_url: {{ default (printf "https://www.%s" .Values.configMap.domain) .Values.configMap.default_redirection_url }}
+    {{- if (include "authelia.enabled.certificatesSecret" .) }}
+    certificates_directory: /usr/app/certificates
+    {{- end }}
+    server: {{ toYaml .Values.configMap.server | nindent 6 }}
+    totp:
+      issuer: {{ .Values.configMap.domain }}
+      period: {{ default 30 .Values.configMap.totp.period }}
+      skew: {{ default 1 .Values.configMap.totp.skew }}
+    {{- with $duoApi := .Values.configMap.duo_api }}
+    duo_api: {{ toYaml $duoApi | nindent 6 }}
+    {{- end }}
+    authentication_backend:
+      disable_reset_password: {{ .Values.configMap.authentication_backend.disable_reset_password }}
+    {{- with $file := .Values.configMap.authentication_backend.file }}
+      file: {{ toYaml $file | nindent 8 }}
+    {{- end }}
+    {{- with $ldap := .Values.configMap.authentication_backend.ldap }}
+      ldap: {{ toYaml $ldap | nindent 8 }}
+    {{- end }}
+    session:
+      name: {{ default "authelia_session" .Values.configMap.session.name }}
+      domain: {{ .Values.configMap.domain }}
+      expiration: {{ default "1M" .Values.configMap.session.expiration }}
+      inactivity: {{ default "5m" .Values.configMap.session.inactivity }}
+      remember_me_duration: {{ default "1M" .Values.configMap.session.remember_me_duration }}
+    {{- with $redis := .Values.configMap.session.redis }}
+      redis: {{ toYaml $redis | nindent 8 }}
+    {{- end }}
+    regulation: {{ toYaml .Values.configMap.regulation | nindent 6 }}
+    storage:
+    {{- with $local := .Values.configMap.storage.local }}
+      local: {{ toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with $mysql := .Values.configMap.storage.mysql }}
+      mysql: {{ toYaml $mysql | nindent 8 }}
+    {{- end }}
+    {{- with $postgres := .Values.configMap.storage.postgres }}
+      postgres: {{ toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with $smtp := .Values.configMap.notifier.smtp }}
+    notifier:
+      disable_startup_check: {{ $.Values.configMap.notifier.disable_startup_check }}
+      smtp: {{ toYaml $smtp | nindent 8 }}
+    {{- end }}
+    access_control: {{ toYaml .Values.configMap.access_control | nindent 6 }}
+  {{- end }}

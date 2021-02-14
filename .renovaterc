@@ -1,0 +1,14 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "automerge": true,
+  "automergeType": "pr",
+  "bumpVersion": "patch",
+  "enabledManagers": [
+    "helmv3",
+    "helm-values"
+  ],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "rebaseWhen": "behind-base-branch"
+}

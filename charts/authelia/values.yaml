@@ -4,51 +4,53 @@
 image:
   registry: docker.io
   repository: authelia/authelia
-  tag: 4.25.0
+  tag: 4.26.1
   pullPolicy: IfNotPresent
-  pullSecrets: []
+  pullSecrets: [ ]
   # pullSecrets:
   #   - myPullSecretName
 
 # nameOverride: authelia-deployment-name
 # appNameOverride: authelia
 
-##
-## extra labels/annotations applied to all resources
-##
-extraLabels: {}
-# extraLabels:
-#   myLabel: myValue
 
-extraAnnotations: {}
+extraAnnotations: { }
 # extraAnnotations:
 #   myAnnotation: myValue
 
+##
+## extra labels/annotations applied to all resources
+##
+extraLabels: { }
+# extraLabels:
+#   myLabel: myValue
+
 service:
-  # ClusterIP, NodePort, LoadBalancer
-  type: ClusterIP
-
-  extraLabels: {}
-  # extraLabels:
-  #   myLabel: myValue
-
-  extraAnnotations: {}
-  # extraAnnotations:
+  annotations: { }
+  # annotations:
   #   myAnnotation: myValue
 
+  labels: { }
+  # labels:
+  #   myLabel: myValue
+
   port: 80
-  ##
-  ## nodePort is used with NodePort and LoadBalancer types.
-  ## clusterIP is used with the ClusterIP type.
-  ## loadBalancerIP is used with the LoadBalancer type.
-  ##
-  # nodePort: 9091
+
   # clusterIP:
-  # loadBalancerIP:
 
 
 ingress:
   enabled: false
+
+  annotations: { }
+  # annotations:
+  #   kubernetes.io/ingress.class: nginx
+  #   kubernetes.io/tls-acme: "true"
+
+  labels: { }
+  # labels:
+  #   myLabel: myValue
+
   certManager: false
   rewriteTarget: true
 
@@ -60,19 +62,12 @@ ingress:
   tls: true
   tlsSecret: authelia-tls
 
-  extraLabels: {}
-  # extraLabels:
-  #   myLabel: myValue
-
-  extraAnnotations: {}
-  # extraAnnotations:
-  #   kubernetes.io/ingress.class: nginx
-  #   kubernetes.io/tls-acme: "true"
-
   traefikCRD:
     enabled: false
 
-    entrypoints: []
+    # matchOverride: Host(`auth.example.com`) && PathPrefix(`/`)
+
+    entrypoints: [ ]
     # entrypoints:
     # - http
 
@@ -88,84 +83,95 @@ ingress:
 
     # responseForwardingFlushInterval: 100ms
 
-    # authMiddlewareNameOverride: authelia-auth
-    extraMiddlewares:
-      middleware:
-        before: []
-        # before:
-        # - name: extra-forward-auth-middleware-for-authelia
-        #   namespace: default
+    middlewares:
+      auth:
+        # nameOverride: authelia-auth
+        authResponseHeaders:
+        - Remote-User
+        - Remote-Name
+        - Remote-Email
+        - Remote-Groups
 
-        after: []
-        # after:
-        # - name: extra-forward-auth-middleware-for-authelia
-        #   namespace: default
+      chains:
+        auth:
+          # nameOverride: authelia-auth-chain
 
-      ingress:
-        before: []
-        # before:
-        # - name: extra-ingress-middleware-for-authelia
-        #   namespace: default
+          # List of Middlewares to apply before the forwardAuth Middleware in the authentication chain.
+          before: [ ]
+          # before:
+          # - name: extra-middleware-name
+          #   namespace: default
 
-        after: []
-        # after:
-        # - name: extra-ingress-middleware-for-authelia
-        #   namespace: default
+          # List of Middlewares to apply after the forwardAuth Middleware in the authentication chain.
+          after: [ ]
+          # after:
+          # - name: extra-middleware-name
+          #   namespace: default
 
-    authResponseHeaders:
-    - Remote-User
-    - Remote-Name
-    - Remote-Email
-    - Remote-Groups
+        ingressRoute:
 
-    tls: {}
-    # tls:
-    #   secretName: traefik-example-com-wildcard
-    #   existingOptions
-    #     name: default-traefik-options
-    #     namespace: default
-    #   options:
-    #     nameOverride: authelia-tls-options
-    #     minVersion: VersionTLS12
-    #     maxVersion: VersionTLS13
-    #     curvePreferences:
-    #     - CurveP521
-    #     - CurveP384
-    #     cipherSuites:
-    #     - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-    #     - TLS_RSA_WITH_AES_256_GCM_SHA384
-    #     sniStrict: true
-    #   certResolver: default
-    #   domains:
-    #   - main: example.com
-    #     sans:
-    #     - *.example.com
-    #
+          # List of Middlewares to apply before the middleware in the IngressRoute chain.
+          before: [ ]
+          # before:
+          # - name: extra-middleware-name
+          #   namespace: default
 
-deployment:
-  enableDaemonSet: true
+          # List of Middlewares to apply after the middleware in the IngressRoute chain.
+          after: [ ]
+          # after:
+          # - name: extra-middleware-name
+          #   namespace: default
+
+    tls:
+      #   secretName: traefik-example-com-wildcard
+      #   existingOptions
+      #     name: default-traefik-options
+      #     namespace: default
+      #   certResolver: default
+      #   domains:
+      #   - main: example.com
+      #     sans:
+      #     - *.example.com
+      #
+      options: { }
+      #   nameOverride: authelia-tls-options
+      #   minVersion: VersionTLS12
+      #   maxVersion: VersionTLS13
+      #   curvePreferences:
+      #   - CurveP521
+      #   - CurveP384
+      #   cipherSuites:
+      #   - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+      #   - TLS_RSA_WITH_AES_256_GCM_SHA384
+      #   sniStrict: true
+
+pod:
+  kind: DaemonSet
+
+  annotations: { }
+  # annotations:
+  #   myAnnotation: myValue
+
+  labels: { }
+  # labels:
+  #   myLabel: myValue
 
   replicas: 1
   revisionHistoryLimit: 5
 
   updateStrategy: RollingUpdate
 
-  containerSecurityContext:
-    runAsUser: 2000
-    runAsGroup: 2000
-    fsGroup: 2000
+  securityContext:
+    container:
+      runAsUser: 2000
+      runAsGroup: 2000
+      fsGroup: 2000
+    pod:
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      privileged: false
 
-  podSecurityContext:
-    readOnlyRootFilesystem: true
-    allowPrivilegeEscalation: false
-    privileged: false
-
-  podDisruptionBudget: {}
-  # podDisruptionBudget:
-  #   minAvailable: 1
-  #   maxUnavailable: 1
-
-  tolerations: []
+  tolerations: [ ]
   # tolerations:
   # - key: key1
   #   operator: Equal
@@ -223,34 +229,37 @@ deployment:
       #             - S2
       #         topologyKey: topology.kubernetes.io/zone
 
-  extraEnv: []
-  # extraEnv:
+  env: [ ]
+  # env:
   # - name: TZ
   #   value: Australia/Melbourne
 
   resources:
-    limits: {}
+    limits: { }
     # limits:
     #   cpu: "4.00"
     #   memory: 125Mi
-    requests: {}
+    requests: { }
     # requests:
     #   cpu: "0.25"
     #   memory: 50Mi
 
   probes:
-    ## The probe http path to use. Default is recommended.
-    # path: /api/health
+    method:
+      httpGet:
+        path: /api/health
+        port: http
+        scheme: HTTP
 
     liveness:
-      initialDelaySeconds: 30
+      initialDelaySeconds: 5
       periodSeconds: 30
       timeoutSeconds: 5
       successThreshold: 1
       failureThreshold: 5
 
     readiness:
-      initialDelaySeconds: 10
+      initialDelaySeconds: 5
       periodSeconds: 5
       timeoutSeconds: 5
       successThreshold: 1
@@ -258,32 +267,46 @@ deployment:
 
     ## Note: Startup Probes are generally not enabled unless you enable them manually in the kubelet.
     # startup:
-    #   initialDelaySeconds: 5
+    #   initialDelaySeconds: 20
     #   periodSeconds: 5
     #   timeoutSeconds: 5
     #   successThreshold: 1
     #   failureThreshold: 6
 
-  ##
-  ## extra labels/annotations applied to the authelia deployment/daemonset
-  ##
-  extraLabels: {}
-  # extraLabels:
-  #   myLabel: myValue
+  extraVolumeMounts: [ ]
+  extraVolumes: [ ]
 
-  extraAnnotations: {}
-  # extraAnnotations:
+##
+## Kubernetes Pod Disruption Budget
+##
+podDisruptionBudget:
+  enabled: false
+
+  annotations: { }
+  # annotations:
   #   myAnnotation: myValue
 
-  extraVolumeMounts: []
-  extraVolumes: []
+  labels: { }
+  # labels:
+  #   myLabel: myValue
 
+  # minAvailable: 1
+  # maxUnavailable: 1
 
 ##
 ## Kubernetes Network Policy
 ##
 networkPolicy:
   enabled: false
+
+  annotations: { }
+  # annotations:
+  #   myAnnotation: myValue
+
+  labels: { }
+  # labels:
+  #   myLabel: myValue
+
   policyTypes:
   - Ingress
   ingress:
@@ -304,13 +327,21 @@ networkPolicy:
 ##
 configMap:
 
-  extraLabels: {}
-  # extraLabels:
+  # Enable the configMap source for the Authelia config.
+  # If this is false you need to provide a volumeMount via PV/PVC or other means that mounts to /config.
+  enabled: true
+
+  annotations: { }
+  # annotations:
+  #   myAnnotation: myValue
+
+  labels: { }
+  # labels:
   #   myLabel: myValue
 
-  extraAnnotations: {}
-  # extraAnnotations:
-  #   myAnnotation: myValue
+  # key: configuration.yml
+
+  # existingConfigMap:
 
   ##
   ## Port sets the configured port for the daemon, service, and the probes.
@@ -356,7 +387,7 @@ configMap:
   ## TOTP Settings
   ##
   ## Parameters used for TOTP generation
-  totp: {}
+  totp: { }
     ## The issuer name displayed in the Authenticator application of your choice
     ## See: https://github.com/google/google-authenticator/wiki/Key-Uri-Format for more info on issuer names
     ## Defaults to <config.domain>.
@@ -366,22 +397,22 @@ configMap:
     ## The period in seconds a one-time password is current for. Changing this will require all users to register
     ## their TOTP applications again.
     ## Warning: before changing period read the docs link below.
-    # period: 30
+  # period: 30
 
-    ## The skew controls number of one-time passwords either side of the current one that are valid.
-    ## Warning: before changing skew read the docs link below.
-    # skew: 1
+  ## The skew controls number of one-time passwords either side of the current one that are valid.
+  ## Warning: before changing skew read the docs link below.
+  # skew: 1
 
-    ##  See: https://docs.authelia.com/configuration/one-time-password.html#period-and-skew to read the documentation.
+  ##  See: https://docs.authelia.com/configuration/one-time-password.html#period-and-skew to read the documentation.
 
   ##
   ## Duo Push API
   ##
   ## Parameters used to contact the Duo API. Those are generated when you protect an application
   ## of type "Partner Auth API" in the management panel.
-  # duo_api:
-    # hostname: api-123456789.example.com
-    # integration_key: ABCDEF
+  duo_api:
+    hostname: api-123456789.example.com
+    integration_key: ABCDEF
 
   ## The authentication backend to use for verifying user passwords
   ## and retrieve information such as email address and groups
@@ -485,6 +516,33 @@ configMap:
 
       ## The username and password of the admin user.
       user: CN=Authelia,DC=example,DC=com
+
+    # File backend configuration.
+    #
+    # With this backend, the users database is stored in a file
+    # which is updated when users reset their passwords.
+    # Therefore, this backend is meant to be used in a dev environment
+    # and not in production since it prevents Authelia to be scaled to
+    # more than one instance. The options under 'password' have sane
+    # defaults, and as it has security implications it is highly recommended
+    # you leave the default values. Before considering changing these settings
+    # please read the docs page below:
+    # https://docs.authelia.com/configuration/authentication/file.html#password-hash-algorithm-tuning
+    ##
+    ## ** WARNING **
+    ## Not using this authentication backend provider makes Authelia stateful.
+    ## If you use this in Kubernetes you SHOULD either use a single replica StatefulSet or disable password resets
+    ## otherwise you risk major issues.
+    ##
+    # file:
+    #   path: /config/users_database.yml
+    #   password:
+    #     algorithm: argon2id
+    #     iterations: 1
+    #     key_length: 32
+    #     salt_length: 16
+    #     memory: 1024
+    #     parallelism: 8
   ##
   ## Access Control
   ##
@@ -618,9 +676,14 @@ configMap:
     ## or attack. Currently the default is 1M or 1 month.
     remember_me_duration: 1M
 
+    ## Redis Session Provider
     ##
-    ## The redis connection details
+    ## Currently the only session providers are redis and memory.
+    ## If you don't define this section Authelia uses the memory provider, making Authelia stateful.
     ##
+    ## ** WARNING **
+    ## Not using this session provider makes Authelia stateful.
+    ## If you do not use this in Kubernetes you SHOULD use a single replica StatefulSet otherwise you risk major issues.
     redis:
       host: redis.databases.svc.cluster.local
       port: 6379
@@ -646,18 +709,36 @@ configMap:
     ## Value is in seconds or duration notation.
     ban_time: 5m
 
-  ## Configuration of the storage backend used to store data and secrets.
+  ## Configuration of the storage provider used to store data and secrets.
   ##
-  ## You must use only an available configuration: local, mysql, postgres
+  ## The available providers are local, mysql, or postgres.
+  ## You must use one of these providers, and you must not use more than one.
   storage:
-    ## Settings to connect to MySQL server
+    ## Local Storage Provider
+    ##
+    ## This stores the data in a SQLite3 Database.
+    ## This is only recommended for lightweight non-stateful installations.
+    ##
+    ## ** WARNING **
+    ## Use of this storage provider in makes Authelia stateful.
+    ## If you use this in Kubernetes you MUST use a StatefulSet otherwise you risk major issues.
+    # local:
+    #  ## The directory where the DB files will be saved
+    #  path: /config/db.sqlite3
+
+    ## MySQL Storage Provider
+    ##
+    ## Supports both MySQL and MariaDB.
+    ## MySQL or PostgreSQL are the recommended storage providers for production environments.
     mysql:
       host: mysql.databases.svc.cluster.local
       port: 3306
       database: authelia
       username: authelia
 
-    ## Settings to connect to PostgreSQL server
+    ## PostgreSQL Storage Provider
+    ##
+    ## MySQL or PostgreSQL are the recommended storage providers for production environments.
     # postgres:
     #   host: postgres.databases.svc.cluster.local
     #   port: 5432
@@ -707,20 +788,20 @@ configMap:
 ##
 ## Authelia Secret Generator.
 ##
-## If both the values and the existingSecretNames are not defined, this chart randomly generates a new secret on each
+## If both the values and existingSecret are not defined, this chart randomly generates a new secret on each
 ## install. It is recommended that you use something like sealed-secrets (https://github.com/bitnami-labs/sealed-secrets)
 ## and use the existingSecrets. All secrets can be stored in a single k8s secret if desired using the key option.
 ##
 secret:
-  # existingSecretName: authelia
+  # existingSecret: authelia
 
-  extraLabels: {}
-  # extraLabels:
-  #   myLabel: myValue
-
-  extraAnnotations: {}
-  # extraAnnotations:
+  annotations: { }
+  # annotations:
   #   myAnnotation: myValue
+
+  labels: { }
+  # labels:
+  #   myLabel: myValue
 
   jwt:
     key: JWT_TOKEN
@@ -745,3 +826,74 @@ secret:
     enabled: false
     key: SMTP_PASSWORD
     # value:
+
+certificates:
+  # existingSecret: authelia
+
+  annotations: { }
+  # annotations:
+  #   myAnnotation: myValue
+
+  labels: { }
+  # labels:
+  #   myLabel: myValue
+
+  values: { }
+  # values:
+  # - name: Example_Com_Root_Certificate_Authority_B64.pem
+  #   secretValue: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURYekNDQWtlZ0F3SUJBZ0lMQkFBQUFBQUJJVmhUQ0tJd0RRWUpLb1pJaHZjTkFRRUxCUUF3VERFZ01CNEcKQTFVRUN4TVhSMnh2WW1Gc1UybG5iaUJTYjI5MElFTkJJQzBnVWpNeEV6QVJCZ05WQkFvVENrZHNiMkpoYkZOcApaMjR4RXpBUkJnTlZCQU1UQ2tkc2IySmhiRk5wWjI0d0hoY05NRGt3TXpFNE1UQXdNREF3V2hjTk1qa3dNekU0Ck1UQXdNREF3V2pCTU1TQXdIZ1lEVlFRTEV4ZEhiRzlpWVd4VGFXZHVJRkp2YjNRZ1EwRWdMU0JTTXpFVE1CRUcKQTFVRUNoTUtSMnh2WW1Gc1UybG5iakVUTUJFR0ExVUVBeE1LUjJ4dlltRnNVMmxuYmpDQ0FTSXdEUVlKS29aSQpodmNOQVFFQkJRQURnZ0VQQURDQ0FRb0NnZ0VCQU13bGRwQjVCbmdpRnZYQWc3YUV5aWllL1FWMkVjV3RpSEw4ClJnSkR4N0tLblFSZkpNc3VTK0ZnZ2tiaFVxc01nVWR3Yk4xazBldjFMS01QZ2owTUs2NlgxN1lVaGhCNXV6c1QKZ0hlTUNPRkowbXBpTHg5ZStwWm8zNGtubFRpZkJ0Yyt5Y3NtV1ExejNyREk2U1lPZ3hYRzcxdUwwZ1JneWttbQpLUFpwTy9iTHlDaVI1WjJLWVZjM3JIUVUzSFRnT3U1eUx5NmMrOUM3di9VOUFPRUdNK2lDSzY1VHBqb1djNHpkClFRNGdPc0MwcDZIcHNrK1FMakpnNlZmTHVRU1NhR2psT0NaZ2RiS2ZkLytSRk8rdUlFbjhyVUFWU05FQ01XRVoKWHJpWDc2MTN0MlNhZXI5ZndSUHZtMkw3RFd6Z1ZHa1dxUVBhYnVtRGszRjJ4bW1GZ2hjQ0F3RUFBYU5DTUVBdwpEZ1lEVlIwUEFRSC9CQVFEQWdFR01BOEdBMVVkRXdFQi93UUZNQU1CQWY4d0hRWURWUjBPQkJZRUZJL3dTMytvCkxrVWtyazFRK21PYWk5N2kzUnU4TUEwR0NTcUdTSWIzRFFFQkN3VUFBNElCQVFCTFFOdkFVS3IreUF6djk1WlUKUlVtN2xnQUpRYXl6RTRhR0tBY3p5bXZtZExtNkFDMnVwQXJUOWZIeEQ0cS9jMmRLZzhkRWUzamdyMjVzYndNcApqak01UmNPTzVMbFhiS3I4RXBic1U4WXQ1Q1JzdVpSais5eFRhR2RXUG9PNHp6VWh3OGxvL3M3YXdsT3F6SkNLCjZmQmRSb3lWM1hwWUtCb3ZIZDdOQURkQmorMUViZGRUS0pkKzgyY0VIaFhYaXBhMDA5NU1KNlJNRzNOemR2UVgKbWNJZmVnN2pMUWl0Q2h3cy96eXJWUTRQa1g0MjY4TlhTYjdoTGkxOFlJdkRRVkVUSTUzTzl6SnJsQUdvbWVjcwpNeDg2T3lYU2hrRE9PeXlHZU1saEx4UzY3dHRWYjkrRTdnVUpUYjBvMkhMTzAySlFaUjdya3BlRE1kbXp0Y3BICldEOWYKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQ==
+  # - name: Example_Com_Root_Certificate_Authority.pem
+  #   value: |
+  #     -----BEGIN CERTIFICATE-----
+  #     MIIDXzCCAkegAwIBAgILBAAAAAABIVhTCKIwDQYJKoZIhvcNAQELBQAwTDEgMB4G
+  #     A1UECxMXR2xvYmFsU2lnbiBSb290IENBIC0gUjMxEzARBgNVBAoTCkdsb2JhbFNp
+  #     Z24xEzARBgNVBAMTCkdsb2JhbFNpZ24wHhcNMDkwMzE4MTAwMDAwWhcNMjkwMzE4
+  #     MTAwMDAwWjBMMSAwHgYDVQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEG
+  #     A1UEChMKR2xvYmFsU2lnbjETMBEGA1UEAxMKR2xvYmFsU2lnbjCCASIwDQYJKoZI
+  #     hvcNAQEBBQADggEPADCCAQoCggEBAMwldpB5BngiFvXAg7aEyiie/QV2EcWtiHL8
+  #     RgJDx7KKnQRfJMsuS+FggkbhUqsMgUdwbN1k0ev1LKMPgj0MK66X17YUhhB5uzsT
+  #     gHeMCOFJ0mpiLx9e+pZo34knlTifBtc+ycsmWQ1z3rDI6SYOgxXG71uL0gRgykmm
+  #     KPZpO/bLyCiR5Z2KYVc3rHQU3HTgOu5yLy6c+9C7v/U9AOEGM+iCK65TpjoWc4zd
+  #     QQ4gOsC0p6Hpsk+QLjJg6VfLuQSSaGjlOCZgdbKfd/+RFO+uIEn8rUAVSNECMWEZ
+  #     XriX7613t2Saer9fwRPvm2L7DWzgVGkWqQPabumDk3F2xmmFghcCAwEAAaNCMEAw
+  #     DgYDVR0PAQH/BAQDAgEGMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFI/wS3+o
+  #     LkUkrk1Q+mOai97i3Ru8MA0GCSqGSIb3DQEBCwUAA4IBAQBLQNvAUKr+yAzv95ZU
+  #     RUm7lgAJQayzE4aGKAczymvmdLm6AC2upArT9fHxD4q/c2dKg8dEe3jgr25sbwMp
+  #     jjM5RcOO5LlXbKr8EpbsU8Yt5CRsuZRj+9xTaGdWPoO4zzUhw8lo/s7awlOqzJCK
+  #     6fBdRoyV3XpYKBovHd7NADdBj+1EbddTKJd+82cEHhXXipa0095MJ6RMG3NzdvQX
+  #     mcIfeg7jLQitChws/zyrVQ4PkX4268NXSb7hLi18YIvDQVETI53O9zJrlAGomecs
+  #     Mx86OyXShkDOOyyGeMlhLxS67ttVb9+E7gUJTb0o2HLO02JQZR7rkpeDMdmztcpH
+  #     WD9f
+  #     -----END CERTIFICATE-----
+
+##
+## Authelia Persistence Configuration.
+##
+## Useful in scenarios where you need persistent storage.
+## Auth Provider Use Case: file; we recommend you use the ldap provider instead.
+## Storage Provider Use Case: local; we recommend you use the mysql/mariadb or postgres provider instead.
+## Configuration Use Case: when you want to manually configure the configuration entirely (set configMap.enabled = false).
+##
+persistence:
+  enabled: false
+
+  annotations: { }
+  # annotations:
+  #   myAnnotation: myValue
+
+  labels: { }
+  # labels:
+  #   myLabel: myValue
+
+  readOnly: false
+  # subPath:
+  # storageClass: "."
+
+  # existingClaim:
+
+  accessModes:
+  - ReadWriteOnce
+
+  size: 100Mi
+
+  selector: { }

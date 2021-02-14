@@ -1,0 +1,15 @@
+# Common
+.DS_Store
+.git/
+.gitignore
+.project
+.idea
+*.tmproj
+*.png
+*.tgz
+docs/
+screenshots/
+scripts/
+
+# Local
+values.personal.yaml
