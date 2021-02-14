@@ -1,6 +1,6 @@
 # _config.yaml
 title: Authelia Helm Chart Repository
-description: A chart repo for storing charts.
+description: A chart repository for Authelia's deployment ecosystem.
 theme: minima
 url: "https://charts.authelia.com"
 repo_name: authelia

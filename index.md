@@ -19,6 +19,17 @@ $ helm repo update
 $ helm search repo authelia
 ```
 
+## Chart Versioning
+
+Our charts follow the [Semantic Versioning Specification](https://semver.org/#semantic-versioning-specification-semver).
+In a nutshell this means that our charts should not have breaking changes unless the major version changes (i.e. 1.x.x to 2.x.x).
+Every time a change occurs to the license, the readme, chart values files, the chart itself, or the templates contained
+within; we require that the chart patch version is incremented at the very least.
+
+Currently this repository is only hosting one chart, the Authelia chart. In the future we may expand this. This chart
+is currently beta (initial development) and should not be considered a stable chart
+as indicated by the [Semantic Versioning Specification](https://semver.org/#spec-item-4).
+
 ## Charts
 
 {% for helm_chart in site.data.index.entries %}
