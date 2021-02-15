@@ -1,14 +1,15 @@
 ---
-## values.yaml
+## values.lite.yaml
 ##
 ## Repository: authelia https://charts.authelia.com
 ## Chart: authelia
 ##
-## This values file is designed for full deployment, eventually for in production once the chart makes it to 1.0.0.
+## This values file is designed for a StatefulSet deployment with a single pod. It is not intended for production environments
 ## It uses the following providers:
-##   - authentication: LDAP
-##   - storage: MySQL
-##   - session: redis
+##   - authentication: file (yaml)
+##   - storage: local (SQLite3)
+##   - session: memory
+##   - notification: filesystem (yaml)
 
 ## Image Parameters
 ## ref: https://hub.docker.com/r/authelia/authelia/tags/
@@ -165,7 +166,7 @@ ingress:
       #   sniStrict: true
 
 pod:
-  kind: DaemonSet
+  kind: StatefulSet
 
   annotations: { }
   # annotations:
@@ -453,7 +454,8 @@ configMap:
   ## This backend allows Authelia to be scaled to more
   ## than one instance and therefore is recommended for
   ## production.
-  ldap:
+  ldap: {}
+  # ldap:
     ## The LDAP implementation, this affects elements like the attribute utilised for resetting a password.
     ## Acceptable options are as follows:
     ## - 'activedirectory' - For Microsoft Active Directory.
@@ -463,27 +465,27 @@ configMap:
     ## Depending on the option here certain other values in this section have a default value, notably all of the
     ## attribute mappings have a default value that this config overrides, you can read more about these default values
     ## at https://www.authelia.com/docs/configuration/authentication/ldap.html#defaults
-    implementation: custom
+    # implementation: custom
   
     ## The url to the ldap server. Format: <scheme>://<address>[:<port>].
     ## Scheme can be ldap or ldaps in the format (port optional).
-    url: ldap://openldap.default.svc.cluster.local
+    # url: ldap://openldap.default.svc.cluster.local
   
     ## Use StartTLS with the LDAP connection.
-    start_tls: false
+    # start_tls: false
   
-    tls:
+    # tls:
       ## Server Name for certificate validation (in case it's not set correctly in the URL).
       # server_name: ldap.example.com
     
       ## Skip verifying the server certificate (to allow a self-signed certificate).
-      skip_verify: false
+      # skip_verify: false
     
       ## Minimum TLS version for either Secure LDAP or LDAP StartTLS.
-      minimum_version: TLS1.2
+      # minimum_version: TLS1.2
   
     ## The base dn for every LDAP query.
-    base_dn: DC=example,DC=com
+    # base_dn: DC=example,DC=com
   
     ## The attribute holding the username of the user. This attribute is used to populate the username in the session
     ## information. It was introduced due to #561 to handle case insensitive search queries. For you information,
@@ -545,7 +547,7 @@ configMap:
     # display_name_attribute: displayname
   
     ## The username of the admin user.
-    user: CN=Authelia,DC=example,DC=com
+    # user: CN=Authelia,DC=example,DC=com
   
   ##
   ## File (Authentication Provider)
@@ -559,15 +561,13 @@ configMap:
   ##
   ## Important: Kubernetes (or HA) users must read https://www.authelia.com/docs/features/statelessness.html
   ##
-  # file:
-  #   path: /config/users_database.yml
-  #   password:
-  #     algorithm: argon2id
-  #     iterations: 1
-  #     key_length: 32
-  #     salt_length: 16
-  #     memory: 1024
-  #     parallelism: 8
+  file:
+    path: /config/users_database.yml
+    password:
+      algorithm: sha512
+      iterations: 100000
+      key_length: 32
+      salt_length: 16
   
   ##
   ## Access Control Configuration
@@ -705,11 +705,12 @@ configMap:
     ##
     ## Important: Kubernetes (or HA) users must read https://www.authelia.com/docs/features/statelessness.html
     ##
-    redis:
-      host: redis.databases.svc.cluster.local
-      port: 6379
+    redis: {}
+    # redis:
+      # host: redis.databases.svc.cluster.local
+      # port: 6379
       ## This is the Redis DB Index https://redis.io/commands/select (sometimes referred to as database number, DB, etc).
-      database_index: 0
+      # database_index: 0
   
   
   ##
@@ -744,19 +745,19 @@ configMap:
     ##
     ## Important: Kubernetes (or HA) users must read https://www.authelia.com/docs/features/statelessness.html
     ##
-    # local:
-    #   path: /config/db.sqlite3
+    local:
+      path: /config/db.sqlite3
   
     ##
     ## MySQL (Storage Provider)
     ##
     ## Also supports MariaDB
     ##
-    mysql:
-      host: mysql.databases.svc.cluster.local
-      port: 3306
-      database: authelia
-      username: authelia
+    # mysql:
+      # host: mysql.databases.svc.cluster.local
+      # port: 3306
+      # database: authelia
+      # username: authelia
   
     ##
     ## PostgreSQL (Storage Provider)
@@ -783,8 +784,8 @@ configMap:
     ##
     ## Important: Kubernetes (or HA) users must read https://www.authelia.com/docs/features/statelessness.html
     ##
-    # filesystem:
-    #   filename: /config/notification.txt
+    filesystem:
+      filename: /config/notification.txt
   
     ##
     ## SMTP (Notification Provider)
@@ -796,31 +797,31 @@ configMap:
     ##        (only works for unauthenticated connections)
     ##   - validate the SMTP server x509 certificate during the TLS handshake against the hosts trusted certificates
     ##     (configure in tls section)
-    smtp:
-      username: test
-      host: smtp.mail.svc.cluster.local
-      port: 25
-      sender: admin@example.com
+    # smtp:
+      # username: test
+      # host: smtp.mail.svc.cluster.local
+      # port: 25
+      # sender: admin@example.com
       ## HELO/EHLO Identifier. Some SMTP Servers may reject the default of localhost.
-      identifier: localhost
+      # identifier: localhost
       ## Subject configuration of the emails sent.
       ## {title} is replaced by the text from the notifier
-      subject: "[Authelia] {title}"
+      # subject: "[Authelia] {title}"
       ## This address is used during the startup check to verify the email configuration is correct.
       ## It's not important what it is except if your email server only allows local delivery.
-      startup_check_address: test@authelia.com
-      disable_require_tls: false
-      disable_html_emails: false
+      # startup_check_address: test@authelia.com
+      # disable_require_tls: false
+      # disable_html_emails: false
     
-      tls:
+      # tls:
         ## Server Name for certificate validation (in case you are using the IP or non-FQDN in the host option).
         # server_name: smtp.example.com
       
         ## Skip verifying the server certificate (to allow a self-signed certificate).
-        skip_verify: false
+        # skip_verify: false
       
         ## Minimum TLS version for either StartTLS or SMTPS.
-        minimum_version: TLS1.2
+        # minimum_version: TLS1.2
 
 ##
 ## Authelia Secret Generator.

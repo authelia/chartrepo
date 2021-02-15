@@ -4,11 +4,26 @@
 not recommended at this stage for production environments without manual intervention to check the templated manifests
 match your desired state.
 
+# Getting Started
+
+Visit https://charts.authelia.com and follow the instructions to install the chart repo.
+
+A more in depth guide is coming. Some key points below.
+
+The chart values.yaml is configured by default for production environments. It expects you will configure the following
+sections:
+
+- domain (this is essential for the chart to work)
+- configMap (the configMap follows a majority of the configuration options
+  in [the documentation](https://www.authelia.com/docs/configuration))
+- secret section to setup passwords and other secret information, configuring this directly is not supported
+
 # TODO
 
 - CI:
   - [ ] helm lint
   - [ ] renovate
+  - [ ] yamllint config
   - [ ] [chart-testing](https://github.com/helm/chart-testing)
   - [ ] [chart-releaser](https://github.com/helm/chart-releaser)
   - [ ] Ensure no changes to the following files can be merged without a version bump to Chart.yaml:
@@ -25,6 +40,13 @@ match your desired state.
   - TraefikCRD:
     - [x] IngressRoute
     - [x] Middleware
+- Validation:
+  - [ ] Add validation checks for defined providers (allow one)
+  - [ ] Add Statefulness validation
+  - [ ] Setup volumeClaimTemplates for stateful installs
+- Ingress:
+  - [ ] Test ingress-nginx
+  - [ ] Test traefikCRD tls
 - Values Schema:
   - Future Notes?
   - [x] https://github.com/CesiumGS/wetzel

@@ -10,6 +10,7 @@ metadata:
   {{- end }}
 data:
   {{ default "configuration.yml" .Values.configMap.key }}: |
+    ---
     host: 0.0.0.0
     port: {{ default 9091 .Values.configMap.port }}
     theme: {{ default "light" .Values.configMap.theme }}
@@ -20,7 +21,7 @@ data:
     {{- end }}
     server: {{ toYaml .Values.configMap.server | nindent 6 }}
     totp:
-      issuer: {{ .Values.domain }}
+      issuer: {{ default .Values.domain .Values.configMap.totp.issuer }}
       period: {{ default 30 .Values.configMap.totp.period }}
       skew: {{ default 1 .Values.configMap.totp.skew }}
     {{- with $duoApi := .Values.configMap.duo_api }}
@@ -36,7 +37,7 @@ data:
     {{- end }}
     session:
       name: {{ default "authelia_session" .Values.configMap.session.name }}
-      domain: {{ .Values.domain }}
+      domain: {{ required "A valid .Values.domain entry required!" .Values.domain }}
       expiration: {{ default "1M" .Values.configMap.session.expiration }}
       inactivity: {{ default "5m" .Values.configMap.session.inactivity }}
       remember_me_duration: {{ default "1M" .Values.configMap.session.remember_me_duration }}
@@ -46,18 +47,22 @@ data:
     regulation: {{ toYaml .Values.configMap.regulation | nindent 6 }}
     storage:
     {{- with $local := .Values.configMap.storage.local }}
-      local: {{ toYaml . | nindent 8 }}
+      local: {{ toYaml $local | nindent 8 }}
     {{- end }}
     {{- with $mysql := .Values.configMap.storage.mysql }}
       mysql: {{ toYaml $mysql | nindent 8 }}
     {{- end }}
     {{- with $postgres := .Values.configMap.storage.postgres }}
-      postgres: {{ toYaml . | nindent 8 }}
+      postgres: {{ toYaml $postgres | nindent 8 }}
     {{- end }}
-    {{- with $smtp := .Values.configMap.notifier.smtp }}
     notifier:
       disable_startup_check: {{ $.Values.configMap.notifier.disable_startup_check }}
+    {{- with $filesystem := .Values.configMap.notifier.filesystem }}
+      filesystem: {{ toYaml $filesystem | nindent 8 }}
+    {{- end }}
+    {{- with $smtp := .Values.configMap.notifier.smtp }}
       smtp: {{ toYaml $smtp | nindent 8 }}
     {{- end }}
     access_control: {{ toYaml .Values.configMap.access_control | nindent 6 }}
-  {{- end }}
+    {{- end }}
+    ...
