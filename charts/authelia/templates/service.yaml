@@ -14,7 +14,7 @@ spec:
   {{- end }}
   selector: {{- include "authelia.matchLabels" . | nindent 4 }}
   ports:
-  - name: http
-    protocol: TCP
-    port: {{ include "authelia.service.port" . }}
-    targetPort: http
+    - name: http
+      protocol: TCP
+      port: {{ include "authelia.service.port" . }}
+      targetPort: http

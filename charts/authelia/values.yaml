@@ -72,24 +72,30 @@ ingress:
 
   certManager: false
   rewriteTarget: true
-
+  
+  ## The Ingress Class Name.
+  # className: ingress-nginx
+  
   ## Subdomain is the only thing required since we specify the domain as part of the root values of the chart.
   ## Example: To get Authelia to listen on https://auth.example.com specify 'auth' for ingress.subdomain,
   ## and specify example.com for the domain.
   subdomain: auth
 
-  tls: true
-  tlsSecret: authelia-tls
+  tls:
+    enabled: true
+    secret: authelia-tls
+  
+    # hostNameOverride:
 
   traefikCRD:
     enabled: false
-
+  
     # matchOverride: Host(`auth.example.com`) && PathPrefix(`/`)
-
+  
     entrypoints: [ ]
     # entrypoints:
     # - http
-
+  
     # priority: 10
 
     # weight: 10
@@ -134,22 +140,20 @@ ingress:
           # before:
           # - name: extra-middleware-name
           #   namespace: default
-
+  
           # List of Middlewares to apply after the middleware in the IngressRoute chain.
           after: [ ]
           # after:
           # - name: extra-middleware-name
           #   namespace: default
-
+  
+    # Specific options for the TraefikCRD TLS configuration. The above TLS section is still used.
     tls:
-      #   secretName: traefik-example-com-wildcard
-      #   existingOptions
+      #   existingOptions:
       #     name: default-traefik-options
       #     namespace: default
       #   certResolver: default
-      #   domains:
-      #   - main: example.com
-      #     sans:
+      #   sans:
       #     - *.example.com
       #
       options: { }

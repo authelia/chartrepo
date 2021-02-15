@@ -10,37 +10,37 @@ metadata:
   {{- end }}
 spec:
   {{- with $entryPoints := default (list "http") .Values.ingress.traefikCRD.entryPoints }}
-  entryPoints: {{- toYaml $entryPoints | nindent 2 }}
+  entryPoints: {{- toYaml $entryPoints | nindent 4 }}
   {{- end }}
   routes:
-  - kind: Rule
-    match: {{ default (printf "Host(`%s`) && PathPrefix(`%s`)" (include "authelia.ingressHost" .) (include "authelia.path" .)) .Values.ingress.traefikCRD.matchOverride }}
-    priority: {{ default 10 .Values.ingress.traefikCRD.priority }}
-    middlewares:
-    - name: {{ include "authelia.ingress.traefikCRD.middleware.name.chain" . }}
-      namespace: {{ .Release.Namespace }}
-    services:
-    - kind: Service
-      name: {{ include "authelia.name" . }}
-      port: {{ include "authelia.service.port" . }}
-      namespace: {{ .Release.Namespace }}
-      passHostHeader: true
-      strategy: {{ default "RoundRobin" .Values.ingress.traefikCRD.strategy }}
-      scheme: {{ default "http" .Values.ingress.traefikCRD.scheme }}
-      weight: {{ default 10 .Values.ingress.traefikCRD.weight }}
-      responseForwarding:
-        flushInterval: {{ default "100ms" .Values.ingress.traefikCRD.responseForwardingFlushInterval }}
-      {{- if .Values.ingress.traefikCRD.sticky }}
-      sticky:
-        cookie:
-          httpOnly: true
-          name: {{ default (printf "%s_traefik_lb" (include "authelia.name" .)) .Values.ingress.traefikCRD.stickyCookieNameOverride }}
-          secure: true
-          sameSite: None
+    - kind: Rule
+      match: {{ default (printf "Host(`%s`) && PathPrefix(`%s`)" (include "authelia.ingressHost" .) (include "authelia.path" .)) .Values.ingress.traefikCRD.matchOverride }}
+      priority: {{ default 10 .Values.ingress.traefikCRD.priority }}
+      middlewares:
+        - name: {{ include "authelia.ingress.traefikCRD.middleware.name.chain" . }}
+          namespace: {{ .Release.Namespace }}
+      services:
+        - kind: Service
+          name: {{ include "authelia.name" . }}
+          port: {{ include "authelia.service.port" . }}
+          namespace: {{ .Release.Namespace }}
+          passHostHeader: true
+          strategy: {{ default "RoundRobin" .Values.ingress.traefikCRD.strategy }}
+          scheme: {{ default "http" .Values.ingress.traefikCRD.scheme }}
+          weight: {{ default 10 .Values.ingress.traefikCRD.weight }}
+          responseForwarding:
+            flushInterval: {{ default "100ms" .Values.ingress.traefikCRD.responseForwardingFlushInterval }}
+          {{- if .Values.ingress.traefikCRD.sticky }}
+          sticky:
+            cookie:
+              httpOnly: true
+              name: {{ default (printf "%s_traefik_lb" (include "authelia.name" .)) .Values.ingress.traefikCRD.stickyCookieNameOverride }}
+              secure: true
+              sameSite: None
   {{- end }}
-  {{- if .Values.ingress.traefikCRD.tls }}
+  {{- if .Values.ingress.tls.enabled }}
   tls:
-    secretName: {{ default (printf "%s-traefik-tls" (include "authelia.name" .)) .Values.ingress.traefikCRD.tls.secretName }}
+    secretName: {{ default (printf "%s-traefik-tls" (include "authelia.name" .)) .Values.ingress.tls.secret }}
     options:
       {{- if (include "authelia.existing.ingress.traefik.tlsOption" .) }}
       {{- toYaml .Values.ingress.traefikCRD.tls.existingOptions | nindent 6 }}
@@ -50,10 +50,10 @@ spec:
     {{- end }}
     certResolver: {{ default "default" .Values.ingress.traefikCRD.tls.certResolver }}
     domains:
-      {{- if .Values.ingress.traefikCRD.tls.domains }}
-      {{- toYaml .Values.ingress.traefikCRD.tls.domains | nindent 4 }}
-      {{- else }}
-    - main: {{ include "authelia.ingressHost" . }}
+      - main: {{ default (include "authelia.ingressHost" .) .Values.ingress.tls.hostNameOverride }}
+        {{- if .Values.ingress.traefikCRD.tls.sans }}
+        sans: {{- toYaml .Values.ingress.traefikCRD.tls.sans | nindent 10 }}
   {{- end }}
+  {{- else }}
   {{- end }}
   {{- end -}}

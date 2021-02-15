@@ -9,25 +9,33 @@ metadata:
   annotations: {{ $annotations | nindent 4 }}
   {{- end }}
 spec:
-  rules:
-  - host: {{ include "authelia.ingressHost" . }}
-    http:
-      paths:
-      - path: {{ (include "authelia.path" .) }}
-        backend:
-          {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress" }}
-          service:
-            name: {{ include "authelia.name" . }}
-            port:
-              number: {{ include "authelia.service.port" . }}
-          {{- else }}
-          serviceName: {{ include "authelia.name" . }}
-          servicePort: {{ include "authelia.service.port" . }}
+  {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress" }}
+  {{- with $className := .Values.ingress.className }}
+  ingressClassName: {{ $className }}
   {{- end }}
-{{- if .Values.ingress.tls }}
+  {{- end }}
+  rules:
+    - host: {{ include "authelia.ingressHost" . }}
+      http:
+        paths:
+          - path: {{ (include "authelia.path" .) }}
+            {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress" }}
+            pathType: Prefix
+            {{- end }}
+            backend:
+              {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress" }}
+              service:
+                name: {{ include "authelia.name" . }}
+                port:
+                  number: {{ include "authelia.service.port" . }}
+            {{- else }}
+            serviceName: {{ include "authelia.name" . }}
+            servicePort: {{ include "authelia.service.port" . }}
+  {{- end }}
+  {{- if .Values.ingress.tls.enabled }}
   tls:
-  - hosts:
-    - {{ include "authelia.ingressHost" . }}
-    secretName: {{ .Values.ingress.tlsSecret }}
-{{- end -}}
+    - hosts:
+        - {{ default (include "authelia.ingressHost" .) .Values.ingress.tls.hostNameOverride }}
+      secretName: {{ default "authelia-tls" .Values.ingress.tls.secret }}
+  {{- end -}}
 {{- end -}}

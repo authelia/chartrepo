@@ -17,6 +17,5 @@ spec:
   minAvailable: 1
   {{- end }}
   selector:
-    matchLabels:
-  {{- include "authelia.matchLabels" . | nindent 6 }}
+    matchLabels: {{- include "authelia.matchLabels" . | nindent 6 }}
 {{- end -}}

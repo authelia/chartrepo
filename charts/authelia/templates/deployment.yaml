@@ -49,7 +49,7 @@ spec:
     {{- end }}
     spec:
       {{- with $tolerations := .Values.pod.tolerations }}
-      tolerations: {{ toYaml $tolerations | nindent 6 }}
+      tolerations: {{ toYaml $tolerations | nindent 8 }}
       {{- end }}
       hostNetwork: false
       hostPID: false
@@ -67,137 +67,137 @@ spec:
       securityContext: {{ toYaml $context | nindent 8 }}
       {{- end }}
       containers:
-      - name: authelia
-        image: {{ include "authelia.image" . }}
-        imagePullPolicy: {{ default "IfNotPresent" .Values.image.pullPolicy }}
-        {{- with $pullSecrets := .Values.image.pullSecrets }}
-        imagePullSecrets:
-          {{- range $k, $secretName := $pullSecrets }}
-        - name: {{ $secretName }}
-        {{- end }}
-        {{- end }}
-        {{- with $resources :=.Values.pod.resources }}
-        resources: {{ toYaml $resources | nindent 10 }}
-        {{- end }}
-        env:
-        - name: AUTHELIA_JWT_SECRET_FILE
-          value: /usr/app/secrets/JWT_TOKEN
-        - name: AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE
-          value: /usr/app/secrets/LDAP_PASSWORD
-        - name: AUTHELIA_SESSION_SECRET_FILE
-          value: /usr/app/secrets/SESSION_ENCRYPTION_KEY
-          {{- if .Values.configMap.storage.postgres }}
-        - name: AUTHELIA_STORAGE_POSTGRES_PASSWORD_FILE
-          value: /usr/app/secrets/STORAGE_PASSWORD
-          {{- end }}
-          {{- if .Values.configMap.storage.mysql }}
-        - name: AUTHELIA_STORAGE_MYSQL_PASSWORD_FILE
-          value: /usr/app/secrets/STORAGE_PASSWORD
-          {{- end }}
-          {{- if .Values.secret.smtp.enabled }}
-        - name: AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE
-          value: /usr/app/secrets/SMTP_PASSWORD
-          {{- end }}
-          {{- if and (.Values.configMap.session.redis) (.Values.secret.redis.enabled) }}
-        - name: AUTHELIA_SESSION_REDIS_PASSWORD_FILE
-          value: /usr/app/secrets/REDIS_PASSWORD
-          {{- end }}
-          {{- if .Values.configMap.duo_api }}
-        - name: AUTHELIA_DUO_API_SECRET_KEY_FILE
-          value: /usr/app/secrets/DUO_API_KEY
-        {{- end }}
-        {{- with .Values.pod.env }}
-        {{ toYaml . | indent 8 }}
-        {{- end }}
-        ports:
-        - name: http
-          containerPort: {{ default 9091  .Values.configMap.port }}
-          protocol: TCP
-        {{- with $probe := include "authelia.merge.probe" (merge (dict "Type" "startup" "Method" .Values.pod.probes.method "Probe" .Values.pod.probes.startup) .) }}
-        {{- $probe | nindent 8 }}
-        {{- end }}
-        {{- with $probe := include "authelia.merge.probe" (merge (dict "Type" "liveness" "Method" .Values.pod.probes.method "Probe" .Values.pod.probes.liveness) .) }}
-        {{- $probe | nindent 8 }}
-        {{- end }}
-        {{- with $probe := include "authelia.merge.probe" (merge (dict "Type" "readiness" "Method" .Values.pod.probes.method "Probe" .Values.pod.probes.readiness) .) }}
-        {{- $probe | nindent 8 }}
-        {{- end }}
-        volumeMounts:
-          {{- if (include "authelia.enabled.persistentVolumeClaim" .) }}
-        - mountPath: /config
-          name: authelia
-          readOnly: {{ .Values.persistence.readOnly }}
-          {{- with $subPath := .Values.persistence.subPath }}
-          subPath: {{ $subPath }}
-          {{- end }}
-          {{- with $subPathExpr := .Values.persistence.subPathExpr }}
-          subPathExpr: {{ $subPathExpr }}
-          {{- end }}
-          {{- with $mountPropagation := .Values.persistence.mountPropagation }}
-          mountPropagation: {{ $mountPropagation }}
+        - name: authelia
+          image: {{ include "authelia.image" . }}
+          imagePullPolicy: {{ default "IfNotPresent" .Values.image.pullPolicy }}
+          {{- with $pullSecrets := .Values.image.pullSecrets }}
+          imagePullSecrets:
+            {{- range $k, $secretName := $pullSecrets }}
+            - name: {{ $secretName }}
           {{- end }}
           {{- end }}
-          {{- if (include "authelia.enabled.configMap" .) }}
-        - mountPath: /config
-          name: config
-          readOnly: true
+          {{- with $resources :=.Values.pod.resources }}
+          resources: {{ toYaml $resources | nindent 12 }}
           {{- end }}
-        - mountPath: /usr/app/secrets
-          name: secrets
-          readOnly: true
-          {{- if (include "authelia.enabled.certificatesSecret" .) }}
-        - mountPath: /usr/app/certificates
-          name: certificates
-          readOnly: true
-        {{- end }}
-        {{- with $mounts := .Values.pod.extraVolumeMounts }}
-        {{ toYaml $mounts | indent 8 }}
-        {{- end }}
-        {{- with $context := .Values.pod.podSecurityContext }}
-        securityContext: {{ toYaml $context | nindent 10 }}
+          env:
+            - name: AUTHELIA_JWT_SECRET_FILE
+              value: /usr/app/secrets/JWT_TOKEN
+            - name: AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE
+              value: /usr/app/secrets/LDAP_PASSWORD
+            - name: AUTHELIA_SESSION_SECRET_FILE
+              value: /usr/app/secrets/SESSION_ENCRYPTION_KEY
+            {{- if .Values.configMap.storage.postgres }}
+            - name: AUTHELIA_STORAGE_POSTGRES_PASSWORD_FILE
+              value: /usr/app/secrets/STORAGE_PASSWORD
+            {{- end }}
+            {{- if .Values.configMap.storage.mysql }}
+            - name: AUTHELIA_STORAGE_MYSQL_PASSWORD_FILE
+              value: /usr/app/secrets/STORAGE_PASSWORD
+            {{- end }}
+            {{- if .Values.secret.smtp.enabled }}
+            - name: AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE
+              value: /usr/app/secrets/SMTP_PASSWORD
+            {{- end }}
+            {{- if and (.Values.configMap.session.redis) (.Values.secret.redis.enabled) }}
+            - name: AUTHELIA_SESSION_REDIS_PASSWORD_FILE
+              value: /usr/app/secrets/REDIS_PASSWORD
+            {{- end }}
+            {{- if .Values.configMap.duo_api }}
+            - name: AUTHELIA_DUO_API_SECRET_KEY_FILE
+              value: /usr/app/secrets/DUO_API_KEY
+          {{- end }}
+          {{- with $env := .Values.pod.env }}
+          {{ toYaml $env | indent 10 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ default 9091  .Values.configMap.port }}
+              protocol: TCP
+          {{- with $probe := include "authelia.merge.probe" (merge (dict "Type" "startup" "Method" .Values.pod.probes.method "Probe" .Values.pod.probes.startup) .) }}
+          {{- $probe | nindent 10 }}
+          {{- end }}
+          {{- with $probe := include "authelia.merge.probe" (merge (dict "Type" "liveness" "Method" .Values.pod.probes.method "Probe" .Values.pod.probes.liveness) .) }}
+          {{- $probe | nindent 10 }}
+          {{- end }}
+          {{- with $probe := include "authelia.merge.probe" (merge (dict "Type" "readiness" "Method" .Values.pod.probes.method "Probe" .Values.pod.probes.readiness) .) }}
+          {{- $probe | nindent 10 }}
+          {{- end }}
+          volumeMounts:
+            {{- if (include "authelia.enabled.persistentVolumeClaim" .) }}
+            - mountPath: /config
+              name: authelia
+              readOnly: {{ .Values.persistence.readOnly }}
+              {{- with $subPath := .Values.persistence.subPath }}
+              subPath: {{ $subPath }}
+              {{- end }}
+              {{- with $subPathExpr := .Values.persistence.subPathExpr }}
+              subPathExpr: {{ $subPathExpr }}
+              {{- end }}
+              {{- with $mountPropagation := .Values.persistence.mountPropagation }}
+              mountPropagation: {{ $mountPropagation }}
+            {{- end }}
+            {{- end }}
+            {{- if (include "authelia.enabled.configMap" .) }}
+            - mountPath: /config
+              name: config
+              readOnly: true
+            {{- end }}
+            - mountPath: /usr/app/secrets
+              name: secrets
+              readOnly: true
+            {{- if (include "authelia.enabled.certificatesSecret" .) }}
+            - mountPath: /usr/app/certificates
+              name: certificates
+              readOnly: true
+          {{- end }}
+          {{- with $mounts := .Values.pod.extraVolumeMounts }}
+          {{ toYaml $mounts | indent 8 }}
+          {{- end }}
+          {{- with $context := .Values.pod.podSecurityContext }}
+          securityContext: {{ toYaml $context | nindent 10 }}
       {{- end }}
       volumes:
         {{- if (include "authelia.enabled.persistentVolumeClaim" .) }}
-      - name: authelia
-        persistentVolumeClaim:
-          claimName: {{ default (include "authelia.name" .) .Values.persistence.existingClaim }}
+        - name: authelia
+          persistentVolumeClaim:
+            claimName: {{ default (include "authelia.name" .) .Values.persistence.existingClaim }}
         {{- end }}
         {{- if (include "authelia.enabled.configMap" .) }}
-      - name: config
-        configMap:
-          name: {{ default (include "authelia.name" .) .Values.configMap.existingConfigMap }}
-          items:
-          - key: {{ default "configuration.yml" .Values.configMap.key }}
-            path: configuration.yml
+        - name: config
+          configMap:
+            name: {{ default (include "authelia.name" .) .Values.configMap.existingConfigMap }}
+            items:
+              - key: {{ default "configuration.yml" .Values.configMap.key }}
+                path: configuration.yml
         {{- end }}
-      - name: secrets
-        secret:
-          secretName: {{ default (include "authelia.name" .) .Values.secret.existingSecret }}
-          items:
-          - key: {{ default "JWT_TOKEN" .Values.secret.jwt.key }}
-            path: JWT_TOKEN
-          - key: {{ default "LDAP_PASSWORD" .Values.secret.ldap.key }}
-            path: LDAP_PASSWORD
-          - key: {{ default "SESSION_ENCRYPTION_KEY" .Values.secret.session.key }}
-            path: SESSION_ENCRYPTION_KEY
-          - key: {{ default "STORAGE_PASSWORD" .Values.secret.storage.key }}
-            path: STORAGE_PASSWORD
-            {{- if .Values.secret.smtp.enabled }}
-          - key: {{ default "SMTP_PASSWORD" .Values.secret.smtp.key }}
-            path: SMTP_PASSWORD
-            {{- end }}
-            {{- if and (.Values.configMap.session.redis) (.Values.secret.redis.enabled) }}
-          - key: {{ default "REDIS_PASSWORD" .Values.secret.redis.key }}
-            path: REDIS_PASSWORD
-            {{- end }}
-            {{- if .Values.configMap.duo_api }}
-          - key: {{ default "DUO_API_KEY" .Values.secret.duo.key }}
-            path: DUO_API_KEY
+        - name: secrets
+          secret:
+            secretName: {{ default (include "authelia.name" .) .Values.secret.existingSecret }}
+            items:
+              - key: {{ default "JWT_TOKEN" .Values.secret.jwt.key }}
+                path: JWT_TOKEN
+              - key: {{ default "LDAP_PASSWORD" .Values.secret.ldap.key }}
+                path: LDAP_PASSWORD
+              - key: {{ default "SESSION_ENCRYPTION_KEY" .Values.secret.session.key }}
+                path: SESSION_ENCRYPTION_KEY
+              - key: {{ default "STORAGE_PASSWORD" .Values.secret.storage.key }}
+                path: STORAGE_PASSWORD
+              {{- if .Values.secret.smtp.enabled }}
+              - key: {{ default "SMTP_PASSWORD" .Values.secret.smtp.key }}
+                path: SMTP_PASSWORD
+              {{- end }}
+              {{- if and (.Values.configMap.session.redis) (.Values.secret.redis.enabled) }}
+              - key: {{ default "REDIS_PASSWORD" .Values.secret.redis.key }}
+                path: REDIS_PASSWORD
+              {{- end }}
+              {{- if .Values.configMap.duo_api }}
+              - key: {{ default "DUO_API_KEY" .Values.secret.duo.key }}
+                path: DUO_API_KEY
         {{- end }}
         {{- if (include "authelia.enabled.certificatesSecret" .) }}
-      - name: certificates
-        secret:
-          secretName: {{ include "authelia.names.certificatesSecret" . }}
+        - name: certificates
+          secret:
+            secretName: {{ include "authelia.names.certificatesSecret" . }}
   {{- end }}
   {{- with .Values.pod.extraVolumes }}
   {{ toYaml . | indent 6 }}
