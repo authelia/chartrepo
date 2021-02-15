@@ -64,6 +64,82 @@ Returns true if pod is stateful.
 {{- end -}}
 
 {{/*
+Returns true if redis is configured.
+*/}}
+{{- define "authelia.configured.redis" -}}
+    {{- if .Values.configMap -}}
+        {{- if .Values.configMap.session -}}
+            {{- if .Values.configMap.session.redis -}}
+                {{- true -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+
+{{/*
+Returns true if redis secret is configured.
+*/}}
+{{- define "authelia.configured.redisSecret" -}}
+    {{- if .Values.secret -}}
+        {{- if .Values.secret.redis -}}
+            {{- if hasKey .Values.secret.redis "value" -}}
+                {{- true -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+
+{{/*
+Returns true if smtp is enabled.
+*/}}
+{{- define "authelia.configured.smtp" -}}
+    {{- if .Values.configMap -}}
+        {{- if .Values.configMap.notifier -}}
+            {{- if .Values.configMap.notifier.smtp -}}
+                {{- true -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+
+{{/*
+Returns true if smtp secret is configured.
+*/}}
+{{- define "authelia.configured.smtpSecret" -}}
+    {{- if .Values.secret -}}
+        {{- if .Values.secret.smtp -}}
+            {{- if hasKey .Values.secret.smtp "value" -}}
+                {{- true -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+
+{{/*
+Returns true if duo is enabled.
+*/}}
+{{- define "authelia.configured.duo" -}}
+    {{- if .Values.configMap -}}
+        {{- if .Values.configMap.duo_api -}}
+            {{- true -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+
+{{/*
+Returns true if duo secret is configured.
+*/}}
+{{- define "authelia.configured.duoSecret" -}}
+    {{- if .Values.secret -}}
+        {{- if .Values.secret.duo -}}
+            {{- if hasKey .Values.secret.duo "value" -}}
+                {{- true -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+
+{{/*
 Returns the name of the chain Middleware for forward auth which gets applied to other IngressRoutes.
 */}}
 {{- define "authelia.ingress.traefikCRD.middleware.name.chain" -}}

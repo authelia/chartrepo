@@ -856,11 +856,9 @@ secret:
     key: DUO_API_KEY
     # value:
   redis:
-    enabled: false
     key: REDIS_PASSWORD
     # value:
   smtp:
-    enabled: false
     key: SMTP_PASSWORD
     # value:
 
