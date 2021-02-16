@@ -171,6 +171,7 @@ ingress:
       #   sniStrict: true
 
 pod:
+  # Must be Deployment, DaemonSet, or StatefulSet.
   kind: StatefulSet
 
   annotations: { }
@@ -295,7 +296,7 @@ pod:
     ## Note: Startup Probes are a Kubernetes feature gate which must be manually enabled pre-1.18.
     ## Ref: https://kubernetes.io/docs/reference/command-line-tools-reference/feature-gates/
     startup:
-      initialDelaySeconds: 20
+      initialDelaySeconds: 10
       periodSeconds: 5
       timeoutSeconds: 5
       successThreshold: 1

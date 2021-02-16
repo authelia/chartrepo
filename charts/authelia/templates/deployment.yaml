@@ -16,8 +16,8 @@ spec:
   minReadySeconds: {{ default 0 .Values.pod.minReadySeconds }}
   {{- end }}
   {{- if (eq "Deployment" $kind)}}
-  {{- with $strategy := .Values.pod.strategy }}
   replicas: {{ default 1 .Values.pod.replicas }}
+  {{- with $strategy := .Values.pod.strategy }}
   strategy:
     type: {{ include "authelia.deploymentStrategy" . }}
     {{- if and $strategy.rollingUpdate (eq (include "authelia.deploymentStrategy" $) "RollingUpdate") }}
