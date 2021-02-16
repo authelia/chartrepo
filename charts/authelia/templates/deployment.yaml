@@ -140,7 +140,7 @@ spec:
             {{- if (include "authelia.enabled.configMap" .) }}
             - mountPath: /config
               name: config
-              readOnly: true
+              readOnly: false
             {{- end }}
             - mountPath: /usr/app/secrets
               name: secrets
