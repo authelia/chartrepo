@@ -29,8 +29,8 @@ spec:
                 port:
                   number: {{ include "authelia.service.port" . }}
             {{- else }}
-            serviceName: {{ include "authelia.name" . }}
-            servicePort: {{ include "authelia.service.port" . }}
+              serviceName: {{ include "authelia.name" . }}
+              servicePort: {{ include "authelia.service.port" . }}
   {{- end }}
   {{- if .Values.ingress.tls.enabled }}
   tls:
