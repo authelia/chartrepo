@@ -17,7 +17,7 @@ data:
     log_level: {{ default "info" .Values.configMap.log_level  }}
     default_redirection_url: {{ default (printf "https://www.%s" .Values.domain) .Values.configMap.default_redirection_url }}
     {{- if (include "authelia.enabled.certificatesSecret" .) }}
-    certificates_directory: /usr/app/certificates
+    certificates_directory: /config/certificates
     {{- end }}
     server: {{ toYaml .Values.configMap.server | nindent 6 }}
     totp:

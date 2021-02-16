@@ -81,32 +81,32 @@ spec:
           {{- end }}
           env:
             - name: AUTHELIA_JWT_SECRET_FILE
-              value: /usr/app/secrets/JWT_TOKEN
+              value: /config/secrets/JWT_TOKEN
             - name: AUTHELIA_SESSION_SECRET_FILE
-              value: /usr/app/secrets/SESSION_ENCRYPTION_KEY
+              value: /config/secrets/SESSION_ENCRYPTION_KEY
             {{- if .Values.configMap.authentication_backend.ldap }}
             - name: AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE
-              value: /usr/app/secrets/LDAP_PASSWORD
+              value: /config/secrets/LDAP_PASSWORD
             {{- end }}
             {{- if or (include "authelia.configured.smtp" .) (include "authelia.configured.smtpSecret" .) }}
             - name: AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE
-              value: /usr/app/secrets/SMTP_PASSWORD
+              value: /config/secrets/SMTP_PASSWORD
             {{- end }}
             {{- if .Values.configMap.storage.postgres }}
             - name: AUTHELIA_STORAGE_POSTGRES_PASSWORD_FILE
-              value: /usr/app/secrets/STORAGE_PASSWORD
+              value: /config/secrets/STORAGE_PASSWORD
             {{- end }}
             {{- if .Values.configMap.storage.mysql }}
             - name: AUTHELIA_STORAGE_MYSQL_PASSWORD_FILE
-              value: /usr/app/secrets/STORAGE_PASSWORD
+              value: /config/secrets/STORAGE_PASSWORD
             {{- end }}
             {{- if and (include "authelia.configured.redisSecret" .) (include "authelia.configured.redis" .) }}
             - name: AUTHELIA_SESSION_REDIS_PASSWORD_FILE
-              value: /usr/app/secrets/REDIS_PASSWORD
+              value: /config/secrets/REDIS_PASSWORD
             {{- end }}
             {{- if and (include "authelia.configured.duoSecret" .) (include "authelia.configured.duo" .) }}
             - name: AUTHELIA_DUO_API_SECRET_KEY_FILE
-              value: /usr/app/secrets/DUO_API_KEY
+              value: /config/secrets/DUO_API_KEY
           {{- end }}
           {{- with $env := .Values.pod.env }}
           {{ toYaml $env | indent 12 }}
@@ -144,11 +144,11 @@ spec:
               name: config
               readOnly: false
             {{- end }}
-            - mountPath: /usr/app/secrets
+            - mountPath: /config/secrets
               name: secrets
               readOnly: true
             {{- if (include "authelia.enabled.certificatesSecret" .) }}
-            - mountPath: /usr/app/certificates
+            - mountPath: /config/certificates
               name: certificates
               readOnly: true
           {{- end }}
