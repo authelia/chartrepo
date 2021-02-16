@@ -17,7 +17,7 @@ spec:
       match: {{ default (printf "Host(`%s`) && PathPrefix(`%s`)" (include "authelia.ingressHost" .) (include "authelia.path" .)) .Values.ingress.traefikCRD.matchOverride }}
       priority: {{ default 10 .Values.ingress.traefikCRD.priority }}
       middlewares:
-        - name: {{ include "authelia.ingress.traefikCRD.middleware.name.chain" . }}
+        - name: {{ include "authelia.ingress.traefikCRD.middleware.name.chainIngress" . }}
           namespace: {{ .Release.Namespace }}
       services:
         - kind: Service

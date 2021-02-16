@@ -142,12 +142,19 @@ Returns true if duo secret is configured.
 {{/*
 Returns the name of the chain Middleware for forward auth which gets applied to other IngressRoutes.
 */}}
-{{- define "authelia.ingress.traefikCRD.middleware.name.chain" -}}
+{{- define "authelia.ingress.traefikCRD.middleware.name.chainAuth" -}}
     {{- if .Values.ingress.traefikCRD.middlewares.chains.auth.nameOverride -}}
         {{- .Values.ingress.traefikCRD.middlewares.chains.auth.nameOverride -}}
     {{- else -}}
         {{- printf "chain-%s-auth" (include "authelia.name" .) -}}
     {{- end -}}
+{{- end -}}
+
+{{/*
+Returns the name of the chain Middleware for forward auth which gets applied to other IngressRoutes.
+*/}}
+{{- define "authelia.ingress.traefikCRD.middleware.name.chainIngress" -}}
+    {{- printf "chain-%s" (include "authelia.name" .) -}}
 {{- end -}}
 
 {{/*

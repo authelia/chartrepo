@@ -35,7 +35,7 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: {{ include "authelia.ingress.traefikCRD.middleware.name.chain" . }}
+  name: {{ include "authelia.ingress.traefikCRD.middleware.name.chainAuth" . }}
   labels: {{ include "authelia.labels" . | nindent 4 }}
   {{- with $annotations := include "authelia.annotations" . }}
   annotations: {{ $annotations | nindent 4 }}
@@ -55,7 +55,7 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: {{ include "authelia.name" . }}
+  name: {{ include "authelia.ingress.traefikCRD.middleware.name.chainIngress" . }}
   labels:
   {{- include "authelia.labels" . | nindent 4 }}
   {{- with $annotations := (include "authelia.annotations" .) }}
