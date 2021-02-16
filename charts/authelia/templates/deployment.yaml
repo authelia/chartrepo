@@ -100,10 +100,6 @@ spec:
             - name: AUTHELIA_STORAGE_MYSQL_PASSWORD_FILE
               value: /usr/app/secrets/STORAGE_PASSWORD
             {{- end }}
-            {{- if include "authelia.configured.smtp" . }}
-            - name: AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE
-              value: /usr/app/secrets/SMTP_PASSWORD
-            {{- end }}
             {{- if and (include "authelia.configured.redisSecret" .) (include "authelia.configured.redis" .) }}
             - name: AUTHELIA_SESSION_REDIS_PASSWORD_FILE
               value: /usr/app/secrets/REDIS_PASSWORD
