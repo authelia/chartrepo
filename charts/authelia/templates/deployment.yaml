@@ -76,7 +76,7 @@ spec:
             - name: {{ $secretName }}
           {{- end }}
           {{- end }}
-          command: authelia
+          command: [ "authelia" ]
           args:
             - --config=/config/configuration.yaml
           {{- with $resources :=.Values.pod.resources }}
