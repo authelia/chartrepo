@@ -82,10 +82,12 @@ spec:
           env:
             - name: AUTHELIA_JWT_SECRET_FILE
               value: /usr/app/secrets/JWT_TOKEN
-            - name: AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE
-              value: /usr/app/secrets/LDAP_PASSWORD
             - name: AUTHELIA_SESSION_SECRET_FILE
               value: /usr/app/secrets/SESSION_ENCRYPTION_KEY
+            {{- if .Values.configMap.authentication_backend.ldap }}
+            - name: AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE
+              value: /usr/app/secrets/LDAP_PASSWORD
+            {{- end }}
             {{- if .Values.configMap.storage.postgres }}
             - name: AUTHELIA_STORAGE_POSTGRES_PASSWORD_FILE
               value: /usr/app/secrets/STORAGE_PASSWORD
@@ -94,15 +96,15 @@ spec:
             - name: AUTHELIA_STORAGE_MYSQL_PASSWORD_FILE
               value: /usr/app/secrets/STORAGE_PASSWORD
             {{- end }}
-            {{- if .Values.secret.smtp.enabled }}
+            {{- if include "authelia.configured.smtp" . }}
             - name: AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE
               value: /usr/app/secrets/SMTP_PASSWORD
             {{- end }}
-            {{- if and (.Values.configMap.session.redis) (.Values.secret.redis.enabled) }}
+            {{- if and (include "authelia.configured.redisSecret" .) (include "authelia.configured.redis" .) }}
             - name: AUTHELIA_SESSION_REDIS_PASSWORD_FILE
               value: /usr/app/secrets/REDIS_PASSWORD
             {{- end }}
-            {{- if .Values.configMap.duo_api }}
+            {{- if and (include "authelia.configured.duoSecret" .) (include "authelia.configured.duo" .) }}
             - name: AUTHELIA_DUO_API_SECRET_KEY_FILE
               value: /usr/app/secrets/DUO_API_KEY
           {{- end }}
@@ -176,12 +178,16 @@ spec:
             items:
               - key: {{ default "JWT_TOKEN" .Values.secret.jwt.key }}
                 path: JWT_TOKEN
-              - key: {{ default "LDAP_PASSWORD" .Values.secret.ldap.key }}
-                path: LDAP_PASSWORD
               - key: {{ default "SESSION_ENCRYPTION_KEY" .Values.secret.session.key }}
                 path: SESSION_ENCRYPTION_KEY
+              {{- if or .Values.configMap.storage.postgres .Values.configMap.storage.mysql }}
               - key: {{ default "STORAGE_PASSWORD" .Values.secret.storage.key }}
                 path: STORAGE_PASSWORD
+              {{- end }}
+              {{- if .Values.configMap.authentication_backend.ldap }}
+              - key: {{ default "LDAP_PASSWORD" .Values.secret.ldap.key }}
+                path: LDAP_PASSWORD
+              {{- end }}
               {{- if .Values.secret.smtp.enabled }}
               - key: {{ default "SMTP_PASSWORD" .Values.secret.smtp.key }}
                 path: SMTP_PASSWORD

@@ -701,11 +701,6 @@ configMap:
     ## spy or attack. Currently the default is 1M or 1 month.
     remember_me_duration: 1M
   
-    ## The domain to protect.
-    ## Note: the authenticator must also be in that domain.
-    ## If empty, the cookie is restricted to the subdomain of the issuer.
-    domain: example.com
-  
     ##
     ## Redis Provider
     ##
