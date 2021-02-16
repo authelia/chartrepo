@@ -88,6 +88,10 @@ spec:
             - name: AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE
               value: /usr/app/secrets/LDAP_PASSWORD
             {{- end }}
+            {{- if or (include "authelia.configured.smtp" .) (include "authelia.configured.smtpSecret" .) }}
+            - name: AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE
+              value: /usr/app/secrets/SMTP_PASSWORD
+            {{- end }}
             {{- if .Values.configMap.storage.postgres }}
             - name: AUTHELIA_STORAGE_POSTGRES_PASSWORD_FILE
               value: /usr/app/secrets/STORAGE_PASSWORD
@@ -188,11 +192,11 @@ spec:
               - key: {{ default "LDAP_PASSWORD" .Values.secret.ldap.key }}
                 path: LDAP_PASSWORD
               {{- end }}
-              {{- if .Values.secret.smtp.enabled }}
+              {{- if or (include "authelia.configured.smtp" .) (include "authelia.configured.smtpSecret" .) }}
               - key: {{ default "SMTP_PASSWORD" .Values.secret.smtp.key }}
                 path: SMTP_PASSWORD
               {{- end }}
-              {{- if and (.Values.configMap.session.redis) (.Values.secret.redis.enabled) }}
+              {{- if and (include "authelia.configured.redisSecret" .) (include "authelia.configured.redis" .) }}
               - key: {{ default "REDIS_PASSWORD" .Values.secret.redis.key }}
                 path: REDIS_PASSWORD
               {{- end }}
