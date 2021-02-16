@@ -153,7 +153,7 @@ spec:
           {{- with $mounts := .Values.pod.extraVolumeMounts }}
           {{ toYaml $mounts | indent 8 }}
           {{- end }}
-          {{- with $context := .Values.pod.podSecurityContext }}
+          {{- with $context := .Values.pod.securityContext.pod }}
           securityContext: {{ toYaml $context | nindent 10 }}
       {{- end }}
       volumes:
