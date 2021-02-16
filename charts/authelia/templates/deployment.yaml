@@ -76,6 +76,9 @@ spec:
             - name: {{ $secretName }}
           {{- end }}
           {{- end }}
+          command: authelia
+          args:
+            - --config=/config/configuration.yaml
           {{- with $resources :=.Values.pod.resources }}
           resources: {{ toYaml $resources | nindent 12 }}
           {{- end }}
@@ -169,8 +172,8 @@ spec:
           configMap:
             name: {{ default (include "authelia.name" .) .Values.configMap.existingConfigMap }}
             items:
-              - key: {{ default "configuration.yml" .Values.configMap.key }}
-                path: configuration.yml
+              - key: {{ default "configuration.yaml" .Values.configMap.key }}
+                path: configuration.yaml
         {{- end }}
         - name: secrets
           secret:

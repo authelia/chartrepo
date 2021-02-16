@@ -1,4 +1,5 @@
 ---
+## @formatter:off
 ## values.lite.yaml
 ##
 ## Repository: authelia https://charts.authelia.com
@@ -366,7 +367,7 @@ configMap:
   # labels:
   #   myLabel: myValue
   
-  # key: configuration.yml
+  # key: configuration.yaml
   
   # existingConfigMap:
   

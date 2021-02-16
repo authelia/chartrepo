@@ -9,7 +9,7 @@ metadata:
   annotations: {{ $annotations | nindent 4 }}
   {{- end }}
 data:
-  {{ default "configuration.yml" .Values.configMap.key }}: |
+  {{ default "configuration.yaml" .Values.configMap.key }}: |
     ---
     host: 0.0.0.0
     port: {{ default 9091 .Values.configMap.port }}

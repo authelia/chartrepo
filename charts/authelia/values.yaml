@@ -366,7 +366,7 @@ configMap:
   # labels:
   #   myLabel: myValue
   
-  # key: configuration.yml
+  # key: configuration.yaml
   
   # existingConfigMap:
   
