@@ -275,14 +275,14 @@ pod:
         scheme: HTTP
 
     liveness:
-      initialDelaySeconds: 5
+      initialDelaySeconds: 0
       periodSeconds: 30
       timeoutSeconds: 5
       successThreshold: 1
       failureThreshold: 5
 
     readiness:
-      initialDelaySeconds: 5
+      initialDelaySeconds: 0
       periodSeconds: 5
       timeoutSeconds: 5
       successThreshold: 1

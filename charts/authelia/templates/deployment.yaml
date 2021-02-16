@@ -107,7 +107,7 @@ spec:
               value: /usr/app/secrets/DUO_API_KEY
           {{- end }}
           {{- with $env := .Values.pod.env }}
-          {{ toYaml $env | indent 10 }}
+          {{ toYaml $env | indent 12 }}
           {{- end }}
           ports:
             - name: http
@@ -151,10 +151,10 @@ spec:
               readOnly: true
           {{- end }}
           {{- with $mounts := .Values.pod.extraVolumeMounts }}
-          {{ toYaml $mounts | indent 8 }}
+          {{ toYaml $mounts | indent 12 }}
           {{- end }}
           {{- with $context := .Values.pod.securityContext.pod }}
-          securityContext: {{ toYaml $context | nindent 10 }}
+          securityContext: {{ toYaml $context | nindent 12 }}
       {{- end }}
       volumes:
         {{- if (include "authelia.enabled.persistentVolumeClaim" .) }}
