@@ -10,11 +10,13 @@ You should be able to access Authelia soon via https://{{ include "authelia.ingr
 You will also need to direct your ingress to use the following path for forward auth: {{ include "authelia.forwardAuthPath" (merge (dict "Namespace" .Release.Namespace) .) }}.
 
 The following are the suggested annotations for 'ingress-nginx':
-
-    nginx.ingress.kubernetes.io/auth-url: http://{{ include "authelia.name" . }}.{{ .Release.Namespace }}/api/verify
+    nginx.ingress.kubernetes.io/auth-url: http://{{ include "authelia.name" . }}.{{ .Release.Namespace }}.svc.cluster.local/api/verify
     nginx.ingress.kubernetes.io/auth-signin: https://{{ include "authelia.ingressHostWithPath" . }}
     nginx.ingress.kubernetes.io/auth-response-headers: Remote-User,Remote-Name,Remote-Groups,Remote-Email
-
+    nginx.ingress.kubernetes.io/auth-snippet: |
+      proxy_set_header X-Forwarded-Method $request_method;
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header X-Forwarded-Method $request_method;
 {{- else if (include "authelia.enabled.ingress.traefik" .) }}
 You have selected the Traefik CRD to deploy the ingress. You can apply the {{ include "authelia.ingress.traefikCRD.middleware.name.chainAuth" . }} ({{ .Release.Namespace }} namespace) middleware to any Traefik ingress type in order to use Authelia auth with that ingress.
 
