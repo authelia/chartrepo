@@ -12,6 +12,10 @@ spec:
   {{- with $ip := .Values.service.clusterIP }}
   clusterIP: {{ $ip }}
   {{- end }}
+  {{- with $ips := .Values.service.externalIPs }}
+  externalIPs: {{ toYaml $ips | nindent 4 }}
+  {{- end }}
+  sessionAffinity: {{ default "None" .Values.service.sessionAffinity }}
   selector: {{- include "authelia.matchLabels" . | nindent 4 }}
   ports:
     - name: http

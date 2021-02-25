@@ -111,9 +111,7 @@ spec:
             - name: AUTHELIA_DUO_API_SECRET_KEY_FILE
               value: /config/secrets/DUO_API_KEY
           {{- end }}
-          {{- with $env := .Values.pod.env }}
-          {{ toYaml $env | indent 12 }}
-          {{- end }}
+          {{- with $env := .Values.pod.env }}{{ toYaml $env | nindent 12 }}{{- end }}
           ports:
             - name: http
               containerPort: {{ default 9091  .Values.configMap.port }}
