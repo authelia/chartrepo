@@ -300,13 +300,17 @@ Returns the forwardAuth url
 */}}
 {{- define "authelia.forwardAuthPath" -}}
     {{- $scheme := "http" -}}
-    {{- $host := (include "authelia.name" .) -}}
+    {{- $host := printf "%s.%s" (include "authelia.name" .) .Release.Namespace -}}
+    {{- $cluster := "cluster.local" -}}
     {{- if .Namespace -}}
         {{- $host = printf "%s.%s" $host .Namespace -}}
     {{- end -}}
+    {{- if .Cluster -}}
+        {{- $cluster := .Cluster -}}
+    {{- end -}}
     {{- $path := (include "authelia.path" .) | trimSuffix "/" -}}
     {{- $redirect := (include "authelia.ingressHostWithPath" .) -}}
-    {{- (printf "%s://%s%s/api/verify?https://%s/#/" $scheme $host $path $redirect) -}}
+    {{- (printf "%s://%s.svc.%s%s/api/verify?https://%s/#/" $scheme $host $cluster $path $redirect) -}}
 {{- end -}}
 
 {{/*
