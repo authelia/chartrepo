@@ -120,7 +120,7 @@ Returns true if duo is enabled.
 */}}
 {{- define "authelia.configured.duo" -}}
     {{- if .Values.configMap -}}
-        {{- if .Values.configMap.duo_api -}}
+        {{- if and .Values.configMap.duo_api (hasKey .Values.configMap.duo_api "integration_key") (hasKey .Values.configMap.duo_api "hostname") -}}-}}
             {{- true -}}
         {{- end -}}
     {{- end -}}

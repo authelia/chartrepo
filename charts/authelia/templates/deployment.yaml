@@ -107,7 +107,7 @@ spec:
             - name: AUTHELIA_SESSION_REDIS_PASSWORD_FILE
               value: /config/secrets/REDIS_PASSWORD
             {{- end }}
-            {{- if and (include "authelia.configured.duoSecret" .) (include "authelia.configured.duo" .) }}
+            {{- if and (include "authelia.configured.duo" .) (or (include "authelia.configured.duoSecret" .) (hasKey .Values.secret "existingSecret")) }}
             - name: AUTHELIA_DUO_API_SECRET_KEY_FILE
               value: /config/secrets/DUO_API_KEY
           {{- end }}
