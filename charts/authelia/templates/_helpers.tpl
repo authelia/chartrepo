@@ -310,7 +310,7 @@ Returns the forwardAuth url
     {{- end -}}
     {{- $path := (include "authelia.path" .) | trimSuffix "/" -}}
     {{- $redirect := (include "authelia.ingressHostWithPath" .) -}}
-    {{- (printf "%s://%s.svc.%s%s/api/verify?https://%s/#/" $scheme $host $cluster $path $redirect) -}}
+    {{- (printf "%s://%s.svc.%s%s/api/verify?rd=https://%s/#/" $scheme $host $cluster $path $redirect) -}}
 {{- end -}}
 
 {{/*
