@@ -19,7 +19,7 @@ image:
   repository: authelia/authelia
   tag: 4.26.2
   pullPolicy: IfNotPresent
-  pullSecrets: [ ]
+  pullSecrets: []
   # pullSecrets:
   #   - myPullSecretName
 
@@ -27,14 +27,14 @@ image:
 # appNameOverride: authelia
 
 
-extraAnnotations: { }
+extraAnnotations: {}
 # extraAnnotations:
 #   myAnnotation: myValue
 
 ##
 ## extra labels/annotations applied to all resources
 ##
-extraLabels: { }
+extraLabels: {}
 # extraLabels:
 #   myLabel: myValue
 
@@ -46,11 +46,11 @@ extraLabels: { }
 domain: example.com
 
 service:
-  annotations: { }
+  annotations: {}
   # annotations:
   #   myAnnotation: myValue
 
-  labels: { }
+  labels: {}
   # labels:
   #   myLabel: myValue
 
@@ -62,12 +62,12 @@ service:
 ingress:
   enabled: false
 
-  annotations: { }
+  annotations: {}
   # annotations:
   #   kubernetes.io/ingress.class: nginx
   #   kubernetes.io/tls-acme: "true"
 
-  labels: { }
+  labels: {}
   # labels:
   #   myLabel: myValue
 
@@ -93,7 +93,7 @@ ingress:
   
     # matchOverride: Host(`auth.example.com`) && PathPrefix(`/`)
   
-    entrypoints: [ ]
+    entrypoints: []
     # entrypoints:
     # - http
   
@@ -123,13 +123,13 @@ ingress:
           # nameOverride: authelia-auth-chain
 
           # List of Middlewares to apply before the forwardAuth Middleware in the authentication chain.
-          before: [ ]
+          before: []
           # before:
           # - name: extra-middleware-name
           #   namespace: default
 
           # List of Middlewares to apply after the forwardAuth Middleware in the authentication chain.
-          after: [ ]
+          after: []
           # after:
           # - name: extra-middleware-name
           #   namespace: default
@@ -137,13 +137,13 @@ ingress:
         ingressRoute:
 
           # List of Middlewares to apply before the middleware in the IngressRoute chain.
-          before: [ ]
+          before: []
           # before:
           # - name: extra-middleware-name
           #   namespace: default
   
           # List of Middlewares to apply after the middleware in the IngressRoute chain.
-          after: [ ]
+          after: []
           # after:
           # - name: extra-middleware-name
           #   namespace: default
@@ -157,7 +157,7 @@ ingress:
       #   sans:
       #     - *.example.com
       #
-      options: { }
+      options: {}
       #   nameOverride: authelia-tls-options
       #   minVersion: VersionTLS12
       #   maxVersion: VersionTLS13
@@ -173,11 +173,11 @@ pod:
   # Must be Deployment, DaemonSet, or StatefulSet.
   kind: DaemonSet
 
-  annotations: { }
+  annotations: {}
   # annotations:
   #   myAnnotation: myValue
 
-  labels: { }
+  labels: {}
   # labels:
   #   myLabel: myValue
 
@@ -187,18 +187,18 @@ pod:
   updateStrategy: RollingUpdate
 
   securityContext:
-    container: { }
+    container: {}
     # container:
     #   runAsUser: 2000
     #   runAsGroup: 2000
     #   fsGroup: 2000
-    pod: { }
+    pod: {}
     # pod:
     #   readOnlyRootFilesystem: true
     #   allowPrivilegeEscalation: false
     #   privileged: false
 
-  tolerations: [ ]
+  tolerations: []
   # tolerations:
   # - key: key1
   #   operator: Equal
@@ -256,17 +256,17 @@ pod:
       #             - S2
       #         topologyKey: topology.kubernetes.io/zone
 
-  env: [ ]
+  env: []
   # env:
   # - name: TZ
   #   value: Australia/Melbourne
 
   resources:
-    limits: { }
+    limits: {}
     # limits:
     #   cpu: "4.00"
     #   memory: 125Mi
-    requests: { }
+    requests: {}
     # requests:
     #   cpu: "0.25"
     #   memory: 50Mi
@@ -301,8 +301,8 @@ pod:
       successThreshold: 1
       failureThreshold: 6
 
-  extraVolumeMounts: [ ]
-  extraVolumes: [ ]
+  extraVolumeMounts: []
+  extraVolumes: []
 
 ##
 ## Kubernetes Pod Disruption Budget
@@ -310,11 +310,11 @@ pod:
 podDisruptionBudget:
   enabled: false
 
-  annotations: { }
+  annotations: {}
   # annotations:
   #   myAnnotation: myValue
 
-  labels: { }
+  labels: {}
   # labels:
   #   myLabel: myValue
 
@@ -327,11 +327,11 @@ podDisruptionBudget:
 networkPolicy:
   enabled: false
 
-  annotations: { }
+  annotations: {}
   # annotations:
   #   myAnnotation: myValue
 
-  labels: { }
+  labels: {}
   # labels:
   #   myLabel: myValue
 
@@ -359,11 +359,11 @@ configMap:
   # If this is false you need to provide a volumeMount via PV/PVC or other means that mounts to /config.
   enabled: true
 
-  annotations: { }
+  annotations: {}
   # annotations:
   #   myAnnotation: myValue
 
-  labels: { }
+  labels: {}
   # labels:
   #   myLabel: myValue
   
@@ -413,7 +413,7 @@ configMap:
   ## TOTP Configuration
   ##
   ## Parameters used for TOTP generation
-  totp: { }
+  totp: {}
   # totp:
     ## The issuer name displayed in the Authenticator application of your choice
     ## See: https://github.com/google/google-authenticator/wiki/Key-Uri-Format for more info on issuer names
@@ -432,7 +432,7 @@ configMap:
   ##
   ## Parameters used to contact the Duo API. Those are generated when you protect an application of type
   ## "Partner Auth API" in the management panel.
-  duo_api: { }
+  duo_api: {}
   # duo_api:
   #   hostname: api-123456789.example.com
   #   integration_key: ABCDEF
@@ -767,11 +767,11 @@ configMap:
 secret:
   # existingSecret: authelia
 
-  annotations: { }
+  annotations: {}
   # annotations:
   #   myAnnotation: myValue
 
-  labels: { }
+  labels: {}
   # labels:
   #   myLabel: myValue
 
@@ -800,15 +800,15 @@ secret:
 certificates:
   # existingSecret: authelia
 
-  annotations: { }
+  annotations: {}
   # annotations:
   #   myAnnotation: myValue
 
-  labels: { }
+  labels: {}
   # labels:
   #   myLabel: myValue
 
-  values: { }
+  values: {}
   # values:
   # - name: Example_Com_Root_Certificate_Authority_B64.pem
   #   secretValue: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURYekNDQWtlZ0F3SUJBZ0lMQkFBQUFBQUJJVmhUQ0tJd0RRWUpLb1pJaHZjTkFRRUxCUUF3VERFZ01CNEcKQTFVRUN4TVhSMnh2WW1Gc1UybG5iaUJTYjI5MElFTkJJQzBnVWpNeEV6QVJCZ05WQkFvVENrZHNiMkpoYkZOcApaMjR4RXpBUkJnTlZCQU1UQ2tkc2IySmhiRk5wWjI0d0hoY05NRGt3TXpFNE1UQXdNREF3V2hjTk1qa3dNekU0Ck1UQXdNREF3V2pCTU1TQXdIZ1lEVlFRTEV4ZEhiRzlpWVd4VGFXZHVJRkp2YjNRZ1EwRWdMU0JTTXpFVE1CRUcKQTFVRUNoTUtSMnh2WW1Gc1UybG5iakVUTUJFR0ExVUVBeE1LUjJ4dlltRnNVMmxuYmpDQ0FTSXdEUVlKS29aSQpodmNOQVFFQkJRQURnZ0VQQURDQ0FRb0NnZ0VCQU13bGRwQjVCbmdpRnZYQWc3YUV5aWllL1FWMkVjV3RpSEw4ClJnSkR4N0tLblFSZkpNc3VTK0ZnZ2tiaFVxc01nVWR3Yk4xazBldjFMS01QZ2owTUs2NlgxN1lVaGhCNXV6c1QKZ0hlTUNPRkowbXBpTHg5ZStwWm8zNGtubFRpZkJ0Yyt5Y3NtV1ExejNyREk2U1lPZ3hYRzcxdUwwZ1JneWttbQpLUFpwTy9iTHlDaVI1WjJLWVZjM3JIUVUzSFRnT3U1eUx5NmMrOUM3di9VOUFPRUdNK2lDSzY1VHBqb1djNHpkClFRNGdPc0MwcDZIcHNrK1FMakpnNlZmTHVRU1NhR2psT0NaZ2RiS2ZkLytSRk8rdUlFbjhyVUFWU05FQ01XRVoKWHJpWDc2MTN0MlNhZXI5ZndSUHZtMkw3RFd6Z1ZHa1dxUVBhYnVtRGszRjJ4bW1GZ2hjQ0F3RUFBYU5DTUVBdwpEZ1lEVlIwUEFRSC9CQVFEQWdFR01BOEdBMVVkRXdFQi93UUZNQU1CQWY4d0hRWURWUjBPQkJZRUZJL3dTMytvCkxrVWtyazFRK21PYWk5N2kzUnU4TUEwR0NTcUdTSWIzRFFFQkN3VUFBNElCQVFCTFFOdkFVS3IreUF6djk1WlUKUlVtN2xnQUpRYXl6RTRhR0tBY3p5bXZtZExtNkFDMnVwQXJUOWZIeEQ0cS9jMmRLZzhkRWUzamdyMjVzYndNcApqak01UmNPTzVMbFhiS3I4RXBic1U4WXQ1Q1JzdVpSais5eFRhR2RXUG9PNHp6VWh3OGxvL3M3YXdsT3F6SkNLCjZmQmRSb3lWM1hwWUtCb3ZIZDdOQURkQmorMUViZGRUS0pkKzgyY0VIaFhYaXBhMDA5NU1KNlJNRzNOemR2UVgKbWNJZmVnN2pMUWl0Q2h3cy96eXJWUTRQa1g0MjY4TlhTYjdoTGkxOFlJdkRRVkVUSTUzTzl6SnJsQUdvbWVjcwpNeDg2T3lYU2hrRE9PeXlHZU1saEx4UzY3dHRWYjkrRTdnVUpUYjBvMkhMTzAySlFaUjdya3BlRE1kbXp0Y3BICldEOWYKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQ==
@@ -847,11 +847,11 @@ certificates:
 persistence:
   enabled: false
 
-  annotations: { }
+  annotations: {}
   # annotations:
   #   myAnnotation: myValue
 
-  labels: { }
+  labels: {}
   # labels:
   #   myLabel: myValue
 
@@ -866,5 +866,5 @@ persistence:
 
   size: 100Mi
 
-  selector: { }
+  selector: {}
 ...
