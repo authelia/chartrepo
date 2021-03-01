@@ -1,0 +1,20 @@
+steps:
+  - label: ":helm: Linting (Chart Test)"
+    command: "ct --config .buildkite/ct.yaml lint"
+    if: build.branch != "gh-pages"
+  
+  - label: ":buildkite: Setup Deployment"
+    command: "mkdir .cr-release-packages .cr-index"
+    if: build.branch == "master"
+  
+  - label: ":package: Package Chart (Chart Releaser)"
+    command: "ct --config .buildkite/ct.yaml list-changed | xargs -n1 cr --config .buildkite/cr.yaml package"
+    if: build.branch == "master"
+  
+  - label: ":github: Deploy Artifacts (Chart Releaser)"
+    command: "cr --config .buildkite/cr.yaml upload"
+    if: build.branch == "master"
+  
+  - label: ":k8s: Publish Chart Index (Chart Releaser)"
+    command: "cr --config .buildkite/cr.yaml index --push"
+    if: build.branch == "master"

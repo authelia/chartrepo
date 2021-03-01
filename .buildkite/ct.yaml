@@ -1,9 +1,14 @@
 chart-dirs:
-- charts
-lint-conf: .buildkite/lintconf.yaml
-chart-yaml-schema: ./buildkite/chart_schema.yaml
+  - charts
+chart-repos:
+  - authelia=https://charts.authelia.com
+check-version-increment: true
+chart-yaml-schema: .buildkite/chart_schema.yaml
 exclude-deprecated: true
+excluded-charts: [ ]
+lint-conf: .yamllint.yaml
 remote: origin
+since: HEAD
 target-branch: master
 validate-chart-schema: true
 validate-maintainers: true
