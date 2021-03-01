@@ -10,7 +10,7 @@ steps:
   
   - label: ":package: Package Chart (Chart Releaser)"
     commands:
-      - "mkdir .cr-release-packages .cr-index"
+      - "mkdir .cr-release-packages"
       - "ct --config .buildkite/ct.yaml list-changed | xargs -n1 cr --config .buildkite/cr.yaml package"
     artifact_paths:
       - ".cr-release-packages/*"
@@ -20,6 +20,7 @@ steps:
   
   - label: ":github: Deploy Artifacts (Chart Releaser)"
     commands:
+      - "mkdir .cr-release-packages"
       - "buildkite-agent artifact download .cr-release-packages/* .cr-release-packages"
       - "cr --config .buildkite/cr.yaml upload"
     agents:
@@ -28,6 +29,7 @@ steps:
   
   - label: ":k8s: Publish Chart Index (Chart Releaser)"
     commands:
+      - "mkdir .cr-release-packages .cr-index"
       - "buildkite-agent artifact download .cr-release-packages/* .cr-release-packages"
       - "cr --config .buildkite/cr.yaml index --push"
     agents:
