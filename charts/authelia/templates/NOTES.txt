@@ -1,4 +1,4 @@
-Thank you for installing the {{ include "authelia.chart" . }} Chart.
+Thank you for installing the {{ include "authelia.chart" . }} Chart!
 
 The helm release name is {{ .Release.Name }}.
 
