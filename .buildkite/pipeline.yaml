@@ -19,7 +19,6 @@ steps:
     if: build.branch == "master" && build.env("CR_BYPASS") != "true"
   
   - label: ":github: Deploy Artifacts (Chart Releaser)"
-    p
     commands:
       - "buildkite-agent artifact download .cr-release-packages/* .cr-release-packages"
       - "cr --config .buildkite/cr.yaml upload"
