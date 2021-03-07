@@ -5,7 +5,7 @@ chart-repos:
 check-version-increment: true
 chart-yaml-schema: .buildkite/chart_schema.yaml
 exclude-deprecated: true
-excluded-charts: [ ]
+excluded-charts: []
 lint-conf: .yamllint.yaml
 remote: origin
 since: HEAD
