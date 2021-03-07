@@ -93,8 +93,8 @@ ingress:
 
     # matchOverride: Host(`auth.example.com`) && PathPrefix(`/`)
 
-    entrypoints: []
-    # entrypoints:
+    entryPoints: []
+    # entryPoints:
     # - http
 
     # priority: 10
