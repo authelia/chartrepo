@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Buildkite](https://img.shields.io/buildkite/883807cdeec091e05a9dd6dbbd1eb401f51f360d00e758f49a/master)](https://buildkite.com/authelia/charts)
 [![GitHub issues](https://img.shields.io/github/issues-raw/authelia/chartrepo)](https://github.com/authelia/chartrepo/issues?q=is%3Aopen+is%3Aissue)
-[![GitHub closed issues](https://img.shields.io/github/issues-closed/authelia/chartrepo)](https://github.com/authelia/chartrepo/issues?q=is%3Aissue+is%3Aclosed)
+[![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/authelia/chartrepo)](https://github.com/authelia/chartrepo/issues?q=is%3Aissue+is%3Aclosed)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/authelia/chartrepo)](https://github.com/authelia/chartrepo/pulls?q=is%3Aopen+is%3Apr)
 [![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/authelia/chartrepo)](https://github.com/authelia/chartrepo/pulls?q=is%3Apr+is%3Aclosed)
 [![Discord](https://img.shields.io/discord/707844280412012608?label=discord)](https://discord.authelia.com)
