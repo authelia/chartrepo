@@ -40,7 +40,9 @@ spec:
   {{- end }}
   {{- if .Values.ingress.tls.enabled }}
   tls:
+    {{- if not .Values.ingress.traefikCRD.tls.certResolver }}
     secretName: {{ default (printf "%s-traefik-tls" (include "authelia.name" .)) .Values.ingress.tls.secret }}
+    {{- end }}
     options:
       {{- if (include "authelia.existing.ingress.traefik.tlsOption" .) }}
       {{- toYaml .Values.ingress.traefikCRD.tls.existingOptions | nindent 6 }}
