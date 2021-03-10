@@ -7,7 +7,7 @@ steps:
     agents:
       charts: "true"
     if: build.branch != "gh-pages"
-  
+
   - label: ":package: Package Chart (Chart Releaser)"
     commands:
       - "mkdir .cr-release-packages"
@@ -17,7 +17,7 @@ steps:
     agents:
       charts: "true"
     if: build.branch == "master" && build.env("CR_BYPASS") != "true"
-  
+
   - label: ":github: Deploy Artifacts (Chart Releaser)"
     commands:
       - "mkdir .cr-release-packages"
@@ -26,7 +26,7 @@ steps:
     agents:
       charts: "true"
     if: build.branch == "master" && build.env("CR_BYPASS") != "true"
-  
+
   - label: ":k8s: Publish Chart Index (Chart Releaser)"
     commands:
       - "mkdir .cr-release-packages .cr-index"
