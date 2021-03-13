@@ -1,6 +1,6 @@
 Thank you for installing the {{ include "authelia.chart" . }} Chart.
 
-Please report any issues at https://github.com/authelia/chartrepo.
+Please report any chart issues at https://github.com/authelia/chartrepo/issues and any application issues at https://github.com/authelia/authelia/issues.
 
 The helm release name is {{ .Release.Name }}.
 
