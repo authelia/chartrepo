@@ -203,83 +203,103 @@ Returns the injector annotations
     {{- if include "authelia.enabled.injector" . -}}
 vault.hashicorp.com/role: {{ default "authelia" .Values.secret.vault_injector.role }}
 vault.hashicorp.com/agent-inject: "true"
-vault.hashicorp.com/agent-inject-status: {{ default "update" .Values.secret.vault_injector.status }}
-{{- if .Values.secret.vault_injector.command }}
-vault.hashicorp.com/agent-inject-command: {{ .Values.secret.vault_injector.command }}
+vault.hashicorp.com/agent-inject-status: {{ default "update" .Values.secret.vault_injector.agent.status }}
+{{- if .Values.secret.vault_injector.agent.configMap }}
+vault.hashicorp.com/agent-configmap: {{ .Values.secret.vault_injector.agent.configMap }}
 {{- end }}
-{{- if .Values.secret.vault_injector.templateValue }}
-vault.hashicorp.com/agent-inject-template: {{ .Values.secret.vault_injector.templateValue }}
+{{- if .Values.secret.vault_injector.agent.image }}
+vault.hashicorp.com/agent-image: {{ .Values.secret.vault_injector.agent.image }}
 {{- end }}
-vault.hashicorp.com/agent-inject-secret-JWT_TOKEN: {{ .Values.secret.vault_injector.secrets.jwt.path }}
+{{- if .Values.secret.vault_injector.agent.initFirst }}
+vault.hashicorp.com/agent-init-first: {{ .Values.secret.vault_injector.agent.initFirst }}
+{{- end }}
+{{- if .Values.secret.vault_injector.agent.command }}
+vault.hashicorp.com/agent-inject-command: {{ .Values.secret.vault_injector.agent.command }}
+{{- end }}
+{{- if .Values.secret.vault_injector.agent.templateValue }}
+vault.hashicorp.com/agent-inject-template: {{ .Values.secret.vault_injector.agent.templateValue }}
+{{- end }}
+vault.hashicorp.com/agent-inject-volume-path: /config/secrets
+vault.hashicorp.com/agent-inject-secret-jwt: {{ .Values.secret.vault_injector.secrets.jwt.path }}
+vault.hashicorp.com/agent-inject-file-jwt: JWT_TOKEN
 {{- if .Values.secret.vault_injector.secrets.jwt.templateValue }}
-vault.hashicorp.com/agent-inject-secret-template-JWT_TOKEN: {{ .Values.secret.vault_injector.secrets.jwt.templateValue }}
+vault.hashicorp.com/agent-inject-secret-template-jwt: {{ .Values.secret.vault_injector.secrets.jwt.templateValue }}
 {{- end }}
 {{- if .Values.secret.vault_injector.secrets.jwt.command }}
-vault.hashicorp.com/agent-inject-secret-command-JWT_TOKEN: {{ .Values.secret.vault_injector.secrets.jwt.command }}
+vault.hashicorp.com/agent-inject-secret-command-jwt: {{ .Values.secret.vault_injector.secrets.jwt.command }}
 {{- end }}
-vault.hashicorp.com/agent-inject-secret-SESSION_ENCRYPTION_KEY: {{ .Values.secret.vault_injector.secrets.session.path }}
+vault.hashicorp.com/agent-inject-secret-session: {{ .Values.secret.vault_injector.secrets.session.path }}
+vault.hashicorp.com/agent-inject-file-session: SESSION_ENCRYPTION_KEY
 {{- if .Values.secret.vault_injector.secrets.session.templateValue }}
-vault.hashicorp.com/agent-inject-secret-template-SESSION_ENCRYPTION_KEY: {{ .Values.secret.vault_injector.secrets.session.templateValue }}
+vault.hashicorp.com/agent-inject-secret-template-session: {{ .Values.secret.vault_injector.secrets.session.templateValue }}
 {{- end }}
 {{- if .Values.secret.vault_injector.secrets.session.command }}
-vault.hashicorp.com/agent-inject-secret-command-SESSION_ENCRYPTION_KEY: {{ .Values.secret.vault_injector.secrets.session.command }}
+vault.hashicorp.com/agent-inject-secret-command-session: {{ .Values.secret.vault_injector.secrets.session.command }}
 {{- end }}
 {{- if .Values.configMap.authentication_backend.ldap.enabled }}
-vault.hashicorp.com/agent-inject-secret-LDAP_PASSWORD: {{ .Values.secret.vault_injector.secrets.ldap.path }}
+vault.hashicorp.com/agent-inject-secret-ldap: {{ .Values.secret.vault_injector.secrets.ldap.path }}
+vault.hashicorp.com/agent-inject-file-ldap: LDAP_PASSWORD
 {{- if .Values.secret.vault_injector.secrets.ldap.templateValue }}
-vault.hashicorp.com/agent-inject-secret-template-LDAP_PASSWORD: {{ .Values.secret.vault_injector.secrets.ldap.templateValue }}
+vault.hashicorp.com/agent-inject-secret-template-ldap: {{ .Values.secret.vault_injector.secrets.ldap.templateValue }}
 {{- end }}
 {{- if .Values.secret.vault_injector.secrets.ldap.command }}
-vault.hashicorp.com/agent-inject-secret-command-LDAP_PASSWORD: {{ .Values.secret.vault_injector.secrets.ldap.command }}
+vault.hashicorp.com/agent-inject-secret-command-ldap: {{ .Values.secret.vault_injector.secrets.ldap.command }}
 {{- end }}
 {{- end }}
 {{- if or .Values.configMap.storage.mysql.enabled .Values.configMap.storage.postgres.enabled }}
-vault.hashicorp.com/agent-inject-secret-STORAGE_PASSWORD: {{ .Values.secret.vault_injector.secrets.storage.path }}
+vault.hashicorp.com/agent-inject-secret-storage: {{ .Values.secret.vault_injector.secrets.storage.path }}
+vault.hashicorp.com/agent-inject-file-storage: STORAGE_PASSWORD
 {{- if .Values.secret.vault_injector.secrets.storage.templateValue }}
-vault.hashicorp.com/agent-inject-secret-template-STORAGE_PASSWORD: {{ .Values.secret.vault_injector.secrets.storage.templateValue }}
+vault.hashicorp.com/agent-inject-secret-template-storage: {{ .Values.secret.vault_injector.secrets.storage.templateValue }}
 {{- end }}
 {{- if .Values.secret.vault_injector.secrets.storage.command }}
-vault.hashicorp.com/agent-inject-secret-command-STORAGE_PASSWORD: {{ .Values.secret.vault_injector.secrets.storage.command }}
+vault.hashicorp.com/agent-inject-secret-command-storage: {{ .Values.secret.vault_injector.secrets.storage.command }}
 {{- end }}
 {{- end }}
 {{- if and .Values.configMap.session.redis.enabled .Values.configMap.session.redis.enabledSecret }}
-vault.hashicorp.com/agent-inject-secret-REDIS_PASSWORD: {{ .Values.secret.vault_injector.secrets.redis.path }}
+vault.hashicorp.com/agent-inject-secret-redis: {{ .Values.secret.vault_injector.secrets.redis.path }}
+vault.hashicorp.com/agent-inject-file-redis: REDIS_PASSWORD
 {{- if .Values.secret.vault_injector.secrets.redis.templateValue }}
-vault.hashicorp.com/agent-inject-secret-template-REDIS_PASSWORD: {{ .Values.secret.vault_injector.secrets.redis.templateValue }}
+vault.hashicorp.com/agent-inject-secret-template-redis: {{ .Values.secret.vault_injector.secrets.redis.templateValue }}
 {{- end }}
 {{- if .Values.secret.vault_injector.secrets.redis.command }}
-vault.hashicorp.com/agent-inject-secret-command-REDIS_PASSWORD: {{ .Values.secret.vault_injector.secrets.redis.command }}
+vault.hashicorp.com/agent-inject-secret-command-redis: {{ .Values.secret.vault_injector.secrets.redis.command }}
 {{- end }}
 {{- if and .Values.configMap.session.redis.high_availability.enabled .Values.configMap.session.redis.high_availability.enabledSecret }}
-vault.hashicorp.com/agent-inject-secret-REDIS_SENTINEL_PASSWORD: {{ .Values.secret.vault_injector.secrets.redis_sentinel.path }}
+vault.hashicorp.com/agent-inject-secret-redissentinel: {{ .Values.secret.vault_injector.secrets.redis_sentinel.path }}
+vault.hashicorp.com/agent-inject-file-redissentinel: REDIS_SENTINEL_PASSWORD
 {{- if .Values.secret.vault_injector.secrets.redis_sentinel.templateValue }}
-vault.hashicorp.com/agent-inject-secret-template-REDIS_SENTINEL_PASSWORD: {{ .Values.secret.vault_injector.secrets.redis_sentinel.templateValue }}
+vault.hashicorp.com/agent-inject-secret-template-redissentinel {{ .Values.secret.vault_injector.secrets.redis_sentinel.templateValue }}
 {{- end }}
 {{- if .Values.secret.vault_injector.secrets.redis_sentinel.command }}
-vault.hashicorp.com/agent-inject-secret-command-REDIS_SENTINEL_PASSWORD: {{ .Values.secret.vault_injector.secrets.redis_sentinel.command }}
+vault.hashicorp.com/agent-inject-secret-command-redissentinel: {{ .Values.secret.vault_injector.secrets.redis_sentinel.command }}
 {{- end }}
 {{- end }}
 {{- end }}
 {{- if and .Values.configMap.notifier.smtp.enabled .Values.configMap.notifier.smtp.enabledSecret }}
-vault.hashicorp.com/agent-inject-secret-SMTP_PASSWORD: {{ .Values.secret.vault_injector.secrets.smtp.path }}
+vault.hashicorp.com/agent-inject-secret-smtp: {{ .Values.secret.vault_injector.secrets.smtp.path }}
+vault.hashicorp.com/agent-inject-file-smtp: SMTP_PASSWORD
 {{- if .Values.secret.vault_injector.secrets.smtp.templateValue }}
-vault.hashicorp.com/agent-inject-secret-template-SMTP_PASSWORD: {{ .Values.secret.vault_injector.secrets.smtp.templateValue }}
+vault.hashicorp.com/agent-inject-secret-template-smtp: {{ .Values.secret.vault_injector.secrets.smtp.templateValue }}
 {{- end }}
 {{- if .Values.secret.vault_injector.secrets.smtp.command }}
-vault.hashicorp.com/agent-inject-secret-command-SMTP_PASSWORD: {{ .Values.secret.vault_injector.secrets.smtp.command }}
+vault.hashicorp.com/agent-inject-secret-command-smtp: {{ .Values.secret.vault_injector.secrets.smtp.command }}
 {{- end }}
 {{- end }}
 {{- if include "authelia.configured.duo" . }}
-vault.hashicorp.com/agent-inject-secret-DUO_API_KEY: {{ .Values.secret.vault_injector.secrets.duo.path }}
+vault.hashicorp.com/agent-inject-secret-duo: {{ .Values.secret.vault_injector.secrets.duo.path }}
+vault.hashicorp.com/agent-inject-file-duo: DUO_API_KEY
 {{- if .Values.secret.vault_injector.secrets.duo.templateValue }}
-vault.hashicorp.com/agent-inject-secret-template-DUO_API_KEY: {{ .Values.secret.vault_injector.secrets.duo.templateValue }}
+vault.hashicorp.com/agent-inject-secret-template-duo: {{ .Values.secret.vault_injector.secrets.duo.templateValue }}
 {{- end }}
 {{- if .Values.secret.vault_injector.secrets.duo.command }}
-vault.hashicorp.com/agent-inject-secret-command-DUO_API_KEY: {{ .Values.secret.vault_injector.secrets.duo.command }}
+vault.hashicorp.com/agent-inject-secret-command-duo: {{ .Values.secret.vault_injector.secrets.duo.command }}
 {{- end }}
 {{- end }}
-vault.hashicorp.com/agent-run-as-same-user: {{ default "true" .Values.secret.vault_injector.sameAsUser | quote }}
+vault.hashicorp.com/agent-run-as-same-user: {{ default "true" .Values.secret.vault_injector.agent.runAsSameUser | quote }}
+{{- if .Values.secret.annotations }}
 {{- toYaml .Values.secret.annotations | nindent 0 }}
+    {{- end }}
     {{- end }}
 {{- end -}}
 
@@ -291,17 +311,6 @@ Returns the value of .SecretValue or a randomly generated one
         {{- .SecretValue | b64enc -}}
     {{- else -}}
         {{- randAlphaNum 128 | b64enc -}}
-    {{- end -}}
-{{- end -}}
-
-{{/*
-Returns the correct secret path for env.
-*/}}
-{{- define "authelia.secret.path" -}}
-    {{- if include "authelia.enabled.injector" . -}}
-        {{- printf "/vault/secrets/%s" .Name -}}
-    {{- else -}}
-        {{- printf "/config/secrets/%s" .Name -}}
     {{- end -}}
 {{- end -}}
 

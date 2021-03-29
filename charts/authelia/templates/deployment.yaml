@@ -89,36 +89,36 @@ spec:
         {{- end }}
         env:
         - name: AUTHELIA_JWT_SECRET_FILE
-          value: {{ include "authelia.secret.path" (merge (dict "Name" "JWT_TOKEN") .) }}
+          value: /config/secrets/JWT_TOKEN
         - name: AUTHELIA_SESSION_SECRET_FILE
-          value: {{ include "authelia.secret.path" (merge (dict "Name" "SESSION_ENCRYPTION_KEY") .) }}
+          value: /config/secrets/SESSION_ENCRYPTION_KEY
           {{- if .Values.configMap.authentication_backend.ldap.enabled }}
         - name: AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE
-          value: {{ include "authelia.secret.path" (merge (dict "Name" "LDAP_PASSWORD") .) }}
+          value: /config/secrets/LDAP_PASSWORD
           {{- end }}
           {{- if or (include "authelia.configured.smtp" .) (include "authelia.configured.smtpSecret" .) }}
         - name: AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE
-          value: {{ include "authelia.secret.path" (merge (dict "Name" "SMTP_PASSWORD") .) }}
+          value: /config/secrets/SMTP_PASSWORD
           {{- end }}
           {{- if .Values.configMap.storage.postgres.enabled }}
         - name: AUTHELIA_STORAGE_POSTGRES_PASSWORD_FILE
-          value: {{ include "authelia.secret.path" (merge (dict "Name" "STORAGE_PASSWORD") .) }}
+          value: /config/secrets/STORAGE_PASSWORD
           {{- end }}
           {{- if .Values.configMap.storage.mysql.enabled }}
         - name: AUTHELIA_STORAGE_MYSQL_PASSWORD_FILE
-          value: {{ include "authelia.secret.path" (merge (dict "Name" "STORAGE_PASSWORD") .) }}
+          value: /config/secrets/STORAGE_PASSWORD
           {{- end }}
           {{- if and .Values.configMap.session.redis.enabled .Values.configMap.session.redis.enabledSecret }}
         - name: AUTHELIA_SESSION_REDIS_PASSWORD_FILE
-          value: {{ include "authelia.secret.path" (merge (dict "Name" "REDIS_PASSWORD") .) }}
+          value: /config/secrets/REDIS_PASSWORD
           {{- end }}
           {{- if and .Values.configMap.session.redis.high_availability.enabled .Values.configMap.session.redis.high_availability.enabledSecret }}
         - name: AUTHELIA_SESSION_REDIS_HIGH_AVAILABILITY_SENTINEL_PASSWORD_FILE
-          value: {{ include "authelia.secret.path" (merge (dict "Name" "REDIS_SENTINEL_PASSWORD") .) }}
+          value: /config/secrets/REDIS_SENTINEL_PASSWORD
           {{- end }}
           {{- if and (include "authelia.configured.duo" .) (or (include "authelia.configured.duoSecret" .) (hasKey .Values.secret "existingSecret")) }}
         - name: AUTHELIA_DUO_API_SECRET_KEY_FILE
-          value: {{ include "authelia.secret.path" (merge (dict "Name" "DUO_API_KEY") .) }}
+          value: /config/secrets/DUO_API_KEY
         {{- end }}
         {{- with $env := .Values.pod.env }}{{ toYaml $env | nindent 12 }}{{- end }}
         {{- with $probe := include "authelia.merge.probe" (merge (dict "Type" "startup" "Method" .Values.pod.probes.method "Probe" .Values.pod.probes.startup) .) }}

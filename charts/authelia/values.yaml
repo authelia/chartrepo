@@ -884,10 +884,16 @@ secret:
   vault_injector:
     enabled: false
     role: authelia
-    sameAsUser: true
-    status: update
-    command: "sh -c 'kill HUP $(pidof authelia)'"
-    templateValue: ""
+
+    agent:
+      status: update
+      configMap: ""
+      image: ""
+      initFirst: "false"
+      runAsSameUser: "true"
+      command: "sh -c 'kill HUP $(pidof authelia)'"
+      templateValue: ""
+
     secrets:
       jwt:
         path: AUTHELIA_JWT
