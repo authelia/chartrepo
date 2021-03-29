@@ -882,7 +882,7 @@ secret:
   
   ## HashiCorp Vault Injector configuration.
   vault_injector:
-    enabled: true
+    enabled: false
     role: authelia
     sameAsUser: true
     status: update
