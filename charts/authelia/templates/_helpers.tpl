@@ -48,41 +48,15 @@ Returns true if pod is stateful.
 {{- define "authelia.stateful" -}}
     {{- if .Values.configMap -}}
         {{- if .Values.configMap.enabled -}}
-            {{- if .Values.configMap.authentication_backend.file -}}
+            {{- if .Values.configMap.authentication_backend.file.enabled -}}
                 {{- true -}}
-            {{- else if .Values.configMap.storage.local -}}
+            {{- else if .Values.configMap.storage.local.enabled -}}
                 {{- true -}}
-            {{- else if not .Values.configMap.session.redis -}}
+            {{- else if not .Values.configMap.session.redis.enabled -}}
                 {{- true -}}
-            {{- else if and (not .Values.configMap.storage.mysql) (not .Values.configMap.storage.postgres) -}}
+            {{- else if and (not .Values.configMap.storage.mysql.enabled) (not .Values.configMap.storage.postgres.enabled) -}}
                 {{- true -}}
-            {{- else if not .Values.configMap.authentication_backend.ldap -}}
-                {{- true -}}
-            {{- end -}}
-        {{- end -}}
-    {{- end -}}
-{{- end -}}
-
-{{/*
-Returns true if redis is configured.
-*/}}
-{{- define "authelia.configured.redis" -}}
-    {{- if .Values.configMap -}}
-        {{- if .Values.configMap.session -}}
-            {{- if .Values.configMap.session.redis -}}
-                {{- true -}}
-            {{- end -}}
-        {{- end -}}
-    {{- end -}}
-{{- end -}}
-
-{{/*
-Returns true if redis secret is configured.
-*/}}
-{{- define "authelia.configured.redisSecret" -}}
-    {{- if .Values.secret -}}
-        {{- if .Values.secret.redis -}}
-            {{- if hasKey .Values.secret.redis "value" -}}
+            {{- else if not .Values.configMap.authentication_backend.ldap.enabled -}}
                 {{- true -}}
             {{- end -}}
         {{- end -}}
@@ -96,7 +70,9 @@ Returns true if smtp is enabled.
     {{- if .Values.configMap -}}
         {{- if .Values.configMap.notifier -}}
             {{- if .Values.configMap.notifier.smtp -}}
-                {{- true -}}
+                {{- if .Values.configMap.notifier.smtp.enabled -}}
+                    {{- true -}}
+                {{- end -}}
             {{- end -}}
         {{- end -}}
     {{- end -}}
@@ -120,8 +96,12 @@ Returns true if duo is enabled.
 */}}
 {{- define "authelia.configured.duo" -}}
     {{- if .Values.configMap -}}
-        {{- if and .Values.configMap.duo_api (hasKey .Values.configMap.duo_api "integration_key") (hasKey .Values.configMap.duo_api "hostname") -}}-}}
-            {{- true -}}
+        {{- if and .Values.configMap.duo_api -}}
+            {{- if and .Values.configMap.duo_api.enabled -}}
+                {{- if and (hasKey .Values.configMap.duo_api "integration_key") (hasKey .Values.configMap.duo_api "hostname") -}}-}}
+                    {{- true -}}
+                {{- end -}}
+            {{- end -}}
         {{- end -}}
     {{- end -}}
 {{- end -}}
@@ -217,6 +197,93 @@ Returns the common annotations
 {{- end -}}
 
 {{/*
+Returns the injector annotations
+*/}}
+{{- define "authelia.annotations.injector" -}}
+    {{- if include "authelia.enabled.injector" . -}}
+vault.hashicorp.com/role: {{ default "authelia" .Values.secret.vault_injector.role }}
+vault.hashicorp.com/agent-inject: "true"
+vault.hashicorp.com/agent-inject-status: {{ default "update" .Values.secret.vault_injector.status }}
+{{- if .Values.secret.vault_injector.command }}
+vault.hashicorp.com/agent-inject-command: {{ .Values.secret.vault_injector.command }}
+{{- end }}
+{{- if .Values.secret.vault_injector.templateValue }}
+vault.hashicorp.com/agent-inject-template: {{ .Values.secret.vault_injector.templateValue }}
+{{- end }}
+vault.hashicorp.com/agent-inject-secret-JWT_TOKEN: {{ .Values.secret.vault_injector.secrets.jwt.path }}
+{{- if .Values.secret.vault_injector.secrets.jwt.templateValue }}
+vault.hashicorp.com/agent-inject-secret-template-JWT_TOKEN: {{ .Values.secret.vault_injector.secrets.jwt.templateValue }}
+{{- end }}
+{{- if .Values.secret.vault_injector.secrets.jwt.command }}
+vault.hashicorp.com/agent-inject-secret-command-JWT_TOKEN: {{ .Values.secret.vault_injector.secrets.jwt.command }}
+{{- end }}
+vault.hashicorp.com/agent-inject-secret-SESSION_ENCRYPTION_KEY: {{ .Values.secret.vault_injector.secrets.session.path }}
+{{- if .Values.secret.vault_injector.secrets.session.templateValue }}
+vault.hashicorp.com/agent-inject-secret-template-SESSION_ENCRYPTION_KEY: {{ .Values.secret.vault_injector.secrets.session.templateValue }}
+{{- end }}
+{{- if .Values.secret.vault_injector.secrets.session.command }}
+vault.hashicorp.com/agent-inject-secret-command-SESSION_ENCRYPTION_KEY: {{ .Values.secret.vault_injector.secrets.session.command }}
+{{- end }}
+{{- if .Values.configMap.authentication_backend.ldap.enabled }}
+vault.hashicorp.com/agent-inject-secret-LDAP_PASSWORD: {{ .Values.secret.vault_injector.secrets.ldap.path }}
+{{- if .Values.secret.vault_injector.secrets.ldap.templateValue }}
+vault.hashicorp.com/agent-inject-secret-template-LDAP_PASSWORD: {{ .Values.secret.vault_injector.secrets.ldap.templateValue }}
+{{- end }}
+{{- if .Values.secret.vault_injector.secrets.ldap.command }}
+vault.hashicorp.com/agent-inject-secret-command-LDAP_PASSWORD: {{ .Values.secret.vault_injector.secrets.ldap.command }}
+{{- end }}
+{{- end }}
+{{- if or .Values.configMap.storage.mysql.enabled .Values.configMap.storage.postgres.enabled }}
+vault.hashicorp.com/agent-inject-secret-STORAGE_PASSWORD: {{ .Values.secret.vault_injector.secrets.storage.path }}
+{{- if .Values.secret.vault_injector.secrets.storage.templateValue }}
+vault.hashicorp.com/agent-inject-secret-template-STORAGE_PASSWORD: {{ .Values.secret.vault_injector.secrets.storage.templateValue }}
+{{- end }}
+{{- if .Values.secret.vault_injector.secrets.storage.command }}
+vault.hashicorp.com/agent-inject-secret-command-STORAGE_PASSWORD: {{ .Values.secret.vault_injector.secrets.storage.command }}
+{{- end }}
+{{- end }}
+{{- if and .Values.configMap.session.redis.enabled .Values.configMap.session.redis.enabledSecret }}
+vault.hashicorp.com/agent-inject-secret-REDIS_PASSWORD: {{ .Values.secret.vault_injector.secrets.redis.path }}
+{{- if .Values.secret.vault_injector.secrets.redis.templateValue }}
+vault.hashicorp.com/agent-inject-secret-template-REDIS_PASSWORD: {{ .Values.secret.vault_injector.secrets.redis.templateValue }}
+{{- end }}
+{{- if .Values.secret.vault_injector.secrets.redis.command }}
+vault.hashicorp.com/agent-inject-secret-command-REDIS_PASSWORD: {{ .Values.secret.vault_injector.secrets.redis.command }}
+{{- end }}
+{{- if and .Values.configMap.session.redis.high_availability.enabled .Values.configMap.session.redis.high_availability.enabledSecret }}
+vault.hashicorp.com/agent-inject-secret-REDIS_SENTINEL_PASSWORD: {{ .Values.secret.vault_injector.secrets.redis_sentinel.path }}
+{{- if .Values.secret.vault_injector.secrets.redis_sentinel.templateValue }}
+vault.hashicorp.com/agent-inject-secret-template-REDIS_SENTINEL_PASSWORD: {{ .Values.secret.vault_injector.secrets.redis_sentinel.templateValue }}
+{{- end }}
+{{- if .Values.secret.vault_injector.secrets.redis_sentinel.command }}
+vault.hashicorp.com/agent-inject-secret-command-REDIS_SENTINEL_PASSWORD: {{ .Values.secret.vault_injector.secrets.redis_sentinel.command }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- if and .Values.configMap.notifier.smtp.enabled .Values.configMap.notifier.smtp.enabledSecret }}
+vault.hashicorp.com/agent-inject-secret-SMTP_PASSWORD: {{ .Values.secret.vault_injector.secrets.smtp.path }}
+{{- if .Values.secret.vault_injector.secrets.smtp.templateValue }}
+vault.hashicorp.com/agent-inject-secret-template-SMTP_PASSWORD: {{ .Values.secret.vault_injector.secrets.smtp.templateValue }}
+{{- end }}
+{{- if .Values.secret.vault_injector.secrets.smtp.command }}
+vault.hashicorp.com/agent-inject-secret-command-SMTP_PASSWORD: {{ .Values.secret.vault_injector.secrets.smtp.command }}
+{{- end }}
+{{- end }}
+{{- if include "authelia.configured.duo" . }}
+vault.hashicorp.com/agent-inject-secret-DUO_API_KEY: {{ .Values.secret.vault_injector.secrets.duo.path }}
+{{- if .Values.secret.vault_injector.secrets.duo.templateValue }}
+vault.hashicorp.com/agent-inject-secret-template-DUO_API_KEY: {{ .Values.secret.vault_injector.secrets.duo.templateValue }}
+{{- end }}
+{{- if .Values.secret.vault_injector.secrets.duo.command }}
+vault.hashicorp.com/agent-inject-secret-command-DUO_API_KEY: {{ .Values.secret.vault_injector.secrets.duo.command }}
+{{- end }}
+{{- end }}
+vault.hashicorp.com/agent-run-as-same-user: {{ default "true" .Values.secret.vault_injector.sameAsUser | quote }}
+{{- toYaml .Values.secret.annotations | nindent 0 }}
+    {{- end }}
+{{- end -}}
+
+{{/*
 Returns the value of .SecretValue or a randomly generated one
 */}}
 {{- define "authelia.secret.standard" -}}
@@ -224,6 +291,17 @@ Returns the value of .SecretValue or a randomly generated one
         {{- .SecretValue | b64enc -}}
     {{- else -}}
         {{- randAlphaNum 128 | b64enc -}}
+    {{- end -}}
+{{- end -}}
+
+{{/*
+Returns the correct secret path for env.
+*/}}
+{{- define "authelia.secret.path" -}}
+    {{- if include "authelia.enabled.injector" . -}}
+        {{- printf "/vault/secrets/%s" .Name -}}
+    {{- else -}}
+        {{- printf "/config/secrets/%s" .Name -}}
     {{- end -}}
 {{- end -}}
 
@@ -420,14 +498,29 @@ Returns true if we should use a PDB.
 {{- end -}}
 
 {{/*
+Returns if hashicorp injector is enabled
+*/}}
+{{- define "authelia.enabled.injector" -}}
+    {{- if .Values.secret -}}
+        {{- if .Values.secret.vault_injector -}}
+            {{- if .Values.secret.vault_injector.enabled -}}
+                {{- true -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+
+{{/*
 Returns if we should generate the secret
 */}}
 {{- define "authelia.enabled.secret" -}}
     {{- if .Values.secret -}}
-        {{- if not .Values.secret.existingSecret -}}
-            {{- true -}}
-        {{- else if eq "" .Values.secret.existingSecret -}}
-            {{- true -}}
+        {{- if not (include "authelia.enabled.injector" .) }}
+            {{- if not .Values.secret.existingSecret -}}
+                {{- true -}}
+            {{- else if eq "" .Values.secret.existingSecret -}}
+                {{- true -}}
+            {{- end -}}
         {{- end -}}
     {{- end -}}
 {{- end -}}
