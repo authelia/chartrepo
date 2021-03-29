@@ -42,13 +42,13 @@ extraLabels: {}
 ## RBAC Configuration.
 ##
 rbac:
-  
+
   ## Enable RBAC. Turning this on associates Authelia with a service account.
   enabled: true
-  
+
   annotations: {}
   labels: {}
-  
+
   serviceAccountName: authelia
 
 
@@ -475,10 +475,10 @@ configMap:
     ## than one instance and therefore is recommended for
     ## production.
     ldap:
-      
+
       ## Enable LDAP Backend.
       enabled: true
-      
+
       ## The LDAP implementation, this affects elements like the attribute utilised for resetting a password.
       ## Acceptable options are as follows:
       ## - 'activedirectory' - For Microsoft Active Directory.
@@ -682,7 +682,7 @@ configMap:
       ## The Redis TLS configuration. If defined will require a TLS connection to the Redis instance(s).
       tls:
         enabled: false
-        
+
         ## Server Name for certificate validation (in case you are using the IP or non-FQDN in the host option).
         server_name: ""
 
@@ -853,7 +853,7 @@ secret:
   labels: {}
   # labels:
   #   myLabel: myValue
-  
+
   ## Secrets.
   jwt:
     key: JWT_TOKEN
@@ -879,7 +879,7 @@ secret:
   smtp:
     key: SMTP_PASSWORD
     # value:
-  
+
   ## HashiCorp Vault Injector configuration.
   vault_injector:
     enabled: false
@@ -921,8 +921,6 @@ secret:
         path: AUTHELIA_SMTP_PASSWORD
         templateValue: ""
         command: ""
-
-
 certificates:
   # existingSecret: authelia
 
