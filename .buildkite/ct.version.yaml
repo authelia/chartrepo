@@ -1,0 +1,13 @@
+chart-dirs:
+- charts
+chart-repos:
+- authelia=https://charts.authelia.com
+check-version-increment: true
+exclude-deprecated: true
+excluded-charts: []
+remote: origin
+since: HEAD
+target-branch: master
+validate-chart-schema: false
+validate-maintainers: false
+validate-yaml: false

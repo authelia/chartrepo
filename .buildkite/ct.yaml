@@ -1,8 +1,8 @@
 chart-dirs:
-  - charts
+- charts
 chart-repos:
-  - authelia=https://charts.authelia.com
-check-version-increment: true
+- authelia=https://charts.authelia.com
+check-version-increment: false
 chart-yaml-schema: .buildkite/chart_schema.yaml
 exclude-deprecated: true
 excluded-charts: []
