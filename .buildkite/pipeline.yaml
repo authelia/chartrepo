@@ -1,6 +1,5 @@
 env:
-  CR_BYPASS: ${CR_BYPASS}
-  CT_BYPASS: ${CT_BYPASS}
+  CHART_CHANGES: ${CHART_CHANGES}
 
 steps:
 - command: "ct --config .buildkite/ct.version.yaml lint"
@@ -29,7 +28,7 @@ steps:
   - ".cr-release-packages/*"
   agents:
     charts: "true"
-  if: build.branch == "master" && build.env("CR_BYPASS") != "true"
+  if: build.branch == "master" && build.env("CHART_CHANGES") == "true"
 
 - commands:
   - "mkdir .cr-release-packages"
@@ -41,7 +40,7 @@ steps:
     charts: "true"
   depends_on:
   - step: "package"
-  if: build.branch == "master" && build.env("CR_BYPASS") != "true"
+  if: build.branch == "master" && build.env("CHART_CHANGES") == "true"
 
 - commands:
   - "mkdir .cr-release-packages .cr-index"
@@ -54,4 +53,4 @@ steps:
     charts: "true"
   depends_on:
   - step: "upload"
-  if: build.branch == "master" && build.env("CR_BYPASS") != "true"
+  if: build.branch == "master" && build.env("CHART_CHANGES") == "true"
