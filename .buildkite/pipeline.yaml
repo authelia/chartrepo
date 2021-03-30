@@ -1,37 +1,56 @@
 env:
-  CR_BYPASS: ${CR_BYPASS}
+  CHART_CHANGES: ${CHART_CHANGES}
 
 steps:
-  - label: ":helm: Linting (Chart Testing)"
-    command: "ct --config .buildkite/ct.yaml lint"
-    agents:
-      charts: "true"
-    if: build.branch != "gh-pages"
+- command: "ct --config .buildkite/ct.version.yaml lint"
+  key: "lint-version"
+  label: ":helm: Chart Version (Chart Testing)"
+  agents:
+    charts: "true"
+  if: build.branch != "gh-pages"
 
-  - label: ":package: Package Chart (Chart Releaser)"
-    commands:
-      - "mkdir .cr-release-packages"
-      - "ct --config .buildkite/ct.yaml list-changed | xargs -n1 cr --config .buildkite/cr.yaml package"
-    artifact_paths:
-      - ".cr-release-packages/*"
-    agents:
-      charts: "true"
-    if: build.branch == "master" && build.env("CR_BYPASS") != "true"
+- command: "ct --config .buildkite/ct.yaml lint"
+  key: "lint"
+  label: ":helm: Linting (Chart Testing)"
+  agents:
+    charts: "true"
+  if: build.branch != "gh-pages"
 
-  - label: ":github: Deploy Artifacts (Chart Releaser)"
-    commands:
-      - "mkdir .cr-release-packages"
-      - "buildkite-agent artifact download .cr-release-packages/* .cr-release-packages"
-      - "cr --config .buildkite/cr.yaml upload"
-    agents:
-      charts: "true"
-    if: build.branch == "master" && build.env("CR_BYPASS") != "true"
+- wait: ~
+  continue_on_failure: true
 
-  - label: ":k8s: Publish Chart Index (Chart Releaser)"
-    commands:
-      - "mkdir .cr-release-packages .cr-index"
-      - "buildkite-agent artifact download .cr-release-packages/* .cr-release-packages"
-      - "cr --config .buildkite/cr.yaml index --push"
-    agents:
-      charts: "true"
-    if: build.branch == "master" && build.env("CR_BYPASS") != "true"
+- commands:
+  - "mkdir .cr-release-packages"
+  - "ct --config .buildkite/ct.yaml list-changed | xargs -n1 cr --config .buildkite/cr.yaml package"
+  key: "package"
+  label: ":package: Package Chart (Chart Releaser)"
+  artifact_paths:
+  - ".cr-release-packages/*"
+  agents:
+    charts: "true"
+  if: build.branch == "master" && build.env("CHART_CHANGES") == "true"
+
+- commands:
+  - "mkdir .cr-release-packages"
+  - "buildkite-agent artifact download .cr-release-packages/* .cr-release-packages"
+  - "cr --config .buildkite/cr.yaml upload"
+  key: "upload"
+  label: ":github: Deploy Artifacts (Chart Releaser)"
+  agents:
+    charts: "true"
+  depends_on:
+  - step: "package"
+  if: build.branch == "master" && build.env("CHART_CHANGES") == "true"
+
+- commands:
+  - "mkdir .cr-release-packages .cr-index"
+  - "buildkite-agent artifact download .cr-release-packages/* .cr-release-packages"
+  - "git branch -d gh-pages"
+  - "cr --config .buildkite/cr.yaml index --push"
+  key: "index"
+  label: ":k8s: Publish Chart Index (Chart Releaser)"
+  agents:
+    charts: "true"
+  depends_on:
+  - step: "upload"
+  if: build.branch == "master" && build.env("CHART_CHANGES") == "true"
