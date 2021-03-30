@@ -296,6 +296,24 @@ vault.hashicorp.com/agent-inject-secret-template-duo: {{ .Values.secret.vault_in
 vault.hashicorp.com/agent-inject-secret-command-duo: {{ .Values.secret.vault_injector.secrets.duo.command }}
 {{- end }}
 {{- end }}
+{{- if .Values.configMap.identity_providers.oidc.enabled }}
+vault.hashicorp.com/agent-inject-secret-oidc-private-key: {{ .Values.secret.vault_injector.secrets.oidcPrivateKey.path }}
+vault.hashicorp.com/agent-inject-file-oidc-private-key: OIDC_PRIVATE_KEY
+{{- if .Values.secret.vault_injector.secrets.oidcPrivateKey.templateValue }}
+vault.hashicorp.com/agent-inject-secret-template-oidc-private-key: {{ .Values.secret.vault_injector.secrets.oidcPrivateKey.templateValue }}
+{{- end }}
+{{- if .Values.secret.vault_injector.secrets.oidcPrivateKey.command }}
+vault.hashicorp.com/agent-inject-secret-command-oidc-private-key: {{ .Values.secret.vault_injector.secrets.oidcPrivateKey.command }}
+{{- end }}
+vault.hashicorp.com/agent-inject-secret-oidc-hmac-secret: {{ .Values.secret.vault_injector.secrets.oidcHMACSecret.path }}
+vault.hashicorp.com/agent-inject-file-oidc-hmac-secret: OIDC_HMAC_SECRET
+{{- if .Values.secret.vault_injector.secrets.oidcHMACSecret.templateValue }}
+vault.hashicorp.com/agent-inject-secret-template-oidc-hmac-secret: {{ .Values.secret.vault_injector.secrets.oidcHMACSecret.templateValue }}
+{{- end }}
+{{- if .Values.secret.vault_injector.secrets.oidcHMACSecret.command }}
+vault.hashicorp.com/agent-inject-secret-command-oidc-hmac-secret: {{ .Values.secret.vault_injector.secrets.oidcHMACSecret.command }}
+{{- end }}
+{{- end }}
 vault.hashicorp.com/agent-run-as-same-user: {{ default "true" .Values.secret.vault_injector.agent.runAsSameUser | quote }}
 {{- if .Values.secret.annotations }}
 {{- toYaml .Values.secret.annotations | nindent 0 }}

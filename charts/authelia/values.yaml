@@ -835,6 +835,34 @@ configMap:
 
         ## Minimum TLS version for either StartTLS or SMTPS.
         minimum_version: TLS1.2
+  
+  identity_providers:
+    oidc:
+      ## Enables this in the config map. Currently in alpha stage there is no official build supporting OIDC.
+      ## This exists for testing and preparation.
+      enabled: false
+      clients:
+      - id: myapp
+        description: My Application
+        ## Secret shared between client and OP. Must be bcrypt hashed.
+        secret: $2y$12$Bk1mw11OwVlG0uYWVJaoEuDkbL62FpEUsq59CXzPbe5oL61zR4XoG
+        ## Policy is either one_factor or two_factor.
+        policy: two_factor
+        ## List of valid redirect URIs
+        redirect_uris:
+        - https://oidc.example.com/oauth2/callback
+        scopes:
+        - openid
+        - profile
+        - email
+        - groups
+        grant_types:
+        - refresh_token
+        - authorization_code
+        response_types:
+        - code
+        
+
 
 ##
 ## Authelia Secret Generator.
@@ -878,6 +906,12 @@ secret:
     # value:
   smtp:
     key: SMTP_PASSWORD
+    # value:
+  oidcPrivateKey:
+    key: OIDC_PRIVATE_KEY
+    # value:
+  oidcHMACSecret:
+    key: OIDC_HMAC_SECRET
     # value:
 
   ## HashiCorp Vault Injector configuration.
@@ -927,6 +961,15 @@ secret:
         path: AUTHELIA_SMTP_PASSWORD
         templateValue: ""
         command: ""
+      oidcPrivateKey:
+        path: AUTHELIA_OIDC_PRIVATE_KEY
+        templateValue: ""
+        command: ""
+      oidcHMACSecret:
+        path: AUTHELIA_OIDC_HMAC_SECRET
+        templateValue: ""
+        command: ""
+        
 certificates:
   # existingSecret: authelia
 

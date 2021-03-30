@@ -119,6 +119,12 @@ spec:
           {{- if and (include "authelia.configured.duo" .) (or (include "authelia.configured.duoSecret" .) (hasKey .Values.secret "existingSecret")) }}
         - name: AUTHELIA_DUO_API_SECRET_KEY_FILE
           value: /config/secrets/DUO_API_KEY
+          {{- end }}
+          {{- if .Values.configMap.identity_providers.oidc.enabled }}
+        - name: AUTHELIA_IDENTITY_PROVIDERS_OIDC_HMAC_SECRET_FILE
+          value: /config/secrets/OIDC_HMAC_SECRET
+        - name: AUTHELIA_IDENTITY_PROVIDERS_OIDC_ISSUER_PRIVATE_KEY_FILE
+          value: /config/secrets/OIDC_PRIVATE_KEY
         {{- end }}
         {{- with $env := .Values.pod.env }}{{ toYaml $env | nindent 12 }}{{- end }}
         {{- with $probe := include "authelia.merge.probe" (merge (dict "Type" "startup" "Method" .Values.pod.probes.method "Probe" .Values.pod.probes.startup) .) }}
@@ -216,6 +222,12 @@ spec:
             {{- if .Values.configMap.duo_api }}
           - key: {{ default "DUO_API_KEY" .Values.secret.duo.key }}
             path: DUO_API_KEY
+            {{- end }}
+            {{- if .Values.configMap.identity_providers.oidc.enabled }}
+          - key: {{ default "OIDC_PRIVATE_KEY" .Values.secret.oidcPrivateKey.key }}
+            path: /config/secrets/OIDC_PRIVATE_KEY
+          - key: {{ default "OIDC_HMAC_SECRET" .Values.secret.oidcHMACSecret.key }}
+            path: /config/secrets/OIDC_HMAC_SECRET
         {{- end }}
         {{- end }}
         {{- if (include "authelia.enabled.certificatesSecret" .) }}
