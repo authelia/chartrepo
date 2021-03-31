@@ -44,7 +44,7 @@ extraLabels: {}
 rbac:
 
   ## Enable RBAC. Turning this on associates Authelia with a service account.
-  enabled: true
+  enabled: false
 
   annotations: {}
   labels: {}
@@ -630,8 +630,59 @@ configMap:
     default_policy: deny
 
     networks: []
+    # networks:
+    # - name: private
+    #   networks:
+    #   - 10.0.0.0/8
+    #   - 172.16.0.0/12
+    #   - 192.168.0.0/16
+    # - name: vpn
+    #   networks:
+    #   - 10.9.0.0/16
 
     rules: []
+    # rules:
+    # - domain: public.example.com
+    #   policy: bypass
+    # - domain: "*.example.com"
+    #   policy: bypass
+    #   methods:
+    #   - OPTIONS
+    # - domain: secure.example.com
+    #   policy: one_factor
+    #   networks:
+    #   - private
+    #   - vpn
+    #   - 192.168.1.0/24
+    #   - 10.0.0.1
+    # - domain:
+    #   - secure.example.com
+    #   - private.example.com
+    #   policy: two_factor
+    # - domain: singlefactor.example.com
+    #   policy: one_factor
+    # - domain: "mx2.mail.example.com"
+    #   subject: "group:admins"
+    #   policy: deny
+    # - domain: "*.example.com"
+    #   subject:
+    #   - "group:admins"
+    #   - "group:moderators"
+    #   policy: two_factor
+    # - domain: dev.example.com
+    #   resources:
+    #   - "^/groups/dev/.*$"
+    #   subject: "group:dev"
+    #   policy: two_factor
+    # - domain: dev.example.com
+    #   resources:
+    #   - "^/users/john/.*$"
+    #   subject:
+    #   - ["group:dev", "user:john"]
+    #   - "group:admins"
+    #   policy: two_factor
+    # - domain: "{user}.example.com"
+    #   policy: bypass
 
   ##
   ## Session Provider Configuration
@@ -886,98 +937,202 @@ secret:
   jwt:
     key: JWT_TOKEN
     # value:
-    # filename:
+    filename: JWT_TOKEN
   ldap:
     key: LDAP_PASSWORD
     # value:
-    # filename:
+    filename: LDAP_PASSWORD
   storage:
     key: STORAGE_PASSWORD
     # value:
-    # filename:
+    filename: STORAGE_PASSWORD
   session:
     key: SESSION_ENCRYPTION_KEY
     # value:
-    # filename:
+    filename: SESSION_ENCRYPTION_KEY
   duo:
     key: DUO_API_KEY
     # value:
-    # filename:
+    filename: DUO_API_KEY
   redis:
     key: REDIS_PASSWORD
     # value:
-    # filename:
+    filename: REDIS_PASSWORD
   redis_sentinel:
     key: REDIS_SENTINEL_PASSWORD
     # value:
-    # filename:
+    filename: REDIS_SENTINEL_PASSWORD
   smtp:
     key: SMTP_PASSWORD
     # value:
-    # filename:
+    filename: SMTP_PASSWORD
   oidcPrivateKey:
     key: OIDC_PRIVATE_KEY
     # value:
-    # filename:
+    filename: OIDC_PRIVATE_KEY
   oidcHMACSecret:
     key: OIDC_HMAC_SECRET
     # value:
-    # filename:
+    filename: OIDC_HMAC_SECRET
 
   ## HashiCorp Vault Injector configuration.
   vault_injector:
+
+    ## Enable the vault injector annotations. This will disable secret injection via other means.
+    ## To see the annotations and what they do see: https://www.vaultproject.io/docs/platform/k8s/injector/annotations
+    ## Annotations with a blank string do not get configured at all.
+    ## Additional annotations can be configured via the secret.annotations: {} above.
+    ## Secrets are by default rendered in the /config/secrets directory. Changing this can be done via editing the
+    ## secret.mountPath value. You can alter the filenames with the secret.<secretName>.filename values.
     enabled: false
+
+    ## The vault role to assign via annotations.
+    ## Annotation: vault.hashicorp.com/role
     role: authelia
 
     agent:
+      ## Annotation: vault.hashicorp.com/agent-inject-status
       status: update
+
+      ## Annotation: vault.hashicorp.com/agent-configmap
       configMap: ""
+
+      ## Annotation: vault.hashicorp.com/agent-image
       image: ""
+
+      ## Annotation: vault.hashicorp.com/agent-init-first
       initFirst: "false"
-      runAsSameUser: "true"
+
+      ## Annotation: vault.hashicorp.com/agent-inject-command
       command: "sh -c 'kill HUP $(pidof authelia)'"
+
+      ## Annotation: vault.hashicorp.com/agent-run-as-same-user
+      runAsSameUser: "true"
+
+      ## If defined, sets the default template for all secrets. Can be overriden by individual templates in secrets.
+      ## Annotation: vault.hashicorp.com/agent-inject-template-*
       templateValue: ""
 
     secrets:
       jwt:
-        path: AUTHELIA_JWT
+        ## Vault Path to the Authelia JWT secret.
+        ## Annotation: vault.hashicorp.com/agent-inject-secret-jwt
+        path: secrets/authelia/jwt
+
+        ## Vault template specific to JWT.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-jwt
         templateValue: ""
+
+        ## Vault after render command specific to JWT.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-jwt
         command: ""
       ldap:
-        path: AUTHELIA_LDAP_PASSWORD
+        ## Vault Path to the Authelia LDAP secret.
+        ## Annotation: vault.hashicorp.com/agent-inject-secret-ldap
+        path: secrets/authelia/ldap
+
+        ## Vault template specific to LDAP.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-ldap
         templateValue: ""
+
+        ## Vault after render command specific to LDAP.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-ldap
         command: ""
       storage:
-        path: AUTHELIA_STORAGE_PASSWORD
+        ## Vault Path to the Authelia storage secret.
+        ## Annotation: vault.hashicorp.com/agent-inject-secret-storage
+        path: secrets/authelia/storage
+
+        ## Vault template specific to storage.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-storage
         templateValue: ""
+
+        ## Vault after render command specific to storage.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-storage
         command: ""
       session:
-        path: AUTHELIA_SESSION_ENCRYPTION_KEY
+        ## Vault Path to the Authelia session secret.
+        ## Annotation: vault.hashicorp.com/agent-inject-secret-session
+        path: secrets/authelia/session
+
+        ## Vault template specific to session.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-session
         templateValue: ""
+
+        ## Vault after render command specific to session.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-session
         command: ""
       duo:
-        path: AUTHELIA_DUO_API_KEY
+        ## Vault Path to the Authelia duo secret.
+        ## Annotation: vault.hashicorp.com/agent-inject-secret-duo
+        path: secrets/authelia/duo
+
+        ## Vault template specific to duo.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-duo
         templateValue: ""
+
+        ## Vault after render command specific to duo.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-duo
         command: ""
       redis:
-        path: AUTHELIA_REDIS_PASSWORD
+        ## Vault Path to the Authelia redis secret.
+        ## Annotation: vault.hashicorp.com/agent-inject-secret-redis
+        path: secrets/authelia/redis
+
+        ## Vault template specific to redis.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-redis
         templateValue: ""
+
+        ## Vault after render command specific to redis.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-redis
         command: ""
       redis_sentinel:
-        path: AUTHELIA_REDIS_SENTINEL_PASSWORD
+        ## Vault Path to the Authelia redis sentinel secret.
+        ## Annotation: vault.hashicorp.com/agent-inject-secret-redis-sentinel
+        path: secrets/authelia/redis-sentinel
+
+        ## Vault template specific to redis sentinel.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-redis-sentinel
         templateValue: ""
+
+        ## Vault after render command specific to redis sentinel.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-redis-sentinel
         command: ""
       smtp:
-        path: AUTHELIA_SMTP_PASSWORD
+        ## Vault Path to the Authelia SMTP secret.
+        ## Annotation: vault.hashicorp.com/agent-inject-secret-smtp
+        path: secrets/authelia/smtp
+
+        ## Vault template specific to SMTP.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-smtp
         templateValue: ""
+
+        ## Vault after render command specific to SMTP.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-smtp
         command: ""
       oidcPrivateKey:
-        path: AUTHELIA_OIDC_PRIVATE_KEY
+        ## Vault Path to the Authelia OIDC private key secret.
+        ## Annotation: vault.hashicorp.com/agent-inject-secret-oidc-private-key
+        path: secrets/authelia/oidc-private-key
+
+        ## Vault template specific to OIDC private key.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-oidc-private-key
         templateValue: ""
+
+        ## Vault after render command specific to OIDC private key.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-oidc-private-key
         command: ""
       oidcHMACSecret:
-        path: AUTHELIA_OIDC_HMAC_SECRET
+        ## Vault Path to the Authelia OIDC HMAC secret.
+        ## Annotation: vault.hashicorp.com/agent-inject-secret-oidc-hmac-secret
+        path: secrets/authelia/oidc-private-key
+
+        ## Vault template specific to OIDC HMAC secret.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-oidc-hmac-secret
         templateValue: ""
+
+        ## Vault after render command specific to OIDC HMAC secret.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-oidc-hmac-secret
         command: ""
 
 certificates:
