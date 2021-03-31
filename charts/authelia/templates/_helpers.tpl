@@ -201,11 +201,11 @@ Returns the injector annotations
 */}}
 {{- define "authelia.annotations.injector" -}}
     {{- if include "authelia.enabled.injector" . -}}
-    {{- with $vault := .Values.secret.vault_injector }}
+    {{- with $vault := .Values.secret.vault_injector -}}
+vault.hashicorp.com/agent-inject: "true"
 {{- if $vault.role }}
 vault.hashicorp.com/role: {{ default "authelia" $vault.role }}
 {{- end }}
-vault.hashicorp.com/agent-inject: "true"
 {{- if $vault.agent.status }}
 vault.hashicorp.com/agent-inject-status: {{ default "update" $vault.agent.status }}
 {{- end }}
