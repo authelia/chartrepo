@@ -43,9 +43,9 @@ steps:
   if: build.branch == "master" && build.env("CHART_CHANGES") == "true"
 
 - commands:
+  - "rm -rf .cr-release-packages .cr-index"
   - "mkdir .cr-release-packages .cr-index"
   - "buildkite-agent artifact download .cr-release-packages/* .cr-release-packages"
-  - "git branch -d gh-pages"
   - "cr --config .buildkite/cr.yaml index --push"
   key: "index"
   label: ":k8s: Publish Chart Index (Chart Releaser)"

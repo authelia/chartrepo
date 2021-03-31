@@ -1,6 +1,6 @@
 ---
 ## @formatter:off
-## values.lite.yaml
+## values.local.yaml
 ##
 ## Repository: authelia https://charts.authelia.com
 ## Chart: authelia
@@ -18,7 +18,7 @@
 image:
   registry: docker.io
   repository: authelia/authelia
-  tag: 4.27.2
+  tag: 4.27.4
   pullPolicy: IfNotPresent
   pullSecrets: []
   # pullSecrets:
@@ -38,6 +38,20 @@ extraAnnotations: {}
 extraLabels: {}
 # extraLabels:
 #   myLabel: myValue
+
+##
+## RBAC Configuration.
+##
+rbac:
+
+  ## Enable RBAC. Turning this on associates Authelia with a service account.
+  enabled: false
+
+  annotations: {}
+  labels: {}
+
+  serviceAccountName: authelia
+
 
 ## Authelia Domain
 ## Should be the root domain you want to protect.
@@ -94,8 +108,8 @@ ingress:
 
     # matchOverride: Host(`auth.example.com`) && PathPrefix(`/`)
 
-    entrypoints: []
-    # entrypoints:
+    entryPoints: []
+    # entryPoints:
     # - http
 
     # priority: 10
@@ -414,29 +428,28 @@ configMap:
   ## TOTP Configuration
   ##
   ## Parameters used for TOTP generation
-  totp: {}
-  # totp:
+  totp:
     ## The issuer name displayed in the Authenticator application of your choice
     ## See: https://github.com/google/google-authenticator/wiki/Key-Uri-Format for more info on issuer names
     ## Defaults to <domain>.
-    # issuer: authelia.com
+    issuer: ""
     ## The period in seconds a one-time password is current for. Changing this will require all users to register
     ## their TOTP applications again. Warning: before changing period read the docs link below.
-    # period: 30
+    period: 30
     ## The skew controls number of one-time passwords either side of the current one that are valid.
     ## Warning: before changing skew read the docs link below.
     ## See: https://www.authelia.com/docs/configuration/one-time-password.html#period-and-skew to read the documentation.
-    # skew: 1
+    skew: 1
 
   ##
   ## Duo Push API Configuration
   ##
   ## Parameters used to contact the Duo API. Those are generated when you protect an application of type
   ## "Partner Auth API" in the management panel.
-  duo_api: {}
-  # duo_api:
-  #   hostname: api-123456789.example.com
-  #   integration_key: ABCDEF
+  duo_api:
+    enabled: false
+    hostname: api-123456789.example.com
+    integration_key: ABCDEF
 
   ##
   ## Authentication Backend Provider Configuration
@@ -462,8 +475,11 @@ configMap:
     ## This backend allows Authelia to be scaled to more
     ## than one instance and therefore is recommended for
     ## production.
-    ldap: {}
-    # ldap:
+    ldap:
+
+      ## Enable LDAP Backend.
+      enabled: false
+
       ## The LDAP implementation, this affects elements like the attribute utilised for resetting a password.
       ## Acceptable options are as follows:
       ## - 'activedirectory' - For Microsoft Active Directory.
@@ -473,29 +489,29 @@ configMap:
       ## Depending on the option here certain other values in this section have a default value, notably all of the
       ## attribute mappings have a default value that this config overrides, you can read more about these default values
       ## at https://www.authelia.com/docs/configuration/authentication/ldap.html#defaults
-      # implementation: custom
+      implementation: activedirectory
 
       ## The url to the ldap server. Format: <scheme>://<address>[:<port>].
       ## Scheme can be ldap or ldaps in the format (port optional).
-      # url: ldap://openldap.default.svc.cluster.local
+      url: ldap://openldap.default.svc.cluster.local
 
       ## Use StartTLS with the LDAP connection.
-      # start_tls: false
+      start_tls: false
 
-      # tls:
+      tls:
         ## Server Name for certificate validation (in case it's not set correctly in the URL).
-        # server_name: ldap.example.com
+        server_name: ""
 
         ## Skip verifying the server certificate (to allow a self-signed certificate).
         ## In preference to setting this we strongly recommend you add the public portion of the certificate to the
         ## certificates directory which is defined by the `certificates_directory` option at the top of the config.
-        # skip_verify: false
+        skip_verify: false
 
         ## Minimum TLS version for either Secure LDAP or LDAP StartTLS.
-        # minimum_version: TLS1.2
+        minimum_version: TLS1.2
 
       ## The base dn for every LDAP query.
-      # base_dn: DC=example,DC=com
+      base_dn: DC=example,DC=com
 
       ## The attribute holding the username of the user. This attribute is used to populate the username in the session
       ## information. It was introduced due to #561 to handle case insensitive search queries. For you information,
@@ -505,10 +521,10 @@ configMap:
       ## otherwise it would break the configuration for that user. Technically, non-unique attributes like 'mail' can also
       ## be used but we don't recommend using them, we instead advise to use the attributes mentioned above
       ## (sAMAccountName and uid) to follow https://www.ietf.org/rfc/rfc2307.txt.
-      # username_attribute: uid
+      username_attribute: ""
 
       ## An additional dn to define the scope to all users.
-      # additional_users_dn: OU=Users
+      additional_users_dn: OU=Users
 
       ## The users filter used in search queries to find the user profile based on input filled in login form.
       ## Various placeholders are available in the user filter:
@@ -526,10 +542,10 @@ configMap:
       ##
       ## To allow sign in both with username and email, one can use a filter like
       ## (&(|({username_attribute}={input})({mail_attribute}={input}))(objectClass=person))
-      # users_filter: (&({username_attribute}={input})(objectClass=person))
+      users_filter: ""
 
       ## An additional dn to define the scope of groups.
-      # additional_groups_dn: OU=Groups
+      additional_groups_dn: OU=Groups
 
       ## The groups filter used in search queries to find the groups of the user.
       ## - {input} is a placeholder replaced by what the user inputs in the login form.
@@ -544,20 +560,20 @@ configMap:
       ##
       ## If your groups use the `groupOfUniqueNames` structure use this instead:
       ##    (&(uniquemember={dn})(objectclass=groupOfUniqueNames))
-      # groups_filter: (&(member={dn})(objectclass=groupOfNames))
+      groups_filter: ""
 
       ## The attribute holding the name of the group
-      # group_name_attribute: cn
+      group_name_attribute: ""
 
       ## The attribute holding the mail address of the user. If multiple email addresses are defined for a user, only the
       ## first one returned by the LDAP server is used.
-      # mail_attribute: mail
+      mail_attribute: ""
 
       ## The attribute holding the display name of the user. This will be used to greet an authenticated user.
-      # display_name_attribute: displayname
+      display_name_attribute: ""
 
       ## The username of the admin user.
-      # user: CN=Authelia,DC=example,DC=com
+      user: CN=Authelia,DC=example,DC=com
 
     ##
     ## File (Authentication Provider)
@@ -572,12 +588,15 @@ configMap:
     ## Important: Kubernetes (or HA) users must read https://www.authelia.com/docs/features/statelessness.html
     ##
     file:
+      enabled: true
       path: /config/users_database.yml
       password:
         algorithm: sha512
         iterations: 100000
         key_length: 32
         salt_length: 16
+        memory: 1024
+        parallelism: 8
 
   ##
   ## Access Control Configuration
@@ -611,77 +630,60 @@ configMap:
     ## resource if there is no policy to be applied to the user.
     default_policy: deny
 
-    networks:
-      - name: internal
-        networks:
-          - 10.10.0.0/16
-          - 192.168.2.0/24
-      - name: VPN
-        networks: 10.9.0.0/16
+    networks: []
+    # networks:
+    # - name: private
+    #   networks:
+    #   - 10.0.0.0/8
+    #   - 172.16.0.0/12
+    #   - 192.168.0.0/16
+    # - name: vpn
+    #   networks:
+    #   - 10.9.0.0/16
 
-    rules:
-      ## Rules applied to everyone
-      - domain: public.example.com
-        policy: bypass
-
-      - domain: secure.example.com
-        policy: one_factor
-        ## Network based rule, if not provided any network matches.
-        networks:
-          - internal
-          - VPN
-          - 192.168.1.0/24
-          - 10.0.0.1
-
-      - domain:
-          - secure.example.com
-          - private.example.com
-        policy: two_factor
-
-      - domain: singlefactor.example.com
-        policy: one_factor
-
-      ## Rules applied to 'admins' group
-      - domain: "mx2.mail.example.com"
-        subject: "group:admins"
-        policy: deny
-
-      - domain: "*.example.com"
-        subject:
-          - "group:admins"
-          - "group:moderators"
-        policy: two_factor
-
-      ## Rules applied to 'dev' group
-      - domain: dev.example.com
-        resources:
-          - "^/groups/dev/.*$"
-        subject: "group:dev"
-        policy: two_factor
-
-      ## Rules applied to user 'john'
-      - domain: dev.example.com
-        resources:
-          - "^/users/john/.*$"
-        subject: "user:john"
-        policy: two_factor
-
-      ## Rules applied to user 'harry'
-      - domain: dev.example.com
-        resources:
-          - "^/users/harry/.*$"
-        subject: "user:harry"
-        policy: two_factor
-
-      ## Rules applied to user 'bob'
-      - domain: "*.mail.example.com"
-        subject: "user:bob"
-        policy: two_factor
-      - domain: "dev.example.com"
-        resources:
-          - "^/users/bob/.*$"
-        subject: "user:bob"
-        policy: two_factor
+    rules: []
+    # rules:
+    # - domain: public.example.com
+    #   policy: bypass
+    # - domain: "*.example.com"
+    #   policy: bypass
+    #   methods:
+    #   - OPTIONS
+    # - domain: secure.example.com
+    #   policy: one_factor
+    #   networks:
+    #   - private
+    #   - vpn
+    #   - 192.168.1.0/24
+    #   - 10.0.0.1
+    # - domain:
+    #   - secure.example.com
+    #   - private.example.com
+    #   policy: two_factor
+    # - domain: singlefactor.example.com
+    #   policy: one_factor
+    # - domain: "mx2.mail.example.com"
+    #   subject: "group:admins"
+    #   policy: deny
+    # - domain: "*.example.com"
+    #   subject:
+    #   - "group:admins"
+    #   - "group:moderators"
+    #   policy: two_factor
+    # - domain: dev.example.com
+    #   resources:
+    #   - "^/groups/dev/.*$"
+    #   subject: "group:dev"
+    #   policy: two_factor
+    # - domain: dev.example.com
+    #   resources:
+    #   - "^/users/john/.*$"
+    #   subject:
+    #   - ["group:dev", "user:john"]
+    #   - "group:admins"
+    #   policy: two_factor
+    # - domain: "{user}.example.com"
+    #   policy: bypass
 
   ##
   ## Session Provider Configuration
@@ -711,53 +713,51 @@ configMap:
     ## Important: Kubernetes (or HA) users must read https://www.authelia.com/docs/features/statelessness.html
     ##
     ## The redis connection details
-    redis: {}
-    # redis:
-      # host: redis.databases.svc.cluster.local
-      # port: 6379
+    redis:
+      enabled: false
+      enabledSecret: false
+      host: redis.databases.svc.cluster.local
+      port: 6379
 
       ## Optional username to be used with authentication.
-      # username: authelia
-
-      ## Password can also be set using a secret: https://docs.authelia.com/configuration/secrets.html
-      # password: authelia
+      username: authelia
 
       ## This is the Redis DB Index https://redis.io/commands/select (sometimes referred to as database number, DB, etc).
-      # database_index: 0
+      database_index: 0
 
       ## The maximum number of concurrent active connections to Redis.
-      # maximum_active_connections: 8
+      maximum_active_connections: 8
 
       ## The target number of idle connections to have open ready for work. Useful when opening connections is slow.
-      # minimum_idle_connections: 0
+      minimum_idle_connections: 0
 
       ## The Redis TLS configuration. If defined will require a TLS connection to the Redis instance(s).
-      # tls:
+      tls:
+        enabled: false
 
         ## Server Name for certificate validation (in case you are using the IP or non-FQDN in the host option).
-        # server_name: myredis.example.com
+        server_name: ""
 
         ## Skip verifying the server certificate (to allow a self-signed certificate).
         ## In preference to setting this we strongly recommend you add the public portion of the certificate to the
         ## certificates directory which is defined by the `certificates_directory` option at the top of the config.
-        # skip_verify: false
+        skip_verify: false
 
         ## Minimum TLS version for the connection.
-        # minimum_version: TLS1.2
+        minimum_version: TLS1.2
 
       ## The Redis HA configuration options.
       ## This provides specific options to Redis Sentinel, sentinel_name must be defined (Master Name).
-      # high_availability:
-
+      high_availability:
+        enabled: false
+        enabledSecret: false
         ## Sentinel Name / Master Name
-        # sentinel_name: mysentinel
-
-        ## Specific password for Redis Sentinel. The node username and password is configured above.
-        # sentinel_password: sentinel_specific_pass
+        sentinel_name: mysentinel
 
         ## The additional nodes to pre-seed the redis provider with (for sentinel).
         ## If the host in the above section is defined, it will be combined with this list to connect to sentinel.
         ## For high availability to be used you must have either defined; the host above or at least one node below.
+        nodes: []
         # nodes:
         #   - host: sentinel-0.databases.svc.cluster.local
         #     port: 26379
@@ -765,10 +765,10 @@ configMap:
         #     port: 26379
 
         ## Choose the host with the lowest latency.
-        # route_by_latency: false
+        route_by_latency: false
 
         ## Choose the host randomly.
-        # route_randomly: false
+        route_randomly: false
 
   ##
   ## Regulation Configuration
@@ -803,6 +803,7 @@ configMap:
     ## Important: Kubernetes (or HA) users must read https://www.authelia.com/docs/features/statelessness.html
     ##
     local:
+      enabled: true
       path: /config/db.sqlite3
 
     ##
@@ -810,21 +811,23 @@ configMap:
     ##
     ## Also supports MariaDB
     ##
-    # mysql:
-      # host: mysql.databases.svc.cluster.local
-      # port: 3306
-      # database: authelia
-      # username: authelia
+    mysql:
+      enabled: false
+      host: mysql.databases.svc.cluster.local
+      port: 3306
+      database: authelia
+      username: authelia
 
     ##
     ## PostgreSQL (Storage Provider)
     ##
-    # postgres:
-    #   host: 127.0.0.1
-    #   port: 5432
-    #   database: authelia
-    #   username: authelia
-    #   sslmode: disable
+    postgres:
+      enabled: false
+      host: 127.0.0.1
+      port: 5432
+      database: authelia
+      username: authelia
+      sslmode: disable
 
   ##
   ## Notification Provider
@@ -842,6 +845,7 @@ configMap:
     ## Important: Kubernetes (or HA) users must read https://www.authelia.com/docs/features/statelessness.html
     ##
     filesystem:
+      enabled: true
       filename: /config/notification.txt
 
     ##
@@ -854,33 +858,61 @@ configMap:
     ##        (only works for unauthenticated connections)
     ##   - validate the SMTP server x509 certificate during the TLS handshake against the hosts trusted certificates
     ##     (configure in tls section)
-    # smtp:
-      # username: test
-      # host: smtp.mail.svc.cluster.local
-      # port: 25
-      # sender: admin@example.com
+    smtp:
+      enabled: false
+      enabledSecret: false
+      username: test
+      host: smtp.mail.svc.cluster.local
+      port: 25
+      sender: admin@example.com
       ## HELO/EHLO Identifier. Some SMTP Servers may reject the default of localhost.
-      # identifier: localhost
+      identifier: localhost
       ## Subject configuration of the emails sent.
       ## {title} is replaced by the text from the notifier
-      # subject: "[Authelia] {title}"
+      subject: "[Authelia] {title}"
       ## This address is used during the startup check to verify the email configuration is correct.
       ## It's not important what it is except if your email server only allows local delivery.
-      # startup_check_address: test@authelia.com
-      # disable_require_tls: false
-      # disable_html_emails: false
+      startup_check_address: test@authelia.com
+      disable_require_tls: false
+      disable_html_emails: false
 
-      # tls:
+      tls:
         ## Server Name for certificate validation (in case you are using the IP or non-FQDN in the host option).
-        # server_name: smtp.example.com
+        server_name: ""
 
         ## Skip verifying the server certificate (to allow a self-signed certificate).
         ## In preference to setting this we strongly recommend you add the public portion of the certificate to the
         ## certificates directory which is defined by the `certificates_directory` option at the top of the config.
-        # skip_verify: false
+        skip_verify: false
 
         ## Minimum TLS version for either StartTLS or SMTPS.
-        # minimum_version: TLS1.2
+        minimum_version: TLS1.2
+
+  identity_providers:
+    oidc:
+      ## Enables this in the config map. Currently in alpha stage there is no official build supporting OIDC.
+      ## This exists for testing and preparation.
+      enabled: false
+      clients:
+      - id: myapp
+        description: My Application
+        ## Secret shared between client and OP. Must be bcrypt hashed.
+        secret: $2y$12$Bk1mw11OwVlG0uYWVJaoEuDkbL62FpEUsq59CXzPbe5oL61zR4XoG
+        ## Policy is either one_factor or two_factor.
+        policy: two_factor
+        ## List of valid redirect URIs
+        redirect_uris:
+        - https://oidc.example.com/oauth2/callback
+        scopes:
+        - openid
+        - profile
+        - email
+        - groups
+        grant_types:
+        - refresh_token
+        - authorization_code
+        response_types:
+        - code
 
 ##
 ## Authelia Secret Generator.
@@ -900,27 +932,209 @@ secret:
   # labels:
   #   myLabel: myValue
 
+  mountPath: /config/secrets
+
+  ## Secrets.
   jwt:
     key: JWT_TOKEN
     # value:
+    filename: JWT_TOKEN
   ldap:
     key: LDAP_PASSWORD
     # value:
+    filename: LDAP_PASSWORD
   storage:
     key: STORAGE_PASSWORD
     # value:
+    filename: STORAGE_PASSWORD
   session:
     key: SESSION_ENCRYPTION_KEY
     # value:
+    filename: SESSION_ENCRYPTION_KEY
   duo:
     key: DUO_API_KEY
     # value:
+    filename: DUO_API_KEY
   redis:
     key: REDIS_PASSWORD
     # value:
+    filename: REDIS_PASSWORD
+  redisSentinel:
+    key: REDIS_SENTINEL_PASSWORD
+    # value:
+    filename: REDIS_SENTINEL_PASSWORD
   smtp:
     key: SMTP_PASSWORD
     # value:
+    filename: SMTP_PASSWORD
+  oidcPrivateKey:
+    key: OIDC_PRIVATE_KEY
+    # value:
+    filename: OIDC_PRIVATE_KEY
+  oidcHMACSecret:
+    key: OIDC_HMAC_SECRET
+    # value:
+    filename: OIDC_HMAC_SECRET
+
+  ## HashiCorp Vault Injector configuration.
+  vaultInjector:
+
+    ## Enable the vault injector annotations. This will disable secret injection via other means.
+    ## To see the annotations and what they do see: https://www.vaultproject.io/docs/platform/k8s/injector/annotations
+    ## Annotations with a blank string do not get configured at all.
+    ## Additional annotations can be configured via the secret.annotations: {} above.
+    ## Secrets are by default rendered in the /config/secrets directory. Changing this can be done via editing the
+    ## secret.mountPath value. You can alter the filenames with the secret.<secretName>.filename values.
+    enabled: false
+
+    ## The vault role to assign via annotations.
+    ## Annotation: vault.hashicorp.com/role
+    role: authelia
+
+    agent:
+      ## Annotation: vault.hashicorp.com/agent-inject-status
+      status: update
+
+      ## Annotation: vault.hashicorp.com/agent-configmap
+      configMap: ""
+
+      ## Annotation: vault.hashicorp.com/agent-image
+      image: ""
+
+      ## Annotation: vault.hashicorp.com/agent-init-first
+      initFirst: "false"
+
+      ## Annotation: vault.hashicorp.com/agent-inject-command
+      command: "sh -c 'kill HUP $(pidof authelia)'"
+
+      ## Annotation: vault.hashicorp.com/agent-run-as-same-user
+      runAsSameUser: "true"
+
+      ## If defined, sets the default template for all secrets. Can be overriden by individual templates in secrets.
+      ## Annotation: vault.hashicorp.com/agent-inject-template-*
+      templateValue: ""
+
+    secrets:
+      jwt:
+        ## Vault Path to the Authelia JWT secret.
+        ## Annotation: vault.hashicorp.com/agent-inject-secret-jwt
+        path: secrets/authelia/jwt
+
+        ## Vault template specific to JWT.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-jwt
+        templateValue: ""
+
+        ## Vault after render command specific to JWT.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-jwt
+        command: ""
+      ldap:
+        ## Vault Path to the Authelia LDAP secret.
+        ## Annotation: vault.hashicorp.com/agent-inject-secret-ldap
+        path: secrets/authelia/ldap
+
+        ## Vault template specific to LDAP.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-ldap
+        templateValue: ""
+
+        ## Vault after render command specific to LDAP.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-ldap
+        command: ""
+      storage:
+        ## Vault Path to the Authelia storage secret.
+        ## Annotation: vault.hashicorp.com/agent-inject-secret-storage
+        path: secrets/authelia/storage
+
+        ## Vault template specific to storage.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-storage
+        templateValue: ""
+
+        ## Vault after render command specific to storage.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-storage
+        command: ""
+      session:
+        ## Vault Path to the Authelia session secret.
+        ## Annotation: vault.hashicorp.com/agent-inject-secret-session
+        path: secrets/authelia/session
+
+        ## Vault template specific to session.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-session
+        templateValue: ""
+
+        ## Vault after render command specific to session.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-session
+        command: ""
+      duo:
+        ## Vault Path to the Authelia duo secret.
+        ## Annotation: vault.hashicorp.com/agent-inject-secret-duo
+        path: secrets/authelia/duo
+
+        ## Vault template specific to duo.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-duo
+        templateValue: ""
+
+        ## Vault after render command specific to duo.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-duo
+        command: ""
+      redis:
+        ## Vault Path to the Authelia redis secret.
+        ## Annotation: vault.hashicorp.com/agent-inject-secret-redis
+        path: secrets/authelia/redis
+
+        ## Vault template specific to redis.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-redis
+        templateValue: ""
+
+        ## Vault after render command specific to redis.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-redis
+        command: ""
+      redisSentinel:
+        ## Vault Path to the Authelia redis sentinel secret.
+        ## Annotation: vault.hashicorp.com/agent-inject-secret-redis-sentinel
+        path: secrets/authelia/redis-sentinel
+
+        ## Vault template specific to redis sentinel.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-redis-sentinel
+        templateValue: ""
+
+        ## Vault after render command specific to redis sentinel.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-redis-sentinel
+        command: ""
+      smtp:
+        ## Vault Path to the Authelia SMTP secret.
+        ## Annotation: vault.hashicorp.com/agent-inject-secret-smtp
+        path: secrets/authelia/smtp
+
+        ## Vault template specific to SMTP.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-smtp
+        templateValue: ""
+
+        ## Vault after render command specific to SMTP.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-smtp
+        command: ""
+      oidcPrivateKey:
+        ## Vault Path to the Authelia OIDC private key secret.
+        ## Annotation: vault.hashicorp.com/agent-inject-secret-oidc-private-key
+        path: secrets/authelia/oidc-private-key
+
+        ## Vault template specific to OIDC private key.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-oidc-private-key
+        templateValue: ""
+
+        ## Vault after render command specific to OIDC private key.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-oidc-private-key
+        command: ""
+      oidcHMACSecret:
+        ## Vault Path to the Authelia OIDC HMAC secret.
+        ## Annotation: vault.hashicorp.com/agent-inject-secret-oidc-hmac-secret
+        path: secrets/authelia/oidc-private-key
+
+        ## Vault template specific to OIDC HMAC secret.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-oidc-hmac-secret
+        templateValue: ""
+
+        ## Vault after render command specific to OIDC HMAC secret.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-oidc-hmac-secret
+        command: ""
 
 certificates:
   # existingSecret: authelia
