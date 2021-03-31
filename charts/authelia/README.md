@@ -4,19 +4,32 @@
 not recommended at this stage for production environments without manual intervention to check the templated manifests
 match your desired state.
 
+This chart uses api version 2 which is only supported by helm v3+. This is a ***standalone*** chart intended just to
+deploy *Authelia* on its own. Eventually we may publish an `authelia-bundle` chart which includes `redis` and
+`postgresql`.
+
 # Getting Started
 
-Visit https://charts.authelia.com and follow the instructions to install the chart repo.
+1. Visit https://charts.authelia.com and follow the instructions to install the chart repo.
+2. Configure the chart by setting the various [parameters](#parameters), either in a locally downloaded values.yaml or
+   in the next step.
+3. Install the chart with `helm install authelia/authelia` and optionally set your values with `--values values.yaml` or
+   via `--set [parameter]=[value]`.
 
-A more in depth guide is coming. Some key points below.
+## Values Files
 
-The chart values.yaml is configured by default for production environments. It expects you will configure the following
-sections:
+- **values.yaml:** production environments with LDAP (auth), PostgreSQL (storage), SMTP (notification), and Redis (
+  session).
+- **values.local.yaml:** environments with file (auth), SQLite3 (storage), filesystem (notification), and memory (
+  session).
+
+It is expected you will configure at least the following sections/values:
 
 - domain (this is essential for the chart to work)
-- configMap (the configMap follows a majority of the configuration options
+- configMap section (the configMap follows a majority of the configuration options
   in [the documentation](https://www.authelia.com/docs/configuration))
-- secret section to setup passwords and other secret information, configuring this directly is not supported
+- secret section configures passwords and other secret information, configuring this directly in the configMap is not
+  supported
 
 # Parameters
 

@@ -168,8 +168,8 @@ Returns the common labels
 app.kubernetes.io/version: {{ .Chart.AppVersion }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 helm.sh/chart: {{ include "authelia.chart" . }}
-    {{- if .Values.extraLabels }}
-        {{ toYaml .Values.extraLabels }}
+    {{- if .Values.labels }}
+        {{ toYaml .Values.labels }}
     {{- end }}
     {{- if .Labels }}
         {{ toYaml .Labels }}
@@ -188,8 +188,8 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Returns the common annotations
 */}}
 {{- define "authelia.annotations" -}}
-    {{- if .Values.extraAnnotations -}}
-        {{ toYaml .Values.extraAnnotations | indent 0 }}
+    {{- if .Values.annotations -}}
+        {{ toYaml .Values.annotations | indent 0 }}
     {{- end }}
     {{- if .Annotations -}}
         {{ toYaml .Annotations | indent 0 }}

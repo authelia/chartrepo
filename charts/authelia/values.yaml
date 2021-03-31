@@ -26,16 +26,15 @@ image:
 # nameOverride: authelia-deployment-name
 # appNameOverride: authelia
 
-
-extraAnnotations: {}
-# extraAnnotations:
-#   myAnnotation: myValue
-
 ##
 ## extra labels/annotations applied to all resources
 ##
-extraLabels: {}
-# extraLabels:
+annotations: {}
+# annotations:
+#   myAnnotation: myValue
+
+labels: {}
+# labels:
 #   myLabel: myValue
 
 ##
