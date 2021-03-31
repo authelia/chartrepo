@@ -42,9 +42,14 @@ steps:
   - step: "package"
   if: build.branch == "master" && build.env("CHART_CHANGES") == "true"
 
+- block: "Pre-index Block"
+
 - commands:
+  - "sleep 120"
   - ".buildkite/scripts/step-index-clean.sh"
+  - "sleep 120"
   - "buildkite-agent artifact download .cr-release-packages/* .cr-release-packages"
+  - "sleep 120"
   - "cr --config .buildkite/cr.yaml index --push"
   key: "index"
   label: ":k8s: Publish Chart Index (Chart Releaser)"

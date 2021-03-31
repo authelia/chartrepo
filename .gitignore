@@ -3,7 +3,7 @@
 .cr-release-packages/
 
 # Helm
-charts*/charts
+charts/*/charts
 charts/*/Chart.lock
 
 # IDE's
