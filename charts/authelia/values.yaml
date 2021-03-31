@@ -1023,7 +1023,7 @@ secret:
         templateValue: ""
 
         ## Vault after render command specific to JWT.
-        ## Annotation: vault.hashicorp.com/agent-inject-template-jwt
+        ## Annotation: vault.hashicorp.com/agent-inject-command-jwt
         command: ""
       ldap:
         ## Vault Path to the Authelia LDAP secret.
@@ -1035,7 +1035,7 @@ secret:
         templateValue: ""
 
         ## Vault after render command specific to LDAP.
-        ## Annotation: vault.hashicorp.com/agent-inject-template-ldap
+        ## Annotation: vault.hashicorp.com/agent-inject-command-ldap
         command: ""
       storage:
         ## Vault Path to the Authelia storage secret.
@@ -1047,7 +1047,7 @@ secret:
         templateValue: ""
 
         ## Vault after render command specific to storage.
-        ## Annotation: vault.hashicorp.com/agent-inject-template-storage
+        ## Annotation: vault.hashicorp.com/agent-inject-command-storage
         command: ""
       session:
         ## Vault Path to the Authelia session secret.
@@ -1059,7 +1059,7 @@ secret:
         templateValue: ""
 
         ## Vault after render command specific to session.
-        ## Annotation: vault.hashicorp.com/agent-inject-template-session
+        ## Annotation: vault.hashicorp.com/agent-inject-command-session
         command: ""
       duo:
         ## Vault Path to the Authelia duo secret.
@@ -1071,7 +1071,7 @@ secret:
         templateValue: ""
 
         ## Vault after render command specific to duo.
-        ## Annotation: vault.hashicorp.com/agent-inject-template-duo
+        ## Annotation: vault.hashicorp.com/agent-inject-command-duo
         command: ""
       redis:
         ## Vault Path to the Authelia redis secret.
@@ -1083,7 +1083,7 @@ secret:
         templateValue: ""
 
         ## Vault after render command specific to redis.
-        ## Annotation: vault.hashicorp.com/agent-inject-template-redis
+        ## Annotation: vault.hashicorp.com/agent-inject-command-redis
         command: ""
       redisSentinel:
         ## Vault Path to the Authelia redis sentinel secret.
@@ -1095,7 +1095,7 @@ secret:
         templateValue: ""
 
         ## Vault after render command specific to redis sentinel.
-        ## Annotation: vault.hashicorp.com/agent-inject-template-redis-sentinel
+        ## Annotation: vault.hashicorp.com/agent-inject-command-redis-sentinel
         command: ""
       smtp:
         ## Vault Path to the Authelia SMTP secret.
@@ -1107,7 +1107,7 @@ secret:
         templateValue: ""
 
         ## Vault after render command specific to SMTP.
-        ## Annotation: vault.hashicorp.com/agent-inject-template-smtp
+        ## Annotation: vault.hashicorp.com/agent-inject-command-smtp
         command: ""
       oidcPrivateKey:
         ## Vault Path to the Authelia OIDC private key secret.
@@ -1119,7 +1119,7 @@ secret:
         templateValue: ""
 
         ## Vault after render command specific to OIDC private key.
-        ## Annotation: vault.hashicorp.com/agent-inject-template-oidc-private-key
+        ## Annotation: vault.hashicorp.com/agent-inject-command-oidc-private-key
         command: ""
       oidcHMACSecret:
         ## Vault Path to the Authelia OIDC HMAC secret.
@@ -1131,7 +1131,7 @@ secret:
         templateValue: ""
 
         ## Vault after render command specific to OIDC HMAC secret.
-        ## Annotation: vault.hashicorp.com/agent-inject-template-oidc-hmac-secret
+        ## Annotation: vault.hashicorp.com/agent-inject-command-oidc-hmac-secret
         command: ""
 
 certificates:
