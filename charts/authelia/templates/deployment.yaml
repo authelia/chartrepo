@@ -45,7 +45,7 @@ spec:
     metadata:
       labels: {{ include "authelia.labels" (merge (dict "Labels" .Values.pod.labels) .) | nindent 8 }}
       {{- $annotations := include "authelia.annotations" (merge (dict "Annotations" .Values.pod.annotations) .) -}}
-      {{- if or $annotations .Values.secret.vault_injector.enabled }}
+      {{- if or $annotations .Values.secret.vaultInjector.enabled }}
       annotations:
     {{- if $annotations }}{{- $annotations | nindent 8 }}{{- end }}
     {{- include "authelia.annotations.injector" . | nindent 8 }}
@@ -216,7 +216,7 @@ spec:
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "redis") .) }}
             {{- end }}
             {{- if and .Values.configMap.session.redis.high_availability.enabled .Values.configMap.session.redis.high_availability.enabledSecret }}
-          - key: {{ default "REDIS_SENTINEL_PASSWORD" .Values.secret.redis_sentinel.key }}
+          - key: {{ default "REDIS_SENTINEL_PASSWORD" .Values.secret.redisSentinel.key }}
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "redis-sentinel") .) }}
             {{- end }}
             {{- if .Values.configMap.duo_api }}

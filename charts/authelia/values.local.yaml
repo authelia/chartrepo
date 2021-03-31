@@ -959,7 +959,7 @@ secret:
     key: REDIS_PASSWORD
     # value:
     filename: REDIS_PASSWORD
-  redis_sentinel:
+  redisSentinel:
     key: REDIS_SENTINEL_PASSWORD
     # value:
     filename: REDIS_SENTINEL_PASSWORD
@@ -977,7 +977,7 @@ secret:
     filename: OIDC_HMAC_SECRET
 
   ## HashiCorp Vault Injector configuration.
-  vault_injector:
+  vaultInjector:
 
     ## Enable the vault injector annotations. This will disable secret injection via other means.
     ## To see the annotations and what they do see: https://www.vaultproject.io/docs/platform/k8s/injector/annotations
@@ -1087,7 +1087,7 @@ secret:
         ## Vault after render command specific to redis.
         ## Annotation: vault.hashicorp.com/agent-inject-template-redis
         command: ""
-      redis_sentinel:
+      redisSentinel:
         ## Vault Path to the Authelia redis sentinel secret.
         ## Annotation: vault.hashicorp.com/agent-inject-secret-redis-sentinel
         path: secrets/authelia/redis-sentinel

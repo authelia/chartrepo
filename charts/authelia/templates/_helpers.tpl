@@ -201,7 +201,7 @@ Returns the injector annotations
 */}}
 {{- define "authelia.annotations.injector" -}}
     {{- if include "authelia.enabled.injector" . -}}
-    {{- with $vault := .Values.secret.vault_injector -}}
+    {{- with $vault := .Values.secret.vaultInjector -}}
 vault.hashicorp.com/agent-inject: "true"
 {{- if $vault.role }}
 vault.hashicorp.com/role: {{ default "authelia" $vault.role }}
@@ -268,13 +268,13 @@ vault.hashicorp.com/agent-inject-secret-template-redis: {{ default $vault.agent.
 vault.hashicorp.com/agent-inject-secret-command-redis: {{ $vault.secrets.redis.command }}
 {{- end }}
 {{- if and $.Values.configMap.session.redis.high_availability.enabled $.Values.configMap.session.redis.high_availability.enabledSecret }}
-vault.hashicorp.com/agent-inject-secret-redis-sentinel: {{ $vault.secrets.redis_sentinel.path }}
+vault.hashicorp.com/agent-inject-secret-redis-sentinel: {{ $vault.secrets.redisSentinel.path }}
 vault.hashicorp.com/agent-inject-file-redis-sentinel: {{ include "authelia.secret.path" (merge (dict "Secret" "redis-sentinel") $) }}
-{{- if or $vault.agent.templateValue $vault.secrets.redis_sentinel.templateValue }}
-vault.hashicorp.com/agent-inject-secret-template-redis-sentinel {{ default $vault.agent.templateValue $vault.secrets.redis_sentinel.templateValue }}
+{{- if or $vault.agent.templateValue $vault.secrets.redisSentinel.templateValue }}
+vault.hashicorp.com/agent-inject-secret-template-redis-sentinel {{ default $vault.agent.templateValue $vault.secrets.redisSentinel.templateValue }}
 {{- end }}
-{{- if $vault.secrets.redis_sentinel.command }}
-vault.hashicorp.com/agent-inject-secret-command-redis-sentinel: {{ $vault.secrets.redis_sentinel.command }}
+{{- if $vault.secrets.redisSentinel.command }}
+vault.hashicorp.com/agent-inject-secret-command-redis-sentinel: {{ $vault.secrets.redisSentinel.command }}
 {{- end }}
 {{- end }}
 {{- end }}
@@ -569,8 +569,8 @@ Returns if hashicorp injector is enabled
 */}}
 {{- define "authelia.enabled.injector" -}}
     {{- if .Values.secret -}}
-        {{- if .Values.secret.vault_injector -}}
-            {{- if .Values.secret.vault_injector.enabled -}}
+        {{- if .Values.secret.vaultInjector -}}
+            {{- if .Values.secret.vaultInjector.enabled -}}
                 {{- true -}}
             {{- end -}}
         {{- end -}}
