@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-if [[ $BUILDKITE_LABEL == ":k8s: Publish Chart Index (Chart Releaser)" ]]; then
+if [[ "${BUILDKITE_STEP_KEY}" == "index" ]]; then
   echo "--- :broom: Cleaning repository"
 
-  rm -rf .cr-release-packages .cr-index
-  mkdir .cr-release-packages .cr-index
+  rm -rf .cr-index
+  mkdir .cr-index
 
-  if [[ ! -z $(git branch --list gh-pages) ]]; then
+  if [[ -n $(git branch --list gh-pages) ]]; then
     git branch --delete --force gh-pages
   fi
 

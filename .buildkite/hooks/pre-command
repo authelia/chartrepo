@@ -2,9 +2,18 @@
 
 set -eu
 
-if [[ $BUILDKITE_LABEL == ":k8s: Publish Chart Index (Chart Releaser)" ]]; then
+if [[ "${BUILDKITE_STEP_KEY}" == "index" ]]; then
   echo "--- :tada: Configuring git user"
 
   git config user.name "James Elliott"
   git config user.email "james-d-elliott@users.noreply.github.com"
+fi
+
+if [[ "${BUILDKITE_STEP_KEY}" == "upload" ]] || [[ "${BUILDKITE_STEP_KEY}" == "index" ]]; then
+  echo "--- :arrow_down: Downloading artifacts"
+
+  rm -rf .cr-release-packages
+  mkdir .cr-release-packages
+
+  buildkite-agent artifact download .cr-release-packages/* .cr-release-packages
 fi
