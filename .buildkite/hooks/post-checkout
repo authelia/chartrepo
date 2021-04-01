@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [[ $BUILDKITE_LABEL == ":k8s: Publish Chart Index (Chart Releaser)" ]]; then
-  echo "Cleaning Repository (Step: index)"
+  echo "--- :broom: Cleaning repository"
 
   rm -rf .cr-release-packages .cr-index
   mkdir .cr-release-packages .cr-index
