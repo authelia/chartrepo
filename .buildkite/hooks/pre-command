@@ -12,8 +12,8 @@ fi
 if [[ "${BUILDKITE_STEP_KEY}" == "upload" ]] || [[ "${BUILDKITE_STEP_KEY}" == "index" ]]; then
   echo "--- :arrow_down: Downloading artifacts"
 
-  rm -rf .cr-release-packages
-  mkdir .cr-release-packages
+  rm -rf .cr-release-packages .cr-index
+  mkdir -p .cr-release-packages .cr-index
 
   buildkite-agent artifact download .cr-release-packages/* .cr-release-packages
 fi
