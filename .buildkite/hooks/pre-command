@@ -3,7 +3,7 @@
 set -eu
 
 if [[ $BUILDKITE_LABEL == ":k8s: Publish Chart Index (Chart Releaser)" ]]; then
-  echo "Configuring Git User (Step: index)"
+  echo "--- :tada: Configuring git user"
 
   git config user.name "James Elliott"
   git config user.email "james-d-elliott@users.noreply.github.com"
