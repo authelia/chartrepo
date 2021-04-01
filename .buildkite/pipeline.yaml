@@ -18,6 +18,7 @@ steps:
 
 - wait: ~
   continue_on_failure: true
+  if: build.branch == "master" && build.env("CHART_CHANGES") == "true"
 
 - commands:
   - "mkdir .cr-release-packages"
