@@ -34,6 +34,22 @@ if [[ $BUILDKITE_LABEL == ":k8s: Publish Chart Index (Chart Releaser)" ]] || [[ 
 fi
 ```
 
+## Additional Information
+
+The following table lists files used in CI/CD and their purposes.
+
+|File                          |Purpose                                                |
+|:----------------------------:|:-----------------------------------------------------:|
+|.yamllint.yaml                |Configuration for linting the yaml aspects of charts   |
+|.buildkite/cr.yaml            |Configuration for Chart Releaser                       |
+|.buildkite/ct.yaml            |Configuration for Chart Testing (linting tasks)        |
+|.buildkite/ct.version.yaml    |Configuration for Chart Testing (version check task)   |
+|.buildkite/chart_schema.yaml  |Configuration for checking the Chart.yaml schema       |
+|.buildkite/pipeline.yaml      |The Buildkite pipeline template which is envsubst'd    |
+|.buildkite/scripts/pipeline.sh|The script to derive env vars to envsubst pipeline.yaml|
+|.buildkite/hooks/post-checkout|This hook does tasks directly after the checkout       |
+|.buildkite/hooks/pre-command  |This hook does tasks directly before the actual step   |
+
 [hooks]: https://buildkite.com/docs/agent/v3/hooks
 
 [Buildkite]: https://buildkite.com
