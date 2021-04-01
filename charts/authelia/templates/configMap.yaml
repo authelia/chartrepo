@@ -139,7 +139,7 @@ data:
         port: {{ default 25 $notifier.smtp.port }}
         sender: {{ $notifier.smtp.sender }}
         identifier: {{ $notifier.smtp.identifier }}
-        subject: {{ $notifier.smtp.subject }}
+        subject: {{ $notifier.smtp.subject | quote }}
         startup_check_address: {{ $notifier.smtp.startup_check_address }}
         disable_require_tls: {{ $notifier.smtp.disable_require_tls }}
         disable_html_emails: {{ $notifier.smtp.disable_html_emails }}

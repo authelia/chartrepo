@@ -45,6 +45,7 @@ labels: {}
 rbac:
 
   ## Enable RBAC. Turning this on associates Authelia with a service account.
+  ## If the vault injector is enabled, then RBAC must be enabled.
   enabled: false
 
   annotations: {}
