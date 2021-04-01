@@ -221,7 +221,7 @@ vault.hashicorp.com/agent-init-first: {{ $vault.agent.initFirst | quote }}
 {{- if $vault.agent.command }}
 vault.hashicorp.com/agent-inject-command: {{ $vault.agent.command | quote }}
 {{- end }}
-vault.hashicorp.com/agent-inject-volume-path: {{ include "authelia.secret.mountPath" $ }}
+vault.hashicorp.com/secret-volume-path: {{ include "authelia.secret.mountPath" $ }}
 vault.hashicorp.com/agent-inject-secret-jwt: {{ $vault.secrets.jwt.path }}
 vault.hashicorp.com/agent-inject-file-jwt: {{ include "authelia.secret.path" (merge (dict "Secret" "jwt") $) }}
 {{- if or $vault.agent.templateValue $vault.secrets.jwt.templateValue }}
