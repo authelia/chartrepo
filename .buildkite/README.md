@@ -1,6 +1,6 @@
 # Buildkite
 
-This repository uses [Buildkite](https://buildkite.com) for CI/CD. The flow for this pipeline works as follows:
+This repository uses [Buildkite] for CI/CD. The flow for this pipeline works as follows:
 
 1. Buildkite Cloud executes the command `.buildkite/scripts/pipeline.sh | buildkite-agent pipeline upload`.
     1. The script detects various things about the commit and uses `envsubst` to fill `.buildkite/pipeline.yaml` with
@@ -8,10 +8,17 @@ This repository uses [Buildkite](https://buildkite.com) for CI/CD. The flow for 
     2. The script outputs the yaml and pipes it to the `buildkite-agent pipeline upload` command.
 
 This process means that a majority of the pipeline is documented by existing in the repository. The only things not
-documented in this way are because they contain secret information. These things are configured by
-[Buildkite hooks](https://buildkite.com/docs/agent/v3/hooks) documented below (the section name is the file name).
+documented in this way are because they contain secret information. These things are configured by [hooks] documented
+below.
 
-## environment
+## Hooks
+
+There are two locations [hooks] can be located. Either on the individual agent home directories or in the repository.
+The [hooks] stored in the repository are all located in the
+[.buildkite/hooks](https://github.com/authelia/chartrepo/tree/master/.buildkite) directory. All [hooks] located locally
+on individual agents are documented below.
+
+### environment
 
 The environment hook configures the environment using the below snippet. Where `abcdef0123456789` is a valid GitHub
 access token that has push access to the `gh-pages` branch of the repository, and access to publish releases for the
@@ -26,3 +33,7 @@ if [[ $BUILDKITE_LABEL == ":k8s: Publish Chart Index (Chart Releaser)" ]] || [[ 
   export CR_TOKEN="abcdef0123456789"
 fi
 ```
+
+[hooks]: https://buildkite.com/docs/agent/v3/hooks
+
+[Buildkite]: https://buildkite.com
