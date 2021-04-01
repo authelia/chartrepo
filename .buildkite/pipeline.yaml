@@ -43,10 +43,12 @@ steps:
   if: build.branch == "master" && build.env("CHART_CHANGES") == "true"
 
 - block: "Pre-index Block"
+  key: "block"
+  depends_on:
+  - step: "upload"
+  if: build.branch == "master" && build.env("CHART_CHANGES") == "true"
 
 - commands:
-  - "sleep 120"
-  - ".buildkite/scripts/step-index-clean.sh"
   - "sleep 120"
   - "buildkite-agent artifact download .cr-release-packages/* .cr-release-packages"
   - "sleep 120"
@@ -56,5 +58,5 @@ steps:
   agents:
     charts: "true"
   depends_on:
-  - step: "upload"
+  - step: "block"
   if: build.branch == "master" && build.env("CHART_CHANGES") == "true"
