@@ -81,6 +81,11 @@ spec:
         - name: {{ $secretName }}
         {{- end }}
         {{- end }}
+        {{- if .Values.secret.vaultInjector.enabled }}
+        securityContext:
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+        {{- end }}
         command: ["authelia"]
         args:
         - --config=/config/configuration.yaml
