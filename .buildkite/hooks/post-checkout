@@ -1,14 +1,8 @@
 #!/usr/bin/env bash
 
 if [[ "${BUILDKITE_STEP_KEY}" == "index" ]]; then
-  echo "--- :broom: Cleaning repository"
-
-  rm -rf .cr-index
-  mkdir .cr-index
-
-  if [[ -n $(git branch --list gh-pages) ]]; then
-    git branch --delete --force gh-pages
-  fi
+  # Buildkite doesn't fetch the gh-pages branch when when the commit is against master so we need to do this for CR.
+  echo "--- :fork: Fetching repository branch gh-pages"
 
   git fetch --verbose --prune origin gh-pages
 fi
