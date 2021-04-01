@@ -1011,10 +1011,6 @@ secret:
       ## Annotation: vault.hashicorp.com/agent-run-as-same-user
       runAsSameUser: "true"
 
-      ## If defined, sets the default template for all secrets. Can be overriden by individual templates in secrets.
-      ## Annotation: vault.hashicorp.com/agent-inject-template-*
-      templateValue: ""
-
     secrets:
       jwt:
         ## Vault Path to the Authelia JWT secret.

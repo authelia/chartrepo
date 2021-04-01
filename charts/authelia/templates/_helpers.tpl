@@ -197,6 +197,24 @@ Returns the common annotations
 {{- end -}}
 
 {{/*
+Returns the vault secret path.
+*/}}
+{{- define "authelia.vault.secret.path" -}}
+    {{- if . -}}
+        {{ (split ":" .)._0 }}
+    {{- end -}}
+{{- end -}}
+
+{{/*
+Returns the injector secret template.
+*/}}
+{{- define "authelia.secret.template" -}}
+    {{- if . -}}
+        {{ printf "{{ with secret %q }}{{ .Data.%s }}{{ end }}" (split ":" .)._0 (split ":" .)._1 }}
+    {{- end -}}
+{{- end -}}
+
+{{/*
 Returns the injector annotations
 */}}
 {{- define "authelia.annotations.injector" -}}
@@ -222,56 +240,68 @@ vault.hashicorp.com/agent-init-first: {{ $vault.agent.initFirst | quote }}
 vault.hashicorp.com/agent-inject-command: {{ $vault.agent.command | quote }}
 {{- end }}
 vault.hashicorp.com/secret-volume-path: {{ include "authelia.secret.mountPath" $ }}
-vault.hashicorp.com/agent-inject-secret-jwt: {{ $vault.secrets.jwt.path }}
+vault.hashicorp.com/agent-inject-secret-jwt: {{ include "authelia.vault.secret.path" $vault.secrets.jwt.path }}
 vault.hashicorp.com/agent-inject-file-jwt: {{ include "authelia.secret.path" (merge (dict "Secret" "jwt") $) }}
-{{- if or $vault.agent.templateValue $vault.secrets.jwt.templateValue }}
-vault.hashicorp.com/agent-inject-template-jwt: {{ default $vault.agent.templateValue $vault.secrets.jwt.templateValue | quote }}
+{{- if $vault.secrets.jwt.templateValue }}
+vault.hashicorp.com/agent-inject-template-jwt: {{ $vault.secrets.jwt.templateValue | quote }}
+{{- else if $vault.secrets.jwt.path }}
+vault.hashicorp.com/agent-inject-template-jwt: {{ include "authelia.secret.template" $vault.secrets.jwt.path | quote }}
 {{- end }}
 {{- if $vault.secrets.jwt.command }}
 vault.hashicorp.com/agent-inject-command-jwt: {{ $vault.secrets.jwt.command | quote }}
 {{- end }}
-vault.hashicorp.com/agent-inject-secret-session: {{ $vault.secrets.session.path }}
+vault.hashicorp.com/agent-inject-secret-session: {{ include "authelia.vault.secret.path" $vault.secrets.session.path }}
 vault.hashicorp.com/agent-inject-file-session: {{ include "authelia.secret.path" (merge (dict "Secret" "session") $) }}
-{{- if or $vault.agent.templateValue $vault.secrets.session.templateValue }}
-vault.hashicorp.com/agent-inject-template-session: {{ default $vault.agent.templateValue $vault.secrets.session.templateValue | quote }}
+{{- if $vault.secrets.session.templateValue }}
+vault.hashicorp.com/agent-inject-template-session: {{ $vault.secrets.session.templateValue | quote }}
+{{- else if $vault.secrets.session.path }}
+vault.hashicorp.com/agent-inject-template-session: {{ include "authelia.secret.template" $vault.secrets.session.path | quote }}
 {{- end }}
 {{- if $vault.secrets.session.command }}
 vault.hashicorp.com/agent-inject-command-session: {{ $vault.secrets.session.command | quote }}
 {{- end }}
 {{- if $.Values.configMap.authentication_backend.ldap.enabled }}
-vault.hashicorp.com/agent-inject-secret-ldap: {{ $vault.secrets.ldap.path }}
+vault.hashicorp.com/agent-inject-secret-ldap: {{ include "authelia.vault.secret.path" $vault.secrets.ldap.path }}
 vault.hashicorp.com/agent-inject-file-ldap: {{ include "authelia.secret.path" (merge (dict "Secret" "ldap") $) }}
-{{- if or $vault.secrets.ldap.templateValue $vault.agent.templateValue }}
-vault.hashicorp.com/agent-inject-template-ldap: {{ default $vault.agent.templateValue $vault.secrets.ldap.templateValue | quote }}
+{{- if $vault.secrets.ldap.templateValue }}
+vault.hashicorp.com/agent-inject-template-ldap: {{ $vault.secrets.ldap.templateValue | quote }}
+{{- else if $vault.secrets.ldap.path }}
+vault.hashicorp.com/agent-inject-template-ldap: {{ include "authelia.secret.template" $vault.secrets.ldap.path | quote }}
 {{- end }}
 {{- if $vault.secrets.ldap.command }}
 vault.hashicorp.com/agent-inject-command-ldap: {{ $vault.secrets.ldap.command | quote }}
 {{- end }}
 {{- end }}
 {{- if or $.Values.configMap.storage.mysql.enabled $.Values.configMap.storage.postgres.enabled }}
-vault.hashicorp.com/agent-inject-secret-storage: {{ $vault.secrets.storage.path }}
+vault.hashicorp.com/agent-inject-secret-storage: {{ include "authelia.vault.secret.path" $vault.secrets.storage.path }}
 vault.hashicorp.com/agent-inject-file-storage: {{ include "authelia.secret.path" (merge (dict "Secret" "storage") $) }}
-{{- if or $vault.agent.templateValue $vault.secrets.storage.templateValue }}
-vault.hashicorp.com/agent-inject-template-storage: {{ default $vault.agent.templateValue $vault.secrets.storage.templateValue | quote }}
+{{- if $vault.secrets.storage.templateValue }}
+vault.hashicorp.com/agent-inject-template-storage: {{ $vault.secrets.storage.templateValue | quote }}
+{{- else if $vault.secrets.storage.path }}
+vault.hashicorp.com/agent-inject-template-storage: {{ include "authelia.secret.template" $vault.secrets.storage.path | quote }}
 {{- end }}
 {{- if $vault.secrets.storage.command }}
 vault.hashicorp.com/agent-inject-command-storage: {{ $vault.secrets.storage.command | quote }}
 {{- end }}
 {{- end }}
 {{- if and $.Values.configMap.session.redis.enabled $.Values.configMap.session.redis.enabledSecret }}
-vault.hashicorp.com/agent-inject-secret-redis: {{ $vault.secrets.redis.path }}
+vault.hashicorp.com/agent-inject-secret-redis: {{ include "authelia.vault.secret.path" $vault.secrets.redis.path }}
 vault.hashicorp.com/agent-inject-file-redis: {{ include "authelia.secret.path" (merge (dict "Secret" "redis") $) }}
-{{- if or $vault.agent.templateValue $vault.secrets.redis.templateValue }}
-vault.hashicorp.com/agent-inject-template-redis: {{ default $vault.agent.templateValue $vault.secrets.redis.templateValue | quote }}
+{{- if $vault.secrets.redis.templateValue }}
+vault.hashicorp.com/agent-inject-template-redis: {{ $vault.secrets.redis.templateValue | quote }}
+{{- else if $vault.secrets.redis.path }}
+vault.hashicorp.com/agent-inject-template-redis: {{ include "authelia.secret.template" $vault.secrets.redis.path | quote }}
 {{- end }}
 {{- if $vault.secrets.redis.command }}
 vault.hashicorp.com/agent-inject-command-redis: {{ $vault.secrets.redis.command | quote }}
 {{- end }}
 {{- if and $.Values.configMap.session.redis.high_availability.enabled $.Values.configMap.session.redis.high_availability.enabledSecret }}
-vault.hashicorp.com/agent-inject-secret-redis-sentinel: {{ $vault.secrets.redisSentinel.path }}
+vault.hashicorp.com/agent-inject-secret-redis-sentinel: {{ include "authelia.vault.secret.path" $vault.secrets.redisSentinel.path }}
 vault.hashicorp.com/agent-inject-file-redis-sentinel: {{ include "authelia.secret.path" (merge (dict "Secret" "redis-sentinel") $) }}
-{{- if or $vault.agent.templateValue $vault.secrets.redisSentinel.templateValue }}
-vault.hashicorp.com/agent-inject-template-redis-sentinel {{ default $vault.agent.templateValue $vault.secrets.redisSentinel.templateValue | quote }}
+{{- if $vault.secrets.redisSentinel.templateValue }}
+vault.hashicorp.com/agent-inject-template-redis-sentinel {{ $vault.secrets.redisSentinel.templateValue | quote }}
+{{- else if $vault.secrets.redisSentinel.path }}
+vault.hashicorp.com/agent-inject-template-redis-sentinel: {{ include "authelia.secret.template" $vault.secrets.redisSentinel.path | quote }}
 {{- end }}
 {{- if $vault.secrets.redisSentinel.command }}
 vault.hashicorp.com/agent-inject-command-redis-sentinel: {{ $vault.secrets.redisSentinel.command | quote }}
@@ -279,38 +309,46 @@ vault.hashicorp.com/agent-inject-command-redis-sentinel: {{ $vault.secrets.redis
 {{- end }}
 {{- end }}
 {{- if and $.Values.configMap.notifier.smtp.enabled $.Values.configMap.notifier.smtp.enabledSecret }}
-vault.hashicorp.com/agent-inject-secret-smtp: {{ $vault.secrets.smtp.path }}
+vault.hashicorp.com/agent-inject-secret-smtp: {{ include "authelia.vault.secret.path" $vault.secrets.smtp.path }}
 vault.hashicorp.com/agent-inject-file-smtp: {{ include "authelia.secret.path" (merge (dict "Secret" "smtp") $) }}
-{{- if or $vault.agent.templateValue $vault.secrets.smtp.templateValue }}
-vault.hashicorp.com/agent-inject-template-smtp: {{ default $vault.agent.templateValue $vault.secrets.smtp.templateValue | quote }}
+{{- if $vault.secrets.smtp.templateValue }}
+vault.hashicorp.com/agent-inject-template-smtp: {{ $vault.secrets.smtp.templateValue | quote }}
+{{- else if $vault.secrets.smtp.path }}
+vault.hashicorp.com/agent-inject-template-smtp: {{ include "authelia.secret.template" $vault.secrets.smtp.path | quote }}
 {{- end }}
 {{- if $vault.secrets.smtp.command }}
 vault.hashicorp.com/agent-inject-command-smtp: {{ $vault.secrets.smtp.command | quote }}
 {{- end }}
 {{- end }}
 {{- if include "authelia.configured.duo" $ }}
-vault.hashicorp.com/agent-inject-secret-duo: {{ $vault.secrets.duo.path }}
+vault.hashicorp.com/agent-inject-secret-duo: {{ include "authelia.vault.secret.path" $vault.secrets.duo.path }}
 vault.hashicorp.com/agent-inject-file-duo: {{ include "authelia.secret.path" (merge (dict "Secret" "duo") $) }}
-{{- if or $vault.agent.templateValue $vault.secrets.duo.templateValue }}
-vault.hashicorp.com/agent-inject-template-duo: {{ default $vault.agent.templateValue $vault.secrets.duo.templateValue | quote }}
+{{- if $vault.secrets.duo.templateValue }}
+vault.hashicorp.com/agent-inject-template-duo: {{ $vault.secrets.duo.templateValue | quote }}
+{{- else if $vault.secrets.duo.path }}
+vault.hashicorp.com/agent-inject-template-duo: {{ include "authelia.secret.template" $vault.secrets.duo.path | quote }}
 {{- end }}
 {{- if $vault.secrets.duo.command }}
 vault.hashicorp.com/agent-inject-command-duo: {{ $vault.secrets.duo.command | quote }}
 {{- end }}
 {{- end }}
 {{- if $.Values.configMap.identity_providers.oidc.enabled }}
-vault.hashicorp.com/agent-inject-secret-oidc-private-key: {{ $vault.secrets.oidcPrivateKey.path }}
+vault.hashicorp.com/agent-inject-secret-oidc-private-key: {{ include "authelia.vault.secret.path" $vault.secrets.oidcPrivateKey.path }}
 vault.hashicorp.com/agent-inject-file-oidc-private-key: {{ include "authelia.secret.path" (merge (dict "Secret" "oidc-private-key") $) }}
-{{- if or $vault.agent.templateValue $vault.secrets.oidcPrivateKey.templateValue }}
-vault.hashicorp.com/agent-inject-template-oidc-private-key: {{ default $vault.agent.templateValue $vault.secrets.oidcPrivateKey.templateValue | quote }}
+{{- if $vault.secrets.oidcPrivateKey.templateValue }}
+vault.hashicorp.com/agent-inject-template-oidc-private-key: {{ $vault.secrets.oidcPrivateKey.templateValue | quote }}
+{{- else if $vault.secrets.oidcPrivateKey.path }}
+vault.hashicorp.com/agent-inject-template-oidc-private-key: {{ include "authelia.secret.template" $vault.secrets.oidcPrivateKey.path | quote }}
 {{- end }}
 {{- if $vault.secrets.oidcPrivateKey.command }}
 vault.hashicorp.com/agent-inject-command-oidc-private-key: {{ $vault.secrets.oidcPrivateKey.command | quote }}
 {{- end }}
-vault.hashicorp.com/agent-inject-secret-oidc-hmac-secret: {{ $vault.secrets.oidcHMACSecret.path }}
+vault.hashicorp.com/agent-inject-secret-oidc-hmac-secret: {{ include "authelia.vault.secret.path" $vault.secrets.oidcHMACSecret.path }}
 vault.hashicorp.com/agent-inject-file-oidc-hmac-secret: {{ include "authelia.secret.path" (merge (dict "Secret" "oidc-hmac-secret") $) }}
-{{- if or $vault.agent.templateValue $vault.secrets.oidcHMACSecret.templateValue }}
-vault.hashicorp.com/agent-inject-template-oidc-hmac-secret: {{ default $vault.agent.templateValue $vault.secrets.oidcHMACSecret.templateValue | quote }}
+{{- if $vault.secrets.oidcHMACSecret.templateValue }}
+vault.hashicorp.com/agent-inject-template-oidc-hmac-secret: {{ $vault.secrets.oidcHMACSecret.templateValue | quote }}
+{{- else if $vault.secrets.oidcHMACSecret.path }}
+vault.hashicorp.com/agent-inject-template-oidc-hmac-secret: {{ include "authelia.secret.template" $vault.secrets.oidcHMACSecret.path | quote }}
 {{- end }}
 {{- if $vault.secrets.oidcHMACSecret.command }}
 vault.hashicorp.com/agent-inject-command-oidc-hmac-secret: {{ $vault.secrets.oidcHMACSecret.command | quote }}
