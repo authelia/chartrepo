@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
 if [[ $BUILDKITE_LABEL == ":k8s: Publish Chart Index (Chart Releaser)" ]]; then
-    echo "Cleaning Repository (Step: index)"
+  echo "Cleaning Repository (Step: index)"
 
-    rm -rf .cr-release-packages .cr-index
-    mkdir .cr-release-packages .cr-index
+  rm -rf .cr-release-packages .cr-index
+  mkdir .cr-release-packages .cr-index
 
-    if [[ ! -z $(git branch --list gh-pages) ]]; then
-      git branch --delete --force gh-pages
-    fi
+  if [[ ! -z $(git branch --list gh-pages) ]]; then
+    git branch --delete --force gh-pages
+  fi
 
-    git fetch --verbose --prune origin gh-pages
+  git fetch --verbose --prune origin gh-pages
 fi

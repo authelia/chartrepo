@@ -26,18 +26,3 @@ if [[ $BUILDKITE_LABEL == ":k8s: Publish Chart Index (Chart Releaser)" ]] || [[ 
   export CR_TOKEN="abcdef0123456789"
 fi
 ```
-
-## pre-command
-
-The pre-command hook configures git for the upcoming commits.
-
-```console
-#!/usr/bin/env bash
-
-set -eu
-
-if [[ $BUILDKITE_LABEL == ":k8s: Publish Chart Index (Chart Releaser)" ]]; then
-  git config user.name "Authelia[bot]"
-  git config user.email "authelia@users.noreply.github.com"
-fi
-```
