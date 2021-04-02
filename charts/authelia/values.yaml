@@ -984,6 +984,11 @@ secret:
     ## Additional annotations can be configured via the secret.annotations: {} above.
     ## Secrets are by default rendered in the /config/secrets directory. Changing this can be done via editing the
     ## secret.mountPath value. You can alter the filenames with the secret.<secretName>.filename values.
+    ## Secrets are loaded from vault path specified below with secrets.<secretName>.path values. Its format should be
+    ## <SECRET_PATH>:<KEY_NAME>.
+    ## Secrets are by default rendered by template suitable for vault KV v1 or database secrets engines. If other used,
+    ## it can be overriden per each secret by specifying secrets.<secretName>.templateValue. For example for KV v2
+    ## secrets engine would be '{{ with secret "<SECRET_PATH>" }}{{ .Data.data.<KEY_NAME> }}{{ end }}'.
     enabled: false
 
     ## The vault role to assign via annotations.
@@ -1009,15 +1014,11 @@ secret:
       ## Annotation: vault.hashicorp.com/agent-run-as-same-user
       runAsSameUser: "true"
 
-      ## If defined, sets the default template for all secrets. Can be overriden by individual templates in secrets.
-      ## Annotation: vault.hashicorp.com/agent-inject-template-*
-      templateValue: ""
-
     secrets:
       jwt:
         ## Vault Path to the Authelia JWT secret.
         ## Annotation: vault.hashicorp.com/agent-inject-secret-jwt
-        path: secrets/authelia/jwt
+        path: secrets/authelia/jwt:token
 
         ## Vault template specific to JWT.
         ## Annotation: vault.hashicorp.com/agent-inject-template-jwt
@@ -1029,7 +1030,7 @@ secret:
       ldap:
         ## Vault Path to the Authelia LDAP secret.
         ## Annotation: vault.hashicorp.com/agent-inject-secret-ldap
-        path: secrets/authelia/ldap
+        path: secrets/authelia/ldap:password
 
         ## Vault template specific to LDAP.
         ## Annotation: vault.hashicorp.com/agent-inject-template-ldap
@@ -1041,7 +1042,7 @@ secret:
       storage:
         ## Vault Path to the Authelia storage secret.
         ## Annotation: vault.hashicorp.com/agent-inject-secret-storage
-        path: secrets/authelia/storage
+        path: secrets/authelia/storage:password
 
         ## Vault template specific to storage.
         ## Annotation: vault.hashicorp.com/agent-inject-template-storage
@@ -1053,7 +1054,7 @@ secret:
       session:
         ## Vault Path to the Authelia session secret.
         ## Annotation: vault.hashicorp.com/agent-inject-secret-session
-        path: secrets/authelia/session
+        path: secrets/authelia/session:encryption_key
 
         ## Vault template specific to session.
         ## Annotation: vault.hashicorp.com/agent-inject-template-session
@@ -1065,7 +1066,7 @@ secret:
       duo:
         ## Vault Path to the Authelia duo secret.
         ## Annotation: vault.hashicorp.com/agent-inject-secret-duo
-        path: secrets/authelia/duo
+        path: secrets/authelia/duo:api_key
 
         ## Vault template specific to duo.
         ## Annotation: vault.hashicorp.com/agent-inject-template-duo
@@ -1077,7 +1078,7 @@ secret:
       redis:
         ## Vault Path to the Authelia redis secret.
         ## Annotation: vault.hashicorp.com/agent-inject-secret-redis
-        path: secrets/authelia/redis
+        path: secrets/authelia/redis:password
 
         ## Vault template specific to redis.
         ## Annotation: vault.hashicorp.com/agent-inject-template-redis
@@ -1089,7 +1090,7 @@ secret:
       redisSentinel:
         ## Vault Path to the Authelia redis sentinel secret.
         ## Annotation: vault.hashicorp.com/agent-inject-secret-redis-sentinel
-        path: secrets/authelia/redis-sentinel
+        path: secrets/authelia/redis_sentinel:password
 
         ## Vault template specific to redis sentinel.
         ## Annotation: vault.hashicorp.com/agent-inject-template-redis-sentinel
@@ -1101,7 +1102,7 @@ secret:
       smtp:
         ## Vault Path to the Authelia SMTP secret.
         ## Annotation: vault.hashicorp.com/agent-inject-secret-smtp
-        path: secrets/authelia/smtp
+        path: secrets/authelia/smtp:password
 
         ## Vault template specific to SMTP.
         ## Annotation: vault.hashicorp.com/agent-inject-template-smtp
@@ -1113,7 +1114,7 @@ secret:
       oidcPrivateKey:
         ## Vault Path to the Authelia OIDC private key secret.
         ## Annotation: vault.hashicorp.com/agent-inject-secret-oidc-private-key
-        path: secrets/authelia/oidc-private-key
+        path: secrets/authelia/oidc:private_key
 
         ## Vault template specific to OIDC private key.
         ## Annotation: vault.hashicorp.com/agent-inject-template-oidc-private-key
@@ -1125,7 +1126,7 @@ secret:
       oidcHMACSecret:
         ## Vault Path to the Authelia OIDC HMAC secret.
         ## Annotation: vault.hashicorp.com/agent-inject-secret-oidc-hmac-secret
-        path: secrets/authelia/oidc-private-key
+        path: secrets/authelia/oidc:hmac_secret
 
         ## Vault template specific to OIDC HMAC secret.
         ## Annotation: vault.hashicorp.com/agent-inject-template-oidc-hmac-secret
