@@ -44,5 +44,5 @@ steps:
   agents:
     charts: "true"
   depends_on:
-  - step: "block"
+  - step: "upload"
   if: build.branch == "master" && build.env("CHART_CHANGES") == "true"
