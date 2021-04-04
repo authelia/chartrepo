@@ -383,15 +383,15 @@ configMap:
   # labels:
   #   myLabel: myValue
 
-  # key: configuration.yaml
+  key: configuration.yaml
 
-  # existingConfigMap:
+  existingConfigMap: ""
 
   ##
   ## Port sets the configured port for the daemon, service, and the probes.
   ## Default is 9091 and should not need to be changed.
   ##
-  # port: 9091
+  port: 9091
 
   ##
   ## Server Configuration
@@ -423,7 +423,10 @@ configMap:
   ##
   ## Note: this parameter is optional. If not provided, user won't be redirected upon successful authentication.
   ## Default is https://www.<domain> (value at the top of the values.yaml).
+  default_redirection_url: ""
   # default_redirection_url: https://example.com
+
+  theme: light
 
   ##
   ## TOTP Configuration
@@ -923,6 +926,7 @@ configMap:
 ## and use the existingSecrets. All secrets can be stored in a single k8s secret if desired using the key option.
 ##
 secret:
+  existingSecret: ""
   # existingSecret: authelia
 
   annotations: {}
