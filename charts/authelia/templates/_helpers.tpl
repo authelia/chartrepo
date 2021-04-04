@@ -396,7 +396,7 @@ Returns the mountPath of the secrets.
     {{- else if eq .Secret "redis" -}}
         {{- default "REDIS_PASSWORD" .Values.secret.redis.filename -}}
     {{- else if eq .Secret "redis-sentinel" -}}
-        {{- default "REDIS_SENTINEL_PASSWORD" .Values.secret.redis_sentinel.filename -}}
+        {{- default "REDIS_SENTINEL_PASSWORD" .Values.secret.redisSentinel.filename -}}
     {{- else if eq .Secret "oidc-private-key" -}}
         {{- default "OIDC_PRIVATE_KEY" .Values.secret.oidcPrivateKey.filename -}}
     {{- else if eq .Secret "oidc-hmac-secret" -}}
