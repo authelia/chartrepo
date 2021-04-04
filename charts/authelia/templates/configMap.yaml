@@ -96,7 +96,9 @@ data:
     {{- if $session.redis.high_availability.enabled }}
         high_availability:
           sentinel_name: {{ $session.redis.high_availability.sentinel_name }}
+          {{- if $session.redis.high_availability.nodes }}
           nodes: {{ toYaml $session.redis.high_availability.nodes | nindent 10 }}
+          {{- end }}
           route_by_latency: {{ $session.redis.high_availability.route_by_latency }}
           route_randomly: {{ $session.redis.high_availability.route_randomly }}
     {{- end }}
