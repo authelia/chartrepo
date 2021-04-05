@@ -13,6 +13,7 @@ keywords:
 - YubiKey
 - Push Notifications
 - LDAP
+- test
 home: https://www.authelia.com
 sources:
 - https://github.com/authelia/chartrepo/tree/master/charts/authelia
