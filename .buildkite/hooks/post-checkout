@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+if [[ "${BUILDKITE_STEP_KEY}" == "lint-version" ]]; then
+  # Buildkite doesn't fetch the gh-pages branch when when the commit is against master so we need to do this for CR.
+  echo "--- :fork: Fetching repository branch master"
+
+  git fetch --verbose --prune origin master
+fi
+
 if [[ "${BUILDKITE_STEP_KEY}" == "index" ]]; then
   # Buildkite doesn't fetch the gh-pages branch when when the commit is against master so we need to do this for CR.
   echo "--- :fork: Fetching repository branch gh-pages"
