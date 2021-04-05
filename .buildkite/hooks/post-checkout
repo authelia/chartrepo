@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [[ "${BUILDKITE_STEP_KEY}" == "lint-version" ]] && [[ "${BUILDKITE_BRANCH}" != "master" ]]; then
+if [[ "${BUILDKITE_STEP_KEY}" == "lint-version" ]] && [[ "${BUILDKITE_BRANCH}" != "master" ]] && [[ "${CHART_CHANGES}" == "true" ]]; then
   # Buildkite doesn't fetch the master branch when when the commit is not on master so we need to do this for CT.
   echo "--- :fork: Fetching repository branch master"
 
