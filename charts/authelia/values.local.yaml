@@ -1143,6 +1143,7 @@ secret:
         command: ""
 
 certificates:
+  existingSecret: ""
   # existingSecret: authelia
 
   annotations: {}
@@ -1201,13 +1202,16 @@ persistence:
   #   myLabel: myValue
 
   readOnly: false
-  # subPath:
-  # storageClass: "."
+  subPath: ""
 
-  # existingClaim:
+  existingClaim: ""
+  # existingClaim: my-claim-name
+
+  storageClass: ""
+  # storageClass: "my-storage-class"
 
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
 
   size: 100Mi
 
