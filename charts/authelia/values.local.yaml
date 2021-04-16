@@ -18,7 +18,7 @@
 image:
   registry: docker.io
   repository: authelia/authelia
-  tag: 4.28.0
+  tag: 4.28.1
   pullPolicy: IfNotPresent
   pullSecrets: []
   # pullSecrets:
