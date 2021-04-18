@@ -66,11 +66,11 @@ spec:
       {{- with $affinity := .Values.pod.selectors.affinity }}
       affinity: {{ toYaml $affinity | nindent 8 }}
       {{- end }}
-      {{- with $context := .Values.pod.securityContext.container }}
-      securityContext: {{ toYaml $context | nindent 8 }}
-      {{- end }}
       {{- if .Values.rbac.enabled }}
       serviceAccountName: {{ default (include "authelia.name" .) .Values.rbac.serviceAccountName }}
+      {{- end }}
+      {{- with $context := .Values.pod.securityContext.pod }}
+      securityContext: {{ toYaml $context | nindent 8 }}
       {{- end }}
       containers:
       - name: authelia
@@ -81,16 +81,21 @@ spec:
         - name: {{ $secretName }}
         {{- end }}
         {{- end }}
-        {{- if .Values.secret.vaultInjector.enabled }}
-        securityContext:
-          runAsUser: 1000
-          allowPrivilegeEscalation: false
-        {{- end }}
         command: ["authelia"]
         args:
         - --config=/config/configuration.yaml
         {{- with $resources :=.Values.pod.resources }}
         resources: {{ toYaml $resources | nindent 10 }}
+        {{- end }}
+        {{- if or ( .Values.secret.vaultInjector.enabled ) ( .Values.pod.securityContext.container ) }}
+        securityContext:
+        {{- with $context := .Values.pod.securityContext.container }}
+        {{ toYaml $context | nindent 10 }}
+        {{- end }}
+        {{- if .Values.secret.vaultInjector.enabled }}
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+        {{- end }}
         {{- end }}
         env:
         - name: AUTHELIA_JWT_SECRET_FILE
@@ -178,9 +183,6 @@ spec:
           {{- with $mounts := .Values.pod.extraVolumeMounts }}
           {{ toYaml $mounts | indent 12 }}
           {{- end }}
-          {{- with $context := .Values.pod.securityContext.pod }}
-          securityContext: {{ toYaml $context | nindent 12 }}
-      {{- end }}
       volumes:
         {{- if (include "authelia.enabled.persistentVolumeClaim" .) }}
       - name: authelia
