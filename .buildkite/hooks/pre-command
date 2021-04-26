@@ -5,8 +5,8 @@ set -eu
 if [[ "${BUILDKITE_STEP_KEY}" == "index" ]]; then
   echo "--- :tada: Configuring git user"
 
-  git config user.name "James Elliott"
-  git config user.email "james-d-elliott@users.noreply.github.com"
+  git config user.name "Authelia[bot]"
+  git config user.email "autheliabot@users.noreply.github.com"
 fi
 
 if [[ "${BUILDKITE_STEP_KEY}" == "upload" ]] || [[ "${BUILDKITE_STEP_KEY}" == "index" ]]; then
