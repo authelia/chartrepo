@@ -188,12 +188,16 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Returns the common annotations
 */}}
 {{- define "authelia.annotations" -}}
+    {{- $annotations := dict -}}
     {{- if .Values.annotations -}}
-        {{ toYaml .Values.annotations | indent 0 }}
-    {{- end }}
+        {{ $annotations = merge $annotations .Values.annotations -}}
+    {{- end -}}
     {{- if .Annotations -}}
-        {{ toYaml .Annotations | indent 0 }}
-    {{- end }}
+        {{ $annotations = merge $annotations .Annotations -}}
+    {{- end -}}
+    {{- if $annotations -}}
+        {{- toYaml $annotations | indent 0 -}}
+    {{- end -}}
 {{- end -}}
 
 {{/*

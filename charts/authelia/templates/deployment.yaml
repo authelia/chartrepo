@@ -44,12 +44,19 @@ spec:
   template:
     metadata:
       labels: {{ include "authelia.labels" (merge (dict "Labels" .Values.pod.labels) .) | nindent 8 }}
-      {{- $annotations := include "authelia.annotations" (merge (dict "Annotations" .Values.pod.annotations) .) -}}
-      {{- if or $annotations .Values.secret.vaultInjector.enabled }}
       annotations:
-    {{- if $annotations }}{{- $annotations | nindent 8 }}{{- end }}
-    {{- include "authelia.annotations.injector" . | nindent 8 }}
-    {{- end }}
+        {{- if (include "authelia.generate.configMap" .) }}
+        checksum/configMap: {{ include (print $.Template.BasePath "/configMap.yaml") . | sha256sum }}
+        {{- end }}
+        {{ if (include "authelia.enabled.secret" .) -}}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        {{- end }}
+        {{- with $annotations := include "authelia.annotations" (merge (dict "Annotations" .Values.pod.annotations) .) }}
+        {{- $annotations | nindent 8 }}
+        {{- end }}
+        {{- with $annotations := include "authelia.annotations.injector" . }}
+        {{- $annotations | nindent 8 }}
+        {{- end }}
     spec:
       {{- with $tolerations := .Values.pod.tolerations }}
       tolerations: {{ toYaml $tolerations | nindent 8 }}
