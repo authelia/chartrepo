@@ -18,7 +18,7 @@
 image:
   registry: docker.io
   repository: authelia/authelia
-  tag: 4.28.1
+  tag: 4.28.2
   pullPolicy: IfNotPresent
   pullSecrets: []
   # pullSecrets:
@@ -698,6 +698,10 @@ configMap:
     ## The name of the session cookie. (default: authelia_session).
     name: authelia_session
 
+    ## Sets the Cookie SameSite value. Possible options are none, lax, or strict.
+    ## Please read https://www.authelia.com/docs/configuration/session.html#same_site
+    same_site: lax
+
     ## The time in seconds before the cookie expires and session is reset.
     expiration: 1h
 
@@ -900,10 +904,10 @@ configMap:
       clients:
       - id: myapp
         description: My Application
-        ## Secret shared between client and OP. Must be bcrypt hashed.
-        secret: $2y$12$Bk1mw11OwVlG0uYWVJaoEuDkbL62FpEUsq59CXzPbe5oL61zR4XoG
-        ## Policy is either one_factor or two_factor.
-        policy: two_factor
+        ## Secret shared between client and OP.
+        secret: apple123
+        ## Authorization Policy is either one_factor or two_factor.
+        authorization_policy: two_factor
         ## List of valid redirect URIs
         redirect_uris:
         - https://oidc.example.com/oauth2/callback
@@ -942,43 +946,43 @@ secret:
   ## Secrets.
   jwt:
     key: JWT_TOKEN
-    # value:
+    value: ""
     filename: JWT_TOKEN
   ldap:
     key: LDAP_PASSWORD
-    # value:
+    value: ""
     filename: LDAP_PASSWORD
   storage:
     key: STORAGE_PASSWORD
-    # value:
+    value: ""
     filename: STORAGE_PASSWORD
   session:
     key: SESSION_ENCRYPTION_KEY
-    # value:
+    value: ""
     filename: SESSION_ENCRYPTION_KEY
   duo:
     key: DUO_API_KEY
-    # value:
+    value: ""
     filename: DUO_API_KEY
   redis:
     key: REDIS_PASSWORD
-    # value:
+    value: ""
     filename: REDIS_PASSWORD
   redisSentinel:
     key: REDIS_SENTINEL_PASSWORD
-    # value:
+    value: ""
     filename: REDIS_SENTINEL_PASSWORD
   smtp:
     key: SMTP_PASSWORD
-    # value:
+    value: ""
     filename: SMTP_PASSWORD
   oidcPrivateKey:
     key: OIDC_PRIVATE_KEY
-    # value:
+    value: ""
     filename: OIDC_PRIVATE_KEY
   oidcHMACSecret:
     key: OIDC_HMAC_SECRET
-    # value:
+    value: ""
     filename: OIDC_HMAC_SECRET
 
   ## HashiCorp Vault Injector configuration.

@@ -77,6 +77,7 @@ data:
     session:
       name: {{ default "authelia_session" $session.name }}
       domain: {{ required "A valid .Values.domain entry required!" $.Values.domain }}
+      same_site: {{ default "lax" $session.same_site }}
       expiration: {{ default "1M" $session.expiration }}
       inactivity: {{ default "5m" $session.inactivity }}
       remember_me_duration: {{ default "1M" $session.remember_me_duration }}
@@ -151,7 +152,17 @@ data:
     {{- if .Values.configMap.identity_providers.oidc.enabled }}
     identity_providers:
       oidc:
-        clients: {{ toYaml .Values.configMap.identity_providers.oidc.clients | nindent 8 }}
+        clients:
+        {{- range $client := .Values.configMap.identity_providers.oidc.clients }}
+        - id: {{ $client.id }}
+          description: {{ default $client.id $client.description }}
+          authoriation_policy: {{ default "two_factor" $client.authorization_policy }}
+          secret: {{ default (randAlphaNum 128) $client.secret }}
+          redirect_uris: {{ toYaml $client.redirect_uris | nindent 10 }}
+          scopes: {{ toYaml (default (list "openid" "profile" "email" "groups") $client.scopes) | nindent 10 }}
+          grant_types: {{ toYaml (default (list "refresh_token" "authorization_code") $client.grant_types) | nindent 10 }}
+          response_types: {{ toYaml (default (list "code") $client.response_types) | nindent 10 }}
+        {{- end }}
     {{- end }}
     access_control: {{ toYaml .Values.configMap.access_control | nindent 6 }}
     ...
