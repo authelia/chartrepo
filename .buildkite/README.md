@@ -22,15 +22,19 @@ on individual agents are documented below.
 
 The environment hook configures the environment using the below snippet. Where `abcdef0123456789` is a valid GitHub
 access token that has push access to the `gh-pages` branch of the repository, and access to publish releases for the
-repository.
+repository. This file needs to be mounted in the ~/hooks directory (hooks directory inside the home of the user running
+the agent).
 
 ```console
 #!/usr/bin/env bash
+set -eu
 
-if [[ $BUILDKITE_LABEL == ":k8s: Publish Chart Index (Chart Releaser)" ]] || [[ $BUILDKITE_LABEL == ":github: Deploy Artifacts (Chart Releaser)" ]]; then
-  echo "--- :sparkles: Setting environment variables"
+if [[ "${BUILDKITE_PIPELINE_NAME}" == "Charts" ]]; then
+  if [[ "${BUILDKITE_STEP_KEY}" == "index" ]] || [[ "${BUILDKITE_STEP_KEY}" == "upload" ]]; then
+    echo "--- :sparkles: Setting environment variables"
 
-  export CR_TOKEN="abcdef0123456789"
+    export CR_TOKEN="abcdef0123456789"
+  fi
 fi
 ```
 
