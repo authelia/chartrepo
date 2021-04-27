@@ -190,10 +190,10 @@ Returns the common annotations
 {{- define "authelia.annotations" -}}
     {{- $annotations := dict -}}
     {{- if .Values.annotations -}}
-        {{ $annotations = merge $annotations .Values.annotations -}}
+        {{ $annotations = mergeOverwrite $annotations .Values.annotations -}}
     {{- end -}}
     {{- if .Annotations -}}
-        {{ $annotations = merge $annotations .Annotations -}}
+        {{ $annotations = mergeOverwrite $annotations .Annotations -}}
     {{- end -}}
     {{- if $annotations -}}
         {{- toYaml $annotations | indent 0 -}}
