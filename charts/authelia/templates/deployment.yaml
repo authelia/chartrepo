@@ -231,7 +231,7 @@ spec:
           - key: {{ default "REDIS_SENTINEL_PASSWORD" .Values.secret.redisSentinel.key }}
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "redis-sentinel") .) }}
             {{- end }}
-            {{- if .Values.configMap.duo_api }}
+            {{- if and (include "authelia.configured.duo" .) (or (include "authelia.configured.duoSecret" .) (hasKey .Values.secret "existingSecret")) }}
           - key: {{ default "DUO_API_KEY" .Values.secret.duo.key }}
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "duo") .) }}
             {{- end }}
