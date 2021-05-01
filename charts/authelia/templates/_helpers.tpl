@@ -113,7 +113,9 @@ Returns true if duo secret is configured.
     {{- if .Values.secret -}}
         {{- if .Values.secret.duo -}}
             {{- if hasKey .Values.secret.duo "value" -}}
-                {{- true -}}
+                {{- if not (eq .Values.secret.duo.value "") -}}
+                    {{- true -}}
+                {{- end -}}
             {{- end -}}
         {{- end -}}
     {{- end -}}
@@ -370,7 +372,7 @@ vault.hashicorp.com/agent-run-as-same-user: {{ default "true" $vault.agent.runAs
 Returns the value of .SecretValue or a randomly generated one
 */}}
 {{- define "authelia.secret.standard" -}}
-    {{- if .SecretValue -}}
+    {{- if and .SecretValue (not (eq .SecretValue "")) -}}
         {{- .SecretValue | b64enc -}}
     {{- else -}}
         {{- randAlphaNum 128 | b64enc -}}
