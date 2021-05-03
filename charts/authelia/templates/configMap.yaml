@@ -97,9 +97,9 @@ data:
     {{- if $session.redis.high_availability.enabled }}
         high_availability:
           sentinel_name: {{ $session.redis.high_availability.sentinel_name }}
-          {{- if $session.redis.high_availability.nodes }}
+    {{- if $session.redis.high_availability.nodes }}
           nodes: {{ toYaml $session.redis.high_availability.nodes | nindent 10 }}
-          {{- end }}
+    {{- end }}
           route_by_latency: {{ $session.redis.high_availability.route_by_latency }}
           route_randomly: {{ $session.redis.high_availability.route_randomly }}
     {{- end }}
@@ -153,7 +153,7 @@ data:
     identity_providers:
       oidc:
         clients:
-        {{- range $client := .Values.configMap.identity_providers.oidc.clients }}
+    {{- range $client := .Values.configMap.identity_providers.oidc.clients }}
         - id: {{ $client.id }}
           description: {{ default $client.id $client.description }}
           authoriation_policy: {{ default "two_factor" $client.authorization_policy }}
@@ -162,8 +162,23 @@ data:
           scopes: {{ toYaml (default (list "openid" "profile" "email" "groups") $client.scopes) | nindent 10 }}
           grant_types: {{ toYaml (default (list "refresh_token" "authorization_code") $client.grant_types) | nindent 10 }}
           response_types: {{ toYaml (default (list "code") $client.response_types) | nindent 10 }}
-        {{- end }}
     {{- end }}
-    access_control: {{ toYaml .Values.configMap.access_control | nindent 6 }}
+    {{- end }}
+    access_control:
+    {{- if and (eq (len .Values.configMap.access_control.rules) 0) (eq .Values.configMap.access_control.default_policy "bypass") }}
+      default_policy: one_factor
+    {{- else }}
+      default_policy: {{ .Values.configMap.access_control.default_policy }}
+    {{- end }}
+    {{- if (eq (len .Values.configMap.access_control.networks) 0) }}
+      networks: []
+    {{- else }}
+      networks: {{ toYaml .Values.configMap.access_control.networks | nindent 8 }}
+    {{- end }}
+    {{- if (eq (len .Values.configMap.access_control.rules) 0) }}
+      rules: []
+    {{- else }}
+      rules: {{ toYaml .Values.configMap.access_control.rules | nindent 8 }}
+    {{- end }}
     ...
     {{- end }}
