@@ -64,7 +64,6 @@ data:
     {{- if $auth.ldap.group_name_attribute }}
         group_name_attribute: {{ $auth.ldap.group_name_attribute }}
     {{- end }}
-    {{- end }}
     {{- if $auth.ldap.mail_attribute }}
         group_name_attribute: {{ $auth.ldap.mail_attribute }}
     {{- end }}
@@ -72,6 +71,7 @@ data:
         group_name_attribute: {{ $auth.ldap.display_name_attribute }}
     {{- end }}
         user: {{ $auth.ldap.user }}
+    {{- end }}
     {{- end }}
     {{- with $session := .Values.configMap.session }}
     session:
