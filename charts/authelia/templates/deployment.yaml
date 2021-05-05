@@ -211,11 +211,11 @@ spec:
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "jwt") .) }}
           - key: {{ default "SESSION_ENCRYPTION_KEY" .Values.secret.session.key }}
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "session") .) }}
-            {{- if or .Values.configMap.storage.postgres .Values.configMap.storage.mysql }}
+            {{- if or .Values.configMap.storage.postgres.enabled .Values.configMap.storage.mysql.enabled }}
           - key: {{ default "STORAGE_PASSWORD" .Values.secret.storage.key }}
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "storage") .) }}
             {{- end }}
-            {{- if .Values.configMap.authentication_backend.ldap }}
+            {{- if .Values.configMap.authentication_backend.ldap.enabled }}
           - key: {{ default "LDAP_PASSWORD" .Values.secret.ldap.key }}
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "ldap") .) }}
             {{- end }}
