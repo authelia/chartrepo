@@ -85,7 +85,9 @@ Returns true if smtp secret is configured.
     {{- if .Values.secret -}}
         {{- if .Values.secret.smtp -}}
             {{- if hasKey .Values.secret.smtp "value" -}}
-                {{- true -}}
+                {{- if not (eq .Values.secret.smtp.value "") -}}
+                    {{- true -}}
+                {{- end -}}
             {{- end -}}
         {{- end -}}
     {{- end -}}
