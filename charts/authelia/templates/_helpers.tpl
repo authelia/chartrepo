@@ -171,10 +171,10 @@ app.kubernetes.io/version: {{ .Chart.AppVersion }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 helm.sh/chart: {{ include "authelia.chart" . }}
     {{- if .Values.labels }}
-        {{ toYaml .Values.labels }}
+        {{- toYaml .Values.labels | nindent 0 }}
     {{- end }}
     {{- if .Labels }}
-        {{ toYaml .Labels }}
+        {{- toYaml .Labels | nindent 0 }}
     {{- end }}
 {{- end -}}
 
