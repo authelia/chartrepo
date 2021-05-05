@@ -18,7 +18,7 @@
 image:
   registry: docker.io
   repository: authelia/authelia
-  tag: 4.28.2
+  tag: 4.29.0
   pullPolicy: IfNotPresent
   pullSecrets: []
   # pullSecrets:
@@ -899,29 +899,28 @@ configMap:
 
   identity_providers:
     oidc:
-      ## Enables this in the config map. Currently in alpha stage there is no official build supporting OIDC.
-      ## This exists for testing and preparation.
+      ## Enables this in the config map. Currently in beta stage.
       enabled: false
-      clients:
-      - id: myapp
-        description: My Application
+      clients: []
+      # - id: myapp
+        # description: My Application
         ## Secret shared between client and OP.
-        secret: apple123
+        # secret: apple123
         ## Authorization Policy is either one_factor or two_factor.
-        authorization_policy: two_factor
+        # authorization_policy: two_factor
         ## List of valid redirect URIs
-        redirect_uris:
-        - https://oidc.example.com/oauth2/callback
-        scopes:
-        - openid
-        - profile
-        - email
-        - groups
-        grant_types:
-        - refresh_token
-        - authorization_code
-        response_types:
-        - code
+        # redirect_uris:
+        # - https://oidc.example.com/oauth2/callback
+        # scopes:
+        # - openid
+        # - profile
+        # - email
+        # - groups
+        # grant_types:
+        # - refresh_token
+        # - authorization_code
+        # response_types:
+        # - code
 
 ##
 ## Authelia Secret Generator.
