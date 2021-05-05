@@ -175,12 +175,12 @@ data:
     {{- if (eq (len .Values.configMap.access_control.networks) 0) }}
       networks: []
     {{- else }}
-      networks: {{ toYaml .Values.configMap.access_control.networks | nindent 8 }}
+      networks: {{ toYaml .Values.configMap.access_control.networks | nindent 6 }}
     {{- end }}
     {{- if (eq (len .Values.configMap.access_control.rules) 0) }}
       rules: []
     {{- else }}
-      rules: {{ toYaml .Values.configMap.access_control.rules | nindent 8 }}
+      rules: {{ toYaml .Values.configMap.access_control.rules | nindent 6 }}
     {{- end }}
     ...
     {{- end }}
