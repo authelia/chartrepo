@@ -85,7 +85,9 @@ data:
       redis:
         host: {{ $session.redis.host }}
         port: {{ default 6379 $session.redis.port }}
-        username: {{ default "authelia" $session.redis.username }}
+        {{- if not (eq $session.redis.username "") }}
+        username: {{ $session.redis.username }}
+        {{- end }}
         maximum_active_connections: {{ default 8 $session.redis.maximum_active_connections }}
         minimum_idle_connections: {{ default 0 $session.redis.minimum_idle_connections }}
     {{- if $session.redis.tls.enabled }}

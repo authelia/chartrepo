@@ -728,7 +728,8 @@ configMap:
       port: 6379
 
       ## Optional username to be used with authentication.
-      username: authelia
+      # username: authelia
+      username: ""
 
       ## This is the Redis DB Index https://redis.io/commands/select (sometimes referred to as database number, DB, etc).
       database_index: 0
