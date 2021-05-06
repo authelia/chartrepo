@@ -385,7 +385,7 @@ Returns the value of .SecretValue or a randomly generated one
 Returns the mountPath of the secrets.
 */}}
 {{- define "authelia.secret.mountPath" -}}
-    {{- default "/config/secrets" .Values.secret.mountPath -}}
+    {{- default "/secrets" .Values.secret.mountPath -}}
 {{- end -}}
 
 {{- define "authelia.secret.path" -}}
@@ -501,7 +501,7 @@ Returns the forwardAuth url
     {{- end -}}
     {{- $path := (include "authelia.path" .) | trimSuffix "/" -}}
     {{- $redirect := (include "authelia.ingressHostWithPath" .) -}}
-    {{- (printf "%s://%s.svc.%s%s/api/verify?rd=https://%s/#/" $scheme $host $cluster $path $redirect) -}}
+    {{- (printf "%s://%s.svc.%s%s/api/verify?rd=https://%s/" $scheme $host $cluster $path $redirect) -}}
 {{- end -}}
 
 {{/*

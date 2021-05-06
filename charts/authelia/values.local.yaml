@@ -941,7 +941,7 @@ secret:
   # labels:
   #   myLabel: myValue
 
-  mountPath: /config/secrets
+  mountPath: /secrets
 
   ## Secrets.
   jwt:
@@ -992,7 +992,7 @@ secret:
     ## To see the annotations and what they do see: https://www.vaultproject.io/docs/platform/k8s/injector/annotations
     ## Annotations with a blank string do not get configured at all.
     ## Additional annotations can be configured via the secret.annotations: {} above.
-    ## Secrets are by default rendered in the /config/secrets directory. Changing this can be done via editing the
+    ## Secrets are by default rendered in the /secrets directory. Changing this can be done via editing the
     ## secret.mountPath value. You can alter the filenames with the secret.<secretName>.filename values.
     ## Secrets are loaded from vault path specified below with secrets.<secretName>.path values. Its format should be
     ## <SECRET_PATH>:<KEY_NAME>.
