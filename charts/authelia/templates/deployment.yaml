@@ -95,7 +95,7 @@ spec:
         {{- end }}
         command: ["authelia"]
         args:
-        - --config=/config/configuration.yaml
+        - --config=/configuration.yaml
         {{- with $resources :=.Values.pod.resources }}
         resources: {{ toYaml $resources | nindent 10 }}
         {{- end }}
@@ -162,15 +162,16 @@ spec:
           {{- end }}
           {{- with $subPathExpr := .Values.persistence.subPathExpr }}
           subPathExpr: {{ $subPathExpr }}
-            {{- end }}
-            {{- with $mountPropagation := .Values.persistence.mountPropagation }}
-            mountPropagation: {{ $mountPropagation }}
+          {{- end }}
+          {{- with $mountPropagation := .Values.persistence.mountPropagation }}
+          mountPropagation: {{ $mountPropagation }}
           {{- end }}
           {{- end }}
           {{- if (include "authelia.enabled.configMap" .) }}
-        - mountPath: /config
+        - mountPath: /configuration.yaml
           name: config
-          readOnly: false
+          readOnly: true
+          subPath: configuration.yaml
           {{- end }}
           {{- if not (include "authelia.enabled.injector" .) }}
         - mountPath: {{ include "authelia.secret.mountPath" . }}
@@ -178,7 +179,7 @@ spec:
           readOnly: true
           {{- end }}
           {{- if (include "authelia.enabled.certificatesSecret" .) }}
-        - mountPath: /config/certificates
+        - mountPath: /certificates
           name: certificates
           readOnly: true
           {{- end }}

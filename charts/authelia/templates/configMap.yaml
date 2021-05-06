@@ -17,7 +17,7 @@ data:
     log_level: {{ default "info" .Values.configMap.log_level  }}
     default_redirection_url: {{ default (printf "https://www.%s" .Values.domain) .Values.configMap.default_redirection_url }}
     {{- if (include "authelia.enabled.certificatesSecret" .) }}
-    certificates_directory: /config/certificates
+    certificates_directory: /certificates
     {{- end }}
     server: {{ toYaml .Values.configMap.server | nindent 6 }}
     totp:
@@ -167,8 +167,14 @@ data:
     {{- end }}
     {{- end }}
     access_control:
-    {{- if and (eq (len .Values.configMap.access_control.rules) 0) (eq .Values.configMap.access_control.default_policy "bypass") }}
+    {{- if (eq (len .Values.configMap.access_control.rules) 0) }}
+      {{- if (eq .Values.configMap.access_control.default_policy "bypass") }}
       default_policy: one_factor
+      {{- else if (eq .Values.configMap.access_control.default_policy "deny") }}
+      default_policy: two_factor
+      {{- else }}
+      default_policy: {{ .Values.configMap.access_control.default_policy }}
+      {{- end }}
     {{- else }}
       default_policy: {{ .Values.configMap.access_control.default_policy }}
     {{- end }}

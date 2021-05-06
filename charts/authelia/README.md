@@ -116,7 +116,7 @@ The `*` below can be one of any of the following values:
 |secret.annotations            |A map of extra annotations to add to the Secret        |{}                     |
 |secret.labels                 |A map of extra labels to add to the Secret             |{}                     |
 |secret.existingSecret         |The name of the existing Secret instead of generating  |nil                    |
-|secret.mountPath              |The path where to mount all of the secrets             |/config/secrets        |
+|secret.mountPath              |The path where to mount all of the secrets             |/secrets               |
 |secret.*.key                  |The key in the secret where the JWT token is stored    |varies                 |
 |secret.*.value                |The value to inject into this secret when generating   |nil                    |
 |secret.*.filename             |The filename of this secret within the mountPath       |varies                 |
@@ -126,7 +126,7 @@ The `*` below can be one of any of the following values:
 |Parameter                                   |Description                                             |Default                |
 |:------------------------------------------:|:------------------------------------------------------:|:---------------------:|
 |secret.annotations                          |A map of extra annotations to add to the pod for Vault  |{}                     |
-|secret.mountPath                            |The path where to mount all of the secrets              |/config/secrets        |
+|secret.mountPath                            |The path where to mount all of the secrets              |/secrets               |
 |secret.vaultInjector.enabled                |Enables HashiCorp Vault Injector annotations            |false                  |
 |secret.vaultInjector.role                   |Vault role to use                                       |authelia               |
 |secret.vaultInjector.agent.status           |Value to inject to prevent further mutations            |update                 |
