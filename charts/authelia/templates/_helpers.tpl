@@ -4,7 +4,7 @@ Return the proper image name
 {{- define "authelia.image" -}}
     {{- $registryName := default "docker.io" .Values.image.registry -}}
     {{- $repositoryName := default "authelia/authelia" .Values.image.repository -}}
-    {{- $tag := default "latest" .Values.image.tag | toString -}}
+    {{- $tag := default .Chart.AppVersion .Values.image.tag | toString -}}
     {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
 {{- end -}}
 
