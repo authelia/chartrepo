@@ -1,6 +1,6 @@
 {{ if (include "authelia.enabled.networkPolicy" .) -}}
 ---
-apiVersion: networking.k8s.io/v1
+apiVersion: {{ include "capabilities.apiVersion.networkPolicy" . }}
 kind: NetworkPolicy
 metadata:
   name: {{ include "authelia.name" . }}
