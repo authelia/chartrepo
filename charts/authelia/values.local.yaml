@@ -16,7 +16,7 @@
 ## ref: https://hub.docker.com/r/authelia/authelia/tags/
 ##
 image:
-  registry: docker.io
+  registry: ghcr.io
   repository: authelia/authelia
   tag: 4.29.2
   pullPolicy: IfNotPresent
