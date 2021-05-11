@@ -537,7 +537,7 @@ Returns applicable Deployment API version
 Deployment API Version Releases: apps/v1 in 1.9, apps/v1beta2 in 1.8, apps/v1beta1 prior.
 */}}
 {{- define "capabilities.apiVersion.deployment" -}}
-    {{- if semverCompare .Capabilities.APIVersions.Has "apps/v1/Deployment" -}}
+    {{- if .Capabilities.APIVersions.Has "apps/v1/Deployment" -}}
         {{- print "apps/v1" -}}
     {{- else if .Capabilities.APIVersions.Has "apps/v1beta2/Deployment" -}}
         {{- print "apps/v1beta2" -}}
