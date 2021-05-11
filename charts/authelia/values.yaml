@@ -106,7 +106,7 @@ ingress:
     enabled: false
 
     ## Use a standard Ingress object, not an IngressRoute.
-    disableIngressRoute: true
+    disableIngressRoute: false
 
     # matchOverride: Host(`auth.example.com`) && PathPrefix(`/`)
 
