@@ -1,4 +1,4 @@
-{{ if (include "authelia.enabled.ingress.traefik" .) -}}
+{{ if (include "authelia.enabled.ingress.ingressRoute" .) -}}
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute

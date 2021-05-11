@@ -1,4 +1,4 @@
-{{- if (include "authelia.enabled.ingress.standard" .) }}
+{{- if (include "authelia.enabled.ingress.ingress" .) }}
 ---
 apiVersion: {{ include "capabilities.apiVersion.ingress" . }}
 kind: Ingress

@@ -150,6 +150,12 @@ Special Annotations Generator for the Ingress kind.
   {{- if .Values.ingress.certManager -}}
   {{- $annotations = set $annotations "kubernetes.io/tls-acme" "true" -}}
   {{- end -}}
+  {{- if and .Values.ingress.traefikCRD .Values.ingress.traefikCRD.disableIngressRoute -}}
+  {{- if .Values.ingress.traefikCRD.entryPoints -}}
+  {{- $annotations = set $annotations "traefik.ingress.kubernetes.io/router.entrypoints" (.Values.ingress.traefikCRD.entryPoints | join ",") -}}
+  {{- end -}}
+  {{- $annotations = set $annotations "traefik.ingress.kubernetes.io/router.middlewares" (printf "%s-%s@kubernetescrd" (include "authelia.ingress.traefikCRD.middleware.name.chainIngress" .) .Release.Namespace) -}}
+  {{- end -}}
   {{ include "authelia.annotations" (merge (dict "Annotations" $annotations) .) }}
 {{- end -}}
 
@@ -726,7 +732,7 @@ Returns true if generation of an ingress is enabled.
 {{- end -}}
 
 {{/*
-Returns true if generation of an IngressRoute is enabled.
+Returns true if generation of the TraefikCRD resources is enabled.
 */}}
 {{- define "authelia.enabled.ingress.traefik" -}}
     {{- if (include "authelia.enabled.ingress" .) -}}
@@ -735,6 +741,26 @@ Returns true if generation of an IngressRoute is enabled.
                 {{- true -}}
             {{- end -}}
         {{- end -}}
+    {{- end -}}
+{{- end -}}
+
+{{/*
+Returns true if generation of an Ingress is enabled.
+*/}}
+{{- define "authelia.enabled.ingress.ingress" -}}
+    {{- if .Values.ingress.enabled -}}
+        {{- if or (not (include "authelia.enabled.ingress.traefik" .)) (.Values.ingress.traefikCRD.disableIngressRoute) -}}
+            {{- true -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+
+{{/*
+Returns true if generation of an IngressRoute is enabled.
+*/}}
+{{- define "authelia.enabled.ingress.ingressRoute" -}}
+    {{- if and (include "authelia.enabled.ingress.traefik" .) (not .Values.ingress.traefikCRD.disableIngressRoute) -}}
+        {{- true -}}
     {{- end -}}
 {{- end -}}
 
