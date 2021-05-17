@@ -154,7 +154,7 @@ Special Annotations Generator for the Ingress kind.
   {{- if .Values.ingress.traefikCRD.entryPoints -}}
   {{- $annotations = set $annotations "traefik.ingress.kubernetes.io/router.entrypoints" (.Values.ingress.traefikCRD.entryPoints | join ",") -}}
   {{- end -}}
-  {{- $annotations = set $annotations "traefik.ingress.kubernetes.io/router.middlewares" (printf "%s-%s@kubernetescrd" (include "authelia.ingress.traefikCRD.middleware.name.chainIngress" .) .Release.Namespace) -}}
+  {{- $annotations = set $annotations "traefik.ingress.kubernetes.io/router.middlewares" (printf "%s-%s@kubernetescrd" .Release.Namespace) (include "authelia.ingress.traefikCRD.middleware.name.chainIngress" .) -}}
   {{- end -}}
   {{ include "authelia.annotations" (merge (dict "Annotations" $annotations) .) }}
 {{- end -}}
