@@ -158,7 +158,7 @@ data:
     {{- range $client := .Values.configMap.identity_providers.oidc.clients }}
         - id: {{ $client.id }}
           description: {{ default $client.id $client.description }}
-          authoriation_policy: {{ default "two_factor" $client.authorization_policy }}
+          authorization_policy: {{ default "two_factor" $client.authorization_policy }}
           secret: {{ default (randAlphaNum 128) $client.secret }}
           redirect_uris: {{ toYaml $client.redirect_uris | nindent 10 }}
           scopes: {{ toYaml (default (list "openid" "profile" "email" "groups") $client.scopes) | nindent 10 }}
