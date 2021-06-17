@@ -20,7 +20,7 @@ steps:
   continue_on_failure: true
   if: build.branch == "master" && build.env("CHART_CHANGES") == "true"
 
-- command: "ct --config .buildkite/ct.yaml list-changed | xargs -n1 cr --config .buildkite/cr.yaml package"
+- command: "ct --config .buildkite/ct.yaml list-changed --since HEAD~1 | xargs -n1 cr --config .buildkite/cr.yaml package"
   key: "package"
   label: ":package: Package Chart (Chart Releaser)"
   artifact_paths:
