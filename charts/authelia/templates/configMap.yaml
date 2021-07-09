@@ -154,6 +154,21 @@ data:
     {{- if .Values.configMap.identity_providers.oidc.enabled }}
     identity_providers:
       oidc:
+        {{- if hasKey .Values.configMap.identity_providers.oidc "access_token_lifespan" }}
+        access_token_lifespan: {{ .Values.configMap.identity_providers.oidc.access_token_lifespan }}
+        {{- end }}
+        {{- if hasKey .Values.configMap.identity_providers.oidc "authorize_code_lifespan" }}
+        authorize_code_lifespan: {{ .Values.configMap.identity_providers.oidc.authorize_code_lifespan }}
+        {{- end }}
+        {{- if hasKey .Values.configMap.identity_providers.oidc "id_token_lifespan" }}
+        id_token_lifespan: {{ .Values.configMap.identity_providers.oidc.id_token_lifespan }}
+        {{- end }}
+        {{- if hasKey .Values.configMap.identity_providers.oidc "refresh_token_lifespan" }}
+        refresh_token_lifespan: {{ .Values.configMap.identity_providers.oidc.refresh_token_lifespan }}
+        {{- end }}
+        {{- if hasKey .Values.configMap.identity_providers.oidc "enable_client_debug_messages" }}
+        enable_client_debug_messages: {{ .Values.configMap.identity_providers.oidc.enable_client_debug_messages }}
+        {{- end }}
         clients:
     {{- range $client := .Values.configMap.identity_providers.oidc.clients }}
         - id: {{ $client.id }}
