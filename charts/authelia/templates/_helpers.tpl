@@ -5,7 +5,7 @@ Return the proper image name
     {{- $registryName := default "docker.io" .Values.image.registry -}}
     {{- $repositoryName := default "authelia/authelia" .Values.image.repository -}}
     {{- $tag := default .Chart.AppVersion .Values.image.tag | toString -}}
-    {{- if hasPrefix $tag "sha256:" }}
+    {{- if hasPrefix "sha256:" $tag }}
     {{- printf "%s/%s@%s" $registryName $repositoryName $tag -}}
     {{- else -}}
     {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
