@@ -117,7 +117,7 @@ The `*` below can be one of any of the following values:
 |secret.labels                 |A map of extra labels to add to the Secret             |{}                     |
 |secret.existingSecret         |The name of the existing Secret instead of generating  |nil                    |
 |secret.mountPath              |The path where to mount all of the secrets             |/secrets               |
-|secret.*.key                  |The key in the secret where the JWT token is stored    |varies                 |
+|secret.*.key                  |The key in the secret where the secret value is stored |varies                 |
 |secret.*.value                |The value to inject into this secret when generating   |nil                    |
 |secret.*.filename             |The filename of this secret within the mountPath       |varies                 |
 
