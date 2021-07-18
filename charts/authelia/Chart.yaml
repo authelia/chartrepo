@@ -1,27 +1,27 @@
 apiVersion: v2
 name: authelia
-version: 0.4.17
+version: 0.4.18
 kubeVersion: ">= 1.13.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
 keywords:
-- SSO
-- Authentication
-- Security
-- Two-Factor
-- U2F
-- YubiKey
-- Push Notifications
-- LDAP
+  - SSO
+  - Authentication
+  - Security
+  - Two-Factor
+  - U2F
+  - YubiKey
+  - Push Notifications
+  - LDAP
 home: https://www.authelia.com
 sources:
-- https://github.com/authelia/chartrepo/tree/master/charts/authelia
-- https://www.github.com/authelia/authelia
+  - https://github.com/authelia/chartrepo/tree/master/charts/authelia
+  - https://www.github.com/authelia/authelia
 dependencies: []
 maintainers:
-- name: james-d-elliott
-  email: james-d-elliott@users.noreply.github.com
-  url: https://github.com/james-d-elliott
+  - name: james-d-elliott
+    email: james-d-elliott@users.noreply.github.com
+    url: https://github.com/james-d-elliott
 icon: https://avatars2.githubusercontent.com/u/59122411?s=200&v=4
 appVersion: 4.29.4
 deprecated: false
