@@ -16,6 +16,7 @@
 ## ref: https://hub.docker.com/r/authelia/authelia/tags/
 ##
 image:
+  # registry: docker.io
   registry: ghcr.io
   repository: authelia/authelia
   tag: 4.29.4
@@ -912,26 +913,62 @@ configMap:
 
       # enable_client_debug_messages: false
 
+      ## SECURITY NOTICE: It's not recommended changing this option, and highly discouraged to have it below 8 for
+      ## security reasons.
+      # minimum_parameter_entropy: 8
+
       clients: []
-      # - id: myapp
+      # clients:
+        # -
+        ## The ID is the OpenID Connect ClientID which is used to link an application to a configuration.
+        # id: myapp
+
+        ## The description to show to users when they end up on the consent screen. Defaults to the ID above.
         # description: My Application
-        ## Secret shared between client and OP.
+
+        ## The client secret is a shared secret between Authelia and the consumer of this client.
         # secret: apple123
-        ## Authorization Policy is either one_factor or two_factor.
+
+        ## Sets the client to public. This should typically not be set, please see the documentation for usage.
+        # public: false
+
+        ## The policy to require for this client; one_factor or two_factor.
         # authorization_policy: two_factor
-        ## List of valid redirect URIs
+
+        ## Redirect URI's specifies a list of valid case-sensitive callbacks for this client.
         # redirect_uris:
-        # - https://oidc.example.com/oauth2/callback
+          # - https://oidc.example.com/oauth2/callback
+
+        ## Audience this client is allowed to request.
+        # audience: []
+
+        ## Scopes this client is allowed to request.
         # scopes:
-        # - openid
-        # - profile
-        # - email
-        # - groups
+        #   - openid
+        #   - profile
+        #   - email
+        #   - groups
+
+        ## Grant Types configures which grants this client can obtain.
+        ## It's not recommended to configure this unless you know what you're doing.
         # grant_types:
-        # - refresh_token
-        # - authorization_code
+        #   - refresh_token
+        #   - authorization_code
+
+        ## Response Types configures which responses this client can be sent.
+        ## It's not recommended to configure this unless you know what you're doing.
         # response_types:
-        # - code
+        #   - code
+
+        ## Response Modes configures which response modes this client supports.
+        ## It's not recommended to configure this unless you know what you're doing.
+        # response_modes:
+        #   - form_post
+        #   - query
+        #   - fragment
+
+        ## The algorithm used to sign userinfo endpoint responses for this client, either none or RS256.
+        # userinfo_signing_algorithm: none
 
 ##
 ## Authelia Secret Generator.
