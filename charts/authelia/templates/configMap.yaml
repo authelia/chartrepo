@@ -11,15 +11,28 @@ metadata:
 data:
   {{ default "configuration.yaml" .Values.configMap.key }}: |
     ---
-    host: 0.0.0.0
-    port: {{ default 9091 .Values.configMap.port }}
-    theme: {{ default "light" .Values.configMap.theme }}
-    log_level: {{ default "info" .Values.configMap.log_level  }}
-    default_redirection_url: {{ default (printf "https://www.%s" .Values.domain) .Values.configMap.default_redirection_url }}
     {{- if (include "authelia.enabled.certificatesSecret" .) }}
     certificates_directory: /certificates
     {{- end }}
-    server: {{ toYaml .Values.configMap.server | nindent 6 }}
+    theme: {{ default "light" .Values.configMap.theme }}
+    default_redirection_url: {{ default (printf "https://www.%s" .Values.domain) .Values.configMap.default_redirection_url }}
+    server:
+      host: 0.0.0.0
+      port: {{ default 9091 .Values.configMap.server.port }}
+      {{- if not (eq "" (default "" .Values.configMap.server.path)) }}
+      path: {{ .Values.configMap.server.path }}
+      {{- end }}
+      read_buffer_size: {{ default 4096 .Values.configMap.server.read_buffer_size }}
+      write_buffer_size: {{ default 4096 .Values.configMap.server.write_buffer_size }}
+      enable_pprof: {{ default false .Values.configMap.server.enable_pprof }}
+      enable_expvars: {{ default false .Values.configMap.server.enable_expvars }}
+    log:
+      level: {{ default "info" .Values.configMap.log.level }}
+      format: {{ default "text" .Values.configMap.log.format }}
+      {{- if not (eq "" (default "" .Values.configMap.log.file_path)) }}
+      file_path: {{ .Values.configMap.log.file_path }}
+      keep_stdout: true
+      {{- end }}
     totp:
       issuer: {{ default .Values.domain .Values.configMap.totp.issuer }}
       period: {{ default 30 .Values.configMap.totp.period }}
@@ -154,24 +167,13 @@ data:
     {{- if .Values.configMap.identity_providers.oidc.enabled }}
     identity_providers:
       oidc:
-        {{- if hasKey .Values.configMap.identity_providers.oidc "access_token_lifespan" }}
-        access_token_lifespan: {{ .Values.configMap.identity_providers.oidc.access_token_lifespan }}
-        {{- end }}
-        {{- if hasKey .Values.configMap.identity_providers.oidc "authorize_code_lifespan" }}
-        authorize_code_lifespan: {{ .Values.configMap.identity_providers.oidc.authorize_code_lifespan }}
-        {{- end }}
-        {{- if hasKey .Values.configMap.identity_providers.oidc "id_token_lifespan" }}
-        id_token_lifespan: {{ .Values.configMap.identity_providers.oidc.id_token_lifespan }}
-        {{- end }}
-        {{- if hasKey .Values.configMap.identity_providers.oidc "refresh_token_lifespan" }}
-        refresh_token_lifespan: {{ .Values.configMap.identity_providers.oidc.refresh_token_lifespan }}
-        {{- end }}
-        {{- if hasKey .Values.configMap.identity_providers.oidc "enable_client_debug_messages" }}
-        enable_client_debug_messages: {{ .Values.configMap.identity_providers.oidc.enable_client_debug_messages }}
-        {{- end }}
-        {{- if hasKey .Values.configMap.identity_providers.oidc "minimum_parameter_entropy" }}
-        minimum_parameter_entropy: {{ .Values.configMap.identity_providers.oidc.minimum_parameter_entropy }}
-        {{- end }}
+        access_token_lifespan: {{ default "1h" .Values.configMap.identity_providers.oidc.access_token_lifespan }}
+        authorize_code_lifespan: {{ default "1m" .Values.configMap.identity_providers.oidc.authorize_code_lifespan }}
+        id_token_lifespan: {{ default "1h" .Values.configMap.identity_providers.oidc.id_token_lifespan }}
+        refresh_token_lifespan: {{ default "90m" .Values.configMap.identity_providers.oidc.refresh_token_lifespan }}
+        enable_client_debug_messages: {{ default false .Values.configMap.identity_providers.oidc.enable_client_debug_messages }}
+        minimum_parameter_entropy: {{ default 8 .Values.configMap.identity_providers.oidc.minimum_parameter_entropy }}
+        {{- if gt (len .Values.configMap.identity_providers.oidc.clients) 0 }}
         clients:
     {{- range $client := .Values.configMap.identity_providers.oidc.clients }}
         - id: {{ $client.id }}
@@ -191,9 +193,8 @@ data:
           {{- if hasKey $client "response_modes" }}
           response_modes: {{ toYaml $client.response_modes | nindent 10 }}
           {{- end }}
-          {{- if hasKey $client "userinfo_signing_algorithm" }}
-          userinfo_signing_algorithm: {{ $client.userinfo_signing_algorithm }}
-          {{- end }}
+          userinfo_signing_algorithm: {{ default "none" $client.userinfo_signing_algorithm }}
+    {{- end }}
     {{- end }}
     {{- end }}
     access_control:

@@ -8,6 +8,23 @@ This chart uses api version 2 which is only supported by helm v3+. This is a ***
 deploy *Authelia* on its own. Eventually we may publish an `authelia-bundle` chart which includes `redis` and
 `postgresql`.
 
+# Breaking Changes
+
+During the beta we will generally not be documenting breaking chart changes but there are exceptions and they are noted
+below.
+
+## 0.5.0
+
+- Does not support Authelia versions lower than 4.30.0
+- Had several changes to the values.yaml file, specifically:
+  - configMap.port is now configMap.server.port
+  - configMap.log_level is now configMap.log.level
+  - configMap.log_format is now configMap.log.format
+  - configMap.log_file_path is now configMap.log.file_path
+
+See the [official migration documentation](https://www.authelia.com/docs/configuration/migration.html#4300) 
+(not specific to Kubernetes) for more information.
+
 # Getting Started
 
 1. Visit https://charts.authelia.com and follow the instructions to install the chart repo.

@@ -18,7 +18,7 @@ image:
   # registry: docker.io
   registry: ghcr.io
   repository: authelia/authelia
-  tag: 4.29.4
+  tag: 4.30.0
   pullPolicy: IfNotPresent
   pullSecrets: []
   # pullSecrets:
@@ -390,15 +390,15 @@ configMap:
   existingConfigMap: ""
 
   ##
-  ## Port sets the configured port for the daemon, service, and the probes.
-  ## Default is 9091 and should not need to be changed.
-  ##
-  port: 9091
-
-  ##
   ## Server Configuration
   ##
   server:
+    ##
+    ## Port sets the configured port for the daemon, service, and the probes.
+    ## Default is 9091 and should not need to be changed.
+    ##
+    port: 9091
+
     ## Buffers usually should be configured to be the same value.
     ## Explanation at https://www.authelia.com/docs/configuration/server.html
     ## Read buffer size adjusts the server's max incoming request size in bytes.
@@ -409,13 +409,16 @@ configMap:
     ## Must be alphanumeric chars and should not contain any slashes.
     path: ""
 
-  ## Level of verbosity for logs: info, debug, trace.
-  log_level: info
-  ## Format the logs are written as: json, text.
-  log_format: text
-  ## TODO: Statefulness check should check if this is set, and the configMap should enable it.
-  ## File path where the logs will be written. If not set logs are written to stdout.
-  # log_file_path: /config/authelia.log
+  log:
+    ## Level of verbosity for logs: info, debug, trace.
+    level: info
+
+    ## Format the logs are written as: json, text.
+    format: text
+
+    ## TODO: Statefulness check should check if this is set, and the configMap should enable it.
+    ## File path where the logs will be written. If not set logs are written to stdout.
+    # file_path: /config/authelia.log
 
   ## Default redirection URL
   ##
@@ -902,18 +905,19 @@ configMap:
   identity_providers:
     oidc:
       ## Enables this in the config map. Currently in beta stage.
-      enabled: true
+      ## See https://www.authelia.com/docs/configuration/identity-providers/oidc.html#roadmap
+      enabled: false
 
-      # access_token_lifespan: 1h
-      # authorize_code_lifespan: 1m
-      # id_token_lifespan: 1h
-      # refresh_token_lifespan: 720h
+      access_token_lifespan: 1h
+      authorize_code_lifespan: 1m
+      id_token_lifespan: 1h
+      refresh_token_lifespan: 90m
 
-      # enable_client_debug_messages: false
+      enable_client_debug_messages: false
 
       ## SECURITY NOTICE: It's not recommended changing this option, and highly discouraged to have it below 8 for
       ## security reasons.
-      # minimum_parameter_entropy: 8
+      minimum_parameter_entropy: 8
 
       clients: []
       # clients:
@@ -933,10 +937,6 @@ configMap:
           ## The policy to require for this client; one_factor or two_factor.
           # authorization_policy: two_factor
 
-          ## Redirect URI's specifies a list of valid case-sensitive callbacks for this client.
-          # redirect_uris:
-          #   - https://oidc.example.com/oauth2/callback
-
           ## Audience this client is allowed to request.
           # audience: []
 
@@ -946,6 +946,10 @@ configMap:
           #   - profile
           #   - email
           #   - groups
+
+          ## Redirect URI's specifies a list of valid case-sensitive callbacks for this client.
+          # redirect_uris:
+          #   - https://oidc.example.com/oauth2/callback
 
           ## Grant Types configures which grants this client can obtain.
           ## It's not recommended to configure this unless you know what you're doing.
