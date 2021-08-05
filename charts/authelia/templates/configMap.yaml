@@ -172,7 +172,7 @@ data:
         id_token_lifespan: {{ default "1h" .Values.configMap.identity_providers.oidc.id_token_lifespan }}
         refresh_token_lifespan: {{ default "90m" .Values.configMap.identity_providers.oidc.refresh_token_lifespan }}
         enable_client_debug_messages: {{ default false .Values.configMap.identity_providers.oidc.enable_client_debug_messages }}
-        minimum_parameter_entropy: {{ default 8 .Values.configMap.identity_providers.oidc.minimum_parameter_entropy }}
+        # minimum_parameter_entropy: {{ default 8 .Values.configMap.identity_providers.oidc.minimum_parameter_entropy }}
         {{- if gt (len .Values.configMap.identity_providers.oidc.clients) 0 }}
         clients:
     {{- range $client := .Values.configMap.identity_providers.oidc.clients }}
