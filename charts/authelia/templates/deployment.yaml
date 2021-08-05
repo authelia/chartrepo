@@ -105,6 +105,8 @@ spec:
         resources: {{ toYaml $resources | nindent 10 }}
         {{- end }}
         env:
+        - name: AUTHELIA_SERVER_DISABLE_HEALTHCHECK
+          value: "true"
         - name: AUTHELIA_JWT_SECRET_FILE
           value: {{ include "authelia.secret.fullPath" (merge (dict "Secret" "jwt") .) }}
         - name: AUTHELIA_SESSION_SECRET_FILE
