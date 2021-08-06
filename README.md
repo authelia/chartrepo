@@ -7,7 +7,7 @@
 [![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/authelia/chartrepo?style=for-the-badge)](https://github.com/authelia/chartrepo/pulls?q=is%3Aopen+is%3Apr)
 [![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/authelia/chartrepo?style=for-the-badge)](https://github.com/authelia/chartrepo/pulls?q=is%3Apr+is%3Aclosed)
 [![Discord](https://img.shields.io/discord/707844280412012608?label=discord&style=for-the-badge)](https://discord.authelia.com)
-[![Matrix](https://img.shields.io/matrix/authelia:matrix.org?label=matrix&style=for-the-badge)](https://riot.im/app/#/room/#authelia:matrix.org)
+[![Matrix](https://img.shields.io/matrix/authelia-support:matrix.org?label=matrix&style=for-the-badge)](https://matrix.to/#/#authelia-support:matrix.org)
 
 This repository is for hosting Authelia specific helm charts. Currently we only host a single chart which is still in
 development.
