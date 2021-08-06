@@ -54,6 +54,7 @@ data:
       ldap:
         implementation: {{ default "custom" $auth.ldap.implementation }}
         url: {{ $auth.ldap.url }}
+        timeout: {{ default "5s" $auth.ldap.timeout }}
         start_tls: {{ $auth.ldap.start_tls }}
         tls: {{ toYaml $auth.ldap.tls | nindent 10 }}
     {{- if $auth.ldap.base_dn }}
@@ -133,6 +134,7 @@ data:
         port: {{ default 3306 $storage.mysql.port }}
         database: {{ default "authelia" $storage.mysql.database }}
         username: {{ default "authelia" $storage.mysql.username }}
+        timeout: {{ default "5s" $storage.mysql.timeout }}
     {{- end }}
     {{- if $storage.postgres.enabled }}
       postgres:
@@ -140,6 +142,7 @@ data:
         port: {{ default 5432 $storage.postgres.port }}
         database: {{ default "authelia" $storage.postgres.database }}
         username: {{ default "authelia" $storage.postgres.username }}
+        timeout: {{ default "5s" $storage.postgres.timeout }}
         sslmode: {{ default "disable" $storage.postgres.sslmode }}
     {{- end }}
     {{- end }}
