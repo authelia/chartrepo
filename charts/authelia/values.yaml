@@ -18,7 +18,7 @@ image:
   # registry: docker.io
   registry: ghcr.io
   repository: authelia/authelia
-  tag: 4.30.1
+  tag: 4.30.2
   pullPolicy: IfNotPresent
   pullSecrets: []
   # pullSecrets:
@@ -504,6 +504,9 @@ configMap:
       ## Scheme can be ldap or ldaps in the format (port optional).
       url: ldap://openldap.default.svc.cluster.local
 
+      ## Connection Timeout.
+      timeout: 5s
+
       ## Use StartTLS with the LDAP connection.
       start_tls: false
 
@@ -831,6 +834,7 @@ configMap:
       port: 3306
       database: authelia
       username: authelia
+      timeout: 5s
 
     ##
     ## PostgreSQL (Storage Provider)
@@ -842,6 +846,7 @@ configMap:
       database: authelia
       username: authelia
       sslmode: disable
+      timeout: 5s
 
   ##
   ## Notification Provider
