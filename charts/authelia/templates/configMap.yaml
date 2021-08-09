@@ -56,7 +56,12 @@ data:
         url: {{ $auth.ldap.url }}
         timeout: {{ default "5s" $auth.ldap.timeout }}
         start_tls: {{ $auth.ldap.start_tls }}
-        tls: {{ toYaml $auth.ldap.tls | nindent 10 }}
+        tls:
+          {{- if hasKey $auth.ldap.tls "server_name" }}
+          server_name: {{ default $auth.ldap.host $auth.ldap.tls.server_name }}
+          {{- end }}
+          minimum_version: {{ default "TLS1.2" $auth.ldap.tls.minimum_version }}
+          skip_verify: {{ default false $auth.ldap.tls.skip_verify }}
     {{- if $auth.ldap.base_dn }}
         base_dn: {{ $auth.ldap.base_dn }}
     {{- end }}
@@ -107,8 +112,8 @@ data:
     {{- if $session.redis.tls.enabled }}
         tls:
           server_name: {{ $session.redis.tls.server_name }}
-          skip_verify: {{ $session.redis.tls.skip_verify }}
           minimum_version: {{ default "TLS1.2" $session.redis.tls.minimum_version }}
+          skip_verify: {{ $session.redis.tls.skip_verify }}
     {{- end }}
     {{- if $session.redis.high_availability.enabled }}
         high_availability:
@@ -154,17 +159,21 @@ data:
         filename: {{ $notifier.filesystem.filename }}
     {{- end }}
     {{- if $notifier.smtp.enabled }}
-      smtp:
-        username: {{ $notifier.smtp.username }}
+      h
         host: {{ $notifier.smtp.host }}
         port: {{ default 25 $notifier.smtp.port }}
+        timeout: {{ default "5s" $notifier.smtp.timeout }}
+        username: {{ $notifier.smtp.username }}
         sender: {{ $notifier.smtp.sender }}
         identifier: {{ $notifier.smtp.identifier }}
         subject: {{ $notifier.smtp.subject | quote }}
         startup_check_address: {{ $notifier.smtp.startup_check_address }}
         disable_require_tls: {{ $notifier.smtp.disable_require_tls }}
         disable_html_emails: {{ $notifier.smtp.disable_html_emails }}
-        tls: {{ toYaml $notifier.smtp.tls | nindent 10 }}
+        tls:
+          server_name: {{ default $notifier.smtp.host $notifier.smtp.tls.server_name }}
+          minimum_version: {{ default "TLS1.2" $notifier.smtp.tls.minimum_version }}
+          skip_verify: {{ default false $notifier.smtp.tls.skip_verify }}
     {{- end }}
     {{- end }}
     {{- if .Values.configMap.identity_providers.oidc.enabled }}
