@@ -159,7 +159,7 @@ data:
         filename: {{ $notifier.filesystem.filename }}
     {{- end }}
     {{- if $notifier.smtp.enabled }}
-      h
+      smtp:
         host: {{ $notifier.smtp.host }}
         port: {{ default 25 $notifier.smtp.port }}
         timeout: {{ default "5s" $notifier.smtp.timeout }}
