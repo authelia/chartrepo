@@ -18,7 +18,7 @@ image:
   # registry: docker.io
   registry: ghcr.io
   repository: authelia/authelia
-  tag: 4.30.2
+  tag: 4.30.3
   pullPolicy: IfNotPresent
   pullSecrets: []
   # pullSecrets:
@@ -880,9 +880,10 @@ configMap:
     smtp:
       enabled: true
       enabledSecret: false
-      username: test
       host: smtp.mail.svc.cluster.local
       port: 25
+      timeout: 5s
+      username: test
       sender: admin@example.com
       ## HELO/EHLO Identifier. Some SMTP Servers may reject the default of localhost.
       identifier: localhost
