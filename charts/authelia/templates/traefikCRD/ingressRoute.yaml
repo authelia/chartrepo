@@ -40,7 +40,14 @@ spec:
   {{- end }}
   {{- if .Values.ingress.tls.enabled }}
   tls:
-    {{- if not .Values.ingress.traefikCRD.tls.certResolver }}
+    {{- if hasKey .Values.ingress.traefikCRD.tls "certResolver" }}
+    certResolver: {{ default "default" .Values.ingress.traefikCRD.tls.certResolver }}
+    domains:
+      - main: {{ default (include "authelia.ingressHost" .) .Values.ingress.tls.hostNameOverride }}
+        {{- if .Values.ingress.traefikCRD.tls.sans }}
+        sans: {{- toYaml .Values.ingress.traefikCRD.tls.sans | nindent 10 }}
+        {{- end }}
+    {{- else }}
     secretName: {{ default (printf "%s-traefik-tls" (include "authelia.name" .)) .Values.ingress.tls.secret }}
     {{- end }}
     options:
@@ -50,12 +57,5 @@ spec:
       name: {{ default (include "authelia.name" .) .Values.ingress.traefikCRD.tls.options.nameOverride }}
       namespace: {{ .Release.Namespace }}
     {{- end }}
-    certResolver: {{ default "default" .Values.ingress.traefikCRD.tls.certResolver }}
-    domains:
-      - main: {{ default (include "authelia.ingressHost" .) .Values.ingress.tls.hostNameOverride }}
-        {{- if .Values.ingress.traefikCRD.tls.sans }}
-        sans: {{- toYaml .Values.ingress.traefikCRD.tls.sans | nindent 10 }}
-  {{- end }}
-  {{- else }}
   {{- end }}
   {{- end -}}
