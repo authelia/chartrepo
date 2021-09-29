@@ -202,7 +202,12 @@ pod:
   replicas: 1
   revisionHistoryLimit: 5
 
-  updateStrategy: RollingUpdate
+  strategy:
+    type: RollingUpdate
+    # rollingUpdate:
+    #   partition: 1
+    #   maxSurge: 25%
+    #   maxUnavailable: 25%
 
   securityContext:
     container: {}

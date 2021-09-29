@@ -479,6 +479,51 @@ Returns the smtp password or a randomly generated one
 {{- end -}}
 
 {{/*
+Returns the rollingUpdate spec
+*/}}
+{{- define "authelia.rollingUpdate" -}}
+    {{- $result := dict -}}
+    {{- if eq "StatefulSet" (include "authelia.pod.kind" .) -}}
+        {{ $result = dict "partition" 0 }}
+        {{- if .Values.pod.strategy -}}
+            {{- if .Values.pod.strategy.rollingUpdate -}}
+                {{- $_ := set $result "partition" (default 0 .Values.pod.strategy.rollingUpdate.partition) -}}
+            {{- end -}}
+        {{- end -}}
+    {{- else -}}
+        {{ $result = dict "maxSurge" "25%" "maxUnavailable" "25%" }}
+        {{- if .Values.pod.strategy -}}
+            {{- if .Values.pod.strategy.rollingUpdate -}}
+                {{- $_ := set $result "maxSurge" (default "25%" .Values.pod.strategy.rollingUpdate.maxSurge) "maxUnavailable" (default "25%" .Values.pod.strategy.rollingUpdate.maxUnavailable) -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+    {{ toYaml $result | indent 0 }}
+{{- end -}}
+
+{{/*
+Returns the number of replicas
+*/}}
+{{- define "authelia.replicas" -}}
+      {{- if (include "authelia.stateful" .) }}
+        {{- 1 -}}
+      {{- else -}}
+        {{- default 1 .Values.pod.replicas -}}
+      {{- end -}}
+{{- end -}}
+
+{{/*
+Returns the pod management policy
+*/}}
+{{- define "authelia.podManagementPolicy" -}}
+      {{- if (include "authelia.stateful" .) }}
+        {{- "Parallel" -}}
+      {{- else -}}
+        {{- default "Parallel" .Values.pod.managementPolicy -}}
+      {{- end -}}
+{{- end -}}
+
+{{/*
 Returns the ingress hostname
 */}}
 {{- define "authelia.ingressHost" -}}
