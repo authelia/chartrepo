@@ -74,6 +74,32 @@ This documents the parameters in the chart values. As the chart values are quite
 |service.port           |The exposed port on the ClusterIP Service              |80                |
 |service.clusterIP      |The ClusterIP to assign to the Service                 |nil               |
 
+## Pod
+
+|Parameter                                |Description                                            |Default           |
+|:---------------------------------------:|:-----------------------------------------------------:|:----------------:|
+|pod.kind                                 |Configures the kind of pod: StatefulSet, Deployment, DaemonSet|DaemonSet  |
+|pod.annotations                          |Adds annotations specifically to the pod               |{}                |
+|pod.labels                               |Adds labels specifically to the pod                    |{}                |
+|pod.replicas                             |Configures the replicas for Deployment's/statefulSet's |1                 |
+|pod.revisionHistoryLimit                 |Configures the revisionHistoryLimit                    |1                 |
+|pod.strategy.type                        |Configures the pods strategy/updateStrategy type       |RollingUpdate     |
+|pod.strategy.rollingUpdate.maxSurge      |Configures the pods rolling update max surge           |25%               |
+|pod.strategy.rollingUpdate.maxUnavailable|Configures the pods rolling update max unavailable     |25%               |
+|pod.strategy.rollingUpdate.partition     |Configures the pods rolling update partition           |1                 |
+|pod.securityContext.container            |Configures the main container's security context       |{}                |
+|pod.securityContext.pod                  |Configures the pod's security context                  |{}                |
+|pod.tolerations                          |Configures the pods tolerations                        |[]                |
+|pod.selectors.nodeSelector               |Configures the pod to select nodes based on node labels|{}                |
+|pod.selectors.affinity.nodeAffinity      |Configures the pod to select nodes based affinity      |{}                |
+|pod.selectors.affinity.podAffinity       |Configures the pod to select nodes based pods on the node|{}              |
+|pod.selectors.affinity.podAntiAffinity   |Configures the pod to select nodes based pods on the node|{}              |
+|pod.env                                  |Configures extra env to add to the node                |[]                |
+|pod.resources.limits.cpu                 |Configures the resource limit for CPU                  |nil               |
+|pod.resources.limits.memory              |Configures the resource limit for memory               |nil               |
+|pod.resources.requests.cpu               |Configures the resource request for CPU                |nil               |
+|pod.resources.requests.memory            |Configures the resource request for memory             |nil               |
+
 ## Ingress
 
 To Document.

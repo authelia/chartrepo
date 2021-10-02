@@ -12,31 +12,28 @@ spec:
   selector:
     matchLabels: {{ include "authelia.matchLabels" . | nindent 6 }}
   revisionHistoryLimit: {{ default 5 .Values.pod.revisionHistoryLimit }}
+  replicas: {{ include "authelia.replicas" . }}
   {{- if or (eq "Deployment" $kind) (eq "DaemonSet" $kind) }}
   minReadySeconds: {{ default 0 .Values.pod.minReadySeconds }}
   {{- end }}
   {{- if (eq "Deployment" $kind)}}
-  replicas: {{ default 1 .Values.pod.replicas }}
-  {{- with $strategy := .Values.pod.strategy }}
+  {{- $type := include "authelia.deploymentStrategy" . }}
   strategy:
-    type: {{ include "authelia.deploymentStrategy" . }}
-    {{- if and $strategy.rollingUpdate (eq (include "authelia.deploymentStrategy" $) "RollingUpdate") }}
-    rollingUpdate: {{ toYaml $strategy.rollingUpdate | nindent 6 }}
+    type: {{ $type }}
+    {{- if eq "RollingUpdate" $type }}
+    rollingUpdate: {{ (include "authelia.rollingUpdate" .) | nindent 6 }}
+    {{- end }}
   {{- end }}
-  {{- end }}
-  {{- end }}
-  {{- if (eq "DaemonSet" $kind) }}
+  {{- if (or (eq "DaemonSet" $kind) (eq "StatefulSet" $kind)) }}
+  {{- $type := include "authelia.deploymentStrategy" . }}
   updateStrategy:
-    type: {{ include "authelia.deploymentStrategy" . }}
+    type: {{ $type }}
+    {{- if eq "RollingUpdate" $type }}
+    rollingUpdate: {{ (include "authelia.rollingUpdate" .) | nindent 6 }}
+    {{- end }}
   {{- end }}
   {{- if eq "StatefulSet" $kind }}
-  {{- if (include "authelia.stateful" .) }}
-  replicas: 1
-  podManagementPolicy: Parallel
-  {{- else }}
-  replicas: {{ default 1 .Values.pod.replicas }}
-  podManagementPolicy: {{ default "Parallel" .Values.pod.managementPolicy }}
-  {{- end }}
+  podManagementPolicy: {{ include "authelia.podManagementPolicy" . }}
   serviceName: {{ default (include "authelia.name" .) .Values.pod.serviceName }}
   {{- end }}
   {{- if eq "Deployment" $kind }}
@@ -79,7 +76,7 @@ spec:
       {{- if .Values.rbac.enabled }}
       serviceAccountName: {{ default (include "authelia.name" .) .Values.rbac.serviceAccountName }}
       {{- end }}
-      {{ if .Values.pod.enableServiceLinks }}
+      {{- if .Values.pod.enableServiceLinks }}
       enableServiceLinks: true
       {{- else }}
       enableServiceLinks: false
