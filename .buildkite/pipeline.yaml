@@ -7,14 +7,14 @@ steps:
   label: ":helm: Chart Version (Chart Testing)"
   agents:
     charts: "true"
-  if: build.branch != "gh-pages"
+  if: build.branch != "gh-pages" && build.env("CHART_CHANGES") == "true"
 
 - command: "ct --config .buildkite/ct.yaml lint"
   key: "lint"
   label: ":helm: Linting (Chart Testing)"
   agents:
     charts: "true"
-  if: build.branch != "gh-pages"
+  if: build.branch != "gh-pages" && build.env("CHART_CHANGES") == "true"
 
 - wait: ~
   continue_on_failure: true
