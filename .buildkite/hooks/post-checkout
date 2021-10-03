@@ -13,3 +13,8 @@ if [[ "${BUILDKITE_STEP_KEY}" == "index" ]] && [[ "${BUILDKITE_BRANCH}" == "mast
 
   git fetch --verbose --prune origin gh-pages
 fi
+
+if [[ "${BUILDKITE_STEP_KEY}" == "index" ]] || [[ "${BUILDKITE_STEP_KEY}" == "upload" ]]; then
+  echo "--- :sparkles: Setting git remote"
+  git remote set-url origin https://github.com/authelia/chartrepo.git
+fi
