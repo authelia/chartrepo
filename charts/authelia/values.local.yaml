@@ -397,15 +397,15 @@ configMap:
   existingConfigMap: ""
 
   ##
-  ## Port sets the configured port for the daemon, service, and the probes.
-  ## Default is 9091 and should not need to be changed.
-  ##
-  port: 9091
-
-  ##
   ## Server Configuration
   ##
   server:
+    ##
+    ## Port sets the configured port for the daemon, service, and the probes.
+    ## Default is 9091 and should not need to be changed.
+    ##
+    port: 9091
+
     ## Buffers usually should be configured to be the same value.
     ## Explanation at https://www.authelia.com/docs/configuration/server.html
     ## Read buffer size adjusts the server's max incoming request size in bytes.
