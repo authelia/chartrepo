@@ -30,7 +30,7 @@ See the [official migration documentation](https://www.authelia.com/docs/configu
 1. Visit https://charts.authelia.com and follow the instructions to install the chart repo.
 2. Configure the chart by setting the various [parameters](#parameters), either in a locally downloaded values.yaml or
    in the next step.
-3. Install the chart with `helm install authelia/authelia` and optionally set your values with `--values values.yaml` or
+3. Install the chart with `helm install authelia authelia/authelia` and optionally set your values with `--values values.yaml` or
    via `--set [parameter]=[value]`.
 
 ## Values Files
