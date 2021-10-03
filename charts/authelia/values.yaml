@@ -18,7 +18,7 @@ image:
   # registry: docker.io
   registry: ghcr.io
   repository: authelia/authelia
-  tag: 4.30.5
+  tag: 4.31.0
   pullPolicy: IfNotPresent
   pullSecrets: []
   # pullSecrets:
@@ -454,6 +454,29 @@ configMap:
     ## Warning: before changing skew read the docs link below.
     ## See: https://www.authelia.com/docs/configuration/one-time-password.html#period-and-skew to read the documentation.
     skew: 1
+
+  ##
+  ## NTP Configuration
+  ##
+  ## This is used to validate the servers time is accurate enough to validate TOTP.
+  ntp:
+    ## NTP server address.
+    address: "time.cloudflare.com:123"
+
+    ## NTP version.
+    version: 4
+
+    ## Maximum allowed time offset between the host and the NTP server.
+    max_desync: 3s
+
+    ## Disables the NTP check on startup entirely. This means Authelia will not contact a remote service at all if you
+    ## set this to true, and can operate in a truly offline mode.
+    disable_startup_check: false
+
+    ## The default of false will prevent startup only if we can contact the NTP server and the time is out of sync with
+    ## the NTP server more than the configured max_desync. If you set this to true, an error will be logged but startup
+    ## will continue regardless of results.
+    disable_failure: false
 
   ##
   ## Duo Push API Configuration

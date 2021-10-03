@@ -37,6 +37,12 @@ data:
       issuer: {{ default .Values.domain .Values.configMap.totp.issuer }}
       period: {{ default 30 .Values.configMap.totp.period }}
       skew: {{ default 1 .Values.configMap.totp.skew }}
+    ntp:
+      address: {{ default "time.cloudflare.com:123" .Values.configMap.ntp.address }}
+      version: {{ default 3 .Values.configMap.ntp.version }}
+      max_desync: {{ default "3s" .Values.configMap.ntp.max_desync }}
+      disable_startup_check: {{ default false .Values.configMap.ntp.disable_startup_check }}
+      disable_failure: {{ default false .Values.configMap.ntp.disable_failure }}
     {{- if include "authelia.configured.duo" . }}
     duo_api:
       hostname: {{ .Values.configMap.duo_api.hostname }}
