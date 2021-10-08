@@ -12,7 +12,9 @@ spec:
   selector:
     matchLabels: {{ include "authelia.matchLabels" . | nindent 6 }}
   revisionHistoryLimit: {{ default 5 .Values.pod.revisionHistoryLimit }}
+  {{- if or (eq "StatefulSet" $kind) (eq "Deployment" $kind) }}
   replicas: {{ include "authelia.replicas" . }}
+  {{- end }}
   {{- if or (eq "Deployment" $kind) (eq "DaemonSet" $kind) }}
   minReadySeconds: {{ default 0 .Values.pod.minReadySeconds }}
   {{- end }}
