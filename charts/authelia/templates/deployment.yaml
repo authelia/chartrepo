@@ -192,8 +192,8 @@ spec:
           {{- with $mounts := .Values.pod.extraVolumeMounts }}
           {{- toYaml $mounts | nindent 8 }}
           {{- end }}
-          {{- with $context := .Values.pod.securityContext.pod }}
-          securityContext: {{ toYaml $context | nindent 12 }}
+        {{- with $context := .Values.pod.securityContext.pod }}
+        securityContext: {{ toYaml $context | nindent 10 }}
       {{- end }}
       volumes:
         {{- if (include "authelia.enabled.persistentVolumeClaim" .) }}
