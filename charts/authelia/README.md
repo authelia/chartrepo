@@ -144,6 +144,7 @@ The `*` below can be one of any of the following values:
 - jwt
 - ldap
 - storage
+- storageEncryptionKey
 - session
 - duo
 - redis

@@ -114,7 +114,7 @@ spec:
         - name: AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE
           value: {{ include "authelia.secret.fullPath" (merge (dict "Secret" "ldap") .) }}
           {{- end }}
-          {{- if or (include "authelia.configured.smtp" .) (include "authelia.configured.smtpSecret" .) }}
+          {{- if and .Values.configMap.notifier.smtp.enabled .Values.configMap.notifier.smtp.enabledSecret }}
         - name: AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE
           value: {{ include "authelia.secret.fullPath" (merge (dict "Secret" "smtp") .) }}
           {{- end }}
@@ -230,7 +230,7 @@ spec:
           - key: {{ default "LDAP_PASSWORD" .Values.secret.ldap.key }}
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "ldap") .) }}
             {{- end }}
-            {{- if or (include "authelia.configured.smtp" .) (include "authelia.configured.smtpSecret" .) }}
+            {{- if and .Values.configMap.notifier.smtp.enabled .Values.configMap.notifier.smtp.enabledSecret }}
           - key: {{ default "SMTP_PASSWORD" .Values.secret.smtp.key }}
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "smtp") .) }}
             {{- end }}

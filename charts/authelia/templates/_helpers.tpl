@@ -68,36 +68,6 @@ Returns true if pod is stateful.
 {{- end -}}
 
 {{/*
-Returns true if smtp is enabled.
-*/}}
-{{- define "authelia.configured.smtp" -}}
-    {{- if .Values.configMap -}}
-        {{- if .Values.configMap.notifier -}}
-            {{- if .Values.configMap.notifier.smtp -}}
-                {{- if .Values.configMap.notifier.smtp.enabled -}}
-                    {{- true -}}
-                {{- end -}}
-            {{- end -}}
-        {{- end -}}
-    {{- end -}}
-{{- end -}}
-
-{{/*
-Returns true if smtp secret is configured.
-*/}}
-{{- define "authelia.configured.smtpSecret" -}}
-    {{- if .Values.secret -}}
-        {{- if .Values.secret.smtp -}}
-            {{- if hasKey .Values.secret.smtp "value" -}}
-                {{- if not (eq .Values.secret.smtp.value "") -}}
-                    {{- true -}}
-                {{- end -}}
-            {{- end -}}
-        {{- end -}}
-    {{- end -}}
-{{- end -}}
-
-{{/*
 Returns true if duo is enabled.
 */}}
 {{- define "authelia.configured.duo" -}}
