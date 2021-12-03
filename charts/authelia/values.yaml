@@ -18,7 +18,7 @@ image:
   # registry: docker.io
   registry: ghcr.io
   repository: authelia/authelia
-  tag: 4.31.0
+  tag: 4.33.0
   pullPolicy: IfNotPresent
   pullSecrets: []
   # pullSecrets:
@@ -872,8 +872,13 @@ configMap:
       host: 127.0.0.1
       port: 5432
       database: authelia
+      schema: public
       username: authelia
-      sslmode: disable
+      ssl:
+        mode: disable
+        root_certificate: ""
+        certificate: ""
+        key: ""
       timeout: 5s
 
   ##
@@ -1040,6 +1045,10 @@ secret:
     key: STORAGE_PASSWORD
     value: ""
     filename: STORAGE_PASSWORD
+  storageEncryptionKey:
+    key: STORAGE_ENCRYPTION_KEY
+    value: ""
+    filename: STORAGE_ENCRYPTION_KEY
   session:
     key: SESSION_ENCRYPTION_KEY
     value: ""

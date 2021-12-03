@@ -1,10 +1,10 @@
-Thank you for installing the {{ include "authelia.chart" . }} Chart.
+Thank you for installing the {{ include "authelia.chart" . }} chart.
 
 Please report any chart issues at https://github.com/authelia/chartrepo/issues and any application issues at https://github.com/authelia/authelia/issues.
 
-The helm release name is {{ .Release.Name }}.
+IMPORTANT: This chart automatically generated an encryption key for sensitive data in your database. Please ensure you backup this key.
 
-{{- if (include "authelia.enabled.ingress.standard" .) }}
+{{ if (include "authelia.enabled.ingress.standard" .) -}}
 You have selected to use a regular ingress.
 
 You should be able to access Authelia soon via https://{{ include "authelia.ingressHostWithPath" . }} if everything is configured correctly in your values and the DNS record points to the correct location.
@@ -20,7 +20,7 @@ The following are the suggested annotations for 'ingress-nginx':
     nginx.ingress.kubernetes.io/configuration-snippet: |
       proxy_set_header X-Forwarded-Method $request_method;
 
-{{- else if (include "authelia.enabled.ingress.traefik" .) }}
+{{ else if (include "authelia.enabled.ingress.traefik" .) -}}
 You have selected the Traefik CRD to deploy the ingress.
 
 If you wish to protect an IngressRoute apply the following middleware:
@@ -35,8 +35,8 @@ If you wish to protect a regular Ingress apply the following annotation:
       traefik.ingress.kubernetes.io/router.middlewares: {{ (printf "%s-%s@kubernetescrd" .Release.Namespace (include "authelia.ingress.traefikCRD.middleware.name.chainIngress" .)) }}
 
 You should be able to access Authelia soon via https://{{ include "authelia.ingressHostWithPath" . }} if everything is configured correctly in your values and the DNS record points to the correct location.
-{{- else -}}
+{{ else -}}
 You have not installed an ingress which you can do manually by specifying {{ include "authelia.name" . }} as the service and {{ include "authelia.service.port" . }} as the port.
-{{- end -}}
+{{- end }}
 
 You can also direct your ingress to use the following path for forward auth: {{ include "authelia.forwardAuthPath" (merge (dict "Namespace" .Release.Namespace) .) }}.

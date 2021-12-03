@@ -68,36 +68,6 @@ Returns true if pod is stateful.
 {{- end -}}
 
 {{/*
-Returns true if smtp is enabled.
-*/}}
-{{- define "authelia.configured.smtp" -}}
-    {{- if .Values.configMap -}}
-        {{- if .Values.configMap.notifier -}}
-            {{- if .Values.configMap.notifier.smtp -}}
-                {{- if .Values.configMap.notifier.smtp.enabled -}}
-                    {{- true -}}
-                {{- end -}}
-            {{- end -}}
-        {{- end -}}
-    {{- end -}}
-{{- end -}}
-
-{{/*
-Returns true if smtp secret is configured.
-*/}}
-{{- define "authelia.configured.smtpSecret" -}}
-    {{- if .Values.secret -}}
-        {{- if .Values.secret.smtp -}}
-            {{- if hasKey .Values.secret.smtp "value" -}}
-                {{- if not (eq .Values.secret.smtp.value "") -}}
-                    {{- true -}}
-                {{- end -}}
-            {{- end -}}
-        {{- end -}}
-    {{- end -}}
-{{- end -}}
-
-{{/*
 Returns true if duo is enabled.
 */}}
 {{- define "authelia.configured.duo" -}}
@@ -386,6 +356,12 @@ Returns the value of .SecretValue or a randomly generated one
 {{- define "authelia.secret.standard" -}}
     {{- if and .SecretValue (not (eq .SecretValue "")) -}}
         {{- .SecretValue | b64enc -}}
+    {{- else if and .LookupValue -}}
+        {{- if (not (eq .LookupValue "")) -}}
+            {{- .LookupValue -}}
+        {{- else -}}
+            {{- randAlphaNum 128 | b64enc -}}
+        {{- end -}}
     {{- else -}}
         {{- randAlphaNum 128 | b64enc -}}
     {{- end -}}
@@ -403,6 +379,8 @@ Returns the mountPath of the secrets.
         {{- default "JWT_TOKEN" .Values.secret.jwt.filename -}}
     {{- else if eq .Secret "storage" -}}
         {{- default "STORAGE_PASSWORD" .Values.secret.storage.filename -}}
+    {{- else if eq .Secret "storageEncryptionKey" -}}
+        {{- default "STORAGE_ENCRYPTION_KEY" .Values.secret.storageEncryptionKey.filename -}}
     {{- else if eq .Secret "session" -}}
         {{- default "SESSION_ENCRYPTION_KEY" .Values.secret.session.filename -}}
     {{- else if eq .Secret "ldap" -}}
@@ -488,6 +466,13 @@ Returns the rollingUpdate spec
         {{- if .Values.pod.strategy -}}
             {{- if .Values.pod.strategy.rollingUpdate -}}
                 {{- $_ := set $result "partition" (default 0 .Values.pod.strategy.rollingUpdate.partition) -}}
+            {{- end -}}
+        {{- end -}}
+    {{- else if eq "DaemonSet" (include "authelia.pod.kind" .) -}}
+        {{ $result = dict "maxUnavailable" "25%" }}
+        {{- if .Values.pod.strategy -}}
+            {{- if .Values.pod.strategy.rollingUpdate -}}
+                {{- $_ := set $result "maxUnavailable" (default "25%" .Values.pod.strategy.rollingUpdate.maxUnavailable) -}}
             {{- end -}}
         {{- end -}}
     {{- else -}}
