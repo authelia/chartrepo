@@ -261,7 +261,7 @@ vault.hashicorp.com/agent-inject-command-ldap: {{ $vault.secrets.ldap.command | 
 {{- end }}
 {{- end }}
 vault.hashicorp.com/agent-inject-secret-storage-encryption-key: {{ include "authelia.vault.secret.path" $vault.secrets.storageEncryptionKey.path }}
-vault.hashicorp.com/agent-inject-file-storage-encryption-key: {{ include "authelia.secret.path" (merge (dict "Secret" "storage-encryption-key") $) }}
+vault.hashicorp.com/agent-inject-file-storage-encryption-key: {{ include "authelia.secret.path" (merge (dict "Secret" "storageEncryptionKey") $) }}
 {{- if $vault.secrets.storageEncryptionKey.templateValue }}
 vault.hashicorp.com/agent-inject-template-storage-encryption-key: {{ $vault.secrets.storageEncryptionKey.templateValue | quote }}
 {{- else if $vault.secrets.storageEncryptionKey.path }}
