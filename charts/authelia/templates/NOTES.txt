@@ -4,6 +4,8 @@ Please report any chart issues at https://github.com/authelia/chartrepo/issues a
 
 The helm release name is {{ .Release.Name }}.
 
+IMPORTANT: This chart automatically generated an encryption key for sensitive data in your database. Please ensure you backup this key.
+
 {{- if (include "authelia.enabled.ingress.standard" .) }}
 You have selected to use a regular ingress.
 

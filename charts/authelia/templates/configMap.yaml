@@ -152,9 +152,20 @@ data:
         host: {{ $storage.postgres.host }}
         port: {{ default 5432 $storage.postgres.port }}
         database: {{ default "authelia" $storage.postgres.database }}
+        schema: {{ default "public" $storage.postgres.schema }}
         username: {{ default "authelia" $storage.postgres.username }}
         timeout: {{ default "5s" $storage.postgres.timeout }}
-        sslmode: {{ default "disable" $storage.postgres.sslmode }}
+        ssl:
+          mode: {{ default "disable" $storage.postgres.sslmode }}
+          {{- if and $storage.postgres.ssl.root_certificate (not (eq $storage.postgres.ssl.root_certificate "")) }}
+          root_certificate: {{ $storage.postgres.ssl.root_certificate }}
+          {{- end }}
+          {{- if and $storage.postgres.ssl.certificate (not (eq $storage.postgres.ssl.certificate "")) }}
+          certificate: {{ $storage.postgres.ssl.certificate }}
+          {{- end }}
+          {{- if and $storage.postgres.ssl.key (not (eq $storage.postgres.ssl.key "")) }}
+          key: {{ $storage.postgres.ssl.key }}
+          {{- end }}
     {{- end }}
     {{- end }}
     {{- with $notifier := .Values.configMap.notifier }}
