@@ -35,6 +35,8 @@ data:
       {{- end }}
     totp:
       issuer: {{ default .Values.domain .Values.configMap.totp.issuer }}
+      algorithm: {{ default "sha1" .Values.configMap.totp.issuer }}
+      digits: {{ default 6 .Values.configMap.totp.issuer }}
       period: {{ default 30 .Values.configMap.totp.period }}
       skew: {{ default 1 .Values.configMap.totp.skew }}
     ntp:
