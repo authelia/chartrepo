@@ -32,7 +32,7 @@ If you wish to protect an IngressRoute apply the following middleware:
 If you wish to protect a regular Ingress apply the following annotation:
 
     annotations:
-      traefik.ingress.kubernetes.io/router.middlewares: {{ (printf "%s-%s@kubernetescrd" .Release.Namespace (include "authelia.ingress.traefikCRD.middleware.name.chainIngress" .)) }}
+      traefik.ingress.kubernetes.io/router.middlewares: {{ (printf "%s-%s@kubernetescrd" .Release.Namespace (include "authelia.ingress.traefikCRD.middleware.name.chainAuth" .)) }}
 
 You should be able to access Authelia soon via https://{{ include "authelia.ingressHostWithPath" . }} if everything is configured correctly in your values and the DNS record points to the correct location.
 {{ else -}}
