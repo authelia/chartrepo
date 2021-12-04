@@ -260,6 +260,16 @@ vault.hashicorp.com/agent-inject-template-ldap: {{ include "authelia.secret.temp
 vault.hashicorp.com/agent-inject-command-ldap: {{ $vault.secrets.ldap.command | quote }}
 {{- end }}
 {{- end }}
+vault.hashicorp.com/agent-inject-secret-storage-encryption-key: {{ include "authelia.vault.secret.path" $vault.secrets.storageEncryptionKey.path }}
+vault.hashicorp.com/agent-inject-file-storage-encryption-key: {{ include "authelia.secret.path" (merge (dict "Secret" "storageEncryptionKey") $) }}
+{{- if $vault.secrets.storageEncryptionKey.templateValue }}
+vault.hashicorp.com/agent-inject-template-storage-encryption-key: {{ $vault.secrets.storageEncryptionKey.templateValue | quote }}
+{{- else if $vault.secrets.storageEncryptionKey.path }}
+vault.hashicorp.com/agent-inject-template-storage-encryption-key: {{ include "authelia.secret.template" $vault.secrets.storageEncryptionKey.path | quote }}
+{{- end }}
+{{- if $vault.secrets.storageEncryptionKey.command }}
+vault.hashicorp.com/agent-inject-command-storage-encryption-key: {{ $vault.secrets.storageEncryptionKey.command | quote }}
+{{- end }}
 {{- if or $.Values.configMap.storage.mysql.enabled $.Values.configMap.storage.postgres.enabled }}
 vault.hashicorp.com/agent-inject-secret-storage: {{ include "authelia.vault.secret.path" $vault.secrets.storage.path }}
 vault.hashicorp.com/agent-inject-file-storage: {{ include "authelia.secret.path" (merge (dict "Secret" "storage") $) }}
