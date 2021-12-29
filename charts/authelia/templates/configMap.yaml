@@ -209,10 +209,12 @@ data:
     {{- range $client := .Values.configMap.identity_providers.oidc.clients }}
         - id: {{ $client.id }}
           description: {{ default $client.id $client.description }}
+        {{- if not $client.public }}
           secret: {{ default (randAlphaNum 128) $client.secret }}
-          {{- if hasKey $client "public" }}
+        {{- end }}
+        {{- if hasKey $client "public" }}
           public: {{ $client.public }}
-          {{- end }}
+        {{- end }}
           authorization_policy: {{ default "two_factor" $client.authorization_policy }}
           redirect_uris: {{ toYaml $client.redirect_uris | nindent 10 }}
           {{- if hasKey $client "audience" }}
