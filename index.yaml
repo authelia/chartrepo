@@ -3,6 +3,35 @@ entries:
   authelia:
   - apiVersion: v2
     appVersion: 4.33.1
+    created: "2022-01-17T19:21:45.243877648+11:00"
+    description: Authelia is a Single Sign-On Multi-Factor portal for web apps
+    digest: 61515f997bb45facdea0e0cf37564e9f2c5a90403aea107156bbfe91664dd3a1
+    home: https://www.authelia.com
+    icon: https://avatars2.githubusercontent.com/u/59122411?s=200&v=4
+    keywords:
+    - SSO
+    - Authentication
+    - Security
+    - Two-Factor
+    - U2F
+    - YubiKey
+    - Push Notifications
+    - LDAP
+    kubeVersion: '>= 1.13.0-0'
+    maintainers:
+    - email: james-d-elliott@users.noreply.github.com
+      name: james-d-elliott
+      url: https://github.com/james-d-elliott
+    name: authelia
+    sources:
+    - https://github.com/authelia/chartrepo/tree/master/charts/authelia
+    - https://www.github.com/authelia/authelia
+    type: application
+    urls:
+    - https://github.com/authelia/chartrepo/releases/download/authelia-0.7.9/authelia-0.7.9.tgz
+    version: 0.7.9
+  - apiVersion: v2
+    appVersion: 4.33.1
     created: "2022-01-17T16:10:04.800061755+11:00"
     description: Authelia is a Single Sign-On Multi-Factor portal for web apps
     digest: 3b22008529a3f9524475d79912d766169ed25f28e389af197cf3febbf2412734
@@ -2863,4 +2892,4 @@ entries:
     urls:
     - https://github.com/authelia/chartrepo/releases/download/authelia-0.1.0/authelia-0.1.0.tgz
     version: 0.1.0
-generated: "2022-01-17T16:10:04.800724754+11:00"
+generated: "2022-01-17T19:21:45.244730061+11:00"
