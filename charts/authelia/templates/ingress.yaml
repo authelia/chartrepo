@@ -1,6 +1,7 @@
 {{- if (include "authelia.enabled.ingress.ingress" .) }}
 ---
-apiVersion: {{ include "capabilities.apiVersion.ingress" . }}
+{{- $apiVersion := (include "capabilities.apiVersion.ingress" .) }}
+apiVersion: {{ $apiVersion }}
 kind: Ingress
 metadata:
   name: {{ include "authelia.name" . }}
@@ -9,7 +10,7 @@ metadata:
   annotations: {{ $annotations | nindent 4 }}
   {{- end }}
 spec:
-  {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress" }}
+  {{- if eq $apiVersion "networking.k8s.io/v1" }}
   {{- with $className := .Values.ingress.className }}
   ingressClassName: {{ $className }}
   {{- end }}
@@ -19,11 +20,11 @@ spec:
       http:
         paths:
           - path: {{ (include "authelia.path" .) }}
-            {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress" }}
+            {{- if eq $apiVersion "networking.k8s.io/v1" }}
             pathType: Prefix
             {{- end }}
             backend:
-              {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress" }}
+              {{- if eq $apiVersion "networking.k8s.io/v1" }}
               service:
                 name: {{ include "authelia.name" . }}
                 port:
