@@ -176,7 +176,7 @@ Returns the common annotations
     {{- if .Values.annotations -}}
         {{ $annotations = mergeOverwrite $annotations .Values.annotations -}}
     {{- end -}}
-    {{- if .Annotations -}}
+    {{- if hasKey . "Annotations" -}}
         {{ $annotations = mergeOverwrite $annotations .Annotations -}}
     {{- end -}}
     {{- if $annotations -}}
