@@ -125,10 +125,12 @@ Special Annotations Generator for the Ingress kind.
   {{- $annotations = set $annotations "kubernetes.io/tls-acme" "true" -}}
   {{- end -}}
   {{- if and .Values.ingress.traefikCRD .Values.ingress.traefikCRD.disableIngressRoute -}}
-  {{- if .Values.ingress.traefikCRD.entryPoints -}}
-  {{- $annotations = set $annotations "traefik.ingress.kubernetes.io/router.entrypoints" (.Values.ingress.traefikCRD.entryPoints | join ",") -}}
+  {{- if and (gt (len .Values.ingress.traefikCRD.entryPoints) 0) (not (hasKey $annotations "traefik.ingress.kubernetes.io/router.entryPoints")) -}}
+  {{- $annotations = set $annotations "traefik.ingress.kubernetes.io/router.entryPoints" (.Values.ingress.traefikCRD.entryPoints | join ",") -}}
   {{- end -}}
+  {{- if not (hasKey $annotations "traefik.ingress.kubernetes.io/router.middlewares") }}
   {{- $annotations = set $annotations "traefik.ingress.kubernetes.io/router.middlewares" (printf "%s-%s@kubernetescrd" .Release.Namespace (include "authelia.ingress.traefikCRD.middleware.name.chainIngress" .)) -}}
+  {{- end }}
   {{- end -}}
   {{ include "authelia.annotations" (merge (dict "Annotations" $annotations) .) }}
 {{- end -}}
