@@ -100,6 +100,9 @@ spec:
         command: ["authelia"]
         args:
         - --config=/configuration.yaml
+        {{- if (include "authelia.mount.acl.secret" .) }}
+        - --config=/configuration.acl.yaml
+        {{- end }}
         {{- with $resources :=.Values.pod.resources }}
         resources: {{ toYaml $resources | nindent 10 }}
         {{- end }}
@@ -110,37 +113,37 @@ spec:
           value: {{ include "authelia.secret.fullPath" (merge (dict "Secret" "jwt") .) }}
         - name: AUTHELIA_SESSION_SECRET_FILE
           value: {{ include "authelia.secret.fullPath" (merge (dict "Secret" "session") .) }}
-          {{- if .Values.configMap.authentication_backend.ldap.enabled }}
+        {{- if .Values.configMap.authentication_backend.ldap.enabled }}
         - name: AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE
           value: {{ include "authelia.secret.fullPath" (merge (dict "Secret" "ldap") .) }}
-          {{- end }}
-          {{- if and .Values.configMap.notifier.smtp.enabled .Values.configMap.notifier.smtp.enabledSecret }}
+        {{- end }}
+        {{- if and .Values.configMap.notifier.smtp.enabled .Values.configMap.notifier.smtp.enabledSecret }}
         - name: AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE
           value: {{ include "authelia.secret.fullPath" (merge (dict "Secret" "smtp") .) }}
-          {{- end }}
+        {{- end }}
         - name: AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE
           value: {{ include "authelia.secret.fullPath" (merge (dict "Secret" "storageEncryptionKey") .) }}
-          {{- if .Values.configMap.storage.postgres.enabled }}
+        {{- if .Values.configMap.storage.postgres.enabled }}
         - name: AUTHELIA_STORAGE_POSTGRES_PASSWORD_FILE
           value: {{ include "authelia.secret.fullPath" (merge (dict "Secret" "storage") .) }}
-          {{- end }}
-          {{- if .Values.configMap.storage.mysql.enabled }}
+        {{- end }}
+        {{- if .Values.configMap.storage.mysql.enabled }}
         - name: AUTHELIA_STORAGE_MYSQL_PASSWORD_FILE
           value: {{ include "authelia.secret.fullPath" (merge (dict "Secret" "storage") .) }}
-          {{- end }}
-          {{- if and .Values.configMap.session.redis.enabled .Values.configMap.session.redis.enabledSecret }}
+        {{- end }}
+        {{- if and .Values.configMap.session.redis.enabled .Values.configMap.session.redis.enabledSecret }}
         - name: AUTHELIA_SESSION_REDIS_PASSWORD_FILE
           value: {{ include "authelia.secret.fullPath" (merge (dict "Secret" "redis") .) }}
-          {{- end }}
-          {{- if and .Values.configMap.session.redis.high_availability.enabled .Values.configMap.session.redis.high_availability.enabledSecret }}
+        {{- end }}
+        {{- if and .Values.configMap.session.redis.high_availability.enabled .Values.configMap.session.redis.high_availability.enabledSecret }}
         - name: AUTHELIA_SESSION_REDIS_HIGH_AVAILABILITY_SENTINEL_PASSWORD_FILE
           value: {{ include "authelia.secret.fullPath" (merge (dict "Secret" "redis-sentinel") .) }}
-          {{- end }}
-          {{- if and (include "authelia.configured.duo" .) (or (include "authelia.configured.duoSecret" .) (hasKey .Values.secret "existingSecret")) }}
+        {{- end }}
+        {{- if and (include "authelia.configured.duo" .) (or (include "authelia.configured.duoSecret" .) (hasKey .Values.secret "existingSecret")) }}
         - name: AUTHELIA_DUO_API_SECRET_KEY_FILE
           value: {{ include "authelia.secret.fullPath" (merge (dict "Secret" "duo") .) }}
-          {{- end }}
-          {{- if .Values.configMap.identity_providers.oidc.enabled }}
+        {{- end }}
+        {{- if .Values.configMap.identity_providers.oidc.enabled }}
         - name: AUTHELIA_IDENTITY_PROVIDERS_OIDC_HMAC_SECRET_FILE
           value: {{ include "authelia.secret.fullPath" (merge (dict "Secret" "oidc-hmac-secret") .) }}
         - name: AUTHELIA_IDENTITY_PROVIDERS_OIDC_ISSUER_PRIVATE_KEY_FILE
@@ -161,7 +164,7 @@ spec:
           containerPort: {{ default 9091  .Values.configMap.port }}
           protocol: TCP
         volumeMounts:
-          {{- if (include "authelia.enabled.persistentVolumeClaim" .) }}
+        {{- if (include "authelia.enabled.persistentVolumeClaim" .) }}
         - mountPath: /config
           name: authelia
           readOnly: {{ .Values.persistence.readOnly }}
@@ -174,44 +177,58 @@ spec:
           {{- with $mountPropagation := .Values.persistence.mountPropagation }}
           mountPropagation: {{ $mountPropagation }}
           {{- end }}
-          {{- end }}
-          {{- if (include "authelia.enabled.configMap" .) }}
+        {{- end }}
+        {{- if (include "authelia.enabled.configMap" .) }}
         - mountPath: /configuration.yaml
           name: config
           readOnly: true
           subPath: configuration.yaml
-          {{- end }}
-          {{- if not (include "authelia.enabled.injector" .) }}
+        {{- end }}
+        {{- if (include "authelia.mount.acl.secret" .) }}
+        - mountPath: /configuration.acl.yaml
+          name: config-acl
+          readOnly: true
+          subPath: configuration.acl.yaml
+        {{- end }}
+        {{- if not (include "authelia.enabled.injector" .) }}
         - mountPath: {{ include "authelia.secret.mountPath" . }}
           name: secrets
           readOnly: true
-          {{- end }}
-          {{- if (include "authelia.enabled.certificatesSecret" .) }}
+        {{- end }}
+        {{- if (include "authelia.enabled.certificatesSecret" .) }}
         - mountPath: /certificates
           name: certificates
           readOnly: true
-          {{- end }}
-          {{- with $mounts := .Values.pod.extraVolumeMounts }}
+        {{- end }}
+        {{- with $mounts := .Values.pod.extraVolumeMounts }}
           {{- toYaml $mounts | nindent 8 }}
-          {{- end }}
-        {{- with $context := .Values.pod.securityContext.pod }}
+        {{- end }}
+      {{- with $context := .Values.pod.securityContext.pod }}
         securityContext: {{ toYaml $context | nindent 10 }}
       {{- end }}
       volumes:
-        {{- if (include "authelia.enabled.persistentVolumeClaim" .) }}
+      {{- if (include "authelia.enabled.persistentVolumeClaim" .) }}
       - name: authelia
         persistentVolumeClaim:
           claimName: {{ default (include "authelia.name" .) .Values.persistence.existingClaim }}
-        {{- end }}
-        {{- if (include "authelia.enabled.configMap" .) }}
+      {{- end }}
+      {{- if (include "authelia.enabled.configMap" .) }}
       - name: config
         configMap:
           name: {{ default (include "authelia.name" .) .Values.configMap.existingConfigMap }}
           items:
           - key: {{ default "configuration.yaml" .Values.configMap.key }}
             path: configuration.yaml
-        {{- end }}
-        {{- if not (include "authelia.enabled.injector" .) }}
+      {{- end }}
+      {{- if (include "authelia.mount.acl.secret" .) }}
+      - name: config-acl
+        secret:
+          secretName: {{ include "authelia.name.acl.secret" . }}
+          items:
+          - key: {{ default "configuration.acl.yaml" .Values.configMap.access_control.secret.key }}
+            path: configuration.acl.yaml
+      {{- end }}
+      {{- if not (include "authelia.enabled.injector" .) }}
       - name: secrets
         secret:
           secretName: {{ default (include "authelia.name" .) .Values.secret.existingSecret }}
@@ -222,42 +239,42 @@ spec:
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "session") .) }}
           - key: {{ default "STORAGE_ENCRYPTION_KEY" .Values.secret.storageEncryptionKey.key }}
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "storageEncryptionKey") .) }}
-            {{- if or .Values.configMap.storage.postgres.enabled .Values.configMap.storage.mysql.enabled }}
+          {{- if or .Values.configMap.storage.postgres.enabled .Values.configMap.storage.mysql.enabled }}
           - key: {{ default "STORAGE_PASSWORD" .Values.secret.storage.key }}
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "storage") .) }}
-            {{- end }}
-            {{- if .Values.configMap.authentication_backend.ldap.enabled }}
+          {{- end }}
+          {{- if .Values.configMap.authentication_backend.ldap.enabled }}
           - key: {{ default "LDAP_PASSWORD" .Values.secret.ldap.key }}
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "ldap") .) }}
-            {{- end }}
-            {{- if and .Values.configMap.notifier.smtp.enabled .Values.configMap.notifier.smtp.enabledSecret }}
+          {{- end }}
+          {{- if and .Values.configMap.notifier.smtp.enabled .Values.configMap.notifier.smtp.enabledSecret }}
           - key: {{ default "SMTP_PASSWORD" .Values.secret.smtp.key }}
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "smtp") .) }}
-            {{- end }}
-            {{- if and .Values.configMap.session.redis.enabled .Values.configMap.session.redis.enabledSecret }}
+          {{- end }}
+          {{- if and .Values.configMap.session.redis.enabled .Values.configMap.session.redis.enabledSecret }}
           - key: {{ default "REDIS_PASSWORD" .Values.secret.redis.key }}
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "redis") .) }}
             {{- end }}
             {{- if and .Values.configMap.session.redis.high_availability.enabled .Values.configMap.session.redis.high_availability.enabledSecret }}
           - key: {{ default "REDIS_SENTINEL_PASSWORD" .Values.secret.redisSentinel.key }}
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "redis-sentinel") .) }}
-            {{- end }}
-            {{- if and (include "authelia.configured.duo" .) (or (include "authelia.configured.duoSecret" .) (hasKey .Values.secret "existingSecret")) }}
+          {{- end }}
+          {{- if and (include "authelia.configured.duo" .) (or (include "authelia.configured.duoSecret" .) (hasKey .Values.secret "existingSecret")) }}
           - key: {{ default "DUO_API_KEY" .Values.secret.duo.key }}
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "duo") .) }}
-            {{- end }}
-            {{- if .Values.configMap.identity_providers.oidc.enabled }}
+          {{- end }}
+          {{- if .Values.configMap.identity_providers.oidc.enabled }}
           - key: {{ default "OIDC_PRIVATE_KEY" .Values.secret.oidcPrivateKey.key }}
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "oidc-private-key") .) }}
           - key: {{ default "OIDC_HMAC_SECRET" .Values.secret.oidcHMACSecret.key }}
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "oidc-hmac-secret") .) }}
-        {{- end }}
-        {{- end }}
-        {{- if (include "authelia.enabled.certificatesSecret" .) }}
+          {{- end }}
+      {{- end }}
+      {{- if (include "authelia.enabled.certificatesSecret" .) }}
       - name: certificates
         secret:
           secretName: {{ include "authelia.names.certificatesSecret" . }}
-        {{- end }}
-        {{- with .Values.pod.extraVolumes }}
+      {{- end }}
+      {{- with .Values.pod.extraVolumes }}
         {{- toYaml . | nindent 6 }}
-        {{- end }}
+      {{- end }}

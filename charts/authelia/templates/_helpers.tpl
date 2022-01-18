@@ -135,6 +135,22 @@ Special Annotations Generator for the Ingress kind.
   {{ include "authelia.annotations" (merge (dict "Annotations" $annotations) .) }}
 {{- end -}}
 
+{{- define "authelia.accessControl.defaultPolicy" }}
+    {{- $defaultPolicy := "deny" }}
+    {{- if (eq (len .Values.configMap.access_control.rules) 0) }}
+        {{- if (eq .Values.configMap.access_control.default_policy "bypass") }}
+            {{- $defaultPolicy = "one_factor" }}
+        {{- else if (eq .Values.configMap.access_control.default_policy "deny") }}
+            {{- $defaultPolicy = "two_factor" }}
+        {{- else }}
+            {{- $defaultPolicy = .Values.configMap.access_control.default_policy }}
+        {{- end }}
+    {{- else }}
+        {{- $defaultPolicy = .Values.configMap.access_control.default_policy }}
+    {{- end }}
+    {{ $defaultPolicy }}
+{{- end }}
+
 {{/*
 Returns if we should use existing TraefikCRD TLSOption
 */}}
@@ -693,6 +709,44 @@ Returns true if we should use a ConfigMap.
 {{- end -}}
 
 {{/*
+Returns true if we should use the ACL Secret.
+*/}}
+{{- define "authelia.enabled.acl.secret" -}}
+    {{- if hasKey .Values "configMap" -}}
+        {{- if .Values.configMap.enabled -}}
+            {{- if .Values.configMap.access_control.secret.enabled }}
+                {{- true -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+
+{{/*
+Returns true if we should use a mount the ACL Secret.
+*/}}
+{{- define "authelia.mount.acl.secret" -}}
+    {{- if or (include "authelia.enabled.acl.secret" .) .Values.configMap.access_control.secret.existingSecret -}}
+        {{- true -}}
+    {{- end -}}
+{{- end -}}
+
+{{/*
+Returns true if we should use a generate the ACL Secret.
+*/}}
+{{- define "authelia.generate.acl.secret" -}}
+    {{- if and (include "authelia.enabled.acl.secret" .) (not .Values.configMap.access_control.secret.existingSecret) -}}
+        {{- true -}}
+    {{- end -}}
+{{- end -}}
+
+{{/*
+Returns the ACL secret name.
+*/}}
+{{- define "authelia.name.acl.secret" -}}
+    {{- default (printf "%s-acl" (include "authelia.name" .) | trunc 63 | trimSuffix "-") .Values.configMap.access_control.secret.existingSecret -}}
+{{- end -}}
+
+{{/*
 Returns true if we should use a PDB.
 */}}
 {{- define "authelia.enabled.podDisruptionBudget" -}}
@@ -922,4 +976,13 @@ Returns the path value.
     {{- else -}}
         {{- "/" -}}
     {{- end -}}
+{{- end -}}
+
+{{/*
+Wraps something with YAML header/footer
+*/}}
+{{- define "authelia.wrapYAML" -}}
+{{- "---" }}
+{{ . }}
+{{ "..." }}
 {{- end -}}

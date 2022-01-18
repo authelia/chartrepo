@@ -681,6 +681,19 @@ configMap:
   ##
   ## Note: the order of the rules is important. The first policy matching (domain, resource, subject) applies.
   access_control:
+
+    ## Configure the ACL as a Secret instead of part of the ConfigMap.
+    secret:
+
+      ## Enables the ACL section being generated as a secret.
+      enabled: false
+
+      ## The key in the secret which contains the file to mount.
+      key: configuration.acl.yaml
+
+      ## An existingSecret name, if configured this will force the secret to be mounted using the key above.
+      existingSecret: ""
+
     ## Default policy can either be 'bypass', 'one_factor', 'two_factor' or 'deny'. It is the policy applied to any
     ## resource if there is no policy to be applied to the user.
     default_policy: deny
