@@ -230,8 +230,8 @@ data:
         {{- end }}
         {{- end }}
     {{- end }}
-    {{- if and (not (include "authelia.enabled.acl.secret" .)) .Values.configMap.access_control.secret.existingSecret }}
-    {{- tpl (.Files.Get "files/configuration.acl.yaml") . | nindent 4 }}
+    {{- if and (not (include "authelia.mount.acl.secret" .)) }}
+    {{- tpl (.Files.Get "files/configuration.acl.yaml") . | trim | nindent 4 }}
     {{- end }}
     ...
 {{- end }}

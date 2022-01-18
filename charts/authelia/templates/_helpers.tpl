@@ -977,3 +977,12 @@ Returns the path value.
         {{- "/" -}}
     {{- end -}}
 {{- end -}}
+
+{{/*
+Wraps something with YAML header/footer
+*/}}
+{{- define "authelia.wrapYAML" -}}
+{{- "---" }}
+{{ . }}
+{{ "..." }}
+{{- end -}}
