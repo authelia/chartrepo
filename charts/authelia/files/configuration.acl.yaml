@@ -1,8 +1,8 @@
 access_control:
   default_policy: {{ include "authelia.accessControl.defaultPolicy" . | trim }}
   {{- if (gt (len .Values.configMap.access_control.networks) 0) }}
-  networks: {{ toYaml .Values.configMap.access_control.networks | nindent 6 }}
+  networks: {{ toYaml .Values.configMap.access_control.networks | nindent 2 }}
   {{- end }}
   {{- if (gt (len .Values.configMap.access_control.rules) 0) }}
-  rules: {{ toYaml .Values.configMap.access_control.rules | nindent 6 }}
+  rules: {{ toYaml .Values.configMap.access_control.rules | nindent 2 }}
   {{- end }}
