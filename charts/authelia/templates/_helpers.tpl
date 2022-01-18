@@ -709,7 +709,7 @@ Returns true if we should use a ConfigMap.
 {{- end -}}
 
 {{/*
-Returns true if we should use a Secret for ACL.
+Returns true if we should use the ACL Secret.
 */}}
 {{- define "authelia.enabled.acl.secret" -}}
     {{- if hasKey .Values "configMap" -}}
@@ -719,6 +719,31 @@ Returns true if we should use a Secret for ACL.
             {{- end -}}
         {{- end -}}
     {{- end -}}
+{{- end -}}
+
+{{/*
+Returns true if we should use a mount the ACL Secret.
+*/}}
+{{- define "authelia.mount.acl.secret" -}}
+    {{- if or (include "authelia.enabled.acl.secret" .) .Values.configMap.access_control.secret.existingSecret -}}
+        {{- true -}}
+    {{- end -}}
+{{- end -}}
+
+{{/*
+Returns true if we should use a generate the ACL Secret.
+*/}}
+{{- define "authelia.generate.acl.secret" -}}
+    {{- if and (include "authelia.enabled.acl.secret" .) (not .Values.configMap.access_control.secret.existingSecret) -}}
+        {{- true -}}
+    {{- end -}}
+{{- end -}}
+
+{{/*
+Returns the ACL secret name.
+*/}}
+{{- define "authelia.name.acl.secret" -}}
+    {{- default (printf "%s-acl" (include "authelia.name" .) | trunc 63 | trimSuffix "-") .Values.configMap.access_control.secret.existingSecret -}}
 {{- end -}}
 
 {{/*
