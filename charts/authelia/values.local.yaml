@@ -681,6 +681,11 @@ configMap:
   ##
   ## Note: the order of the rules is important. The first policy matching (domain, resource, subject) applies.
   access_control:
+    secret:
+      enabled: true
+      key: acl.yaml
+      # existingSecret: authelia-acl
+
     ## Default policy can either be 'bypass', 'one_factor', 'two_factor' or 'deny'. It is the policy applied to any
     ## resource if there is no policy to be applied to the user.
     default_policy: deny

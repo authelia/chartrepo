@@ -135,6 +135,22 @@ Special Annotations Generator for the Ingress kind.
   {{ include "authelia.annotations" (merge (dict "Annotations" $annotations) .) }}
 {{- end -}}
 
+{{- define "authelia.accessControl.defaultPolicy" }}
+    {{- $defaultPolicy := "deny" }}
+    {{- if (eq (len .Values.configMap.access_control.rules) 0) }}
+        {{- if (eq .Values.configMap.access_control.default_policy "bypass") }}
+            {{- $defaultPolicy = "one_factor" }}
+        {{- else if (eq .Values.configMap.access_control.default_policy "deny") }}
+            {{- $defaultPolicy = "two_factor" }}
+        {{- else }}
+            {{- $defaultPolicy = .Values.configMap.access_control.default_policy }}
+        {{- end }}
+    {{- else }}
+        {{- $defaultPolicy = .Values.configMap.access_control.default_policy }}
+    {{- end }}
+    {{ $defaultPolicy }}
+{{- end }}
+
 {{/*
 Returns if we should use existing TraefikCRD TLSOption
 */}}
@@ -688,6 +704,19 @@ Returns true if we should use a ConfigMap.
     {{- if .Values.configMap -}}
         {{- if .Values.configMap.enabled -}}
             {{- true -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+
+{{/*
+Returns true if we should use a Secret for ACL.
+*/}}
+{{- define "authelia.enabled.acl.secret" -}}
+    {{- if hasKey .Values "configMap" -}}
+        {{- if .Values.configMap.enabled -}}
+            {{- if .Values.configMap.access_control.secret.enabled }}
+                {{- true -}}
+            {{- end -}}
         {{- end -}}
     {{- end -}}
 {{- end -}}

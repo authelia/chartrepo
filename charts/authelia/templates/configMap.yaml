@@ -53,12 +53,12 @@ data:
     {{- with $auth := .Values.configMap.authentication_backend }}
     authentication_backend:
       disable_reset_password: {{ $auth.disable_reset_password }}
-    {{- if $auth.file.enabled }}
+      {{- if $auth.file.enabled }}
       file:
         path: {{ $auth.file.path }}
         password: {{ toYaml $auth.file.password | nindent 10 }}
-    {{- end }}
-    {{- if $auth.ldap.enabled }}
+      {{- end }}
+      {{- if $auth.ldap.enabled }}
       ldap:
         implementation: {{ default "custom" $auth.ldap.implementation }}
         url: {{ $auth.ldap.url }}
@@ -70,35 +70,35 @@ data:
           {{- end }}
           minimum_version: {{ default "TLS1.2" $auth.ldap.tls.minimum_version }}
           skip_verify: {{ default false $auth.ldap.tls.skip_verify }}
-    {{- if $auth.ldap.base_dn }}
+        {{- if $auth.ldap.base_dn }}
         base_dn: {{ $auth.ldap.base_dn }}
-    {{- end }}
-    {{- if $auth.ldap.username_attribute }}
+        {{- end }}
+        {{- if $auth.ldap.username_attribute }}
         username_attribute: {{ $auth.ldap.username_attribute }}
-    {{- end }}
-    {{- if $auth.ldap.additional_users_dn }}
+        {{- end }}
+        {{- if $auth.ldap.additional_users_dn }}
         additional_users_dn: {{ $auth.ldap.additional_users_dn }}
-    {{- end }}
-    {{- if $auth.ldap.users_filter }}
+        {{- end }}
+        {{- if $auth.ldap.users_filter }}
         users_filter: {{ $auth.ldap.users_filter }}
-    {{- end }}
-    {{- if $auth.ldap.additional_groups_dn }}
+        {{- end }}
+        {{- if $auth.ldap.additional_groups_dn }}
         additional_groups_dn: {{ $auth.ldap.additional_groups_dn }}
-    {{- end }}
-    {{- if $auth.ldap.groups_filter }}
+        {{- end }}
+        {{- if $auth.ldap.groups_filter }}
         groups_filter: {{ $auth.ldap.groups_filter }}
-    {{- end }}
-    {{- if $auth.ldap.group_name_attribute }}
+        {{- end }}
+        {{- if $auth.ldap.group_name_attribute }}
         group_name_attribute: {{ $auth.ldap.group_name_attribute }}
-    {{- end }}
-    {{- if $auth.ldap.mail_attribute }}
+        {{- end }}
+        {{- if $auth.ldap.mail_attribute }}
         mail_attribute: {{ $auth.ldap.mail_attribute }}
-    {{- end }}
-    {{- if $auth.ldap.display_name_attribute }}
+        {{- end }}
+        {{- if $auth.ldap.display_name_attribute }}
         display_name_attribute: {{ $auth.ldap.display_name_attribute }}
-    {{- end }}
+        {{- end }}
         user: {{ $auth.ldap.user }}
-    {{- end }}
+      {{- end }}
     {{- end }}
     {{- with $session := .Values.configMap.session }}
     session:
@@ -108,7 +108,7 @@ data:
       expiration: {{ default "1M" $session.expiration }}
       inactivity: {{ default "5m" $session.inactivity }}
       remember_me_duration: {{ default "1M" $session.remember_me_duration }}
-    {{- if $session.redis.enabled }}
+      {{- if $session.redis.enabled }}
       redis:
         host: {{ $session.redis.host }}
         port: {{ default 6379 $session.redis.port }}
@@ -117,39 +117,39 @@ data:
         {{- end }}
         maximum_active_connections: {{ default 8 $session.redis.maximum_active_connections }}
         minimum_idle_connections: {{ default 0 $session.redis.minimum_idle_connections }}
-    {{- if $session.redis.tls.enabled }}
+        {{- if $session.redis.tls.enabled }}
         tls:
           server_name: {{ $session.redis.tls.server_name }}
           minimum_version: {{ default "TLS1.2" $session.redis.tls.minimum_version }}
           skip_verify: {{ $session.redis.tls.skip_verify }}
-    {{- end }}
-    {{- if $session.redis.high_availability.enabled }}
+        {{- end }}
+        {{- if $session.redis.high_availability.enabled }}
         high_availability:
           sentinel_name: {{ $session.redis.high_availability.sentinel_name }}
-    {{- if $session.redis.high_availability.nodes }}
+          {{- if $session.redis.high_availability.nodes }}
           nodes: {{ toYaml $session.redis.high_availability.nodes | nindent 10 }}
-    {{- end }}
+          {{- end }}
           route_by_latency: {{ $session.redis.high_availability.route_by_latency }}
           route_randomly: {{ $session.redis.high_availability.route_randomly }}
-    {{- end }}
-    {{- end }}
+        {{- end }}
+      {{- end }}
     {{- end }}
     regulation: {{ toYaml .Values.configMap.regulation | nindent 6 }}
     storage:
-    {{- with $storage := .Values.configMap.storage }}
-    {{- if $storage.local.enabled }}
+      {{- with $storage := .Values.configMap.storage }}
+      {{- if $storage.local.enabled }}
       local:
         path: {{ $storage.local.path }}
-    {{- end }}
-    {{- if $storage.mysql.enabled }}
+      {{- end }}
+      {{- if $storage.mysql.enabled }}
       mysql:
         host: {{ $storage.mysql.host }}
         port: {{ default 3306 $storage.mysql.port }}
         database: {{ default "authelia" $storage.mysql.database }}
         username: {{ default "authelia" $storage.mysql.username }}
         timeout: {{ default "5s" $storage.mysql.timeout }}
-    {{- end }}
-    {{- if $storage.postgres.enabled }}
+      {{- end }}
+      {{- if $storage.postgres.enabled }}
       postgres:
         host: {{ $storage.postgres.host }}
         port: {{ default 5432 $storage.postgres.port }}
@@ -168,16 +168,16 @@ data:
           {{- if and $storage.postgres.ssl.key (not (eq $storage.postgres.ssl.key "")) }}
           key: {{ $storage.postgres.ssl.key }}
           {{- end }}
-    {{- end }}
+      {{- end }}
     {{- end }}
     {{- with $notifier := .Values.configMap.notifier }}
     notifier:
       disable_startup_check: {{ $.Values.configMap.notifier.disable_startup_check }}
-    {{- if $notifier.filesystem.enabled }}
+      {{- if $notifier.filesystem.enabled }}
       filesystem:
         filename: {{ $notifier.filesystem.filename }}
-    {{- end }}
-    {{- if $notifier.smtp.enabled }}
+      {{- end }}
+      {{- if $notifier.smtp.enabled }}
       smtp:
         host: {{ $notifier.smtp.host }}
         port: {{ default 25 $notifier.smtp.port }}
@@ -193,7 +193,7 @@ data:
           server_name: {{ default $notifier.smtp.host $notifier.smtp.tls.server_name }}
           minimum_version: {{ default "TLS1.2" $notifier.smtp.tls.minimum_version }}
           skip_verify: {{ default false $notifier.smtp.tls.skip_verify }}
-    {{- end }}
+      {{- end }}
     {{- end }}
     {{- if .Values.configMap.identity_providers.oidc.enabled }}
     identity_providers:
@@ -206,15 +206,15 @@ data:
         minimum_parameter_entropy: {{ default 8 .Values.configMap.identity_providers.oidc.minimum_parameter_entropy }}
         {{- if gt (len .Values.configMap.identity_providers.oidc.clients) 0 }}
         clients:
-    {{- range $client := .Values.configMap.identity_providers.oidc.clients }}
+        {{- range $client := .Values.configMap.identity_providers.oidc.clients }}
         - id: {{ $client.id }}
           description: {{ default $client.id $client.description }}
-        {{- if not $client.public }}
+          {{- if not $client.public }}
           secret: {{ default (randAlphaNum 128) $client.secret }}
-        {{- end }}
-        {{- if hasKey $client "public" }}
+          {{- end }}
+          {{- if hasKey $client "public" }}
           public: {{ $client.public }}
-        {{- end }}
+          {{- end }}
           authorization_policy: {{ default "two_factor" $client.authorization_policy }}
           redirect_uris: {{ toYaml $client.redirect_uris | nindent 10 }}
           {{- if hasKey $client "audience" }}
@@ -227,30 +227,11 @@ data:
           response_modes: {{ toYaml $client.response_modes | nindent 10 }}
           {{- end }}
           userinfo_signing_algorithm: {{ default "none" $client.userinfo_signing_algorithm }}
+        {{- end }}
+        {{- end }}
     {{- end }}
-    {{- end }}
-    {{- end }}
-    access_control:
-    {{- if (eq (len .Values.configMap.access_control.rules) 0) }}
-      {{- if (eq .Values.configMap.access_control.default_policy "bypass") }}
-      default_policy: one_factor
-      {{- else if (eq .Values.configMap.access_control.default_policy "deny") }}
-      default_policy: two_factor
-      {{- else }}
-      default_policy: {{ .Values.configMap.access_control.default_policy }}
-      {{- end }}
-    {{- else }}
-      default_policy: {{ .Values.configMap.access_control.default_policy }}
-    {{- end }}
-    {{- if (eq (len .Values.configMap.access_control.networks) 0) }}
-      networks: []
-    {{- else }}
-      networks: {{ toYaml .Values.configMap.access_control.networks | nindent 6 }}
-    {{- end }}
-    {{- if (eq (len .Values.configMap.access_control.rules) 0) }}
-      rules: []
-    {{- else }}
-      rules: {{ toYaml .Values.configMap.access_control.rules | nindent 6 }}
+    {{- if and (not (include "authelia.enabled.acl.secret" .)) .Values.configMap.access_control.secret.existingSecret }}
+    {{- tpl (.Files.Get "files/acl.yaml") . | nindent 4 }}
     {{- end }}
     ...
-    {{- end }}
+{{- end }}

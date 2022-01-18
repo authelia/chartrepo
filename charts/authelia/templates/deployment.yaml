@@ -100,6 +100,9 @@ spec:
         command: ["authelia"]
         args:
         - --config=/configuration.yaml
+        {{- if or (include "authelia.enabled.acl.secret" .) .Values.configMap.access_control.secret.existingSecret }}
+        - --config=/acl.yaml
+        {{- end }}
         {{- with $resources :=.Values.pod.resources }}
         resources: {{ toYaml $resources | nindent 10 }}
         {{- end }}
@@ -175,12 +178,18 @@ spec:
           mountPropagation: {{ $mountPropagation }}
           {{- end }}
           {{- end }}
-          {{- if (include "authelia.enabled.configMap" .) }}
+        {{- if (include "authelia.enabled.configMap" .) }}
         - mountPath: /configuration.yaml
           name: config
           readOnly: true
           subPath: configuration.yaml
-          {{- end }}
+        {{- end }}
+        {{- if or (include "authelia.enabled.acl.secret" .) .Values.configMap.access_control.secret.existingSecret }}
+        - mountPath: /acl.yaml
+          name: acl
+          readOnly: true
+          subPath: acl.yaml
+        {{- end }}
           {{- if not (include "authelia.enabled.injector" .) }}
         - mountPath: {{ include "authelia.secret.mountPath" . }}
           name: secrets
@@ -198,20 +207,28 @@ spec:
         securityContext: {{ toYaml $context | nindent 10 }}
       {{- end }}
       volumes:
-        {{- if (include "authelia.enabled.persistentVolumeClaim" .) }}
+      {{- if (include "authelia.enabled.persistentVolumeClaim" .) }}
       - name: authelia
         persistentVolumeClaim:
           claimName: {{ default (include "authelia.name" .) .Values.persistence.existingClaim }}
-        {{- end }}
-        {{- if (include "authelia.enabled.configMap" .) }}
+      {{- end }}
+      {{- if (include "authelia.enabled.configMap" .) }}
       - name: config
         configMap:
           name: {{ default (include "authelia.name" .) .Values.configMap.existingConfigMap }}
           items:
           - key: {{ default "configuration.yaml" .Values.configMap.key }}
             path: configuration.yaml
-        {{- end }}
-        {{- if not (include "authelia.enabled.injector" .) }}
+      {{- end }}
+      {{- if or (include "authelia.enabled.acl.secret" .) .Values.configMap.access_control.secret.existingSecret }}
+      - name: acl
+        secret:
+          name: {{ default "authelia-acl" .Values.configMap.access_control.secret.existingSecret }}
+          items:
+            - key: {{ default "acl.yaml" .Values.configMap.access_control.secret.key }}
+              path: acl.yaml
+      {{- end }}
+      {{- if not (include "authelia.enabled.injector" .) }}
       - name: secrets
         secret:
           secretName: {{ default (include "authelia.name" .) .Values.secret.existingSecret }}
