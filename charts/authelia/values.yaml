@@ -825,6 +825,10 @@ configMap:
         ## Sentinel Name / Master Name
         sentinel_name: mysentinel
 
+        ## The Redis Sentinel-specific username. If supplied, authentication will be done via Redis 6+ ACL-based
+        ## authentication. If left blank, authentication to sentinels will be done via `requirepass`.
+        username: ""
+
         ## The additional nodes to pre-seed the redis provider with (for sentinel).
         ## If the host in the above section is defined, it will be combined with this list to connect to sentinel.
         ## For high availability to be used you must have either defined; the host above or at least one node below.
