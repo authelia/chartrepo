@@ -129,6 +129,9 @@ data:
           {{- if $session.redis.high_availability.nodes }}
           nodes: {{ toYaml $session.redis.high_availability.nodes | nindent 10 }}
           {{- end }}
+          {{- if not (eq $session.redis.high_availability.username "") }}
+          sentinel_username: {{ $session.redis.high_availability.username }}
+          {{- end }}
           route_by_latency: {{ $session.redis.high_availability.route_by_latency }}
           route_randomly: {{ $session.redis.high_availability.route_randomly }}
         {{- end }}
