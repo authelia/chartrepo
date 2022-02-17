@@ -10,8 +10,8 @@ metadata:
   {{- end }}
 spec:
   selector:
-    matchLabels: {{ include "authelia.matchLabels" . | nindent 6 }}
-  revisionHistoryLimit: {{ default 5 .Values.pod.revisionHistoryLimit }}
+    matchLabels: {{ include "authelia.labels.match" . | nindent 6 }}
+  revisionHistoryLimit: {{ .Values.pod.revisionHistoryLimit | default 5 }}
   {{- if or (eq "StatefulSet" $kind) (eq "Deployment" $kind) }}
   replicas: {{ include "authelia.replicas" . }}
   {{- end }}
@@ -44,16 +44,16 @@ spec:
     metadata:
       labels: {{ include "authelia.labels" (merge (dict "Labels" .Values.pod.labels) .) | nindent 8 }}
       annotations:
-        {{- if (include "authelia.generate.configMap" .) }}
+        {{- if (include "authelia.configMap.generate" .) }}
         checksum/configMap: {{ include (print $.Template.BasePath "/configMap.yaml") . | sha256sum }}
         {{- end }}
-        {{ if (include "authelia.enabled.secret" .) -}}
-        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        {{- if or (include "authelia.secrets.main.enabled" .) (include "authelia.secrets.certificates.generate" .) (include "authelia.secrets.acl.generate" .) -}}
+        checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
         {{- end }}
         {{- with $annotations := include "authelia.annotations" (merge (dict "Annotations" .Values.pod.annotations) .) }}
         {{- $annotations | nindent 8 }}
         {{- end }}
-        {{- with $annotations := include "authelia.annotations.injector" . }}
+        {{- with $annotations := tpl (.Files.Get "files/vaultInjector.annotations.yaml") . | trim }}
         {{- $annotations | nindent 8 }}
         {{- end }}
     spec:
@@ -100,7 +100,7 @@ spec:
         command: ["authelia"]
         args:
         - --config=/configuration.yaml
-        {{- if (include "authelia.mount.acl.secret" .) }}
+        {{- if (include "authelia.secrets.acl.mount" .) }}
         - --config=/configuration.acl.yaml
         {{- end }}
         {{- with $resources :=.Values.pod.resources }}
@@ -139,7 +139,7 @@ spec:
         - name: AUTHELIA_SESSION_REDIS_HIGH_AVAILABILITY_SENTINEL_PASSWORD_FILE
           value: {{ include "authelia.secret.fullPath" (merge (dict "Secret" "redis-sentinel") .) }}
         {{- end }}
-        {{- if and (include "authelia.configured.duo" .) (or (include "authelia.configured.duoSecret" .) (hasKey .Values.secret "existingSecret")) }}
+        {{- if and (include "authelia.duo.enabled" .) (or (include "authelia.duo.secret.enabled" .) (hasKey .Values.secret "existingSecret")) }}
         - name: AUTHELIA_DUO_API_SECRET_KEY_FILE
           value: {{ include "authelia.secret.fullPath" (merge (dict "Secret" "duo") .) }}
         {{- end }}
@@ -161,10 +161,10 @@ spec:
         {{- end }}
         ports:
         - name: http
-          containerPort: {{ default 9091  .Values.configMap.port }}
+          containerPort: {{ .Values.configMap.port | default 9091 }}
           protocol: TCP
         volumeMounts:
-        {{- if (include "authelia.enabled.persistentVolumeClaim" .) }}
+        {{- if (include "authelia.persistentVolumeClaim.enabled" .) }}
         - mountPath: /config
           name: authelia
           readOnly: {{ .Values.persistence.readOnly }}
@@ -178,24 +178,24 @@ spec:
           mountPropagation: {{ $mountPropagation }}
           {{- end }}
         {{- end }}
-        {{- if (include "authelia.enabled.configMap" .) }}
+        {{- if (include "authelia.configMap.enabled" .) }}
         - mountPath: /configuration.yaml
           name: config
           readOnly: true
           subPath: configuration.yaml
         {{- end }}
-        {{- if (include "authelia.mount.acl.secret" .) }}
+        {{- if (include "authelia.secrets.acl.mount" .) }}
         - mountPath: /configuration.acl.yaml
           name: config-acl
           readOnly: true
           subPath: configuration.acl.yaml
         {{- end }}
-        {{- if not (include "authelia.enabled.injector" .) }}
+        {{- if not (include "authelia.vaultInjector.enabled" .) }}
         - mountPath: {{ include "authelia.secret.mountPath" . }}
           name: secrets
           readOnly: true
         {{- end }}
-        {{- if (include "authelia.enabled.certificatesSecret" .) }}
+        {{- if (include "authelia.secrets.certificates.enabled" .) }}
         - mountPath: /certificates
           name: certificates
           readOnly: true
@@ -207,12 +207,12 @@ spec:
         securityContext: {{ toYaml $context | nindent 10 }}
       {{- end }}
       volumes:
-      {{- if (include "authelia.enabled.persistentVolumeClaim" .) }}
+      {{- if (include "authelia.persistentVolumeClaim.enabled" .) }}
       - name: authelia
         persistentVolumeClaim:
           claimName: {{ default (include "authelia.name" .) .Values.persistence.existingClaim }}
       {{- end }}
-      {{- if (include "authelia.enabled.configMap" .) }}
+      {{- if (include "authelia.configMap.enabled" .) }}
       - name: config
         configMap:
           name: {{ default (include "authelia.name" .) .Values.configMap.existingConfigMap }}
@@ -220,15 +220,15 @@ spec:
           - key: {{ default "configuration.yaml" .Values.configMap.key }}
             path: configuration.yaml
       {{- end }}
-      {{- if (include "authelia.mount.acl.secret" .) }}
+      {{- if (include "authelia.secrets.acl.mount" .) }}
       - name: config-acl
         secret:
-          secretName: {{ include "authelia.name.acl.secret" . }}
+          secretName: {{ include "authelia.secrets.acl.name" . }}
           items:
           - key: {{ default "configuration.acl.yaml" .Values.configMap.access_control.secret.key }}
             path: configuration.acl.yaml
       {{- end }}
-      {{- if not (include "authelia.enabled.injector" .) }}
+      {{- if not (include "authelia.vaultInjector.enabled" .) }}
       - name: secrets
         secret:
           secretName: {{ default (include "authelia.name" .) .Values.secret.existingSecret }}
@@ -259,7 +259,7 @@ spec:
           - key: {{ default "REDIS_SENTINEL_PASSWORD" .Values.secret.redisSentinel.key }}
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "redis-sentinel") .) }}
           {{- end }}
-          {{- if and (include "authelia.configured.duo" .) (or (include "authelia.configured.duoSecret" .) (hasKey .Values.secret "existingSecret")) }}
+          {{- if and (include "authelia.duo.enabled" .) (or (include "authelia.duo.secret.enabled" .) (hasKey .Values.secret "existingSecret")) }}
           - key: {{ default "DUO_API_KEY" .Values.secret.duo.key }}
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "duo") .) }}
           {{- end }}
@@ -270,10 +270,10 @@ spec:
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "oidc-hmac-secret") .) }}
           {{- end }}
       {{- end }}
-      {{- if (include "authelia.enabled.certificatesSecret" .) }}
+      {{- if (include "authelia.secrets.certificates.enabled" .) }}
       - name: certificates
         secret:
-          secretName: {{ include "authelia.names.certificatesSecret" . }}
+          secretName: {{ include "authelia.secrets.certificates.name" . }}
       {{- end }}
       {{- with .Values.pod.extraVolumes }}
         {{- toYaml . | nindent 6 }}

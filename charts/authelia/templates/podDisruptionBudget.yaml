@@ -1,4 +1,4 @@
-{{- if (include "authelia.enabled.podDisruptionBudget" .) }}
+{{- if (include "authelia.podDisruptionBudget.enabled" .) }}
 ---
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
@@ -17,5 +17,5 @@ spec:
   minAvailable: 1
   {{- end }}
   selector:
-    matchLabels: {{- include "authelia.matchLabels" . | nindent 6 }}
+    matchLabels: {{- include "authelia.labels.match" . | nindent 6 }}
 {{- end -}}

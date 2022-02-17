@@ -12,33 +12,48 @@
 ##   - session: memory
 ##   - notification: filesystem (yaml)
 
+## Authelia Domain
+## Should be the root domain you want to protect.
+## For example if you have apps app1.example.com and app2.example.com it should be example.com
+## This affects the ingress (partially sets the domain used) and configMap.
+## Authelia must be served from the domain or a subdomain under it.
+domain: example.com
+
+## Override the default name of objects created by this chart.
+# nameOverride: authelia-deployment-name
+
+## Override the appName.
+# appNameOverride: authelia
+
 ## Image Parameters
 ## ref: https://hub.docker.com/r/authelia/authelia/tags/
 ##
 image:
-  # registry: docker.io
-  registry: ghcr.io
-  repository: authelia/authelia
-  tag: 4.33.1
-  pullPolicy: IfNotPresent
-  pullSecrets: []
-  # pullSecrets:
-  #   - myPullSecretName
 
-# nameOverride: authelia-deployment-name
-# appNameOverride: authelia
+  ## Determines the container registry to use for the image. Official options are docker.io and ghcr.io.
+  registry: docker.io
+
+  ## Determines the repository in the container registry to use. The only official option is authelia/authelia.
+  repository: authelia/authelia
+
+  ## Determines the image tag to use.
+  tag: 4.33.2
+
+  ## Alters the pull policy.
+  pullPolicy: IfNotPresent
+
+  ## If using a private registry you can define pullSecrets to include using this option. It is a list of strings.
+  pullSecrets: []
 
 
 ##
-## extra labels/annotations applied to all resources
+## The annotations and labels options control extra values to apply to all resources. They are defined with
+## key values / a dictionary.
 ##
 annotations: {}
-# annotations:
-#   myAnnotation: myValue
 
 labels: {}
-# labels:
-#   myLabel: myValue
+
 
 ##
 ## RBAC Configuration.
@@ -49,20 +64,27 @@ rbac:
   ## If the vault injector is enabled, then RBAC must be enabled.
   enabled: false
 
-  annotations: {}
-  labels: {}
-
+  ## The serviceAccountName to use.
   serviceAccountName: authelia
 
+  ## The annotations and labels options control extra values to apply to RBAC resources. They are defined with
+  ## key values / a dictionary.
+  annotations: {}
 
-## Authelia Domain
-## Should be the root domain you want to protect.
-## For example if you have apps app1.example.com and app2.example.com it should be example.com
-## This affects the ingress (partially sets the domain used) and configMap.
-## Authelia must be served from the domain or a subdomain under it.
-domain: example.com
+  labels: {}
 
+
+##
+## Service Configuration.
+##
 service:
+
+  port: 80
+
+  clusterIP: ""
+
+  ## The annotations and labels options control extra values to apply to service resources. They are defined with
+  ## key values / a dictionary.
   annotations: {}
   # annotations:
   #   myAnnotation: myValue
@@ -70,10 +92,6 @@ service:
   labels: {}
   # labels:
   #   myLabel: myValue
-
-  port: 80
-
-  # clusterIP:
 
 
 ingress:
@@ -121,9 +139,10 @@ ingress:
 
     # weight: 10
 
-    sticky: false
+    sticky:
+      enabled: false
 
-    # stickyCookieNameOverride: authelia_traefik_lb
+      cookieNameOverride: ""
 
     # strategy: RoundRobin
 
@@ -168,26 +187,36 @@ ingress:
           # - name: extra-middleware-name
           #   namespace: default
 
-    # Specific options for the TraefikCRD TLS configuration. The above TLS section is still used.
     tls:
-      #   existingOptions:
-      #     name: default-traefik-options
-      #     namespace: default
-      #   certResolver: default
-      #   sans:
-      #     - *.example.com
-      #
-      options: {}
-      #   nameOverride: authelia-tls-options
-      #   minVersion: VersionTLS12
-      #   maxVersion: VersionTLS13
-      #   curvePreferences:
-      #   - CurveP521
-      #   - CurveP384
-      #   cipherSuites:
-      #   - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-      #   - TLS_RSA_WITH_AES_256_GCM_SHA384
-      #   sniStrict: true
+      certResolver: default
+      # sans:
+      #   - *.example.com
+      sans: []
+
+    # Specific options for the TraefikCRD TLS configuration. The above TLS section is still used.
+    tlsOptions:
+      enabled: false
+
+      # nameOverride: authelia-tls-options
+      nameOverride: ""
+
+      existing:
+        # name: default-traefik-options
+        name: ""
+
+        # namespace: default
+        namespace: ""
+
+      minVersion: VersionTLS12
+      maxVersion: VersionTLS13
+      sniStrict: false
+      cipherSuites:
+        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        - TLS_RSA_WITH_AES_256_GCM_SHA384
+      curvePreferences: []
+      # curvePreferences:
+      # - CurveP521
+      # - CurveP384
 
 pod:
   # Must be Deployment, DaemonSet, or StatefulSet.
@@ -412,9 +441,16 @@ configMap:
     ## Write buffer size does the same for outgoing responses.
     read_buffer_size: 4096
     write_buffer_size: 4096
+
     ## Set the single level path Authelia listens on.
     ## Must be alphanumeric chars and should not contain any slashes.
     path: ""
+
+    ## Enable the pprof request handler. This is used for debug purposes and should not be on in production.
+    enable_pprof: false
+
+    ## Enable the expvars request handler. This is used for debug purposes and should not be on in production.
+    enable_expvars: false
 
   log:
     ## Level of verbosity for logs: info, debug, trace.
@@ -426,6 +462,7 @@ configMap:
     ## TODO: Statefulness check should check if this is set, and the configMap should enable it.
     ## File path where the logs will be written. If not set logs are written to stdout.
     # file_path: /config/authelia.log
+    file_path: ""
 
   ## Default redirection URL
   ##
@@ -435,8 +472,8 @@ configMap:
   ##
   ## Note: this parameter is optional. If not provided, user won't be redirected upon successful authentication.
   ## Default is https://www.<domain> (value at the top of the values.yaml).
-  default_redirection_url: ""
   # default_redirection_url: https://example.com
+  default_redirection_url: ""
 
   theme: light
 

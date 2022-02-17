@@ -1,4 +1,4 @@
-{{ if (include "authelia.enabled.networkPolicy" .) -}}
+{{ if (include "authelia.networkPolicy.enabled" .) -}}
 ---
 apiVersion: {{ include "capabilities.apiVersion.networkPolicy" . }}
 kind: NetworkPolicy
@@ -10,7 +10,7 @@ metadata:
   {{- end }}
 spec:
   podSelector:
-    matchLabels: {{- include "authelia.matchLabels" . | nindent 6 }}
+    matchLabels: {{- include "authelia.labels.match" . | nindent 6 }}
   policyTypes: {{ toYaml .Values.networkPolicy.policyTypes | nindent 4 }}
   {{- with $ingress := .Values.networkPolicy.ingress }}
   ingress: {{ toYaml $ingress | nindent 4 }}

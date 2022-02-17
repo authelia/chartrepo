@@ -11,32 +11,48 @@
 ##   - storage: MySQL
 ##   - session: redis
 
+## Authelia Domain
+## Should be the root domain you want to protect.
+## For example if you have apps app1.example.com and app2.example.com it should be example.com
+## This affects the ingress (partially sets the domain used) and configMap.
+## Authelia must be served from the domain or a subdomain under it.
+domain: example.com
+
+## Override the default name of objects created by this chart.
+# nameOverride: authelia-deployment-name
+
+## Override the appName.
+# appNameOverride: authelia
+
 ## Image Parameters
 ## ref: https://hub.docker.com/r/authelia/authelia/tags/
 ##
 image:
-  # registry: docker.io
-  registry: ghcr.io
-  repository: authelia/authelia
-  tag: 4.33.1
-  pullPolicy: IfNotPresent
-  pullSecrets: []
-  # pullSecrets:
-  #   - myPullSecretName
 
-# nameOverride: authelia-deployment-name
-# appNameOverride: authelia
+  ## Determines the container registry to use for the image. Official options are docker.io and ghcr.io.
+  registry: docker.io
+
+  ## Determines the repository in the container registry to use. The only official option is authelia/authelia.
+  repository: authelia/authelia
+
+  ## Determines the image tag to use.
+  tag: 4.33.2
+
+  ## Alters the pull policy.
+  pullPolicy: IfNotPresent
+
+  ## If using a private registry you can define pullSecrets to include using this option. It is a list of strings.
+  pullSecrets: []
+
 
 ##
-## extra labels/annotations applied to all resources
+## The annotations and labels options control extra values to apply to all resources. They are defined with
+## key values / a dictionary.
 ##
 annotations: {}
-# annotations:
-#   myAnnotation: myValue
 
 labels: {}
-# labels:
-#   myLabel: myValue
+
 
 ##
 ## RBAC Configuration.
@@ -47,54 +63,60 @@ rbac:
   ## If the vault injector is enabled, then RBAC must be enabled.
   enabled: false
 
-  annotations: {}
-  labels: {}
-
+  ## The serviceAccountName to use.
   serviceAccountName: authelia
 
-
-## Authelia Domain
-## Should be the root domain you want to protect.
-## For example if you have apps app1.example.com and app2.example.com it should be example.com
-## This affects the ingress (partially sets the domain used) and configMap.
-## Authelia must be served from the domain or a subdomain under it.
-domain: example.com
-
-service:
+  ## The annotations and labels options control extra values to apply to RBAC resources. They are defined with
+  ## key values / a dictionary.
   annotations: {}
-  # annotations:
-  #   myAnnotation: myValue
 
   labels: {}
-  # labels:
-  #   myLabel: myValue
 
+
+##
+## Service Configuration.
+##
+service:
+
+  ## The port the service exposes.
   port: 80
 
-  # clusterIP:
+  ## The port name for the service.
+  portName: http
 
+  ## The static clusterIP to set. If blank the chart will not configure this value and let the apiserver decide.
+  clusterIP: ""
 
-ingress:
-  enabled: false
+  ## List of externalIPs for the service. If blank the chart will not configure this value.
+  externalIPs: []
 
+  ## The annotations and labels options control extra values to apply to service resources. They are defined with
+  ## key values / a dictionary.
   annotations: {}
-  # annotations:
-  #   kubernetes.io/ingress.class: nginx
-  #   kubernetes.io/tls-acme: "true"
 
   labels: {}
-  # labels:
-  #   myLabel: myValue
 
-  certManager: false
-  rewriteTarget: true
 
-  ## The Ingress Class Name.
-  # className: ingress-nginx
+##
+## Ingress Configuration.
+##
+ingress:
+
+  ## Enables the ingress generation. If false no ingress items are specified.
+  enabled: true
+
+  ## The annotations and labels options control extra values to apply to ingress resources. They are defined with
+  ## key values / a dictionary.
+  annotations: {}
+
+  labels: {}
+
+  ## The ingress className.
+  className: ""
 
   ## Subdomain is the only thing required since we specify the domain as part of the root values of the chart.
-  ## Example: To get Authelia to listen on https://auth.example.com specify 'auth' for ingress.subdomain,
-  ## and specify example.com for the domain.
+  ## Example: To get Authelia to listen on https://auth.example.com:
+  ## helm install --set domain=example.com --set ingress.subdomain=auth authelia-release authelia/authelia
   subdomain: auth
 
   tls:
@@ -104,37 +126,57 @@ ingress:
     # hostNameOverride:
 
   traefikCRD:
-    enabled: false
 
-    ## Use a standard Ingress object, not an IngressRoute.
+    ## Enables traefik's CRD. You can only use this if you have the TraefikCRD already installed in your cluster.
+    ## You must also set ingress.enabled to true for this option to take effect.
+    enabled: true
+
+    ## By default if the traefikCRD is enabled we provision an IngressRoute to route requests to Authelia. If you'd
+    ## prefer to use an Ingress resource instead set ingress.traefikCRD.disableIngressRoute to true.
     disableIngressRoute: false
 
-    # matchOverride: Host(`auth.example.com`) && PathPrefix(`/`)
+    ## Configure the IngressRoute/Ingress rule match parameter. Only affects the IngressRoute.
+    ## For example:
+    ##    ingress.traefikCRD.matchOverride="Host(`auth.example.com`) && PathPrefix(`/`)"
+    matchOverride: ""
 
+    ## Configure the list of entryPoints for the IngressRoute.
     entryPoints: []
     # entryPoints:
     # - http
 
-    # priority: 10
+    ## Configures the rule priority.
+    priority: 10
 
-    # weight: 10
+    ## Configures the rule weight.
+    weight: 10
 
-    sticky: false
+    ## Configures the LB strategy.
+    strategy: RoundRobin
 
-    # stickyCookieNameOverride: authelia_traefik_lb
+    ## Configures the LB responseForwardingFlushInterval.
+    responseForwardingFlushInterval: 100ms
 
-    # strategy: RoundRobin
+    ## Configures traefik's sticky routing settings.
+    sticky:
+      ## Enables traefik's sticky routing option.
+      enabled: false
 
-    # responseForwardingFlushInterval: 100ms
+      ## Changes the default cookie name.
+      cookieNameOverride: ""
 
     middlewares:
       auth:
-        # nameOverride: authelia-auth
+
+        ## Overrides the name of this middleware.
+        nameOverride: ""
+
+        ## Configures the allowed auth response headers. These defaults are all of the headers Authelia offers.
         authResponseHeaders:
-        - Remote-User
-        - Remote-Name
-        - Remote-Email
-        - Remote-Groups
+          - Remote-User
+          - Remote-Name
+          - Remote-Email
+          - Remote-Groups
 
       chains:
         auth:
@@ -166,26 +208,36 @@ ingress:
           # - name: extra-middleware-name
           #   namespace: default
 
-    # Specific options for the TraefikCRD TLS configuration. The above TLS section is still used.
     tls:
-      #   existingOptions:
-      #     name: default-traefik-options
-      #     namespace: default
-      #   certResolver: default
-      #   sans:
-      #     - *.example.com
-      #
-      options: {}
-      #   nameOverride: authelia-tls-options
-      #   minVersion: VersionTLS12
-      #   maxVersion: VersionTLS13
-      #   curvePreferences:
-      #   - CurveP521
-      #   - CurveP384
-      #   cipherSuites:
-      #   - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-      #   - TLS_RSA_WITH_AES_256_GCM_SHA384
-      #   sniStrict: true
+      certResolver: default
+      # sans:
+      #   - *.example.com
+      sans: []
+
+    # Specific options for the TraefikCRD TLS configuration. The above TLS section is still used.
+    tlsOptions:
+      enabled: false
+
+      # nameOverride: authelia-tls-options
+      nameOverride: ""
+
+      existing:
+        # name: default-traefik-options
+        name: ""
+
+        # namespace: default
+        namespace: ""
+
+      minVersion: VersionTLS12
+      maxVersion: VersionTLS13
+      sniStrict: false
+      cipherSuites:
+        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        - TLS_RSA_WITH_AES_256_GCM_SHA384
+      curvePreferences: []
+      # curvePreferences:
+      # - CurveP521
+      # - CurveP384
 
 pod:
   # Must be Deployment, DaemonSet, or StatefulSet.
@@ -410,9 +462,16 @@ configMap:
     ## Write buffer size does the same for outgoing responses.
     read_buffer_size: 4096
     write_buffer_size: 4096
+
     ## Set the single level path Authelia listens on.
     ## Must be alphanumeric chars and should not contain any slashes.
     path: ""
+
+    ## Enable the pprof request handler. This is used for debug purposes and should not be on in production.
+    enable_pprof: false
+
+    ## Enable the expvars request handler. This is used for debug purposes and should not be on in production.
+    enable_expvars: false
 
   log:
     ## Level of verbosity for logs: info, debug, trace.
@@ -424,6 +483,7 @@ configMap:
     ## TODO: Statefulness check should check if this is set, and the configMap should enable it.
     ## File path where the logs will be written. If not set logs are written to stdout.
     # file_path: /config/authelia.log
+    file_path: ""
 
   ## Default redirection URL
   ##
@@ -433,9 +493,10 @@ configMap:
   ##
   ## Note: this parameter is optional. If not provided, user won't be redirected upon successful authentication.
   ## Default is https://www.<domain> (value at the top of the values.yaml).
-  default_redirection_url: ""
   # default_redirection_url: https://example.com
+  default_redirection_url: ""
 
+  ## WebUI Theme.
   theme: light
 
   ##
@@ -1122,7 +1183,7 @@ secret:
     ## Secrets are by default rendered by template suitable for vault KV v1 or database secrets engines. If other used,
     ## it can be overriden per each secret by specifying secrets.<secretName>.templateValue. For example for KV v2
     ## secrets engine would be '{{ with secret "<SECRET_PATH>" }}{{ .Data.data.<KEY_NAME> }}{{ end }}'.
-    enabled: false
+    enabled: true
 
     ## The vault role to assign via annotations.
     ## Annotation: vault.hashicorp.com/role
@@ -1176,6 +1237,18 @@ secret:
         ## Vault Path to the Authelia storage secret.
         ## Annotation: vault.hashicorp.com/agent-inject-secret-storage
         path: secrets/authelia/storage:password
+
+        ## Vault template specific to storage.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-storage
+        templateValue: ""
+
+        ## Vault after render command specific to storage.
+        ## Annotation: vault.hashicorp.com/agent-inject-command-storage
+        command: ""
+      storageEncryptionKey:
+        ## Vault Path to the Authelia storage secret.
+        ## Annotation: vault.hashicorp.com/agent-inject-secret-storage
+        path: secrets/authelia/storage:encryption_key
 
         ## Vault template specific to storage.
         ## Annotation: vault.hashicorp.com/agent-inject-template-storage

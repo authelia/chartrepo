@@ -9,16 +9,16 @@ metadata:
   {{- end }}
 spec:
   type: ClusterIP
-  {{- with $ip := .Values.service.clusterIP }}
-  clusterIP: {{ $ip }}
+  {{- if .Values.service.clusterIP }}
+  clusterIP: {{ .Values.service.clusterIP }}
   {{- end }}
   {{- with $ips := .Values.service.externalIPs }}
   externalIPs: {{ toYaml $ips | nindent 4 }}
   {{- end }}
-  sessionAffinity: {{ default "None" .Values.service.sessionAffinity }}
-  selector: {{- include "authelia.matchLabels" . | nindent 4 }}
+  sessionAffinity: {{ .Values.service.sessionAffinity | default "None" }}
+  selector: {{- include "authelia.labels.match" . | nindent 4 }}
   ports:
-    - name: http
+    - name: {{ .Values.service.portName | default "http" }}
       protocol: TCP
       port: {{ include "authelia.service.port" . }}
       targetPort: http
