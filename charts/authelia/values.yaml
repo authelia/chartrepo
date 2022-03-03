@@ -18,7 +18,7 @@ image:
   # registry: docker.io
   registry: ghcr.io
   repository: authelia/authelia
-  tag: 4.33.1
+  tag: 4.33.2
   pullPolicy: IfNotPresent
   pullSecrets: []
   # pullSecrets:
@@ -168,6 +168,8 @@ ingress:
 
     # Specific options for the TraefikCRD TLS configuration. The above TLS section is still used.
     tls:
+      ## Disables inclusion of the IngressRoute TLSOptions.
+      disableTLSOptions: false
       #   existingOptions:
       #     name: default-traefik-options
       #     namespace: default
