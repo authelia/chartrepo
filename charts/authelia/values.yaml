@@ -18,7 +18,7 @@ image:
   # registry: docker.io
   registry: ghcr.io
   repository: authelia/authelia
-  tag: 4.33.1
+  tag: 4.34.0
   pullPolicy: IfNotPresent
   pullSecrets: []
   # pullSecrets:
@@ -404,6 +404,12 @@ configMap:
     ##
     port: 9091
 
+    ## Customize Authelia headers.
+    headers:
+      ## Read the Authelia docs before setting this advanced option.
+      ## https://www.authelia.com/docs/configuration/server.html#csp_template.
+      csp_template: ""
+
     ## Buffers usually should be configured to be the same value.
     ## Explanation at https://www.authelia.com/docs/configuration/server.html
     ## Read buffer size adjusts the server's max incoming request size in bytes.
@@ -441,17 +447,19 @@ configMap:
   ##
   ## TOTP Configuration
   ##
-  ## Parameters used for TOTP generation
+  ## Parameters used for TOTP generation.
   totp:
-    ## The issuer name displayed in the Authenticator application of your choice
-    ## See: https://github.com/google/google-authenticator/wiki/Key-Uri-Format for more info on issuer names
+    ## Disable TOTP.
+    disable: false
+
+    ## The issuer name displayed in the Authenticator application of your choice.
     ## Defaults to <domain>.
     issuer: ""
 
     ## The TOTP algorithm to use.
     ## It is CRITICAL you read the documentation before changing this option:
     ## https://www.authelia.com/docs/configuration/one-time-password.html#algorithm
-    algorithm: "sha1"
+    algorithm: sha1
 
     ## The number of digits a user has to input. Must either be 6 or 8.
     ## Changing this option only affects newly generated TOTP configurations.
@@ -467,6 +475,28 @@ configMap:
     ## Warning: before changing skew read the docs link below.
     ## See: https://www.authelia.com/docs/configuration/one-time-password.html#period-and-skew to read the documentation.
     skew: 1
+
+  ##
+  ## WebAuthn Configuration
+  ##
+  ## Parameters used for WebAuthn.
+  webauthn:
+    ## Disable Webauthn.
+    disable: false
+
+    ## Adjust the interaction timeout for Webauthn dialogues.
+    timeout: 60s
+
+    ## The display name the browser should show the user for when using Webauthn to login/register.
+    display_name: Authelia
+
+    ## Conveyance preference controls if we collect the attestation statement including the AAGUID from the device.
+    ## Options are none, indirect, direct.
+    attestation_conveyance_preference: indirect
+
+    ## User verification controls if the user must make a gesture or action to confirm they are present.
+    ## Options are required, preferred, discouraged.
+    user_verification: preferred
 
   ##
   ## NTP Configuration
@@ -981,6 +1011,14 @@ configMap:
       authorize_code_lifespan: 1m
       id_token_lifespan: 1h
       refresh_token_lifespan: 90m
+
+      ## Adjusts the PKCE enforcement. Options are always, public_clients_only, never.
+      ## For security reasons it's recommended this option is public_clients_only or always, however always is not
+      ## compatible with all clients.
+      enforce_pkce: public_clients_only
+
+      ## Enables the plain PKCE challenge which is not recommended for security reasons but may be necessary for some clients.
+      enable_pkce_plain_challenge: false
 
       enable_client_debug_messages: false
 
