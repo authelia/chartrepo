@@ -50,12 +50,14 @@ spec:
     {{- else }}
     secretName: {{ default (printf "%s-traefik-tls" (include "authelia.name" .)) .Values.ingress.tls.secret }}
     {{- end }}
+    {{- if not (eq .Values.ingress.traefikCRD.tls.disableTLSOptions true) }}
     options:
       {{- if (include "authelia.existing.ingress.traefik.tlsOption" .) }}
       {{- toYaml .Values.ingress.traefikCRD.tls.existingOptions | nindent 6 }}
       {{- else }}
       name: {{ default (include "authelia.name" .) .Values.ingress.traefikCRD.tls.options.nameOverride }}
       namespace: {{ .Release.Namespace }}
+    {{- end }}
     {{- end }}
   {{- end }}
   {{- end -}}
