@@ -222,8 +222,10 @@ data:
         authorize_code_lifespan: {{ default "1m" .Values.configMap.identity_providers.oidc.authorize_code_lifespan }}
         id_token_lifespan: {{ default "1h" .Values.configMap.identity_providers.oidc.id_token_lifespan }}
         refresh_token_lifespan: {{ default "90m" .Values.configMap.identity_providers.oidc.refresh_token_lifespan }}
+        {{- if not (semverCompare .Values.image.tag "4.34.0") }}
         enforce_pkce: {{ .Values.configMap.identity_providers.oidc.enforce_pkce | default "public_clients_only" }}
         enable_pkce_plain_challenge: {{ .Values.configMap.identity_providers.oidc.enable_pkce_plain_challenge | default false }}
+        {{- end }}
         enable_client_debug_messages: {{ default false .Values.configMap.identity_providers.oidc.enable_client_debug_messages }}
         minimum_parameter_entropy: {{ default 8 .Values.configMap.identity_providers.oidc.minimum_parameter_entropy }}
         {{- if gt (len .Values.configMap.identity_providers.oidc.clients) 0 }}
