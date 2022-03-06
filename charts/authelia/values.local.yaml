@@ -12,6 +12,12 @@
 ##   - session: memory
 ##   - notification: filesystem (yaml)
 
+## Version Override allows changing some chart characteristics that render only on specific versions.
+## This does NOT affect the image used, please see the below image section instead for this.
+## If this value is not specified, it's assumed the appVersion of the chart is the version.
+## The format of this value  is x.x.x, for example 4.100.0.
+versionOverride: ""
+
 ## Image Parameters
 ## ref: https://hub.docker.com/r/authelia/authelia/tags/
 ##
