@@ -18,6 +18,12 @@
 ## Authelia must be served from the domain or a subdomain under it.
 domain: example.com
 
+## Version Override allows changing some chart characteristics that render only on specific versions.
+## This does NOT affect the image used, please see the below image section instead for this.
+## If this value is not specified, it's assumed the appVersion of the chart is the version.
+## The format of this value  is x.x.x, for example 4.100.0.
+versionOverride: ""
+
 ## Override the default name of objects created by this chart.
 # nameOverride: authelia-deployment-name
 

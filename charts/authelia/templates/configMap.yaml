@@ -219,7 +219,7 @@ data:
         id_token_lifespan: {{ .Values.configMap.identity_providers.oidc.id_token_lifespan | default "1h" }}
         refresh_token_lifespan: {{ .Values.configMap.identity_providers.oidc.refresh_token_lifespan | default "90m" }}
         minimum_parameter_entropy: {{ .Values.configMap.identity_providers.oidc.minimum_parameter_entropy | default 8 }}
-        {{- if not (semverCompare (.Values.image.tag | default .Chart.AppVersion  | toString) "4.34.0") }}
+        {{- if (semverCompare ">=4.34.1" (.Values.versionOverride | default .Chart.AppVersion | toString)) }}
         enforce_pkce: {{ .Values.configMap.identity_providers.oidc.enforce_pkce | default "public_clients_only" }}
         enable_pkce_plain_challenge: {{ .Values.configMap.identity_providers.oidc.enable_pkce_plain_challenge | default false }}
         {{- end }}

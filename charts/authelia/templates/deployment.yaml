@@ -87,11 +87,6 @@ spec:
       - name: authelia
         image: {{ include "authelia.image" . }}
         imagePullPolicy: {{ default "IfNotPresent" .Values.image.pullPolicy }}
-        {{- with $pullSecrets := .Values.image.pullSecrets }}
-        imagePullSecrets: {{- range $k, $secretName := $pullSecrets }}
-        - name: {{ $secretName }}
-        {{- end }}
-        {{- end }}
         {{- if .Values.secret.vaultInjector.enabled }}
         securityContext:
           runAsUser: 1000
@@ -205,6 +200,11 @@ spec:
         {{- end }}
       {{- with $context := .Values.pod.securityContext.pod }}
         securityContext: {{ toYaml $context | nindent 10 }}
+      {{- end }}
+      {{- with $pullSecrets := .Values.image.pullSecrets }}
+      imagePullSecrets: {{- range $k, $secretName := $pullSecrets }}
+      - name: {{ $secretName }}
+      {{- end }}
       {{- end }}
       volumes:
       {{- if (include "authelia.persistentVolumeClaim.enabled" .) }}
