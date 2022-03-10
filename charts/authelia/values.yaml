@@ -28,15 +28,12 @@ domain: example.com
 ## ref: https://hub.docker.com/r/authelia/authelia/tags/
 ##
 image:
-
-  ## Determines the container registry to use for the image. Official options are docker.io and ghcr.io.
-  registry: docker.io
-
-  ## Determines the repository in the container registry to use. The only official option is authelia/authelia.
+  # registry: docker.io
+  registry: ghcr.io
   repository: authelia/authelia
 
   ## Determines the image tag to use.
-  tag: 4.33.2
+  tag: ""
 
   ## Alters the pull policy.
   pullPolicy: IfNotPresent
@@ -50,9 +47,12 @@ image:
 ## key values / a dictionary.
 ##
 annotations: {}
+# annotations:
+#   myAnnotation: myValue
 
 labels: {}
-
+# labels:
+#   myLabel: myValue
 
 ##
 ## RBAC Configuration.
@@ -456,6 +456,12 @@ configMap:
     ##
     port: 9091
 
+    ## Customize Authelia headers.
+    headers:
+      ## Read the Authelia docs before setting this advanced option.
+      ## https://www.authelia.com/docs/configuration/server.html#csp_template.
+      csp_template: ""
+
     ## Buffers usually should be configured to be the same value.
     ## Explanation at https://www.authelia.com/docs/configuration/server.html
     ## Read buffer size adjusts the server's max incoming request size in bytes.
@@ -502,17 +508,19 @@ configMap:
   ##
   ## TOTP Configuration
   ##
-  ## Parameters used for TOTP generation
+  ## Parameters used for TOTP generation.
   totp:
-    ## The issuer name displayed in the Authenticator application of your choice
-    ## See: https://github.com/google/google-authenticator/wiki/Key-Uri-Format for more info on issuer names
+    ## Disable TOTP.
+    disable: false
+
+    ## The issuer name displayed in the Authenticator application of your choice.
     ## Defaults to <domain>.
     issuer: ""
 
     ## The TOTP algorithm to use.
     ## It is CRITICAL you read the documentation before changing this option:
     ## https://www.authelia.com/docs/configuration/one-time-password.html#algorithm
-    algorithm: "sha1"
+    algorithm: sha1
 
     ## The number of digits a user has to input. Must either be 6 or 8.
     ## Changing this option only affects newly generated TOTP configurations.
@@ -528,6 +536,28 @@ configMap:
     ## Warning: before changing skew read the docs link below.
     ## See: https://www.authelia.com/docs/configuration/one-time-password.html#period-and-skew to read the documentation.
     skew: 1
+
+  ##
+  ## WebAuthn Configuration
+  ##
+  ## Parameters used for WebAuthn.
+  webauthn:
+    ## Disable Webauthn.
+    disable: false
+
+    ## Adjust the interaction timeout for Webauthn dialogues.
+    timeout: 60s
+
+    ## The display name the browser should show the user for when using Webauthn to login/register.
+    display_name: Authelia
+
+    ## Conveyance preference controls if we collect the attestation statement including the AAGUID from the device.
+    ## Options are none, indirect, direct.
+    attestation_conveyance_preference: indirect
+
+    ## User verification controls if the user must make a gesture or action to confirm they are present.
+    ## Options are required, preferred, discouraged.
+    user_verification: preferred
 
   ##
   ## NTP Configuration
@@ -1043,6 +1073,14 @@ configMap:
       id_token_lifespan: 1h
       refresh_token_lifespan: 90m
 
+      ## Adjusts the PKCE enforcement. Options are always, public_clients_only, never.
+      ## For security reasons it's recommended this option is public_clients_only or always, however always is not
+      ## compatible with all clients.
+      enforce_pkce: public_clients_only
+
+      ## Enables the plain PKCE challenge which is not recommended for security reasons but may be necessary for some clients.
+      enable_pkce_plain_challenge: false
+
       enable_client_debug_messages: false
 
       ## SECURITY NOTICE: It's not recommended changing this option, and highly discouraged to have it below 8 for
@@ -1183,7 +1221,7 @@ secret:
     ## Secrets are by default rendered by template suitable for vault KV v1 or database secrets engines. If other used,
     ## it can be overriden per each secret by specifying secrets.<secretName>.templateValue. For example for KV v2
     ## secrets engine would be '{{ with secret "<SECRET_PATH>" }}{{ .Data.data.<KEY_NAME> }}{{ end }}'.
-    enabled: true
+    enabled: false
 
     ## The vault role to assign via annotations.
     ## Annotation: vault.hashicorp.com/role

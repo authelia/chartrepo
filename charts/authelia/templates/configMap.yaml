@@ -22,6 +22,8 @@ data:
       {{- if .Values.configMap.server.path }}
       path: {{ .Values.configMap.server.path }}
       {{- end }}
+      headers:
+        csp_template: {{ .Values.configMap.server.headers.csp_template | default "" | quote }}
       read_buffer_size: {{ .Values.configMap.server.read_buffer_size | default 4096 }}
       write_buffer_size: {{ .Values.configMap.server.write_buffer_size | default 4096 }}
       enable_pprof: {{ .Values.configMap.server.enable_pprof | default false }}
@@ -34,11 +36,18 @@ data:
       keep_stdout: true
       {{- end }}
     totp:
+      disable: {{ .Values.configMap.totp.disable | default false }}
       issuer: {{ .Values.configMap.totp.issuer | default .Values.domain }}
       algorithm: {{ .Values.configMap.totp.algorithm | default "sha1" }}
       digits: {{ .Values.configMap.totp.digits | default 6 }}
       period: {{ .Values.configMap.totp.period | default 30 }}
       skew: {{ .Values.configMap.totp.skew | default 1 }}
+    webauthn:
+      disable: {{ .Values.configMap.webauthn.disable | default false }}
+      display_name: {{ .Values.configMap.webauthn.display_name | default "Authelia" }}
+      attestation_conveyance_preference: {{ .Values.configMap.webauthn.attestation_conveyance_preference | default "indirect" }}
+      user_verification: {{ .Values.configMap.webauthn.user_verification | default "preferred" }}
+      timeout: {{ .Values.configMap.webauthn.timeout | default "60s" }}
     ntp:
       address: {{ .Values.configMap.ntp.address | default "time.cloudflare.com:123" }}
       version: {{ .Values.configMap.ntp.version | default 3 }}
@@ -209,8 +218,12 @@ data:
         authorize_code_lifespan: {{ .Values.configMap.identity_providers.oidc.authorize_code_lifespan | default "1m" }}
         id_token_lifespan: {{ .Values.configMap.identity_providers.oidc.id_token_lifespan | default "1h" }}
         refresh_token_lifespan: {{ .Values.configMap.identity_providers.oidc.refresh_token_lifespan | default "90m" }}
-        enable_client_debug_messages: {{ .Values.configMap.identity_providers.oidc.enable_client_debug_messages | default false }}
         minimum_parameter_entropy: {{ .Values.configMap.identity_providers.oidc.minimum_parameter_entropy | default 8 }}
+        {{- if not (semverCompare (.Values.image.tag | default .Chart.AppVersion  | toString) "4.34.0") }}
+        enforce_pkce: {{ .Values.configMap.identity_providers.oidc.enforce_pkce | default "public_clients_only" }}
+        enable_pkce_plain_challenge: {{ .Values.configMap.identity_providers.oidc.enable_pkce_plain_challenge | default false }}
+        {{- end }}
+        enable_client_debug_messages: {{ .Values.configMap.identity_providers.oidc.enable_client_debug_messages | default false }}
         {{- if gt (len .Values.configMap.identity_providers.oidc.clients) 0 }}
         clients:
         {{- range $client := .Values.configMap.identity_providers.oidc.clients }}

@@ -3,8 +3,8 @@ Returns the path value.
 */}}
 {{- define "authelia.path" -}}
     {{- if .Values.configMap -}}
-        {{- if .Values.configMap.path -}}
-            {{- .Values.configMap.path -}}
+        {{- if .Values.configMap.server.path -}}
+            {{- printf "/%s" .Values.configMap.server.path -}}
         {{- else -}}
             {{- "/" -}}
         {{- end -}}
