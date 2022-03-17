@@ -152,7 +152,7 @@ data:
           {{- if $session.redis.high_availability.nodes }}
           nodes: {{ toYaml $session.redis.high_availability.nodes | nindent 10 }}
           {{- end }}
-          {{- if semverCompare ">=4.33.0" (include "authelia.version" $) }}
+          {{- if semverCompare ">=4.34.5" (include "authelia.version" $) }}
           sentinel_username: {{ $session.redis.high_availability.username | default "" | quote }}
           {{- end }}
           route_by_latency: {{ $session.redis.high_availability.route_by_latency }}
