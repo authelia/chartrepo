@@ -36,6 +36,13 @@ Return the name for this chart
 {{- end -}}
 
 {{/*
+Return the app version.
+*/}}
+{{- define "authelia.version" -}}
+    {{ .Values.versionOverride | default .Chart.AppVersion | toString }}
+{{- end -}}
+
+{{/*
 Returns the name of the forwardAuth Middleware for forward auth which gets applied to other IngressRoutes.
 */}}
 {{- define "authelia.ingress.traefikCRD.middleware.name.forwardAuth" -}}
@@ -167,7 +174,7 @@ Returns the common labels
 */}}
 {{- define "authelia.labels" -}}
     {{ include "authelia.matchLabels" . }}
-app.kubernetes.io/version: {{ .Chart.AppVersion }}
+app.kubernetes.io/version: {{ include "authelia.version" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 helm.sh/chart: {{ include "authelia.chart" . }}
     {{- if .Values.labels }}
