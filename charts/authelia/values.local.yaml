@@ -16,6 +16,11 @@
 ## This does NOT affect the image used, please see the below image section instead for this.
 ## If this value is not specified, it's assumed the appVersion of the chart is the version.
 ## The format of this value  is x.x.x, for example 4.100.0.
+##
+## Important Points:
+##   - No guarantees of support for prior versions is given. The chart is intended to be used with the AppVersion.
+##   - Does not and will not support any version prior to 4.30.0 due to a significant refactor of the configuration
+##     system.
 versionOverride: ""
 
 ## Image Parameters
@@ -414,6 +419,15 @@ configMap:
     ##
     port: 9091
 
+    ## Set the single level path Authelia listens on.
+    ## Must be alphanumeric chars and should not contain any slashes.
+    path: ""
+
+    ## Set the path on disk to Authelia assets.
+    ## Useful to allow overriding of specific static assets.
+    # asset_path: /config/assets/
+    asset_path: ""
+
     ## Customize Authelia headers.
     headers:
       ## Read the Authelia docs before setting this advanced option.
@@ -426,9 +440,6 @@ configMap:
     ## Write buffer size does the same for outgoing responses.
     read_buffer_size: 4096
     write_buffer_size: 4096
-    ## Set the single level path Authelia listens on.
-    ## Must be alphanumeric chars and should not contain any slashes.
-    path: ""
 
   log:
     ## Level of verbosity for logs: info, debug, trace.
@@ -440,6 +451,7 @@ configMap:
     ## TODO: Statefulness check should check if this is set, and the configMap should enable it.
     ## File path where the logs will be written. If not set logs are written to stdout.
     # file_path: /config/authelia.log
+    file_path: ""
 
   ## Default redirection URL
   ##
@@ -540,6 +552,7 @@ configMap:
     enabled: false
     hostname: api-123456789.example.com
     integration_key: ABCDEF
+    enable_self_enrollment: false
 
   ##
   ## Authentication Backend Provider Configuration
@@ -943,7 +956,11 @@ configMap:
       port: 5432
       database: authelia
       username: authelia
-      sslmode: disable
+      ssl:
+        mode: disable
+        root_certificate: ""
+        certificate: ""
+        key: ""
       timeout: 5s
 
   ##

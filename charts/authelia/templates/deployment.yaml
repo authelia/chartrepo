@@ -116,8 +116,10 @@ spec:
         - name: AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE
           value: {{ include "authelia.secret.fullPath" (merge (dict "Secret" "smtp") .) }}
         {{- end }}
+        {{- if semverCompare ">=4.33.0" (include "authelia.version" .) }}
         - name: AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE
           value: {{ include "authelia.secret.fullPath" (merge (dict "Secret" "storageEncryptionKey") .) }}
+        {{- end }}
         {{- if .Values.configMap.storage.postgres.enabled }}
         - name: AUTHELIA_STORAGE_POSTGRES_PASSWORD_FILE
           value: {{ include "authelia.secret.fullPath" (merge (dict "Secret" "storage") .) }}
@@ -237,8 +239,10 @@ spec:
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "jwt") .) }}
           - key: {{ default "SESSION_ENCRYPTION_KEY" .Values.secret.session.key }}
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "session") .) }}
+          {{- if semverCompare ">=4.33.0" (include "authelia.version" .) }}
           - key: {{ default "STORAGE_ENCRYPTION_KEY" .Values.secret.storageEncryptionKey.key }}
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "storageEncryptionKey") .) }}
+          {{- end }}
           {{- if or .Values.configMap.storage.postgres.enabled .Values.configMap.storage.mysql.enabled }}
           - key: {{ default "STORAGE_PASSWORD" .Values.secret.storage.key }}
             path: {{ include "authelia.secret.path" (merge (dict "Secret" "storage") .) }}
