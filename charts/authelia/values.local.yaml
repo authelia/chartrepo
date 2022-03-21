@@ -190,17 +190,20 @@ ingress:
       #   sans:
       #     - *.example.com
       #
-      options: {}
-      #   nameOverride: authelia-tls-options
-      #   minVersion: VersionTLS12
-      #   maxVersion: VersionTLS13
-      #   curvePreferences:
-      #   - CurveP521
-      #   - CurveP384
-      #   cipherSuites:
-      #   - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-      #   - TLS_RSA_WITH_AES_256_GCM_SHA384
-      #   sniStrict: true
+      options:
+        # nameOverride: authelia-tls-options
+        nameOverride: ""
+
+        minVersion: VersionTLS12
+        maxVersion: VersionTLS13
+        sniStrict: false
+        cipherSuites:
+          - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+          - TLS_RSA_WITH_AES_256_GCM_SHA384
+        curvePreferences: []
+        # curvePreferences:
+        # - CurveP521
+        # - CurveP384
 
 pod:
   # Must be Deployment, DaemonSet, or StatefulSet.
