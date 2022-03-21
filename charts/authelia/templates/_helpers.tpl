@@ -916,11 +916,13 @@ Returns true if generation of an IngressRoute is enabled.
 Returns if we should use existing TraefikCRD TLSOption
 */}}
 {{- define "authelia.enabled.ingress.traefik.tlsOption" -}}
-    {{- if (include "authelia.enabled.ingress.traefik" .) -}}
-        {{- if .Values.ingress.traefikCRD.tls -}}
-            {{- if .Values.ingress.traefikCRD.tls.options -}}
-                {{- if not (include "authelia.existing.ingress.traefik.tlsOption" .) -}}
-                    {{- true -}}
+    {{- if .Values.ingress.tls.enabled -}}
+        {{- if (include "authelia.enabled.ingress.traefik" .) -}}
+            {{- if .Values.ingress.traefikCRD.tls -}}
+                {{- if .Values.ingress.traefikCRD.tls.options -}}
+                    {{- if not (include "authelia.existing.ingress.traefik.tlsOption" .) -}}
+                        {{- true -}}
+                    {{- end -}}
                 {{- end -}}
             {{- end -}}
         {{- end -}}
