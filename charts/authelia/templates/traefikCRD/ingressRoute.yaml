@@ -55,7 +55,7 @@ spec:
       {{- if (include "authelia.existing.ingress.traefik.tlsOption" .) }}
       {{- toYaml .Values.ingress.traefikCRD.tls.existingOptions | nindent 6 }}
       {{- else }}
-      name: {{ default (include "authelia.name" .) .Values.ingress.traefikCRD.tls.options.nameOverride }}
+      name: {{ .Values.ingress.traefikCRD.tls.options.nameOverride | default (include "authelia.name" .) }}
       namespace: {{ .Release.Namespace }}
     {{- end }}
     {{- end }}
