@@ -102,7 +102,22 @@ This documents the parameters in the chart values. As the chart values are quite
 
 ## Ingress
 
-To Document.
+|Parameter                                    |Description                                                                               |Default           |
+|:-------------------------------------------:|:----------------------------------------------------------------------------------------:|:----------------:|
+|ingress.enabled                              |Enable the ingress for any type of proxy integration                                      |false             |
+|ingress.annotations                          |Adds annotations specifically to the ingress                                              |{}                |
+|ingress.labels                               |Adds labels specifically to the ingress                                                   |{}                |
+|ingress.subdomain                            |Configures the subdomain of the authelia endpoint                                         |auth              |
+|tls.enabled                                  |Enable the tls cert for the ingress                                                       |true              |
+|tls.secret                                   |The tls cert that will be used in the ingress                                             |authelia-tls      |
+|ingress.traefikCRD.enabled                   |Enable the traefik for the proxy                                                          |false             |
+|ingress.traefikCRD.disableIngressRoute       |The ingress route can be disabled using the value                                         |false             |
+|ingress.traefikCRD.entryPoints               |Entrypoints configuration in the ingress route                                            |[]                |
+|ingress.traefikCRD.sticky                    |enable the sticky cookie in the ingress route                                             |false             |
+|ingress.traefikCRD.chains.auth.before        |List of Middlewares to apply before the forwardAuth Middleware in the authentication chain|[]                |
+|ingress.traefikCRD.chains.auth.after         |List of Middlewares to apply after the forwardAuth Middleware in the authentication chain |[]                |
+|ingress.traefikCRD.chains.ingressRoute.before|List of Middlewares to apply before the middleware in the IngressRoute chain              |[]                |
+|ingress.traefikCRD.chains.ingressRoute.after |List of Middlewares to apply after the middleware in the IngressRoute chain               |[]                |
 
 ## ConfigMap
 
