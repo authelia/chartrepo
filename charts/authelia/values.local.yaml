@@ -501,6 +501,9 @@ configMap:
     ## See: https://www.authelia.com/docs/configuration/one-time-password.html#period-and-skew to read the documentation.
     skew: 1
 
+    ## The size of the generated shared secrets. Default is 32 and is sufficient in most use cases, minimum is 20.
+    secret_size: 32
+
   ##
   ## WebAuthn Configuration
   ##
@@ -706,6 +709,37 @@ configMap:
         salt_length: 16
         memory: 1024
         parallelism: 8
+
+  ##
+  ## Password Policy Configuration.
+  ##
+  password_policy:
+
+    ## The standard policy allows you to tune individual settings manually.
+    standard:
+      enabled: false
+
+      ## Require a minimum length for passwords.
+      min_length: 8
+
+      ## Require a maximum length for passwords.
+      max_length: 0
+
+      ## Require uppercase characters.
+      require_uppercase: true
+
+      ## Require lowercase characters.
+      require_lowercase: true
+
+      ## Require numeric characters.
+      require_number: true
+
+      ## Require special characters.
+      require_special: true
+
+    ## zxcvbn is a well known and used password strength algorithm. It does not have tunable settings.
+    zxcvbn:
+      enabled: false
 
   ##
   ## Access Control Configuration
@@ -1045,11 +1079,34 @@ configMap:
       ## Enables the plain PKCE challenge which is not recommended for security reasons but may be necessary for some clients.
       enable_pkce_plain_challenge: false
 
-      enable_client_debug_messages: false
-
       ## SECURITY NOTICE: It's not recommended changing this option, and highly discouraged to have it below 8 for
       ## security reasons.
       minimum_parameter_entropy: 8
+
+      ## Enables additional debug messages.
+      enable_client_debug_messages: false
+
+      ## Cross-Origin Resource Sharing (CORS) settings.
+      cors:
+        ## List of endpoints in addition to the metadata endpoints to permit cross-origin requests on.
+        # endpoints:
+        #    - authorization
+        #    - token
+        #    - revocation
+        #    - introspection
+        #    - userinfo
+        endpoints: []
+
+        ## List of allowed origins.
+        ## Any origin with https is permitted unless this option is configured or the
+        ## allowed_origins_from_client_redirect_uris option is enabled.
+        # allowed_origins:
+        #   - https://example.com
+        allowed_origins: []
+
+        ## Automatically adds the origin portion of all redirect URI's on all clients to the list of allowed_origins,
+        ## provided they have the scheme http or https and do not have the hostname of localhost.
+        allowed_origins_from_client_redirect_uris: true
 
       clients: []
       # clients:
@@ -1063,11 +1120,21 @@ configMap:
         ## The client secret is a shared secret between Authelia and the consumer of this client.
         # secret: apple123
 
+        ## Sector Identifiers are occasionally used to generate pairwise subject identifiers. In most cases this is not
+        ## necessary. Read the documentation for more information.
+        ## The subject identifier must be the host component of a URL, which is a domain name with an optional port.
+        # sector_identifier: example.com
+
         ## Sets the client to public. This should typically not be set, please see the documentation for usage.
         # public: false
 
         ## The policy to require for this client; one_factor or two_factor.
         # authorization_policy: two_factor
+
+        ## By default users cannot remember pre-configured consents. Setting this value to a period of time using a
+        ## duration notation will enable users to remember consent for this client. The time configured is the amount
+        ## of time the pre-configured consent is valid for granting new authorizations to the user.
+        # pre_configured_consent_duration: 30d
 
         ## Audience this client is allowed to request.
         # audience: []
