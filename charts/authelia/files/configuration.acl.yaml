@@ -1,5 +1,8 @@
 access_control:
   default_policy: {{ include "authelia.accessControl.defaultPolicy" . | trim }}
+  {{- if semverCompare ">=4.35.0" (include "authelia.version" .) }}
+  default_2fa_method: {{ .Values.configMap.access_control.default_2fa_method | default "" | quote }}
+  {{- end }}
   {{- if (gt (len .Values.configMap.access_control.networks) 0) }}
   networks: {{ toYaml .Values.configMap.access_control.networks | nindent 2 }}
   {{- end }}

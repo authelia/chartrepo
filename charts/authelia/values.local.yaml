@@ -789,6 +789,11 @@ configMap:
     ## resource if there is no policy to be applied to the user.
     default_policy: deny
 
+    ## Set the default 2FA method for new users and for when a user has a preferred method configured that has been
+    ## disabled. This setting must be a method that is enabled.
+    ## Options are totp, webauthn, mobile_push.
+    default_2fa_method: ""
+
     networks: []
     # networks:
     # - name: private
