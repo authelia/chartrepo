@@ -804,6 +804,8 @@ configMap:
 
     rules: []
     # rules:
+    # - domain_regex: '^.*\.example.com$'
+    #   policy: bypass
     # - domain: public.example.com
     #   policy: bypass
     # - domain: "*.example.com"

@@ -995,3 +995,27 @@ Wraps something with YAML header/footer
 {{ . }}
 {{ "..." }}
 {{- end -}}
+
+{{/*
+squote a list joined by comma
+*/}}
+{{- define "authelia.squote.join" -}}
+{{- if kindIs "string" . }}{{ . | squote }}
+{{- else -}}
+{{- range $i, $val := . -}}
+{{- if $i -}}
+{{- print ", " -}}
+{{- end -}}
+{{- $val | squote -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+squote a list joined by comma
+*/}}
+{{- define "authelia.squote.list" -}}
+{{- range . }}
+- {{ . | squote }}
+{{- end }}
+{{- end -}}

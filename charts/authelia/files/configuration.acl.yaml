@@ -3,6 +3,65 @@ access_control:
   {{- if (gt (len .Values.configMap.access_control.networks) 0) }}
   networks: {{ toYaml .Values.configMap.access_control.networks | nindent 2 }}
   {{- end }}
-  {{- if (gt (len .Values.configMap.access_control.rules) 0) }}
-  rules: {{ toYaml .Values.configMap.access_control.rules | nindent 2 }}
+  {{- if .Values.configMap.access_control.rules }}
+  rules:
+  {{- range .Values.configMap.access_control.rules }}
+    - policy: {{ .policy | default "deny" }}
+      {{- if .domain }}
+      domain:
+        {{- if kindIs "string" .domain }}
+        - {{ .domain | squote }}
+        {{- else }}
+          {{- include "authelia.squote.list" .domain | indent 8 }}
+        {{- end }}
+      {{- end }}
+      {{- if and .domain_regex (semverCompare ">=4.35.0" (include "authelia.version" $)) }}
+      domain_regex:
+        {{- if kindIs "string" .domain_regex }}
+        - {{ .domain_regex | squote }}
+        {{- else }}
+          {{- include "authelia.squote.list" .domain_regex | indent 8 }}
+        {{- end }}
+      {{- end }}
+      {{- if .networks }}
+      networks:
+        {{- if kindIs "string" .networks }}
+        - {{ .networks }}
+        {{- else }}
+        {{- range .networks }}
+        - {{ . }}
+        {{- end }}
+        {{- end }}
+      {{- end }}
+      {{- if .subject }}
+      subject:
+      {{- if kindIs "string" .subject }}
+        - {{ .subject | squote }}
+      {{- else }}
+        {{- range .subject }}
+        - [{{ include "authelia.squote.join" . }}]
+        {{- end }}
+      {{- end }}
+      {{- end }}
+      {{- if .methods }}
+      methods:
+      {{- if kindIs "string" .methods }}
+        - {{ .methods | squote }}
+      {{- else }}
+        {{- range .methods }}
+        - {{ . | squote }}
+        {{- end }}
+      {{- end }}
+      {{- end }}
+      {{- if .resources }}
+      resources:
+        {{- if kindIs "string" .resources }}
+        - {{ .resources | squote }}
+        {{- else }}
+        {{- range .resources }}
+        - {{ . | squote }}
+        {{- end }}
+        {{- end }}
+      {{- end }}
+  {{- end }}
   {{- end }}
