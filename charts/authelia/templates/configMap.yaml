@@ -130,7 +130,7 @@ data:
         user: {{ $auth.ldap.user }}
       {{- end }}
     {{- end }}
-    {{- if semverCompare ">=4.31.0" (include "authelia.version" .) }}
+    {{- if semverCompare ">=4.35.0" (include "authelia.version" .) }}
     password_policy:
       standard:
         enabled: {{ .Values.configMap.password_policy.standard.enabled }}
@@ -142,6 +142,7 @@ data:
         require_special: {{ .Values.configMap.password_policy.standard.require_special }}
       zxcvbn:
         enabled: {{ .Values.configMap.password_policy.zxcvbn.enabled }}
+        min_score: {{ .Values.configMap.password_policy.zxcvbn.min_score }}
     {{- end }}
     {{- with $session := .Values.configMap.session }}
     session:
