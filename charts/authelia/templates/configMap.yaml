@@ -16,6 +16,9 @@ data:
     {{- end }}
     theme: {{ default "light" .Values.configMap.theme }}
     default_redirection_url: {{ default (printf "https://www.%s" .Values.domain) .Values.configMap.default_redirection_url }}
+    {{- if semverCompare ">=4.35.0" (include "authelia.version" .) }}
+    default_2fa_method: {{ .Values.configMap.default_2fa_method | default "" | quote }}
+    {{- end }}
     server:
       host: 0.0.0.0
       port: {{ default 9091 .Values.configMap.server.port }}
@@ -49,6 +52,9 @@ data:
       {{- end }}
       period: {{ default 30 .Values.configMap.totp.period }}
       skew: {{ default 1 .Values.configMap.totp.skew }}
+      {{- if semverCompare ">=4.35.0" (include "authelia.version" .) }}
+      secret_size: {{ .Values.configMap.totp.secret_size | default 32 }}
+      {{- end }}
    {{- if semverCompare ">=4.34.0" (include "authelia.version" .) }}
     webauthn:
       disable: {{ .Values.configMap.webauthn.disable | default false }}
@@ -76,6 +82,10 @@ data:
     {{- with $auth := .Values.configMap.authentication_backend }}
     authentication_backend:
       disable_reset_password: {{ $auth.disable_reset_password }}
+      {{- if semverCompare ">=4.35.0" (include "authelia.version" $) }}
+      password_reset:
+        custom_url: {{ $auth.password_reset.custom_url | default "" | quote }}
+      {{- end }}
       {{- if $auth.file.enabled }}
       file:
         path: {{ $auth.file.path }}
@@ -122,6 +132,20 @@ data:
         {{- end }}
         user: {{ $auth.ldap.user }}
       {{- end }}
+    {{- end }}
+    {{- if semverCompare ">=4.35.0" (include "authelia.version" .) }}
+    password_policy:
+      standard:
+        enabled: {{ .Values.configMap.password_policy.standard.enabled }}
+        min_length: {{ .Values.configMap.password_policy.standard.min_length }}
+        max_length: {{ .Values.configMap.password_policy.standard.max_length }}
+        require_uppercase: {{ .Values.configMap.password_policy.standard.require_uppercase }}
+        require_lowercase: {{ .Values.configMap.password_policy.standard.require_lowercase }}
+        require_number: {{ .Values.configMap.password_policy.standard.require_number }}
+        require_special: {{ .Values.configMap.password_policy.standard.require_special }}
+      zxcvbn:
+        enabled: {{ .Values.configMap.password_policy.zxcvbn.enabled }}
+        min_score: {{ .Values.configMap.password_policy.zxcvbn.min_score }}
     {{- end }}
     {{- with $session := .Values.configMap.session }}
     session:
@@ -240,7 +264,17 @@ data:
         {{- end }}
         enable_client_debug_messages: {{ default false .Values.configMap.identity_providers.oidc.enable_client_debug_messages }}
         minimum_parameter_entropy: {{ default 8 .Values.configMap.identity_providers.oidc.minimum_parameter_entropy }}
-        {{- if gt (len .Values.configMap.identity_providers.oidc.clients) 0 }}
+        {{- if semverCompare ">=4.35.0" (include "authelia.version" $) }}
+        cors:
+          {{- if .Values.configMap.identity_providers.oidc.cors.endpoints }}
+          endpoints: {{ toYaml .Values.configMap.identity_providers.oidc.cors.endpoints | nindent 8 }}
+          {{- end }}
+          {{- if .Values.configMap.identity_providers.oidc.cors.allowed_origins }}
+          allowed_origins: {{ toYaml .Values.configMap.identity_providers.oidc.cors.allowed_origins | nindent 8 }}
+          {{- end }}
+          allowed_origins_from_client_redirect_uris: {{ .Values.configMap.identity_providers.oidc.cors.allowed_origins_from_client_redirect_uris }}
+        {{- end }}
+        {{- if .Values.configMap.identity_providers.oidc.clients }}
         clients:
         {{- range $client := .Values.configMap.identity_providers.oidc.clients }}
         - id: {{ $client.id }}
@@ -248,10 +282,16 @@ data:
           {{- if not $client.public }}
           secret: {{ default (randAlphaNum 128) $client.secret }}
           {{- end }}
+          {{- if semverCompare ">=4.35.0" (include "authelia.version" $) }}
+          sector_identifier: {{ $client.sector_identifier | default "" | quote }}
+          pre_configured_consent_duration: {{ $client.pre_configured_consent_duration | default "" | quote }}
+          {{- end }}
           public: {{ $client.public | default false }}
           authorization_policy: {{ default "two_factor" $client.authorization_policy }}
+          {{- if $client.redirect_uris }}
           redirect_uris: {{ toYaml $client.redirect_uris | nindent 10 }}
-          {{- if hasKey $client "audience" }}
+          {{- end }}
+          {{- if $client.audience }}
           audience: {{ toYaml $client.audience | nindent 10 }}
           {{- end }}
           scopes: {{ toYaml (default (list "openid" "profile" "email" "groups") $client.scopes) | nindent 10 }}
