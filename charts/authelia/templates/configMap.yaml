@@ -284,7 +284,7 @@ data:
           {{- end }}
           {{- if semverCompare ">=4.35.0" (include "authelia.version" $) }}
           sector_identifier: {{ $client.sector_identifier | default "" | quote }}
-          {{ if $client.pre_configured_consent_duration }}
+          {{- if $client.pre_configured_consent_duration }}
           pre_configured_consent_duration: {{ $client.pre_configured_consent_duration | quote }}
           {{- end }}
           {{- end }}
