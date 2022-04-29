@@ -694,6 +694,10 @@ configMap:
       ## The attribute holding the display name of the user. This will be used to greet an authenticated user.
       display_name_attribute: ""
 
+      ## Follow referrals returned by the server.
+      ## This is especially useful for environments where read-only servers exist. Only implemented for write operations.
+      permit_referrals: false
+
       ## The username of the admin user.
       user: CN=Authelia,DC=example,DC=com
 
