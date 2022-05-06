@@ -1,6 +1,6 @@
 apiVersion: v2
 name: authelia
-version: 0.8.25
+version: 0.8.26
 kubeVersion: ">= 1.13.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
@@ -9,8 +9,11 @@ keywords:
   - Authentication
   - Security
   - Two-Factor
-  - U2F
   - YubiKey
+  - Webauthn
+  - Duo
+  - TOTP
+  - Time-based One Time Password
   - Push Notifications
   - LDAP
 home: https://www.authelia.com
@@ -23,6 +26,6 @@ maintainers:
     email: james-d-elliott@users.noreply.github.com
     url: https://github.com/james-d-elliott
 icon: https://avatars2.githubusercontent.com/u/59122411?s=200&v=4
-appVersion: 4.35.1
+appVersion: 4.35.2
 deprecated: false
 annotations: {}
