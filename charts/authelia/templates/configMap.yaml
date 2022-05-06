@@ -130,7 +130,7 @@ data:
         {{- if $auth.ldap.display_name_attribute }}
         display_name_attribute: {{ $auth.ldap.display_name_attribute }}
         {{- end }}
-        {{- if semverCompare ">=4.35.2" (include "authelia.version" .) }}
+        {{- if semverCompare ">=4.35.2" (include "authelia.version" $) }}
         permit_referrals: {{ $auth.ldap.permit_referrals }}
         {{- end }}
         user: {{ $auth.ldap.user }}
