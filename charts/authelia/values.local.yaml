@@ -1317,16 +1317,28 @@ secret:
         ## Annotation: vault.hashicorp.com/agent-inject-command-ldap
         command: ""
       storage:
-        ## Vault Path to the Authelia storage secret.
+        ## Vault Path to the Authelia storage password secret.
         ## Annotation: vault.hashicorp.com/agent-inject-secret-storage
         path: secrets/authelia/storage:password
 
-        ## Vault template specific to storage.
+        ## Vault template specific to the storage password.
         ## Annotation: vault.hashicorp.com/agent-inject-template-storage
         templateValue: ""
 
-        ## Vault after render command specific to storage.
+        ## Vault after render command specific to the storage password.
         ## Annotation: vault.hashicorp.com/agent-inject-command-storage
+        command: ""
+      storageEncryptionKey:
+        ## Vault Path to the Authelia storage encryption key secret.
+        ## Annotation: vault.hashicorp.com/agent-inject-secret-storage-encryption-key
+        path: secrets/authelia/storage:encryption_key
+
+        ## Vault template specific to the storage encryption key.
+        ## Annotation: vault.hashicorp.com/agent-inject-template-storage-encryption-key
+        templateValue: ""
+
+        ## Vault after render command specific to the storage encryption key.
+        ## Annotation: vault.hashicorp.com/agent-inject-command-storage-encryption-key
         command: ""
       session:
         ## Vault Path to the Authelia session secret.
