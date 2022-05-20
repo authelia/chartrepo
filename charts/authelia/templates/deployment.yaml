@@ -47,7 +47,7 @@ spec:
         {{- if (include "authelia.generate.configMap" .) }}
         checksum/configMap: {{ include (print $.Template.BasePath "/configMap.yaml") . | sha256sum }}
         {{- end }}
-        {{ if (include "authelia.enabled.secret" .) -}}
+        {{ if and (include "authelia.enabled.secret" .) (not (include "authelia.enabled.injector" .)) (not .Values.secret.excludeVolumeAndMounts) -}}
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
         {{- end }}
         {{- with $annotations := include "authelia.annotations" (merge (dict "Annotations" .Values.pod.annotations) .) }}
