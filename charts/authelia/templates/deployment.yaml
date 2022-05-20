@@ -187,7 +187,7 @@ spec:
           readOnly: true
           subPath: configuration.acl.yaml
         {{- end }}
-        {{- if not (include "authelia.enabled.injector" .) }}
+        {{- if and (not (include "authelia.enabled.injector" .)) (not .Values.secret.excludeVolumeAndMounts) }}
         - mountPath: {{ include "authelia.secret.mountPath" . }}
           name: secrets
           readOnly: true
@@ -230,7 +230,7 @@ spec:
           - key: {{ default "configuration.acl.yaml" .Values.configMap.access_control.secret.key }}
             path: configuration.acl.yaml
       {{- end }}
-      {{- if not (include "authelia.enabled.injector" .) }}
+      {{- if and (not (include "authelia.enabled.injector" .)) (not .Values.secret.excludeVolumeAndMounts) }}
       - name: secrets
         secret:
           secretName: {{ default (include "authelia.name" .) .Values.secret.existingSecret }}
