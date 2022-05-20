@@ -1212,6 +1212,8 @@ secret:
 
   mountPath: /secrets
 
+  excludeVolumeAndMounts: false
+
   ## Secrets.
   jwt:
     key: JWT_TOKEN
