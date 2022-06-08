@@ -270,10 +270,10 @@ data:
         {{- if semverCompare ">=4.35.0" (include "authelia.version" $) }}
         cors:
           {{- if .Values.configMap.identity_providers.oidc.cors.endpoints }}
-          endpoints: {{ toYaml .Values.configMap.identity_providers.oidc.cors.endpoints | nindent 8 }}
+          endpoints: {{ toYaml .Values.configMap.identity_providers.oidc.cors.endpoints | nindent 12 }}
           {{- end }}
           {{- if .Values.configMap.identity_providers.oidc.cors.allowed_origins }}
-          allowed_origins: {{ toYaml .Values.configMap.identity_providers.oidc.cors.allowed_origins | nindent 8 }}
+          allowed_origins: {{ toYaml .Values.configMap.identity_providers.oidc.cors.allowed_origins | nindent 12 }}
           {{- end }}
           allowed_origins_from_client_redirect_uris: {{ .Values.configMap.identity_providers.oidc.cors.allowed_origins_from_client_redirect_uris }}
         {{- end }}
