@@ -1019,3 +1019,14 @@ squote a list joined by comma
 - {{ . | squote }}
 {{- end }}
 {{- end -}}
+
+{{/*
+Returns the password reset disabled value.
+*/}}
+{{- define "authelia.config.password_reset.disable" -}}
+{{- if hasKey .Values.configMap.authentication_backend "disable_reset_password" }}
+{{- .Values.configMap.authentication_backend.disable_reset_password }}
+{{- else }}
+{{- .Values.configMap.authentication_backend.password_reset.disable | default false }}
+{{- end }}
+{{- end -}}
