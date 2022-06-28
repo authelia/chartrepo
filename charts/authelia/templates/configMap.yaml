@@ -81,9 +81,14 @@ data:
     {{- end }}
     {{- with $auth := .Values.configMap.authentication_backend }}
     authentication_backend:
-      disable_reset_password: {{ $auth.disable_reset_password }}
+      {{- if semverCompare "<4.36.0" (include "authelia.version" $) }}
+      disable_reset_password: {{ include "authelia.config.password_reset.disable" $ }}
+      {{- end }}
       {{- if semverCompare ">=4.35.0" (include "authelia.version" $) }}
       password_reset:
+        {{- if semverCompare ">=4.36.0" (include "authelia.version" $) }}
+        disable: {{ include "authelia.config.password_reset.disable" $ }}
+        {{- end }}
         custom_url: {{ $auth.password_reset.custom_url | default "" | quote }}
       {{- end }}
       {{- if $auth.file.enabled }}
@@ -132,6 +137,9 @@ data:
         {{- end }}
         {{- if semverCompare ">=4.35.2" (include "authelia.version" $) }}
         permit_referrals: {{ $auth.ldap.permit_referrals }}
+        {{- end }}
+        {{- if semverCompare ">=4.36.0" (include "authelia.version" $) }}
+        permit_unauthenticated_bind: {{ $auth.ldap.permit_unauthenticated_bind }}
         {{- end }}
         user: {{ $auth.ldap.user }}
       {{- end }}

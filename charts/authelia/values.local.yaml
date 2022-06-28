@@ -434,11 +434,11 @@ configMap:
     ## Customize Authelia headers.
     headers:
       ## Read the Authelia docs before setting this advanced option.
-      ## https://www.authelia.com/docs/configuration/server.html#csp_template.
+      ## https://www.authelia.com/configuration/miscellaneous/server/#csp_template.
       csp_template: ""
 
     ## Buffers usually should be configured to be the same value.
-    ## Explanation at https://www.authelia.com/docs/configuration/server.html
+    ## Explanation at https://www.authelia.com/configuration/miscellaneous/server/
     ## Read buffer size adjusts the server's max incoming request size in bytes.
     ## Write buffer size does the same for outgoing responses.
     read_buffer_size: 4096
@@ -488,13 +488,13 @@ configMap:
 
     ## The TOTP algorithm to use.
     ## It is CRITICAL you read the documentation before changing this option:
-    ## https://www.authelia.com/docs/configuration/one-time-password.html#algorithm
+    ## https://www.authelia.com/configuration/second-factor/time-based-one-time-password/#algorithm
     algorithm: sha1
 
     ## The number of digits a user has to input. Must either be 6 or 8.
     ## Changing this option only affects newly generated TOTP configurations.
     ## It is CRITICAL you read the documentation before changing this option:
-    ## https://www.authelia.com/docs/configuration/one-time-password.html#digits
+    ## https://www.authelia.com/configuration/second-factor/time-based-one-time-password/#digits
     digits: 6
 
     ## The period in seconds a one-time password is valid for.
@@ -503,7 +503,7 @@ configMap:
 
     ## The skew controls number of one-time passwords either side of the current one that are valid.
     ## Warning: before changing skew read the docs link below.
-    ## See: https://www.authelia.com/docs/configuration/one-time-password.html#period-and-skew to read the documentation.
+    ## See: https://www.authelia.com/configuration/second-factor/time-based-one-time-password/#input-validation to read the documentation.
     skew: 1
 
     ## The size of the generated shared secrets. Default is 32 and is sufficient in most use cases, minimum is 20.
@@ -572,16 +572,24 @@ configMap:
   ##
   ## The available providers are: `file`, `ldap`. You must use one and only one of these providers.
   authentication_backend:
-    ## Disable both the HTML element and the API for reset password functionality
-    disable_reset_password: false
+
+    ## Password Reset Options.
+    password_reset:
+
+      ## Disable both the HTML element and the API for reset password functionality
+      disable: false
+
+      ## External reset password url that redirects the user to an external reset portal. This disables the internal reset
+      ## functionality.
+      custom_url: ""
 
     ## The amount of time to wait before we refresh data from the authentication backend. Uses duration notation.
     ## To disable this feature set it to 'disable', this will slightly reduce security because for Authelia, users will
     ## always belong to groups they belonged to at the time of login even if they have been removed from them in LDAP.
     ## To force update on every request you can set this to '0' or 'always', this will increase processor demand.
     ## See the below documentation for more information.
-    ## Duration Notation docs:  https://www.authelia.com/docs/configuration/index.html#duration-notation-format
-    ## Refresh Interval docs: https://www.authelia.com/docs/configuration/authentication/ldap.html#refresh-interval
+    ## Duration Notation docs:  https://www.authelia.com/configuration/prologue/common/#duration-notation-format
+    ## Refresh Interval docs: https://www.authelia.com/configuration/first-factor/ldap/#refresh-interval
     refresh_interval: 5m
 
     ## LDAP backend configuration.
@@ -602,7 +610,7 @@ configMap:
       ##
       ## Depending on the option here certain other values in this section have a default value, notably all of the
       ## attribute mappings have a default value that this config overrides, you can read more about these default values
-      ## at https://www.authelia.com/docs/configuration/authentication/ldap.html#defaults
+      ## at https://www.authelia.com/reference/guides/ldap/#defaults
       implementation: activedirectory
 
       ## The url to the ldap server. Format: <scheme>://<address>[:<port>].
@@ -704,9 +712,9 @@ configMap:
     ## to be scaled to more than one instance. The options under 'password' have sane defaults, and as it has security
     ## implications it is highly recommended you leave the default values. Before considering changing these settings
     ## please read the docs page below:
-    ## https://www.authelia.com/docs/configuration/authentication/file.html#password-hash-algorithm-tuning
+    ## https://www.authelia.com/reference/guides/passwords/#tuning
     ##
-    ## Important: Kubernetes (or HA) users must read https://www.authelia.com/docs/features/statelessness.html
+    ## Important: Kubernetes (or HA) users must read https://www.authelia.com/overview/authorization/statelessness/
     ##
     file:
       enabled: true
@@ -865,7 +873,7 @@ configMap:
     name: authelia_session
 
     ## Sets the Cookie SameSite value. Possible options are none, lax, or strict.
-    ## Please read https://www.authelia.com/docs/configuration/session.html#same_site
+    ## Please read https://www.authelia.com/configuration/session/introduction/#same_site
     same_site: lax
 
     ## The time in seconds before the cookie expires and session is reset.
@@ -876,7 +884,7 @@ configMap:
 
     ## The remember me duration.
     ## Value is in seconds, or duration notation. Value of 0 disables remember me.
-    ## See: https://www.authelia.com/docs/configuration/index.html#duration-notation-format
+    ## See: https://www.authelia.com/configuration/prologue/common/#duration-notation-format
     ## Longer periods are considered less secure because a stolen cookie will last longer giving attackers more time to
     ## spy or attack. Currently the default is 1M or 1 month.
     remember_me_duration: 1M
@@ -884,7 +892,7 @@ configMap:
     ##
     ## Redis Provider
     ##
-    ## Important: Kubernetes (or HA) users must read https://www.authelia.com/docs/features/statelessness.html
+    ## Important: Kubernetes (or HA) users must read https://www.authelia.com/overview/authorization/statelessness/
     ##
     ## The redis connection details
     redis:
@@ -960,11 +968,11 @@ configMap:
 
     ## The time range during which the user can attempt login before being banned. The user is banned if the
     ## authentication failed 'max_retries' times in a 'find_time' seconds window. Find Time accepts duration notation.
-    ## See: https://www.authelia.com/docs/configuration/index.html#duration-notation-format
+    ## See: https://www.authelia.com/configuration/prologue/common/#duration-notation-format
     find_time: 2m
 
     ## The length of time before a banned user can login again. Ban Time accepts duration notation.
-    ## See: https://www.authelia.com/docs/configuration/index.html#duration-notation-format
+    ## See: https://www.authelia.com/configuration/prologue/common/#duration-notation-format
     ban_time: 5m
 
 
@@ -979,7 +987,7 @@ configMap:
     ## This stores the data in a SQLite3 Database.
     ## This is only recommended for lightweight non-stateful installations.
     ##
-    ## Important: Kubernetes (or HA) users must read https://www.authelia.com/docs/features/statelessness.html
+    ## Important: Kubernetes (or HA) users must read https://www.authelia.com/overview/authorization/statelessness/
     ##
     local:
       enabled: true
@@ -1027,7 +1035,7 @@ configMap:
     ##
     ## File System (Notification Provider)
     ##
-    ## Important: Kubernetes (or HA) users must read https://www.authelia.com/docs/features/statelessness.html
+    ## Important: Kubernetes (or HA) users must read https://www.authelia.com/overview/authorization/statelessness/
     ##
     filesystem:
       enabled: true
