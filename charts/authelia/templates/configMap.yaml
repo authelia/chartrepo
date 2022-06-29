@@ -86,7 +86,7 @@ data:
       {{- end }}
       {{- if semverCompare ">=4.35.0" (include "authelia.version" $) }}
       password_reset:
-        {{- if semverCompare ">=4.36.0" (include "authelia.version" $) }}
+        {{- if semverCompare ">=4.36.1" (include "authelia.version" $) }}
         disable: {{ include "authelia.config.password_reset.disable" $ }}
         {{- end }}
         custom_url: {{ $auth.password_reset.custom_url | default "" | quote }}
