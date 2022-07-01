@@ -41,7 +41,7 @@ data:
       format: {{ default "text" .Values.configMap.log.format }}
       file_path: {{ .Values.configMap.log.file_path | default "" | quote }}
       keep_stdout: true
-    {{- if semverCompare ">=4.36.0" (include "authelia.version" .) }}
+    {{- if and (semverCompare ">=4.36.0" (include "authelia.version" .)) .Values.configMap.telemetry.metrics.enabled }}
     telemetry:
       metrics:
         enabled: {{ .Values.configMap.telemetry.metrics.enabled | default false }}
