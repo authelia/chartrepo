@@ -41,6 +41,12 @@ data:
       format: {{ default "text" .Values.configMap.log.format }}
       file_path: {{ .Values.configMap.log.file_path | default "" | quote }}
       keep_stdout: true
+    {{- if semverCompare ">=4.36.0" (include "authelia.version" .) }}
+    telemetry:
+      metrics:
+        enabled: {{ .Values.configMap.telemetry.metrics.enabled | default false }}
+        address: '0.0.0.0:{{ .Values.configMap.telemetry.metrics.port | default 9959 }}'
+    {{- end }}
     totp:
       {{- if semverCompare ">=4.34.0" (include "authelia.version" .) }}
       disable: {{ .Values.configMap.totp.disable | default false }}

@@ -22,3 +22,9 @@ spec:
       protocol: TCP
       port: {{ include "authelia.service.port" . }}
       targetPort: http
+    {{- if and (semverCompare ">=4.36.0" (include "authelia.version" .)) .Values.configMap.telemetry.metrics.enabled }}
+    - name: metrics
+      protocol: TCP
+      port: {{ .Values.configMap.telemetry.metrics.port | default 9959 }}
+      targetPort: metrics
+    {{- end }}
