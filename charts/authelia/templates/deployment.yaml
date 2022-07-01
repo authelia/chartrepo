@@ -158,8 +158,13 @@ spec:
         {{- end }}
         ports:
         - name: http
-          containerPort: {{ default 9091  .Values.configMap.port }}
+          containerPort: {{ .Values.configMap.port | default 9091 }}
           protocol: TCP
+        {{- if and (semverCompare ">=4.36.0" (include "authelia.version" .)) .Values.configMap.telemetry.metrics.enabled }}
+        - name: metrics
+          containerPort: {{ .Values.configMap.telemetry.metrics.port | default 9959 }}
+          protocol: TCP
+        {{- end }}
         volumeMounts:
         {{- if (include "authelia.enabled.persistentVolumeClaim" .) }}
         - mountPath: /config
