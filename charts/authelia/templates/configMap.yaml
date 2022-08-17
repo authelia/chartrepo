@@ -16,52 +16,85 @@ data:
     {{- end }}
     theme: {{ .Values.configMap.theme | default "light" }}
     default_redirection_url: {{ .Values.configMap.default_redirection_url | default (printf "https://www.%s" .Values.domain) }}
+    {{- if semverCompare ">=4.35.0" (include "authelia.version" .) }}
+    default_2fa_method: {{ .Values.configMap.default_2fa_method | default "" | quote }}
+    {{- end }}
     server:
       host: 0.0.0.0
       port: {{ .Values.configMap.server.port | default 9091 }}
-      {{- if .Values.configMap.server.path }}
-      path: {{ .Values.configMap.server.path }}
+      path: {{ .Values.configMap.server.path | default "" | squote }}
+      {{- if semverCompare ">=4.33.0" (include "authelia.version" .) }}
+      asset_path: {{ .Values.configMap.server.asset_path | default "" | quote }}
       {{- end }}
+      {{- if (semverCompare ">=4.34.0" (include "authelia.version" .)) }}
       headers:
-        csp_template: {{ .Values.configMap.server.headers.csp_template | default "" | quote }}
+        csp_template: {{ .Values.configMap.server.headers.csp_template | default "" | squote }}
+      {{- end }}
       read_buffer_size: {{ .Values.configMap.server.read_buffer_size | default 4096 }}
       write_buffer_size: {{ .Values.configMap.server.write_buffer_size | default 4096 }}
       enable_pprof: {{ .Values.configMap.server.enable_pprof | default false }}
       enable_expvars: {{ .Values.configMap.server.enable_expvars | default false }}
     log:
-      level: {{ .Values.configMap.log.level | default "info" }}
-      format: {{ .Values.configMap.log.format | default "text" }}
-      {{- if .Values.configMap.log.file_path }}
-      file_path: {{ .Values.configMap.log.file_path }}
+      level: {{ .Values.configMap.log.level | default "info" | squote }}
+      format: {{ .Values.configMap.log.format | default "text" | squote }}
+      file_path: {{ .Values.configMap.log.file_path | default "" | squote }}
       keep_stdout: true
-      {{- end }}
+    {{- if and (semverCompare ">=4.36.0" (include "authelia.version" .)) .Values.configMap.telemetry.metrics.enabled }}
+    telemetry:
+      metrics:
+        enabled: {{ .Values.configMap.telemetry.metrics.enabled | default false }}
+        address: '0.0.0.0:{{ .Values.configMap.telemetry.metrics.port | default 9959 }}'
+    {{- end }}
     totp:
+      {{- if semverCompare ">=4.34.0" (include "authelia.version" .) }}
       disable: {{ .Values.configMap.totp.disable | default false }}
+      {{- end }}
       issuer: {{ .Values.configMap.totp.issuer | default .Values.domain }}
+      {{- if semverCompare ">=4.33.0" (include "authelia.version" .) }}
       algorithm: {{ .Values.configMap.totp.algorithm | default "sha1" }}
       digits: {{ .Values.configMap.totp.digits | default 6 }}
+      {{- end }}
       period: {{ .Values.configMap.totp.period | default 30 }}
       skew: {{ .Values.configMap.totp.skew | default 1 }}
+      {{- if semverCompare ">=4.35.0" (include "authelia.version" .) }}
+      secret_size: {{ .Values.configMap.totp.secret_size | default 32 }}
+      {{- end }}
+    {{- if semverCompare ">=4.34.0" (include "authelia.version" .) }}
     webauthn:
       disable: {{ .Values.configMap.webauthn.disable | default false }}
       display_name: {{ .Values.configMap.webauthn.display_name | default "Authelia" }}
       attestation_conveyance_preference: {{ .Values.configMap.webauthn.attestation_conveyance_preference | default "indirect" }}
       user_verification: {{ .Values.configMap.webauthn.user_verification | default "preferred" }}
       timeout: {{ .Values.configMap.webauthn.timeout | default "60s" }}
+    {{- end }}
+    {{- if semverCompare ">=4.31.0" (include "authelia.version" .) }}
     ntp:
       address: {{ .Values.configMap.ntp.address | default "time.cloudflare.com:123" }}
       version: {{ .Values.configMap.ntp.version | default 3 }}
       max_desync: {{ .Values.configMap.ntp.max_desync | default "3s" }}
       disable_startup_check: {{ .Values.configMap.ntp.disable_startup_check | default false }}
       disable_failure: {{ .Values.configMap.ntp.disable_failure | default false }}
+    {{- end }}
     {{- if include "authelia.duo.enabled" . }}
     duo_api:
       hostname: {{ .Values.configMap.duo_api.hostname }}
       integration_key: {{ .Values.configMap.duo_api.integration_key }}
+      {{- if semverCompare ">=4.33.0" (include "authelia.version" .) }}
+      enable_self_enrollment: {{ .Values.configMap.duo_api.enable_self_enrollment | default false }}
+      {{- end }}
     {{- end }}
     {{- with $auth := .Values.configMap.authentication_backend }}
     authentication_backend:
-      disable_reset_password: {{ $auth.disable_reset_password }}
+      {{- if semverCompare "<4.36.0" (include "authelia.version" $) }}
+      disable_reset_password: {{ include "authelia.config.password_reset.disable" $ }}
+      {{- end }}
+      {{- if semverCompare ">=4.35.0" (include "authelia.version" $) }}
+      password_reset:
+        {{- if semverCompare ">=4.36.1" (include "authelia.version" $) }}
+        disable: {{ include "authelia.config.password_reset.disable" $ }}
+        {{- end }}
+        custom_url: {{ $auth.password_reset.custom_url | default "" | quote }}
+      {{- end }}
       {{- if $auth.file.enabled }}
       file:
         path: {{ $auth.file.path }}
@@ -106,8 +139,28 @@ data:
         {{- if $auth.ldap.display_name_attribute }}
         display_name_attribute: {{ $auth.ldap.display_name_attribute }}
         {{- end }}
+        {{- if semverCompare ">=4.35.2" (include "authelia.version" $) }}
+        permit_referrals: {{ $auth.ldap.permit_referrals }}
+        {{- end }}
+        {{- if semverCompare ">=4.36.0" (include "authelia.version" $) }}
+        permit_unauthenticated_bind: {{ $auth.ldap.permit_unauthenticated_bind }}
+        {{- end }}
         user: {{ $auth.ldap.user }}
       {{- end }}
+    {{- end }}
+    {{- if semverCompare ">=4.35.0" (include "authelia.version" .) }}
+    password_policy:
+      standard:
+        enabled: {{ .Values.configMap.password_policy.standard.enabled }}
+        min_length: {{ .Values.configMap.password_policy.standard.min_length }}
+        max_length: {{ .Values.configMap.password_policy.standard.max_length }}
+        require_uppercase: {{ .Values.configMap.password_policy.standard.require_uppercase }}
+        require_lowercase: {{ .Values.configMap.password_policy.standard.require_lowercase }}
+        require_number: {{ .Values.configMap.password_policy.standard.require_number }}
+        require_special: {{ .Values.configMap.password_policy.standard.require_special }}
+      zxcvbn:
+        enabled: {{ .Values.configMap.password_policy.zxcvbn.enabled }}
+        min_score: {{ .Values.configMap.password_policy.zxcvbn.min_score }}
     {{- end }}
     {{- with $session := .Values.configMap.session }}
     session:
@@ -140,8 +193,8 @@ data:
           {{- if $session.redis.high_availability.nodes }}
           nodes: {{ toYaml $session.redis.high_availability.nodes | nindent 10 }}
           {{- end }}
-          {{- if $session.redis.high_availability.username }}
-          sentinel_username: {{ $session.redis.high_availability.username }}
+          {{- if semverCompare ">=4.34.5" (include "authelia.version" $) }}
+          sentinel_username: {{ $session.redis.high_availability.username | default "" | squote }}
           {{- end }}
           route_by_latency: {{ $session.redis.high_availability.route_by_latency }}
           route_randomly: {{ $session.redis.high_availability.route_randomly }}
@@ -157,31 +210,35 @@ data:
       {{- end }}
       {{- if $storage.mysql.enabled }}
       mysql:
-        host: {{ $storage.mysql.host }}
+        host: {{ $storage.mysql.host | squote }}
         port: {{ $storage.mysql.port | default 3306 }}
-        database: {{ $storage.mysql.database | default "authelia" }}
-        username: {{ $storage.mysql.username | default "authelia" }}
+        database: {{ $storage.mysql.database | default "authelia" | squote }}
+        username: {{ $storage.mysql.username | default "authelia" | squote }}
+        {{- if semverCompare ">=4.31.0" (include "authelia.version" $) }}
         timeout: {{ $storage.mysql.timeout | default "5s" }}
+        {{- end }}
       {{- end }}
       {{- if $storage.postgres.enabled }}
       postgres:
-        host: {{ $storage.postgres.host }}
+        host: {{ $storage.postgres.host | squote }}
         port: {{ $storage.postgres.port | default 5432 }}
-        database: {{ $storage.postgres.database | default "authelia" }}
-        schema: {{ $storage.postgres.schema | default "public" }}
-        username: {{ $storage.postgres.username | default "authelia" }}
+        database: {{ $storage.postgres.database | default "authelia" | squote }}
+        {{- if semverCompare ">=4.33.0" (include "authelia.version" $) }}
+        schema: {{ $storage.postgres.schema | default "public" | squote }}
+        {{- end }}
+        username: {{ $storage.postgres.username | default "authelia" | squote }}
+        {{- if semverCompare ">=4.31.0" (include "authelia.version" $) }}
         timeout: {{ $storage.postgres.timeout | default "5s" }}
+        {{- end }}
+        {{- if semverCompare ">=4.33.0" (include "authelia.version" $) }}
         ssl:
-          mode: {{ $storage.postgres.sslmode | default "disable" }}
-          {{- if $storage.postgres.ssl.root_certificate }}
-          root_certificate: {{ $storage.postgres.ssl.root_certificate }}
-          {{- end }}
-          {{- if $storage.postgres.ssl.certificate }}
-          certificate: {{ $storage.postgres.ssl.certificate }}
-          {{- end }}
-          {{- if $storage.postgres.ssl.key }}
-          key: {{ $storage.postgres.ssl.key }}
-          {{- end }}
+          mode: {{ $storage.postgres.sslmode | default "disable" | squote }}
+          root_certificate: {{ $storage.postgres.ssl.root_certificate | default "" | squote }}
+          certificate: {{ $storage.postgres.ssl.certificate | default "" | squote }}
+          key: {{ $storage.postgres.ssl.key | default "" | squote }}
+        {{- else }}
+        sslmode: {{ $storage.postgres.ssl.mode | default "disable" | squote }}
+        {{- end }}
       {{- end }}
     {{- end }}
     {{- with $notifier := .Values.configMap.notifier }}
@@ -193,16 +250,18 @@ data:
       {{- end }}
       {{- if $notifier.smtp.enabled }}
       smtp:
-        host: {{ $notifier.smtp.host }}
+        host: {{ $notifier.smtp.host | squote }}
         port: {{ $notifier.smtp.port | default 25 }}
+        {{- if semverCompare ">=4.31.0" (include "authelia.version" $) }}
         timeout: {{ $notifier.smtp.timeout | default "5s" }}
-        username: {{ $notifier.smtp.username }}
-        sender: {{ $notifier.smtp.sender }}
-        identifier: {{ $notifier.smtp.identifier }}
-        subject: {{ $notifier.smtp.subject | quote }}
-        startup_check_address: {{ $notifier.smtp.startup_check_address }}
-        disable_require_tls: {{ $notifier.smtp.disable_require_tls }}
-        disable_html_emails: {{ $notifier.smtp.disable_html_emails }}
+        {{- end }}
+        username: {{ $notifier.smtp.username | default "" | squote }}
+        sender: {{ $notifier.smtp.sender | default "" | squote }}
+        identifier: {{ $notifier.smtp.identifier | default "localhost" | squote }}
+        subject: {{ $notifier.smtp.subject | squote }}
+        startup_check_address: {{ $notifier.smtp.startup_check_address | squote }}
+        disable_require_tls: {{ $notifier.smtp.disable_require_tls | default false }}
+        disable_html_emails: {{ $notifier.smtp.disable_html_emails | default false }}
         tls:
           {{- if $notifier.smtp.tls.server_name }}
           server_name: {{ $notifier.smtp.tls.server_name }}
@@ -218,13 +277,23 @@ data:
         authorize_code_lifespan: {{ .Values.configMap.identity_providers.oidc.authorize_code_lifespan | default "1m" }}
         id_token_lifespan: {{ .Values.configMap.identity_providers.oidc.id_token_lifespan | default "1h" }}
         refresh_token_lifespan: {{ .Values.configMap.identity_providers.oidc.refresh_token_lifespan | default "90m" }}
-        minimum_parameter_entropy: {{ .Values.configMap.identity_providers.oidc.minimum_parameter_entropy | default 8 }}
-        {{- if (semverCompare ">=4.34.1" (.Values.versionOverride | default .Chart.AppVersion | toString)) }}
+        {{- if semverCompare ">=4.34.1" (include "authelia.version" .) }}
         enforce_pkce: {{ .Values.configMap.identity_providers.oidc.enforce_pkce | default "public_clients_only" }}
         enable_pkce_plain_challenge: {{ .Values.configMap.identity_providers.oidc.enable_pkce_plain_challenge | default false }}
         {{- end }}
         enable_client_debug_messages: {{ .Values.configMap.identity_providers.oidc.enable_client_debug_messages | default false }}
-        {{- if gt (len .Values.configMap.identity_providers.oidc.clients) 0 }}
+        minimum_parameter_entropy: {{ .Values.configMap.identity_providers.oidc.minimum_parameter_entropy | default 8 }}
+        {{- if semverCompare ">=4.35.0" (include "authelia.version" $) }}
+        cors:
+          {{- if .Values.configMap.identity_providers.oidc.cors.endpoints }}
+          endpoints: {{ toYaml .Values.configMap.identity_providers.oidc.cors.endpoints | nindent 12 }}
+          {{- end }}
+          {{- if .Values.configMap.identity_providers.oidc.cors.allowed_origins }}
+          allowed_origins: {{ toYaml .Values.configMap.identity_providers.oidc.cors.allowed_origins | nindent 12 }}
+          {{- end }}
+          allowed_origins_from_client_redirect_uris: {{ .Values.configMap.identity_providers.oidc.cors.allowed_origins_from_client_redirect_uris }}
+        {{- end }}
+        {{- if and .Values.configMap.identity_providers.oidc.clients (gt (len .Values.configMap.identity_providers.oidc.clients) 0) }}
         clients:
         {{- range $client := .Values.configMap.identity_providers.oidc.clients }}
         - id: {{ $client.id }}
@@ -232,12 +301,18 @@ data:
           {{- if not $client.public }}
           secret: {{ $client.secret | default (randAlphaNum 128) }}
           {{- end }}
-          {{- if hasKey $client "public" }}
-          public: {{ $client.public }}
+          {{- if semverCompare ">=4.35.0" (include "authelia.version" $) }}
+          sector_identifier: {{ $client.sector_identifier | default "" | quote }}
+          {{- if $client.pre_configured_consent_duration }}
+          pre_configured_consent_duration: {{ $client.pre_configured_consent_duration | quote }}
           {{- end }}
+          {{- end }}
+          public: {{ $client.public | default false }}
           authorization_policy: {{ $client.authorization_policy | default "two_factor" }}
+          {{- if $client.redirect_uris }}
           redirect_uris: {{ toYaml $client.redirect_uris | nindent 10 }}
-          {{- if hasKey $client "audience" }}
+          {{- end }}
+          {{- if $client.audience }}
           audience: {{ toYaml $client.audience | nindent 10 }}
           {{- end }}
           scopes: {{ toYaml ($client.scopes | default (list "openid" "profile" "email" "groups")) | nindent 10 }}

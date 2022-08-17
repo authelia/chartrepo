@@ -56,7 +56,7 @@ spec:
       name: {{ .Values.ingress.traefikCRD.tlsOptions.existing.name }}
       namespace: {{ .Values.ingress.traefikCRD.tlsOptions.existing.namespace | default .Release.Namespace }}
       {{- else }}
-      name: {{ default (include "authelia.name" .) .Values.ingress.traefikCRD.tlsOptions.nameOverride }}
+      name: {{ .Values.ingress.traefikCRD.tls.options.nameOverride | default (include "authelia.name" .) }}
       namespace: {{ .Release.Namespace }}
     {{- end }}
     {{- end }}

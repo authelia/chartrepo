@@ -2,7 +2,7 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: TLSOption
 metadata:
-  name: {{ include "authelia.name" . }}
+  name: {{ .Values.ingress.traefikCRD.tls.options.nameOverride | default (include "authelia.name" .) }}
   namespace: {{ .Release.Namespace }}
   labels: {{ include "authelia.labels" (merge (dict "Labels" .Values.ingress.labels) .) | nindent 4 }}
   {{- with $annotations := include "authelia.annotations" (merge (dict "Annotations" .Values.ingress.annotations) .) }}

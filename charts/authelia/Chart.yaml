@@ -9,8 +9,11 @@ keywords:
   - Authentication
   - Security
   - Two-Factor
-  - U2F
   - YubiKey
+  - Webauthn
+  - Duo
+  - TOTP
+  - Time-based One Time Password
   - Push Notifications
   - LDAP
 home: https://www.authelia.com
@@ -23,6 +26,6 @@ maintainers:
     email: james-d-elliott@users.noreply.github.com
     url: https://github.com/james-d-elliott
 icon: https://avatars2.githubusercontent.com/u/59122411?s=200&v=4
-appVersion: 4.34.3
+appVersion: 4.36.1
 deprecated: false
 annotations: {}
