@@ -1,4 +1,4 @@
-{{- if (include "authelia.enabled.ingress.ingress" .) }}
+{{- if (include "authelia.ingress.enabled" .) }}
 ---
 {{- $apiVersion := (include "capabilities.apiVersion.ingress" .) }}
 apiVersion: {{ $apiVersion }}
@@ -11,12 +11,12 @@ metadata:
   {{- end }}
 spec:
   {{- if eq $apiVersion "networking.k8s.io/v1" }}
-  {{- with $className := .Values.ingress.className }}
-  ingressClassName: {{ $className }}
+  {{- if .Values.ingress.className }}
+  ingressClassName: {{ .Values.ingress.className }}
   {{- end }}
   {{- end }}
   rules:
-    - host: {{ include "authelia.ingressHost" . }}
+    - host: {{ include "authelia.ingress.host" . }}
       http:
         paths:
           - path: {{ (include "authelia.path" .) }}
@@ -36,7 +36,7 @@ spec:
   {{- if .Values.ingress.tls.enabled }}
   tls:
     - hosts:
-        - {{ default (include "authelia.ingressHost" .) .Values.ingress.tls.hostNameOverride }}
-      secretName: {{ default "authelia-tls" .Values.ingress.tls.secret }}
+        - {{ .Values.ingress.tls.hostNameOverride | default (include "authelia.ingress.host" .) }}
+      secretName: {{ .Values.ingress.tls.secret | default "authelia-tls" }}
   {{- end -}}
 {{- end -}}
