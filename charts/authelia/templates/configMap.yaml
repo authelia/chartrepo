@@ -32,8 +32,18 @@ data:
       headers:
         csp_template: {{ .Values.configMap.server.headers.csp_template | default "" | quote }}
       {{- end }}
-      read_buffer_size: {{ default 4096 .Values.configMap.server.read_buffer_size }}
-      write_buffer_size: {{ default 4096 .Values.configMap.server.write_buffer_size }}
+      {{- if and (semverCompare ">=4.36.4" (include "authelia.version" .)) }}
+      buffers:
+        read: {{ .Values.configMap.server.read_buffer_size | default .Values.configMap.server.buffers.read | default 4096 }}
+        write: {{ .Values.configMap.server.write_buffer_size | default .Values.configMap.server.buffers.write | default 4096 }}
+      timeouts:
+        read: {{ .Values.configMap.server.timeouts.read | default "6s" }}
+        write: {{ .Values.configMap.server.timeouts.write | default "6s" }}
+        idle: {{ .Values.configMap.server.timeouts.idle | default "30s" }}
+      {{- else }}
+      read_buffer_size: {{ .Values.configMap.server.read_buffer_size | default .Values.configMap.server.buffers.read | default 4096 }}
+      write_buffer_size: {{ .Values.configMap.server.write_buffer_size | default .Values.configMap.server.buffers.write | default 4096 }}
+      {{- end }}
       enable_pprof: {{ .Values.configMap.server.enable_pprof | default false }}
       enable_expvars: {{ .Values.configMap.server.enable_expvars | default false }}
     log:
@@ -46,6 +56,11 @@ data:
       metrics:
         enabled: {{ .Values.configMap.telemetry.metrics.enabled | default false }}
         address: 'tcp://0.0.0.0:{{ .Values.configMap.telemetry.metrics.port | default 9959 }}'
+        {{- if and (semverCompare ">=4.36.4" (include "authelia.version" .)) }}
+        buffers:
+          read: {{ .Values.configMap.telemetry.metrics.buffers.read | default 4096 }}
+          write: {{ .Values.configMap.telemetry.metrics.buffers.write | default 4096 }}
+        {{- end }}
     {{- end }}
     totp:
       {{- if semverCompare ">=4.34.0" (include "authelia.version" .) }}

@@ -441,8 +441,14 @@ configMap:
     ## Explanation at https://www.authelia.com/configuration/miscellaneous/server/
     ## Read buffer size adjusts the server's max incoming request size in bytes.
     ## Write buffer size does the same for outgoing responses.
-    read_buffer_size: 4096
-    write_buffer_size: 4096
+    buffers:
+      read: 4096
+      write: 4096
+
+    timeouts:
+      read: 6s
+      write: 6s
+      idle: 30s
 
   log:
     ## Level of verbosity for logs: info, debug, trace.
@@ -470,6 +476,15 @@ configMap:
 
       ## The port to listen on for metrics. This should be on a different port to the main server.port value.
       port: 9959
+
+      buffers:
+        read: 4096
+        write: 4096
+
+      timeouts:
+        read: 6s
+        write: 6s
+        idle: 30s
 
       serviceMonitor:
         enabled: false
