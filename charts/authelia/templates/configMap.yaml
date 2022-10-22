@@ -45,7 +45,7 @@ data:
     telemetry:
       metrics:
         enabled: {{ .Values.configMap.telemetry.metrics.enabled | default false }}
-        address: '0.0.0.0:{{ .Values.configMap.telemetry.metrics.port | default 9959 }}'
+        address: 'tcp://0.0.0.0:{{ .Values.configMap.telemetry.metrics.port | default 9959 }}'
     {{- end }}
     totp:
       {{- if semverCompare ">=4.34.0" (include "authelia.version" .) }}
