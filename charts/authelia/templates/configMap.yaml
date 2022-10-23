@@ -250,7 +250,7 @@ data:
     {{- with $session := .Values.configMap.session }}
     session:
       name: {{ $session.name | default "authelia_session" | squote }}
-      domain: {{ required "A valid .Values.domain entry required!" $.Values.domain }}
+      domain: {{ required "A valid .Values.domain entry required!" $.Values.domain | squote }}
       same_site: {{ $session.same_site | default "lax" | squote }}
       expiration: {{ $session.expiration | default "1M" }}
       inactivity: {{ $session.inactivity | default "5m" }}
@@ -420,25 +420,59 @@ data:
           {{- if semverCompare ">=4.35.0" (include "authelia.version" $) }}
           sector_identifier: {{ $client.sector_identifier | default "" | squote }}
           {{- if semverCompare ">=4.37.0" (include "authelia.version" $) }}
-          consent_mode: {{ $client.consent_mode | default "explicit" | squote }}
+          consent_mode: {{ $client.consent_mode | default "auto" | squote }}
           {{- end }}
           {{- if $client.pre_configured_consent_duration }}
           pre_configured_consent_duration: {{ $client.pre_configured_consent_duration | squote }}
           {{- end }}
           {{- end }}
           public: {{ $client.public | default false }}
-          authorization_policy: {{ $client.authorization_policy | default "two_factor" }}
+          authorization_policy: {{ $client.authorization_policy | default "two_factor" | squote }}
           {{- if $client.redirect_uris }}
-          redirect_uris: {{ toYaml $client.redirect_uris | nindent 10 }}
+          redirect_uris:
+          {{- range $redirect_uri := $client.redirect_uris }}
+          - {{ $redirect_uri | squote }}
+          {{- end }}
           {{- end }}
           {{- if $client.audience }}
-          audience: {{ toYaml $client.audience | nindent 10 }}
+          audience:
+          {{- range $audience := $client.audience }}
+          - {{ $audience | squote }}
           {{- end }}
-          scopes: {{ toYaml (default (list "openid" "profile" "email" "groups") $client.scopes) | nindent 10 }}
-          grant_types: {{ toYaml (default (list "refresh_token" "authorization_code") $client.grant_types) | nindent 10 }}
-          response_types: {{ toYaml (default (list "code") $client.response_types) | nindent 10 }}
+          {{- end }}
+          scopes:
+          {{- if $client.scopes }}
+          {{- range $scopes := $client.scopes }}
+          - {{ $scopes | squote }}
+          {{- end }}
+          {{- else }}
+          - 'openid'
+          - 'profile'
+          - 'email'
+          - 'groups'
+          {{- end }}
+          grant_types:
+          {{- if $client.grant_types }}
+          {{- range $grant_type := $client.grant_types }}
+          - {{ $grant_type | squote }}
+          {{- end }}
+          {{- else }}
+          - 'refresh_token'
+          - 'authorization_code'
+          {{- end }}
+          response_types:
+          {{- if $client.response_types }}
+          {{- range $response_type := $client.response_types }}
+          - {{ $response_type | squote }}
+          {{- end }}
+          {{- else }}
+          - 'code'
+          {{- end }}
           {{- if hasKey $client "response_modes" }}
-          response_modes: {{ toYaml $client.response_modes | nindent 10 }}
+          response_modes:
+          {{- range $response_mode := $client.response_modes }}
+          - {{ $response_mode | squote }}
+          {{- end }}
           {{- end }}
           userinfo_signing_algorithm: {{ $client.userinfo_signing_algorithm | default "none" }}
         {{- end }}
