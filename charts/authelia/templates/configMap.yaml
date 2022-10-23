@@ -147,7 +147,7 @@ data:
             salt_length: {{ $auth.file.password.scrypt.salt_length | default 16 }}
           pbkdf2:
             variant: {{ $auth.file.password.pbkdf2.variant | default "sha512" | squote }}
-            iterations: {{ $auth.file.password.pbkdf2.iterations | 310000 }}
+            iterations: {{ $auth.file.password.pbkdf2.iterations | default 310000 }}
             salt_length: {{ $auth.file.password.pbkdf2.salt_length | default 16 }}
           sha2crypt:
             variant: {{ $auth.file.password.sha2crypt.variant | default "sha512" | squote }}
