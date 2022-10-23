@@ -136,7 +136,7 @@ data:
             {{- else }}
             memory: {{ $auth.file.password.argon2.memory | default 65536 }}
             {{- end }}
-            parallelism: {{ $auth.file.password.memory | default $auth.file.password.argon2.memory | default 4 }}
+            parallelism: {{ $auth.file.password.parallelism | default $auth.file.password.argon2.parallelism | default 4 }}
             key_length: {{ $auth.file.password.key_length | default $auth.file.password.argon2.key_length | default 32 }}
             salt_length: {{ $auth.file.password.salt_length | default $auth.file.password.argon2.salt_length | default 16 }}
           scrypt:
