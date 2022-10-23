@@ -415,7 +415,15 @@ data:
         - id: {{ $client.id }}
           description: {{ $client.description | default $client.id }}
           {{- if not $client.public }}
+          {{- if semverCompare ">=4.37.0" (include "authelia.version" $) }}
+          {{- if and $client.secret (hasPrefix "$" $client.secret) }}
+          secret: {{ $client.secret }}
+          {{- else }}
+          secret: {{ printf "$plaintext$%s" ($client.secret) }}
+          {{- end }}
+          {{- else }}
           secret: {{ $client.secret | default (randAlphaNum 128) }}
+          {{- end }}
           {{- end }}
           {{- if semverCompare ">=4.35.0" (include "authelia.version" $) }}
           sector_identifier: {{ $client.sector_identifier | default "" | squote }}
