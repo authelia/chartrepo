@@ -121,24 +121,14 @@ data:
           email: {{ $auth.file.search.email | default false }}
           case_insensitive: {{ $auth.file.search.case_insensitive | default false }}
         password:
-          {{- if eq "sha512" $auth.file.password.algorithm }}
-          algorithm: {{ "sha2crypt" | squote }}
-          {{- else if eq "argon2id" $auth.file.password.algorithm }}
-          algorithm: {{ "argon2" | squote }}
-          {{- else }}
-          algorithm: {{ $auth.file.password.algorithm | default "argon2" | squote }}
-          {{- end }}
+          algorithm: {{ (include "authelia.config.auth.file.algorithm" $) | squote }}
           argon2:
             variant: {{ $auth.file.password.argon2.variant | default "argon2" | squote }}
-            iterations: {{ $auth.file.password.argon2.iterations | default 3 }}
-            {{- if $auth.file.password.memory }}
-            memory: {{ mul $auth.file.password.memory 1024 }}
-            {{- else }}
-            memory: {{ $auth.file.password.argon2.memory | default 65536 }}
-            {{- end }}
-            parallelism: {{ $auth.file.password.parallelism | default $auth.file.password.argon2.parallelism | default 4 }}
-            key_length: {{ $auth.file.password.key_length | default $auth.file.password.argon2.key_length | default 32 }}
-            salt_length: {{ $auth.file.password.salt_length | default $auth.file.password.argon2.salt_length | default 16 }}
+            iterations: {{ (include "authelia.config.auth.file.iterations.argon2" $) }}
+            memory: {{ (include "authelia.config.auth.file.memory.argon2" $) }}
+            parallelism: {{ (include "authelia.config.auth.file.parallelism.argon2" $) }}
+            key_length: {{ (include "authelia.config.auth.file.key_length.argon2" $) }}
+            salt_length: {{ (include "authelia.config.auth.file.salt_length.argon2" $) }}
           scrypt:
             iterations: {{ $auth.file.password.scrypt.iterations | default 16 }}
             block_size: {{ $auth.file.password.scrypt.block_size | default 8 }}
@@ -151,8 +141,8 @@ data:
             salt_length: {{ $auth.file.password.pbkdf2.salt_length | default 16 }}
           sha2crypt:
             variant: {{ $auth.file.password.sha2crypt.variant | default "sha512" | squote }}
-            iterations: {{ $auth.file.password.iterations | default $auth.file.password.sha2crypt.iterations | default 50000 }}
-            salt_length: {{ $auth.file.password.salt_length | default $auth.file.password.sha2crypt.salt_length | default 16 }}
+            iterations: {{ (include "authelia.config.auth.file.iterations.sha2crypt" $) }}
+            salt_length: {{ (include "authelia.config.auth.file.salt_length.sha2crypt" $) }}
           bcrypt:
             variant: {{ $auth.file.password.bcrypt.variant | default "standard" | squote }}
             cost: {{ $auth.file.password.bcrypt.cost | default 12 }}
@@ -160,15 +150,15 @@ data:
         password:
           {{- if or (eq "argon2" $auth.file.password.algorithm) (eq "argon2id" $auth.file.password.algorithm) }}
           algorithm: {{ "argon2id" | squote }}
-          iterations: {{ $auth.file.password.iterations | default $auth.file.password.argon2.iterations | default 3 }}
-          memory: {{ $auth.file.password.memory | default (div $auth.file.password.argon2.memory 1024) | default 64 }}
-          parallelism: {{ $auth.file.password.parallelism | default $auth.file.password.argon2.parallelism | default 4 }}
-          key_length: {{ $auth.file.password.key_length | default $auth.file.password.argon2.key_length | default 32 }}
-          salt_length: {{ $auth.file.password.salt_length | default $auth.file.password.argon2.salt_length | default 16 }}
+          iterations: {{ (include "authelia.config.auth.file.iterations.argon2" $) }}
+          memory: {{ (include "authelia.config.auth.file.memory.argon2" $) }}
+          parallelism: {{ (include "authelia.config.auth.file.parallelism.argon2" $) }}
+          key_length: {{ (include "authelia.config.auth.file.key_length.argon2" $) }}
+          salt_length: {{ (include "authelia.config.auth.file.salt_length.argon2" $) }}
           {{- else if or (eq "sha2crypt" $auth .file.password.algorithm) (eq "sha512" $auth .file.password.algorithm) }}
           algorithm: {{ "sha512" | squote }}
-          iterations: {{ $auth.file.password.iterations | default $auth.file.password.sha2crypt.iterations | default 50000 }}
-          salt_length: {{ $auth.file.password.salt_length | default $auth.file.password.sha2crypt.salt_length | default 16 }}
+          iterations: {{ (include "authelia.config.auth.file.iterations.sha2crypt" $) }}
+          salt_length: {{ (include "authelia.config.auth.file.salt_length.sha2crypt" $) }}
           {{- else }}
           algorithm: {{ "argon2id" | squote }}
           iterations: {{ 1 }}
