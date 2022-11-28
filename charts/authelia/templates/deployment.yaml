@@ -45,7 +45,10 @@ spec:
       labels: {{ include "authelia.labels" (merge (dict "Labels" .Values.pod.labels) .) | nindent 8 }}
       annotations:
         {{- if (include "authelia.generate.configMap" .) }}
-        checksum/configMap: {{ include (print $.Template.BasePath "/configMap.yaml") . | sha256sum }}
+        checksum/config: {{ include (print $.Template.BasePath "/configMap.yaml") . | sha256sum }}
+        {{- end }}
+        {{- if (include "authelia.generate.acl.secret" .) }}
+        checksum/acl: {{ include (print $.Template.BasePath "/secretACL.yaml") . | sha256sum }}
         {{- end }}
         {{ if and (include "authelia.enabled.secret" .) (not (include "authelia.enabled.injector" .)) (not .Values.secret.excludeVolumeAndMounts) -}}
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
