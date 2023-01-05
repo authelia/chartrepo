@@ -23,6 +23,12 @@
 ##     system.
 versionOverride: ""
 
+## Kubernetes Version Override allows forcibly overriding the detected KubeVersion for fallback capabilities assessment.
+## The fallback capabilities assessment only occurs if the APIVersions Capabilities list does not include a known
+## APIVersion for a manifest which occurs with some CI/CD tooling. This value will completely override the value
+## detected by helm.
+kubeVersionOverride: ""
+
 ## Image Parameters
 ## ref: https://hub.docker.com/r/authelia/authelia/tags/
 ##
@@ -359,8 +365,8 @@ podDisruptionBudget:
   # labels:
   #   myLabel: myValue
 
-  # minAvailable: 1
-  # maxUnavailable: 1
+  minAvailable: 0
+  maxUnavailable: 0
 
 ##
 ## Kubernetes Network Policy
