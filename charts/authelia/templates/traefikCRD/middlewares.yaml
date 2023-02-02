@@ -19,6 +19,22 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
+  name: {{ include "authelia.ingress.traefikCRD.middleware.name.forwardAuth" . }}-basic
+  labels: {{ include "authelia.labels" . | nindent 4 }}
+  {{- with $annotations := include "authelia.annotations" . }}
+  annotations: {{ $annotations | nindent 4 }}
+  {{- end }}
+spec:
+  forwardAuth:
+    address: {{ (include "authelia.forwardAuthBasicPath" .) }}
+    trustForwardHeader: true
+    {{- with .Values.ingress.traefikCRD.middlewares.auth.authResponseHeaders }}
+    authResponseHeaders: {{- toYaml . | nindent 6 }}
+  {{- end }}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
   name: {{ printf "headers-%s" (include "authelia.name" .) }}
   labels: {{ include "authelia.labels" . | nindent 4 }}
   {{- with $annotations := include "authelia.annotations" . }}
@@ -47,6 +63,26 @@ spec:
       {{- toYaml $middlewares | nindent 6 }}
       {{- end }}
       - name: {{ include "authelia.ingress.traefikCRD.middleware.name.forwardAuth" . }}
+        namespace: {{ .Release.Namespace }}
+  {{- with $middlewares := .Values.ingress.traefikCRD.middlewares.chains.auth.after }}
+  {{- toYaml $middlewares | nindent 6 }}
+  {{- end }}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "authelia.ingress.traefikCRD.middleware.name.chainAuth" . }}-basic
+  labels: {{ include "authelia.labels" . | nindent 4 }}
+  {{- with $annotations := include "authelia.annotations" . }}
+  annotations: {{ $annotations | nindent 4 }}
+  {{- end }}
+spec:
+  chain:
+    middlewares:
+      {{- with $middlewares := .Values.ingress.traefikCRD.middlewares.chains.auth.before }}
+      {{- toYaml $middlewares | nindent 6 }}
+      {{- end }}
+      - name: {{ include "authelia.ingress.traefikCRD.middleware.name.forwardAuth" . }}-basic
         namespace: {{ .Release.Namespace }}
   {{- with $middlewares := .Values.ingress.traefikCRD.middlewares.chains.auth.after }}
   {{- toYaml $middlewares | nindent 6 }}
