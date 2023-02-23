@@ -252,6 +252,7 @@ data:
         {{- if not (eq $session.redis.username "") }}
         username: {{ $session.redis.username }}
         {{- end }}
+        database_index: {{ $session.redis.database_index | default 0 }}
         maximum_active_connections: {{ $session.redis.maximum_active_connections | default 8 }}
         minimum_idle_connections: {{ $session.redis.minimum_idle_connections | default 0 }}
         {{- if $session.redis.tls.enabled }}
