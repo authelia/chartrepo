@@ -66,6 +66,9 @@ spec:
       hostNetwork: false
       hostPID: false
       hostIPC: false
+      {{- if (include "authelia.pod.priorityClassName.enabled" .) }}
+      priorityClassName: {{ .Values.pod.priorityClassName }}
+      {{- end }}
       {{- with $nodeName := .Values.pod.selectors.nodeName }}
       nodeName: {{ $nodeName }}
       {{- end }}
