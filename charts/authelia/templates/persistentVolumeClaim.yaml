@@ -18,5 +18,8 @@ spec:
       storage: {{ default "100Mi" .Values.persistence.size }}
   {{- with $selector := .Values.persistence.selector }}
   selector: {{ toYaml $selector | nindent 4 }}
+  {{- if .Values.persistence.volumeName }}
+  volumeName: "{{ .Values.persistence.volumeName }}"
+  {{- end -}}
   {{- end }}
   {{- end }}
