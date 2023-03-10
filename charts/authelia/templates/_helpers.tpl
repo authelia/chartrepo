@@ -916,3 +916,9 @@ Returns the password reset disabled value.
 {{- .Values.configMap.authentication_backend.password_reset.disable | default false }}
 {{- end }}
 {{- end -}}
+
+{{- define "authelia.pod.priorityClassName.enabled" -}}
+{{- if and (hasKey .Values.pod "priorityClassName") .Values.pod.priorityClassName (semverCompare ">=1.14-0" (include "capabilities.kubeVersion" .)) }}
+{{- true -}}
+{{- end }}
+{{- end }}

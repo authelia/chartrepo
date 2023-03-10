@@ -225,6 +225,7 @@ pod:
 
   replicas: 1
   revisionHistoryLimit: 5
+  priorityClassName: ""
 
   strategy:
     type: RollingUpdate
