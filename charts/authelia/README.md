@@ -22,7 +22,7 @@ below.
   - configMap.log_format is now configMap.log.format
   - configMap.log_file_path is now configMap.log.file_path
 
-See the [official migration documentation](https://www.authelia.com/docs/configuration/migration.html#4300) 
+See the [official migration documentation](https://www.authelia.com/configuration/prologue/migration/#4300) 
 (not specific to Kubernetes) for more information.
 
 # Getting Started
@@ -44,7 +44,7 @@ It is expected you will configure at least the following sections/values:
 
 - domain (this is essential for the chart to work)
 - configMap section (the configMap follows a majority of the configuration options
-  in [the documentation](https://www.authelia.com/docs/configuration))
+  in [the documentation](https://www.authelia.com/configuration))
 - secret section configures passwords and other secret information, configuring this directly in the configMap is not
   supported
 
@@ -123,7 +123,7 @@ This documents the parameters in the chart values. As the chart values are quite
 
 This section only documents the sections that are specific to the helm chart. The majority of this section of the
 values.yaml is based on the *Authelia* configuration. See the
-[Authelia documentation](https://www.authelia.com/docs/configuration/) for more information.
+[Authelia documentation](https://www.authelia.com/configuration) for more information.
 
 |Parameter                                              |Description                                             |Default           |
 |:-----------------------------------------------------:|:------------------------------------------------------:|:----------------:|
