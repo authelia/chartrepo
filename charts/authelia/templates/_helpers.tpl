@@ -477,6 +477,19 @@ Renders a probe
 {{- end -}}
 
 {{/*
+Renders a value that contains template.
+Usage:
+{{ include "authelia.snippets.render" ( dict "value" .Values.path.to.the.Value "context" $) }}
+*/}}
+{{- define "authelia.snippets.render" -}}
+    {{- if typeIs "string" .value }}
+        {{- tpl .value .context }}
+    {{- else }}
+        {{- tpl (.value | toYaml) .context }}
+    {{- end }}
+{{- end -}}
+
+{{/*
 Returns the service port.
 */}}
 {{- define "authelia.service.port" -}}
