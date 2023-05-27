@@ -89,6 +89,9 @@ spec:
       {{- else }}
       enableServiceLinks: false
       {{- end }}
+      {{- if .Values.initContainers }}
+      initContainers: {{- include "authelia.snippets.render" (dict "value" .Values.initContainers "context" $) | nindent 8 }}
+      {{- end }}
       containers:
       - name: authelia
         image: {{ include "authelia.image" . }}
