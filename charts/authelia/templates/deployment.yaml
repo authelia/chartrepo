@@ -82,6 +82,9 @@ spec:
       serviceAccountName: {{ default (include "authelia.name" .) .Values.rbac.serviceAccountName }}
       {{- end }}
       enableServiceLinks: {{ .Values.pod.enableServiceLinks | default false }}
+      {{- if .Values.pod.initContainers }}
+      initContainers: {{- include "authelia.snippets.render" (dict "value" .Values.pod.initContainers "context" $) | nindent 8 }}
+      {{- end }}
       containers:
       - name: authelia
         image: {{ include "authelia.image" . }}
