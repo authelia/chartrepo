@@ -78,6 +78,7 @@ rbac:
 domain: example.com
 
 service:
+  type: "ClusterIP"
   annotations: {}
   # annotations:
   #   myAnnotation: myValue
@@ -87,7 +88,6 @@ service:
   #   myLabel: myValue
 
   port: 80
-
   # clusterIP:
 
 

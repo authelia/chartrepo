@@ -8,7 +8,7 @@ metadata:
   annotations: {{ $annotations | nindent 4 }}
   {{- end }}
 spec:
-  type: ClusterIP
+  type: {{ .Values.service.type | quote }}
   {{- with $ip := .Values.service.clusterIP }}
   clusterIP: {{ $ip }}
   {{- end }}
@@ -22,6 +22,7 @@ spec:
       protocol: TCP
       port: {{ include "authelia.service.port" . }}
       targetPort: http
+      nodePort: {{ .Values.service.nodePort }}
     {{- if and (semverCompare ">=4.36.0" (include "authelia.version" .)) .Values.configMap.telemetry.metrics.enabled }}
     - name: metrics
       protocol: TCP
