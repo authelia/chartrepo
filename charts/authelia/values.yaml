@@ -88,6 +88,8 @@ service:
   #   myLabel: myValue
 
   port: 80
+  nodePort: 9091
+  
   # clusterIP:
 
 
