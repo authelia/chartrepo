@@ -8,7 +8,7 @@ metadata:
   annotations: {{ $annotations | nindent 4 }}
   {{- end }}
 spec:
-  type: {{ .Values.service.type | quote }}
+  type: {{ .Values.service.type }}
   {{- with $ip := .Values.service.clusterIP }}
   clusterIP: {{ $ip }}
   {{- end }}
