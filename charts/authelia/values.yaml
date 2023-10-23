@@ -89,7 +89,6 @@ service:
 
   port: 80
   nodePort: 30091
-  
   # clusterIP:
 
 
