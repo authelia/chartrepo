@@ -1,6 +1,6 @@
 {{ if (include "authelia.enabled.ingress.traefik" .) -}}
 ---
-apiVersion: traefik.containo.us/v1alpha1
+apiVersion: {{ include "capabilities.apiVersion.traefikCRD" . }}
 kind: Middleware
 metadata:
   name: {{ include "authelia.ingress.traefikCRD.middleware.name.forwardAuth" . }}
@@ -16,7 +16,7 @@ spec:
     authResponseHeaders: {{- toYaml . | nindent 6 }}
   {{- end }}
 ---
-apiVersion: traefik.containo.us/v1alpha1
+apiVersion: {{ include "capabilities.apiVersion.traefikCRD" . }}
 kind: Middleware
 metadata:
   name: {{ printf "headers-%s" (include "authelia.name" .) }}
@@ -32,7 +32,7 @@ spec:
       Cache-Control: "no-store"
       Pragma: "no-cache"
 ---
-apiVersion: traefik.containo.us/v1alpha1
+apiVersion: {{ include "capabilities.apiVersion.traefikCRD" . }}
 kind: Middleware
 metadata:
   name: {{ include "authelia.ingress.traefikCRD.middleware.name.chainAuth" . }}
@@ -52,7 +52,7 @@ spec:
   {{- toYaml $middlewares | nindent 6 }}
   {{- end }}
 ---
-apiVersion: traefik.containo.us/v1alpha1
+apiVersion: {{ include "capabilities.apiVersion.traefikCRD" . }}
 kind: Middleware
 metadata:
   name: {{ include "authelia.ingress.traefikCRD.middleware.name.chainIngress" . }}

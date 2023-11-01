@@ -127,3 +127,14 @@ PodDisruptionBudget API Version Releases: policy/v1 in 1.21, policy/v1beta1 prio
         {{- print "policy/v1beta1" -}}
     {{- end }}
 {{- end -}}
+
+{{/*
+Returns applicable traefikCRD API version
+*/}}
+{{- define "capabilities.apiVersion.traefikCRD" -}}
+    {{- if .Capabilities.APIVersions.Has "traefik.io/v1alpha1" -}}
+        {{- print "traefik.io/v1alpha1" -}}
+    {{- else -}}
+        {{- print "traefik.containo.us/v1alpha1" -}}
+    {{- end }}
+{{- end -}}
