@@ -125,6 +125,7 @@ ingress:
     enabled: false
 
     ## The TraefikCRD apiVersion to use. traefik.containo.us/v1alpha1 is the default but is deprecated since Traefik 2.10 and removed in Traevik v3.
+    ## Setting this value to null chooses traefik.io/v1alpha1 if it is supported by the cluster
     # apiVersion: traefik.io/v1alpha1
     apiVersion: traefik.containo.us/v1alpha1
 
