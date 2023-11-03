@@ -43,6 +43,17 @@ Return the app version.
 {{- end -}}
 
 {{/*
+Returns the traefikCRD apiVersion
+*/}}
+{{- define "authelia.ingress.traefikCRD.apiVersion" -}}
+    {{- if .Values.ingress.traefikCRD.apiVersion -}}
+        {{- .Values.ingress.traefikCRD.apiVersion -}}
+    {{- else -}}
+        {{- include "capabilities.apiVersion.traefikCRD" . -}}
+    {{- end -}}
+{{- end -}}
+
+{{/*
 Returns the name of the forwardAuth Middleware for forward auth which gets applied to other IngressRoutes.
 */}}
 {{- define "authelia.ingress.traefikCRD.middleware.name.forwardAuth" -}}
