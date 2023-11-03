@@ -1,6 +1,6 @@
 {{ if (include "authelia.enabled.ingress.ingressRoute" .) -}}
 ---
-apiVersion: traefik.containo.us/v1alpha1
+apiVersion: {{ include "authelia.ingress.traefikCRD.apiVersion" . }}
 kind: IngressRoute
 metadata:
   name: {{ include "authelia.name" . }}
