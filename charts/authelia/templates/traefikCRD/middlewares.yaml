@@ -10,10 +10,13 @@ metadata:
   {{- end }}
 spec:
   forwardAuth:
-    address: {{ (include "authelia.forwardAuthPath" .) }}
+    address: {{ (include "authelia.forwardAuthPath" .) | squote }}
     trustForwardHeader: true
     {{- with .Values.ingress.traefikCRD.middlewares.auth.authResponseHeaders }}
-    authResponseHeaders: {{- toYaml . | nindent 6 }}
+    authResponseHeaders:
+    {{- range . }}
+    - {{ . | squote }}
+    {{- end }}
   {{- end }}
 ---
 apiVersion: traefik.containo.us/v1alpha1
@@ -43,14 +46,20 @@ metadata:
 spec:
   chain:
     middlewares:
-      {{- with $middlewares := .Values.ingress.traefikCRD.middlewares.chains.auth.before }}
-      {{- toYaml $middlewares | nindent 6 }}
-      {{- end }}
+    {{- range $middleware := .Values.ingress.traefikCRD.middlewares.chains.auth.before }}
+      - name: {{ $middleware.name }}
+        {{- if $middleware.namespace }}
+        namespace: {{ $middleware.namespace }}
+        {{- end }}
+    {{- end }}
       - name: {{ include "authelia.ingress.traefikCRD.middleware.name.forwardAuth" . }}
         namespace: {{ .Release.Namespace }}
-  {{- with $middlewares := .Values.ingress.traefikCRD.middlewares.chains.auth.after }}
-  {{- toYaml $middlewares | nindent 6 }}
-  {{- end }}
+    {{- range $middleware := .Values.ingress.traefikCRD.middlewares.chains.auth.after }}
+      - name: {{ $middleware.name }}
+        {{- if $middleware.namespace }}
+        namespace: {{ $middleware.namespace }}
+        {{- end }}
+    {{- end }}
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
@@ -65,12 +74,18 @@ metadata:
 spec:
   chain:
     middlewares:
-      {{- with $middlewares := .Values.ingress.traefikCRD.middlewares.chains.ingressRoute.before }}
-      {{- toYaml $middlewares | nindent 6 }}
+    {{- range $middleware := .Values.ingress.traefikCRD.middlewares.chains.ingressRoute.before }}
+    - name: {{ $middleware.name }}
+      {{- if $middleware.namespace }}
+      namespace: {{ $middleware.namespace }}
       {{- end }}
+    {{- end }}
       - name: {{ printf "headers-%s" (include "authelia.name" .) }}
         namespace: {{ .Release.Namespace }}
-  {{- with $middlewares := .Values.ingress.traefikCRD.middlewares.chains.ingressRoute.after }}
-  {{- toYaml $middlewares | nindent 6 }}
-  {{- end }}
+    {{- range $middleware := .Values.ingress.traefikCRD.middlewares.chains.ingressRoute.after }}
+      - name: {{ $middleware.name }}
+        {{- if $middleware.namespace }}
+        namespace: {{ $middleware.namespace }}
+        {{- end }}
+    {{- end }}
 {{- end -}}

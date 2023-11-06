@@ -1,0 +1,75 @@
+- id: {{ .Client.id | squote }}
+  description: {{ .Client.description | default .Client.id | squote }}
+  {{- if not .Client.public }}
+  {{- if and .Client.secret (hasPrefix "$" .Client.secret) }}
+  secret: {{ .Client.secret | squote }}
+  {{- else }}
+  secret: {{ printf "$plaintext$%s" (.Client.secret | default (randAlphaNum 128)) | squote }}
+  {{- end }}
+  {{- end }}
+  sector_identifier: {{ .Client.sector_identifier | default "" | squote }}
+  consent_mode: {{ .Client.consent_mode | default "auto" | squote }}
+  {{- if .Client.pre_configured_consent_duration }}
+  pre_configured_consent_duration: {{ .Client.pre_configured_consent_duration | squote }}
+  {{- end }}
+  public: {{ .Client.public | default false }}
+  authorization_policy: {{ .Client.authorization_policy | default "two_factor" | squote }}
+  {{- if .Client.redirect_uris }}
+  redirect_uris:
+  {{- range $redirect_uri := .Client.redirect_uris }}
+  - {{ $redirect_uri | squote }}
+  {{- end }}
+  {{- end }}
+  {{- if .Client.audience }}
+  audience:
+  {{- range $audience := .Client.audience }}
+  - {{ $audience | squote }}
+  {{- end }}
+  {{- end }}
+  scopes:
+  {{- range $scopes := (.Client.scopes | default (list "openid" "profile" "email" "groups")) }}
+  - {{ $scopes | squote }}
+  {{- end }}
+  grant_types:
+  {{- range $grant_type := (.Client.grant_types | default (list "authorization_code")) }}
+  - {{ $grant_type | squote }}
+  {{- end }}
+  response_types:
+  {{- range $response_type := (.Client.response_types | default (list "code")) }}
+  - {{ $response_type | squote }}
+  {{- end }}
+  {{- if hasKey .Client "response_modes" }}
+  response_modes:
+  {{- range $response_mode := .Client.response_modes }}
+  - {{ $response_mode | squote }}
+  {{- end }}
+  {{- end }}
+  {{- if .Client.lifespan }}
+  lifespan: {{ .Client.lifespan | squote }}
+  {{- end }}
+  enforce_par: {{ .Client.enforce_par | default false }}
+  enforce_pkce: {{ .Client.enforce_pkce | default false }}
+  pkce_challenge_method: {{ .Client.pkce_challenge_method | default "S256" | squote }}
+  authorization_signed_response_alg: {{ .Client.authorization_signed_response_alg | default "RS256" | squote }}
+  authorization_signed_response_key_id: {{ .Client.authorization_signed_response_key_id | default "" | squote }}
+  id_token_signed_response_alg: {{ .Client.id_token_signed_response_alg | default "RS256" | squote }}
+  id_token_signed_response_key_id: {{ .Client.id_token_signed_response_key_id | default "" | squote }}
+  access_token_signed_response_alg: {{ .Client.access_token_signed_response_alg | default "none" | squote }}
+  access_token_signed_response_key_id: {{ .Client.access_token_signed_response_key_id | default "" | squote }}
+  userinfo_signed_response_alg: {{ include "authelia.config.oidc.client.userinfo_signed_response_alg" .Client | squote }}
+  userinfo_signed_response_key_id: {{ .Client.userinfo_signed_response_key_id | default "" | squote }}
+  request_object_signing_alg: {{ .Client.request_object_signing_alg | default "" | squote }}
+  token_endpoint_auth_signing_alg: {{ .Client.token_endpoint_auth_signing_alg | default "" | squote }}
+  token_endpoint_auth_method: {{ .Client.token_endpoint_auth_method | default "client_secret_basic" | squote }}
+  {{- if .Client.public_keys }}
+  public_keys:
+    {{- if .Client.public_keys.uri }}
+    uri: {{ .Client.public_keys.uri | squote }}
+    {{- end }}
+    {{- if .Client.public_keys.values }}
+    values:
+    {{- range $key := .Client.public_keys.values }}
+    {{- tpl ($.Files.Get "files/configuration.oidc.jwk.yaml") (merge (dict "Key" $key "Indent" 8) $) | trim | nindent 4 }}
+    {{- end }}
+    {{- end }}
+  {{- end }}

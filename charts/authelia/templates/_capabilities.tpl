@@ -127,3 +127,9 @@ PodDisruptionBudget API Version Releases: policy/v1 in 1.21, policy/v1beta1 prio
         {{- print "policy/v1beta1" -}}
     {{- end }}
 {{- end -}}
+
+{{- define "authelia.pod.priorityClassName.enabled" -}}
+{{- if and (hasKey .Values.pod "priorityClassName") .Values.pod.priorityClassName (semverCompare ">=1.14-0" (include "capabilities.kubeVersion" .)) }}
+{{- true -}}
+{{- end }}
+{{- end }}

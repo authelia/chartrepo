@@ -1,0 +1,12 @@
+The following example demonstrates configuration of the AuthRequest implementation for ingresses like 'ingress-nginx':
+
+apiVersion: {{ .APIVersion }}
+kind: Ingress
+metadata:
+  name: example
+  namespace: example-namespace
+  annotations:
+    nginx.ingress.kubernetes.io/auth-url: http://{{ .ServiceName }}.svc.cluster.local/api/authz/{{ .EndpointName }}
+    nginx.ingress.kubernetes.io/auth-response-headers: Remote-User,Remote-Name,Remote-Groups,Remote-Email
+    nginx.ingress.kubernetes.io/auth-snippet: |
+      proxy_set_header X-Forwarded-Method $request_method;

@@ -1,4 +1,5 @@
 {{ if (include "authelia.enabled.ingress.traefik.tlsOption" .) -}}
+---
 apiVersion: traefik.containo.us/v1alpha1
 kind: TLSOption
 metadata:
@@ -11,13 +12,19 @@ metadata:
 spec:
   minVersion: {{ default "VersionTLS12" .Values.ingress.traefikCRD.tls.options.minVersion }}
   maxVersion: {{ default "VersionTLS13" .Values.ingress.traefikCRD.tls.options.maxVersion }}
-  {{- with $prefernces := .Values.ingress.traefikCRD.tls.options.curvePreferences }}
-  curvePreferences: {{ toYaml $prefernces | nindent 4 }}
+{{- with $preferences := .Values.ingress.traefikCRD.tls.options.curvePreferences }}
+  curvePreferences:
+  {{- range $preferences }}
+  - {{ . }}
   {{- end }}
-  {{- with $suites := default (list "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256" "TLS_RSA_WITH_AES_256_GCM_SHA384") .Values.ingress.traefikCRD.tls.options.cipherSuites }}
-  cipherSuites: {{ toYaml $suites | nindent 4 }}
+{{- end }}
+{{- with $suites := .Values.ingress.traefikCRD.tls.options.cipherSuites | default (list "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256" "TLS_RSA_WITH_AES_256_GCM_SHA384") }}
+  cipherSuites:
+  {{- range $suites }}
+  - {{ . }}
   {{- end }}
-  {{ with $strict := .Values.ingress.traefikCRD.tls.options.sniStrict }}
+{{- end }}
+{{ with $strict := .Values.ingress.traefikCRD.tls.options.sniStrict }}
   sniStrict: {{ $strict }}
-  {{- end }}
+{{- end }}
 {{- end -}}

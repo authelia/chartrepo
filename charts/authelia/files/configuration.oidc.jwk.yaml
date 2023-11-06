@@ -1,0 +1,26 @@
+{{- $key := "" }}{{ $certificate_chain := "" }}
+{{- if .Key.key }}
+  {{- if .Key.key.path }}
+  {{- $key = (include "authelia.secrets.template" (dict "Path" .Key.key.path "Indent" (add 4 .Indent))) }}
+  {{- else if .Key.key.value }}
+  {{- $key = printf "| %s" (.Key.key.value | nindent 4) }}
+  {{- end }}
+{{- end }}
+{{- if .Key.certificate_chain }}
+{{- if .Key.certificate_chain.path }}
+{{- $certificate_chain = (include "authelia.secrets.template" (dict "Path" .Key.certificate_chain.path "Indent" (add 4 .Indent))) }}
+{{- else if .Key.key.value }}
+{{- $certificate_chain = printf "| %s" (.Key.certificate_chain.value | nindent 4) }}
+{{- end }}
+{{- end }}
+- algorithm: {{ .Key.algorithm | default "RS256" | squote }}
+  use: {{ .Key.use | default "sig" | squote }}
+  {{- if .Key.key_id }}
+  key_id: {{ .Key.key_id | squote }}
+  {{- end }}
+  {{- if $key }}
+  key: {{ $key }}
+  {{- end }}
+  {{- if $certificate_chain }}
+  certificate_chain: {{ $certificate_chain }}
+  {{- end }}

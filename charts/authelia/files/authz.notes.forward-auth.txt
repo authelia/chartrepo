@@ -1,0 +1,23 @@
+The following examples demonstrate configuration of the ForwardAuth implementation for ingresses like 'traefik' using a IngressRoute CRD manifest:
+
+apiVersion: {{ .CRDVersion }}
+kind: IngressRoute
+metadata:
+  name: example
+  namespace: example-namespace
+spec:
+  routes:
+  - kind: Rule
+    middlewares:
+    - name: {{ .MiddlewareName }}
+      namespace: {{ .Namespace }}
+
+The following examples demonstrate configuration of the ForwardAuth implementation for ingresses like 'traefik' using a standard Ingress manifest:
+
+apiVersion: {{ .APIVersion }}
+kind: Ingress
+metadata:
+  name: example
+  namespace: example-namespace
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: {{ printf "%s-%s@kubernetescrd" .Namespace .MiddlewareName }}

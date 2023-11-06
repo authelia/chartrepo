@@ -1,7 +1,18 @@
 access_control:
-  default_policy: {{ include "authelia.accessControl.defaultPolicy" . | trim }}
-  {{- if (gt (len .Values.configMap.access_control.networks) 0) }}
-  networks: {{ toYaml .Values.configMap.access_control.networks | nindent 2 }}
+  default_policy: {{ include "authelia.accessControl.defaultPolicy" . | trim | squote }}
+  {{- if .Values.configMap.access_control.networks }}
+  networks:
+  {{- range $network := .Values.configMap.access_control.networks }}
+  - name: {{ $network.name }}
+    networks:
+  {{- if kindIs "string" $network.neworks }}
+    - {{ $network.networks | squote }}
+  {{- else }}
+  {{- range $value := $network.networks }}
+    - {{ $value | squote }}
+  {{- end }}
+  {{- end }}
+  {{- end }}
   {{- end }}
   {{- if .Values.configMap.access_control.rules }}
   rules:
@@ -15,7 +26,7 @@ access_control:
           {{- include "authelia.squote.list" .domain | indent 8 }}
         {{- end }}
       {{- end }}
-      {{- if and .domain_regex (semverCompare ">=4.35.0" (include "authelia.version" $)) }}
+      {{- if .domain_regex }}
       domain_regex:
         {{- if kindIs "string" .domain_regex }}
         - {{ .domain_regex | squote }}
