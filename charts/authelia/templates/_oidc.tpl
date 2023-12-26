@@ -1,12 +1,34 @@
 {{/*
-Returns the OpenID Connect 1.0 clients userinfo signed response alg.
+Returns the OpenID Connect 1.0 clients token endpoint authentication method.
 */}}
-{{- define "authelia.config.oidc.client.userinfo_signed_response_alg" -}}
-    {{- if .userinfo_signed_response_alg }}
-        {{- .userinfo_signed_response_alg }}
-    {{- else if .userinfo_signing_algorithm }}
-        {{- .userinfo_signing_algorithm }}
+{{- define "authelia.config.oidc.client.token_endpoint_auth_method" -}}
+    {{- if .public }}
+        {{- .token_endpoint_auth_method | default "none" }}
     {{- else }}
-        {{- "none" }}
+        {{- .token_endpoint_auth_method | default "client_secret_post" }}
     {{- end }}
 {{- end }}
+
+
+{{/*
+Returns the OpenID Connect 1.0 clients secret.
+*/}}
+{{- define "authelia.config.oidc.client.secret" -}}
+    {{- if or .public (not .secret) }}
+        {{- "" }}
+    {{- else if kindIs "string" .secret }}
+        {{- .secret }}
+    {{- else if hasKey .secret "value" }}
+        {{- .secret.value }}
+    {{- end }}
+{{- end }}
+
+{{- define "authelia.config.oidc.client.secret.render" -}}
+    {{- if not .public }}
+        {{- if and (not (kindIs "string" .secret)) .secret.path }}
+            {{- printf "{{ secret %s | squote }}" .secret.path }}
+        {{- else }}
+            {{- (include "authelia.config.oidc.client.secret" .) | squote }}
+        {{- end }}
+    {{- end }}
+{{- end -}}

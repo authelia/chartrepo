@@ -97,13 +97,13 @@ ingress:
   #   myLabel: 'myValue'
 
   certManager: false
-  rewriteTarget: true
+  rewriteTarget: false
 
   ## The Ingress Class Name.
   # className: 'ingress-nginx'
 
   tls:
-    enabled: true
+    enabled: false
     secret: 'authelia-tls'
 
     # hostNameOverride: 'example.com'
@@ -232,7 +232,7 @@ pod:
     #   fsGroup: 2000
     pod: {}
     # pod:
-    #   readOnlyRootFilesystem: true
+    #   readOnlyRootFilesystem: false
     #   allowPrivilegeEscalation: false
     #   privileged: false
 
@@ -395,7 +395,7 @@ configMap:
 
   # Enable the configMap source for the Authelia config.
   # If this is false you need to provide a volumeMount via PV/PVC or other means that mounts to /config.
-  enabled: true
+  disabled: false
 
   annotations: {}
   # annotations:
@@ -414,7 +414,7 @@ configMap:
   # - '/configuration.oidc.yaml'
 
   filters:
-    enableTemplating: false
+    disabled: false
 
   ##
   ## Server Configuration
@@ -465,6 +465,7 @@ configMap:
       enable_expvars: false
 
       ## A list of automatically configured authz implementations if you don't wish to manually configure each one.
+      ## Important Note: If you configure the 'authz' section this is completely ignored.
       automatic_authz_implementations: []
       # automatic_authz_implementations:
       # - 'AuthRequest'
@@ -477,16 +478,22 @@ configMap:
       #     implementation: 'AuthRequest'
       #     authn_strategies:
       #     - name: 'HeaderAuthRequestProxyAuthorization'
+      #       schemes:
+      #       - 'Basic'
       #     - name: 'CookieSession'
       #   ext-authz:
       #     implementation: 'ExtAuthz'
       #     authn_strategies:
       #     - name: 'HeaderProxyAuthorization'
+      #       schemes:
+      #       - 'Basic'
       #     - name: 'CookieSession'
       #   forward-auth:
       #     implementation: 'ForwardAuth'
       #     authn_strategies:
       #     - name: 'HeaderProxyAuthorization'
+      #       schemes:
+      #       - 'Basic'
       #     - name: 'CookieSession'
 
   log:
@@ -557,7 +564,21 @@ configMap:
     reset_password:
       expiration: '5 minutes'
       jwt_algorithm: 'HS256'
-      jwt_secret: ''
+      secret:
+        ## Disables this secret and leaves configuring it entirely up to you.
+        disabled: false
+
+        ## The secret name. The internal name is special as it is the secret we generate either automatically or via the
+        ## secret_value option below.
+        secret_name: 'internal'
+
+        ## The value of a generated secret when using the 'internal' secret_name.
+        value: ''
+
+        ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+        ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+        ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+        path: 'identity_validation.reset_password.jwt.hmac.key'
 
   ##
   ## TOTP Configuration
@@ -658,6 +679,21 @@ configMap:
     hostname: ''
     integration_key: ''
     enable_self_enrollment: false
+    secret:
+      ## Disables this secret and leaves configuring it entirely up to you.
+      disabled: false
+
+      ## The secret name. The internal name is special as it is the secret we generate either automatically or via the
+      ## secret_value option below.
+      secret_name: 'internal'
+
+      ## The value of a generated secret when using the 'internal' secret_name.
+      value: ''
+
+      ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+      ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+      ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+      path: 'duo.key'
 
   ##
   ## Authentication Backend Provider Configuration
@@ -694,7 +730,7 @@ configMap:
     ldap:
 
       ## Enable LDAP Backend.
-      enabled: true
+      enabled: false
 
       ## The LDAP implementation, this affects elements like the attribute utilised for resetting a password.
       ## Acceptable options are as follows:
@@ -793,6 +829,22 @@ configMap:
       ## The username of the admin user.
       user: 'CN=Authelia,DC=example,DC=com'
 
+      password:
+        ## Disables this secret and leaves configuring it entirely up to you.
+        disabled: false
+
+        ## The secret name. The internal name is special as it is the secret we generate either automatically or via the
+        ## secret_value option below.
+        secret_name: 'internal'
+
+        ## The value of a generated secret when using the 'internal' secret_name.
+        value: ''
+
+        ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+        ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+        ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+        path: 'authentication.ldap.password.txt'
+
       attributes:
         distinguished_name: ''
 
@@ -832,7 +884,7 @@ configMap:
     file:
       enabled: false
       path: '/config/users_database.yml'
-      watch: true
+      watch: false
       search:
         email: false
         case_insensitive: false
@@ -879,16 +931,16 @@ configMap:
       max_length: 0
 
       ## Require uppercase characters.
-      require_uppercase: true
+      require_uppercase: false
 
       ## Require lowercase characters.
-      require_lowercase: true
+      require_lowercase: false
 
       ## Require numeric characters.
-      require_number: true
+      require_number: false
 
       ## Require special characters.
-      require_special: true
+      require_special: false
 
     ## zxcvbn is a well known and used password strength algorithm. It does not have tunable settings.
     zxcvbn:
@@ -1025,6 +1077,22 @@ configMap:
     ## spy or attack. Currently the default is 1M or 1 month.
     remember_me_duration: '1 month'
 
+    encryption_key:
+      ## Disables this secret and leaves configuring it entirely up to you.
+      disabled: false
+
+      ## The secret name. The internal name is special as it is the secret we generate either automatically or via the
+      ## secret_value option below.
+      secret_name: 'internal'
+
+      ## The value of a generated secret when using the 'internal' secret_name.
+      value: ''
+
+      ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+      ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+      ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+      path: 'session.encryption.key'
+
     cookies:
       - domain: ''
         subdomain: 'auth'
@@ -1041,7 +1109,7 @@ configMap:
     ##
     ## The redis connection details
     redis:
-      enabled: true
+      enabled: false
       enabledSecret: false
       host: 'redis.databases.svc.cluster.local'
       port: 6379
@@ -1049,6 +1117,22 @@ configMap:
       ## Optional username to be used with authentication.
       # username: authelia
       username: ''
+
+      password:
+        ## Disables this secret and leaves configuring it entirely up to you.
+        disabled: false
+
+        ## The secret name. The internal name is special as it is the secret we generate either automatically or via the
+        ## secret_value option below.
+        secret_name: 'internal'
+
+        ## The value of a generated secret when using the 'internal' secret_name.
+        value: ''
+
+        ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+        ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+        ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+        path: 'session.redis.password.txt'
 
       ## This is the Redis DB Index https://redis.io/commands/select (sometimes referred to as database number, DB, etc).
       database_index: 0
@@ -1093,6 +1177,22 @@ configMap:
         ## authentication. If left blank, authentication to sentinels will be done via `requirepass`.
         username: ''
 
+        password:
+          ## Disables this secret and leaves configuring it entirely up to you.
+          disabled: false
+
+          ## The secret name. The internal name is special as it is the secret we generate either automatically or via the
+          ## secret_value option below.
+          secret_name: 'internal'
+
+          ## The value of a generated secret when using the 'internal' secret_name.
+          value: ''
+
+          ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+          ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+          ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+          path: 'session.redis.sentinel.password.txt'
+
         ## The additional nodes to pre-seed the redis provider with (for sentinel).
         ## If the host in the above section is defined, it will be combined with this list to connect to sentinel.
         ## For high availability to be used you must have either defined; the host above or at least one node below.
@@ -1135,10 +1235,20 @@ configMap:
   storage:
 
     encryption_key:
-      enabled: false
-      secret_name: ''
-      secret_namespace: ''
-      secret_key: ''
+      ## Disables this secret and leaves configuring it entirely up to you.
+      disabled: false
+
+      ## The secret name. The internal name is special as it is the secret we generate either automatically or via the
+      ## secret_value option below.
+      secret_name: 'internal'
+
+      ## The value of a generated secret when using the 'internal' secret_name.
+      value: ''
+
+      ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+      ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+      ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+      path: 'storage.encryption.key'
 
     ##
     ## Local (Storage Provider)
@@ -1164,10 +1274,20 @@ configMap:
       database: 'authelia'
       username: 'authelia'
       password:
-        enabled: false
-        secret_name: ''
-        secret_namespace: ''
-        secret_key: ''
+        ## Disables this secret and leaves configuring it entirely up to you.
+        disabled: false
+
+        ## The secret name. The internal name is special as it is the secret we generate either automatically or via the
+        ## secret_value option below.
+        secret_name: 'internal'
+
+        ## The value of a generated secret when using the 'internal' secret_name.
+        value: ''
+
+        ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+        ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+        ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+        path: 'storage.mysql.password.txt'
       tls:
         enabled: false
 
@@ -1193,17 +1313,27 @@ configMap:
     ## PostgreSQL (Storage Provider)
     ##
     postgres:
-      enabled: true
+      enabled: false
       address: 'tcp://postgres.databases.svc.cluster.local:5432'
       timeout: '5 seconds'
       database: 'authelia'
       schema: 'public'
       username: 'authelia'
       password:
-        enabled: false
-        secret_name: ''
-        secret_namespace: ''
-        secret_key: ''
+        ## Disables this secret and leaves configuring it entirely up to you.
+        disabled: false
+
+        ## The secret name. The internal name is special as it is the secret we generate either automatically or via the
+        ## secret_value option below.
+        secret_name: 'internal'
+
+        ## The value of a generated secret when using the 'internal' secret_name.
+        value: ''
+
+        ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+        ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+        ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+        path: 'storage.postgres.password.txt'
       tls:
         enabled: false
 
@@ -1255,7 +1385,7 @@ configMap:
     ##   - validate the SMTP server x509 certificate during the TLS handshake against the hosts trusted certificates
     ##     (configure in tls section)
     smtp:
-      enabled: true
+      enabled: false
       enabledSecret: false
       address: 'submission://smtp.mail.svc.cluster.local:587'
       timeout: '5 seconds'
@@ -1288,10 +1418,20 @@ configMap:
 
       username: 'test'
       password:
-        enabled: false
-        secret_name: ''
-        secret_namespace: ''
-        secret_key: ''
+        ## Disables this secret and leaves configuring it entirely up to you.
+        disabled: false
+
+        ## The secret name. The internal name is special as it is the secret we generate either automatically or via the
+        ## secret_value option below.
+        secret_name: 'internal'
+
+        ## The value of a generated secret when using the 'internal' secret_name.
+        value: ''
+
+        ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+        ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+        ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+        path: 'notifier.smtp.password.txt'
 
       tls:
         ## The server subject name to check the servers certificate against during the validation process.
@@ -1317,6 +1457,22 @@ configMap:
       ## Enables this in the config map. Currently in beta stage.
       ## See https://www.authelia.com/r/openid-connect/
       enabled: false
+
+      hmac_secret:
+        ## Disables this secret and leaves configuring it entirely up to you.
+        disabled: false
+
+        ## The secret name. The internal name is special as it is the secret we generate either automatically or via the
+        ## secret_value option below.
+        secret_name: 'internal'
+
+        ## The value of a generated secret when using the 'internal' secret_name.
+        value: ''
+
+        ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+        ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+        ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+        path: 'identity_providers.oidc.hmac.key'
 
       lifespans:
         access_token: '1 hour'
@@ -1447,7 +1603,7 @@ configMap:
 
         ## Automatically adds the origin portion of all redirect URI's on all clients to the list of allowed_origins,
         ## provided they have the scheme http or https and do not have the hostname of localhost.
-        allowed_origins_from_client_redirect_uris: true
+        allowed_origins_from_client_redirect_uris: false
 
       clients: []
 
@@ -1548,7 +1704,7 @@ configMap:
           # token_endpoint_auth_signing_alg: 'RS256'
 
           ## The authentication method the client must use to authenticate.
-          # token_endpoint_auth_method: 'client_secret_basic'
+          # token_endpoint_auth_method: 'client_secret_post'
 
 
 ##
@@ -1559,6 +1715,9 @@ configMap:
 ## and use the existingSecrets. All secrets can be stored in a single k8s secret if desired using the key option.
 ##
 secret:
+
+  disabled: false
+
   existingSecret: ''
   # existingSecret: authelia
 
@@ -1572,53 +1731,19 @@ secret:
 
   mountPath: '/secrets'
 
-  excludeVolumeAndMounts: false
-
-  ## Secrets.
-  jwt:
-    key: 'JWT_TOKEN'
-    value: ''
-    filename: 'JWT_TOKEN'
-  ldap:
-    key: 'LDAP_PASSWORD'
-    value: ''
-    filename: 'LDAP_PASSWORD'
-  storage:
-    key: 'STORAGE_PASSWORD'
-    value: ''
-    filename: 'STORAGE_PASSWORD'
-  storageEncryptionKey:
-    key: 'STORAGE_ENCRYPTION_KEY'
-    value: ''
-    filename: 'STORAGE_ENCRYPTION_KEY'
-  session:
-    key: 'SESSION_ENCRYPTION_KEY'
-    value: ''
-    filename: 'SESSION_ENCRYPTION_KEY'
-  duo:
-    key: 'DUO_API_KEY'
-    value: ''
-    filename: 'DUO_API_KEY'
-  redis:
-    key: 'REDIS_PASSWORD'
-    value: ''
-    filename: 'REDIS_PASSWORD'
-  redisSentinel:
-    key: 'REDIS_SENTINEL_PASSWORD'
-    value: ''
-    filename: 'REDIS_SENTINEL_PASSWORD'
-  smtp:
-    key: 'SMTP_PASSWORD'
-    value: ''
-    filename: 'SMTP_PASSWORD'
-  oidcPrivateKey:
-    key: 'OIDC_PRIVATE_KEY'
-    value: ''
-    filename: 'OIDC_PRIVATE_KEY'
-  oidcHMACSecret:
-    key: 'OIDC_HMAC_SECRET'
-    value: ''
-    filename: 'OIDC_HMAC_SECRET'
+  ## additionalSecrets contains a list of additional secrets to mount.
+  ## They will all be mounted in the format of '/{mountPath}/{key}' where the '{mountPath}' is the value above and
+  ## '{key}' is the key from the dictionary below (in our example we named it 'example'). If the items are specified
+  ## then those options will be rendered in the volumes spec. See 'example-without-items' for an example that doesn't
+  ## specify this.
+  ##
+  additionalSecrets: {}
+  # additionalSecrets:
+  #   example:
+  #     items:
+  #       - key: 'key-example'
+  #         path: 'path-example'
+  #   example-without-items: {}
 
 certificates:
   existingSecret: ''

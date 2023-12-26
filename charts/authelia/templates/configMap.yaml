@@ -11,6 +11,7 @@ metadata:
 data:
   {{ .Values.configMap.key | default "configuration.yaml" }}: |
     ---
+    {{ include "authelia.schema" (merge (dict "SchemaName" "configuration") .) }}
     {{- if (include "authelia.enabled.certificatesSecret" .) }}
     certificates_directory: '/certificates'
     {{- end }}
@@ -31,6 +32,25 @@ data:
       endpoints:
         enable_pprof: {{ .Values.configMap.server.endpoints.enable_pprof | default false }}
         enable_expvars: {{ .Values.configMap.server.endpoints.enable_expvars | default false }}
+        {{- if .Values.configMap.server.endpoints.authz }}
+        authz:
+        {{- range $name, $endpoint := .Values.configMap.server.endpoints.authz }}
+        {{- tpl ($.Files.Get "files/configuration.server.endpoints.authz.yaml") (merge (dict "Name" $name "Endpoint" $endpoint) $) | trim | nindent 10 }}
+        {{- end }}
+        {{- else if .Values.configMap.server.endpoints.automatic_authz_implementations }}
+        {{- range $name := .Values.configMap.server.endpoints.automatic_authz_implementations }}
+          {{- if eq "AuthRequest" $name }}
+          auth-request:
+            implementation: 'AuthRequest'
+          {{- else if eq "ExtAuthz" $name }}
+          ext-authz:
+            implementation: 'ExtAuthz'
+          {{- else if eq "ForwardAuth" $name }}
+          forward-auth:
+            implementation: 'ForwardAuth'
+          {{- end }}
+        {{- end }}
+        {{- end }}
     log:
       level: {{ .Values.configMap.log.level | default "info" | squote }}
       format: {{ .Values.configMap.log.format | default "text" | squote }}
@@ -69,15 +89,15 @@ data:
       period: {{ .Values.configMap.totp.period | default 30 }}
       allowed_algorithms:
       {{- range $algorithm := (.Values.configMap.totp.allowed_algorithms | default (list "SHA1")) }}
-      - {{ $algorithm | squote }}
+        - {{ $algorithm | squote }}
       {{- end }}
       allowed_digits:
       {{- range $digits := (.Values.configMap.totp.allowed_digits | default (list 6)) }}
-      - {{ $digits }}
+        - {{ $digits }}
       {{- end }}
       allowed_periods:
       {{- range $periods := (.Values.configMap.totp.allowed_periods | default (list 30)) }}
-      - {{ $periods }}
+        - {{ $periods }}
       {{- end }}
     webauthn:
       disable: {{ .Values.configMap.webauthn.disable | default false }}
@@ -113,11 +133,11 @@ data:
           algorithm: {{ $auth.file.password.algorithm | squote }}
           argon2:
             variant: {{ $auth.file.password.argon2.variant | default "argon2" | squote }}
-            iterations: {{ (include "authelia.config.auth.file.iterations.argon2" $) }}
-            memory: {{ (include "authelia.config.auth.file.memory.argon2" $) }}
-            parallelism: {{ (include "authelia.config.auth.file.parallelism.argon2" $) }}
-            key_length: {{ (include "authelia.config.auth.file.key_length.argon2" $) }}
-            salt_length: {{ (include "authelia.config.auth.file.salt_length.argon2" $) }}
+            iterations: {{ $auth.file.password.argon2.iterations | default 3 }}
+            memory: {{ $auth.file.password.argon2.memory | default 65536 }}
+            parallelism: {{ $auth.file.password.argon2.parallelism | default 4 }}
+            key_length: {{ $auth.file.password.argon2.key_length | default 32 }}
+            salt_length: {{ $auth.file.password.argon2.salt_length | default 16 }}
           scrypt:
             iterations: {{ $auth.file.password.scrypt.iterations | default 16 }}
             block_size: {{ $auth.file.password.scrypt.block_size | default 8 }}
@@ -130,8 +150,8 @@ data:
             salt_length: {{ $auth.file.password.pbkdf2.salt_length | default 16 }}
           sha2crypt:
             variant: {{ $auth.file.password.sha2crypt.variant | default "sha512" | squote }}
-            iterations: {{ (include "authelia.config.auth.file.iterations.sha2crypt" $) }}
-            salt_length: {{ (include "authelia.config.auth.file.salt_length.sha2crypt" $) }}
+            iterations: {{ $auth.file.password.sha2crypt.iterations | default 50000 }}
+            salt_length: {{ $auth.file.password.sha2crypt.salt_length | default 16 }}
           bcrypt:
             variant: {{ $auth.file.password.bcrypt.variant | default "standard" | squote }}
             cost: {{ $auth.file.password.bcrypt.cost | default 12 }}
@@ -143,9 +163,7 @@ data:
         timeout: {{ include "authelia.func.dquote" ($auth.ldap.timeout | default "5 seconds") }}
         start_tls: {{ $auth.ldap.start_tls }}
         tls:
-          {{- if hasKey $auth.ldap.tls "server_name" }}
           server_name: {{ $auth.ldap.tls.server_name | default "" | squote }}
-          {{- end }}
           skip_verify: {{ $auth.ldap.tls.skip_verify | default false }}
           minimum_version: {{ $auth.ldap.tls.minimum_version | default "TLS1.2" | squote }}
           maximum_version: {{ $auth.ldap.tls.maximum_version | default "TLS1.3" | squote }}
@@ -198,26 +216,26 @@ data:
       remember_me_duration: {{ include "authelia.func.dquote" ($session.inactivity | default "1 month") }}
       cookies:
       {{- range $cookie := (required "The value 'configMap.session.cookies' must have at least one configuration" $session.cookies) }}
-      - domain: {{ required "All 'domain' values for the 'configMap.session.cookies' configurations must be configured" .domain | squote }}
-        authelia_url: {{ printf "https://%s" (include "authelia.ingress.host" (merge (dict "SubDomain" $cookie.subdomain "Domain" $cookie.domain) $)) | squote }}
-        {{- if $cookie.default_redirection_url }}
-        default_redirection_url: {{ $cookie.default_redirection_url | squote }}
-        {{- end }}
-        {{- if $cookie.name }}
-        name: {{ $cookie.name | squote }}
-        {{- end }}
-        {{- if $cookie.same_site }}
-        same_site: {{ $cookie.same_site | squote }}
-        {{- end }}
-        {{- if $cookie.inactivity }}
-        inactivity: {{ include "authelia.func.dquote" $cookie.inactivity }}
-        {{- end }}
-        {{- if $cookie.expiration }}
-        expiration: {{ include "authelia.func.dquote" $cookie.expiration }}
-        {{- end }}
-        {{- if $cookie.remember_me }}
-        remember_me: {{ include "authelia.func.dquote" $cookie.remember_me }}
-        {{- end }}
+        - domain: {{ required "All 'domain' values for the 'configMap.session.cookies' configurations must be configured" .domain | squote }}
+          authelia_url: {{ printf "https://%s" (include "authelia.ingress.host" (merge (dict "SubDomain" $cookie.subdomain "Domain" $cookie.domain) $)) | squote }}
+          {{- if $cookie.default_redirection_url }}
+          default_redirection_url: {{ $cookie.default_redirection_url | squote }}
+          {{- end }}
+          {{- if $cookie.name }}
+          name: {{ $cookie.name | squote }}
+          {{- end }}
+          {{- if $cookie.same_site }}
+          same_site: {{ $cookie.same_site | squote }}
+          {{- end }}
+          {{- if $cookie.inactivity }}
+          inactivity: {{ include "authelia.func.dquote" $cookie.inactivity }}
+          {{- end }}
+          {{- if $cookie.expiration }}
+          expiration: {{ include "authelia.func.dquote" $cookie.expiration }}
+          {{- end }}
+          {{- if $cookie.remember_me }}
+          remember_me: {{ include "authelia.func.dquote" $cookie.remember_me }}
+          {{- end }}
       {{- end }}
       {{- if $session.redis.enabled }}
       redis:
@@ -231,7 +249,7 @@ data:
         minimum_idle_connections: {{ $session.redis.minimum_idle_connections | default 0 }}
         {{- if $session.redis.tls.enabled }}
         tls:
-          server_name: {{ $session.redis.tls.server_name | squote }}
+          server_name: {{ $session.redis.tls.server_name | default "" | squote }}
           skip_verify: {{ $session.redis.tls.skip_verify | default false }}
           minimum_version: {{ $session.redis.tls.minimum_version | default "TLS1.2" | squote }}
           maximum_version: {{ $session.redis.tls.maximum_version | default "TLS1.3" | squote }}
@@ -269,7 +287,7 @@ data:
         database: {{ $storage.mysql.database | default "authelia" | squote }}
         username: {{ $storage.mysql.username |  default "authelia" | squote }}
         tls:
-          server_name: {{ $storage.mysql.tls.server_name | default $storage.mysql.host | squote }}
+          server_name: {{ $storage.mysql.tls.server_name | default "" | squote }}
           skip_verify: {{ $storage.mysql.tls.skip_verify | default false }}
           minimum_version: {{ $storage.mysql.tls.minimum_version | default "TLS1.2" | squote }}
           maximum_version: {{ $storage.mysql.tls.maximum_version | default "TLS1.3" | squote }}
@@ -282,7 +300,7 @@ data:
         schema: {{ $storage.postgres.schema | default "public" | squote }}
         username: {{ $storage.postgres.username | default "authelia" | squote }}
         tls:
-          server_name: {{ $storage.postgres.tls.server_name | default $storage.postgres.host | squote }}
+          server_name: {{ $storage.postgres.tls.server_name | default "" | squote }}
           skip_verify: {{ $storage.postgres.tls.skip_verify | default false }}
           minimum_version: {{ $storage.postgres.tls.minimum_version | default "TLS1.2" | squote }}
           maximum_version: {{ $storage.postgres.tls.maximum_version | default "TLS1.3" | squote }}
@@ -308,7 +326,7 @@ data:
         disable_require_tls: {{ $notifier.smtp.disable_require_tls }}
         disable_starttls: {{ $notifier.smtp.disable_starttls | default false }}
         tls:
-          server_name: {{ $notifier.smtp.tls.server_name | default $notifier.smtp.host | squote }}
+          server_name: {{ $notifier.smtp.tls.server_name | default "" | squote }}
           skip_verify: {{ $notifier.smtp.tls.skip_verify | default false }}
           minimum_version: {{ $notifier.smtp.tls.minimum_version | default "TLS1.2" | squote }}
           maximum_version: {{ $notifier.smtp.tls.maximum_version | default "TLS1.3" | squote }}
@@ -376,7 +394,7 @@ data:
         minimum_parameter_entropy: {{ .Values.configMap.identity_providers.oidc.minimum_parameter_entropy | default 8 }}
         issuer_private_keys:
         {{- range $key := .Values.configMap.identity_providers.oidc.issuer_private_keys }}
-        {{- tpl ($.Files.Get "files/configuration.oidc.jwk.yaml") (merge (dict "Key" $key "Indent" 4) $) | trim | nindent 8 }}
+        {{- tpl ($.Files.Get "files/configuration.oidc.jwk.yaml") (merge (dict "Key" $key "Indent" 4) $) | trim | nindent 10 }}
         {{- end }}
         cors:
           {{- if .Values.configMap.identity_providers.oidc.cors.endpoints }}
@@ -395,7 +413,7 @@ data:
       {{- if .Values.configMap.identity_providers.oidc.clients }}
         clients:
       {{- range $client := .Values.configMap.identity_providers.oidc.clients }}
-        {{- tpl ($.Files.Get "files/configuration.oidc.client.yaml") (merge (dict "Client" $client) $) | trim | nindent 8 }}
+        {{- tpl ($.Files.Get "files/configuration.oidc.client.yaml") (merge (dict "Client" $client) $) | trim | nindent 10 }}
       {{- end }}
         {{- end }}
     {{- if and (not (include "authelia.mount.acl.secret" .)) }}

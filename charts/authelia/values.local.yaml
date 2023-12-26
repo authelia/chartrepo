@@ -461,7 +461,41 @@ configMap:
       ## Idle timeout.
       idle: '30 seconds'
 
-    endpoints: {}
+    endpoints:
+      enable_pprof: false
+      enable_expvars: false
+
+      ## A list of automatically configured authz implementations if you don't wish to manually configure each one.
+      ## Important Note: If you configure the 'authz' section this is completely ignored.
+      automatic_authz_implementations: []
+      # automatic_authz_implementations:
+      # - 'AuthRequest'
+      # - 'ExtAuthz'
+      # - 'ForwardAuth'
+
+      authz: {}
+      # authz:
+      #   auth-request:
+      #     implementation: 'AuthRequest'
+      #     authn_strategies:
+      #     - name: 'HeaderAuthRequestProxyAuthorization'
+      #       schemes:
+      #       - 'Basic'
+      #     - name: 'CookieSession'
+      #   ext-authz:
+      #     implementation: 'ExtAuthz'
+      #     authn_strategies:
+      #     - name: 'HeaderProxyAuthorization'
+      #       schemes:
+      #       - 'Basic'
+      #     - name: 'CookieSession'
+      #   forward-auth:
+      #     implementation: 'ForwardAuth'
+      #     authn_strategies:
+      #     - name: 'HeaderProxyAuthorization'
+      #       schemes:
+      #       - 'Basic'
+      #     - name: 'CookieSession'
 
   log:
     ## Level of verbosity for logs: info, debug, trace.
@@ -1521,7 +1555,7 @@ configMap:
           # token_endpoint_auth_signing_alg: 'RS256'
 
           ## The authentication method the client must use to authenticate.
-          # token_endpoint_auth_method: 'client_secret_basic'
+          # token_endpoint_auth_method: 'client_secret_post'
 
 
 ##
