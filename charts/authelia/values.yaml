@@ -35,7 +35,7 @@ image:
   # registry: docker.io
   registry: ghcr.io
   repository: authelia/authelia
-  tag: ''
+  tag: v4.38.0-beta3
   pullPolicy: IfNotPresent
   pullSecrets: []
   # pullSecrets:
