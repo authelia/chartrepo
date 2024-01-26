@@ -97,67 +97,67 @@ spec:
         {{- with $secret := .Values.configMap.identity_validation.reset_password.secret }}
         {{- if and (not $secret.disabled) }}
         - name: AUTHELIA_IDENTITY_PROVIDERS_RESET_PASSWORD_JWT_SECRET_FILE
-          value:  {{ include "authelia.secret.env.path" (merge (dict "MountPath" (include "authelia.secret.mountPath" $) "SecretName" $secret.secret_name "SecretPath" (include "authelia.secret.path.reset_password.jwt" $)) $) }}
+          value: {{ include "authelia.secret.env.path" (merge (dict "MountPath" (include "authelia.secret.mountPath" $) "SecretName" $secret.secret_name "SecretPath" (include "authelia.secret.path.reset_password.jwt" $)) $) }}
         {{- end }}
         {{- end }}
         {{- with $secret := .Values.configMap.session.encryption_key }}
         {{- if and (not $secret.disabled) }}
         - name: AUTHELIA_SESSION_SECRET_FILE
-          value:  {{ include "authelia.secret.env.path" (merge (dict "MountPath" (include "authelia.secret.mountPath" $) "SecretName" $secret.secret_name "SecretPath" (include "authelia.secret.path.session.encryption_key" $)) $) }}
+          value: {{ include "authelia.secret.env.path" (merge (dict "MountPath" (include "authelia.secret.mountPath" $) "SecretName" $secret.secret_name "SecretPath" (include "authelia.secret.path.session.encryption_key" $)) $) }}
         {{- end }}
         {{- end }}
         {{- with $secret := .Values.configMap.session.redis.password }}
         {{- if and (not $secret.disabled) $.Values.configMap.session.redis.enabled }}
         - name: AUTHELIA_SESSION_REDIS_PASSWORD_FILE
-          value:  {{ include "authelia.secret.env.path" (merge (dict "MountPath" (include "authelia.secret.mountPath" $) "SecretName" $secret.secret_name "SecretPath" (include "authelia.secret.path.redis.password" $)) $) }}
+          value: {{ include "authelia.secret.env.path" (merge (dict "MountPath" (include "authelia.secret.mountPath" $) "SecretName" $secret.secret_name "SecretPath" (include "authelia.secret.path.redis.password" $)) $) }}
         {{- end }}
         {{- end }}
         {{- with $secret := .Values.configMap.session.redis.high_availability.password }}
         {{- if and (not $secret.disabled) $.Values.configMap.session.redis.high_availability.enabled }}
         - name: AUTHELIA_SESSION_REDIS_HIGH_AVAILABILITY_SENTINEL_PASSWORD_FILE
-          value:  {{ include "authelia.secret.env.path" (merge (dict "MountPath" (include "authelia.secret.mountPath" $) "SecretName" $secret.secret_name "SecretPath" (include "authelia.secret.path.redis.sentinel.password" $)) $) }}
+          value: {{ include "authelia.secret.env.path" (merge (dict "MountPath" (include "authelia.secret.mountPath" $) "SecretName" $secret.secret_name "SecretPath" (include "authelia.secret.path.redis.sentinel.password" $)) $) }}
         {{- end }}
         {{- end }}
         {{- with $secret := .Values.configMap.authentication_backend.ldap.password }}
         {{- if and (not $secret.disabled) $.Values.configMap.authentication_backend.ldap.enabled }}
         - name: AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE
-          value:  {{ include "authelia.secret.env.path" (merge (dict "MountPath" (include "authelia.secret.mountPath" $) "SecretName" $secret.secret_name "SecretPath" (include "authelia.secret.path.ldap.password" $)) $) }}
+          value: {{ include "authelia.secret.env.path" (merge (dict "MountPath" (include "authelia.secret.mountPath" $) "SecretName" $secret.secret_name "SecretPath" (include "authelia.secret.path.ldap.password" $)) $) }}
         {{- end }}
         {{- end }}
         {{- with $secret := .Values.configMap.notifier.smtp.password }}
         {{- if and (not $secret.disabled) $.Values.configMap.notifier.smtp.enabled  }}
         - name: AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE
-          value:  {{ include "authelia.secret.env.path" (merge (dict "MountPath" (include "authelia.secret.mountPath" $) "SecretName" $secret.secret_name "SecretPath" (include "authelia.secret.path.smtp.password" $)) $) }}
+          value: {{ include "authelia.secret.env.path" (merge (dict "MountPath" (include "authelia.secret.mountPath" $) "SecretName" $secret.secret_name "SecretPath" (include "authelia.secret.path.smtp.password" $)) $) }}
         {{- end }}
         {{- end }}
         {{- with $secret := .Values.configMap.storage.encryption_key }}
         {{- if and (not $secret.disabled) }}
         - name: AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE
-          value:  {{ include "authelia.secret.env.path" (merge (dict "MountPath" (include "authelia.secret.mountPath" $) "SecretName" $secret.secret_name "SecretPath" (include "authelia.secret.path.storage.encryption_key" $)) $) }}
+          value: {{ include "authelia.secret.env.path" (merge (dict "MountPath" (include "authelia.secret.mountPath" $) "SecretName" $secret.secret_name "SecretPath" (include "authelia.secret.path.storage.encryption_key" $)) $) }}
         {{- end }}
         {{- end }}
         {{- with $secret := .Values.configMap.storage.postgres.password }}
         {{- if and (not $secret.disabled) $.Values.configMap.storage.postgres.enabled }}
         - name: AUTHELIA_STORAGE_POSTGRES_PASSWORD_FILE
-          value:  {{ include "authelia.secret.env.path" (merge (dict "MountPath" (include "authelia.secret.mountPath" $) "SecretName" $secret.secret_name "SecretPath" (include "authelia.secret.path.postgres.password" $)) $) }}
+          value: {{ include "authelia.secret.env.path" (merge (dict "MountPath" (include "authelia.secret.mountPath" $) "SecretName" $secret.secret_name "SecretPath" (include "authelia.secret.path.postgres.password" $)) $) }}
         {{- end }}
         {{- end }}
         {{- with $secret := .Values.configMap.storage.mysql.password }}
         {{- if and (not $secret.disabled) $.Values.configMap.storage.mysql.enabled }}
         - name: AUTHELIA_STORAGE_MYSQL_PASSWORD_FILE
-          value:  {{ include "authelia.secret.env.path" (merge (dict "MountPath" (include "authelia.secret.mountPath" $) "SecretName" $secret.secret_name "SecretPath" (include "authelia.secret.path.mysql.password" $)) $) }}
+          value: {{ include "authelia.secret.env.path" (merge (dict "MountPath" (include "authelia.secret.mountPath" $) "SecretName" $secret.secret_name "SecretPath" (include "authelia.secret.path.mysql.password" $)) $) }}
         {{- end }}
         {{- end }}
         {{- with $secret := .Values.configMap.duo_api.secret }}
         {{- if and (not $secret.disabled) $.Values.configMap.duo_api.enabled }}
         - name: AUTHELIA_DUO_API_SECRET_KEY_FILE
-          value:  {{ include "authelia.secret.env.path" (merge (dict "MountPath" (include "authelia.secret.mountPath" $) "SecretName" $secret.secret_name "SecretPath" (include "authelia.secret.path.duo" $)) $) }}
+          value: {{ include "authelia.secret.env.path" (merge (dict "MountPath" (include "authelia.secret.mountPath" $) "SecretName" $secret.secret_name "SecretPath" (include "authelia.secret.path.duo" $)) $) }}
         {{- end }}
         {{- end }}
         {{- with $secret := .Values.configMap.identity_providers.oidc.hmac_secret }}
         {{- if and (not $secret.disabled) $.Values.configMap.identity_providers.oidc.enabled }}
         - name: AUTHELIA_IDENTITY_PROVIDERS_OIDC_HMAC_SECRET_FILE
-          value:  {{ include "authelia.secret.env.path" (merge (dict "MountPath" (include "authelia.secret.mountPath" $) "SecretName" $secret.secret_name "SecretPath" (include "authelia.secret.path.oidc.hmac_key" $)) $) }}
+          value: {{ include "authelia.secret.env.path" (merge (dict "MountPath" (include "authelia.secret.mountPath" $) "SecretName" $secret.secret_name "SecretPath" (include "authelia.secret.path.oidc.hmac_key" $)) $) }}
         {{- end }}
         {{- end }}
         {{- end }}
@@ -165,7 +165,7 @@ spec:
           value: {{ (include "authelia.config.paths" .) | squote }}
         {{- if not .Values.configMap.filters.disabled }}
         - name: X_AUTHELIA_CONFIG_FILTERS
-          value: 'template'
+          value: template
         {{- end }}
         {{- with $env := .Values.pod.env }}{{ toYaml $env | nindent 8 }}{{- end }}
         {{- with $probe := include "authelia.merge.probe" (merge (dict "Type" "startup" "Method" .Values.pod.probes.method "Probe" .Values.pod.probes.startup) .) }}
@@ -267,67 +267,67 @@ spec:
           secretName: {{ default (include "authelia.name" .) .Values.secret.existingSecret }}
           items:
           {{- with $secret := .Values.configMap.identity_validation.reset_password.secret }}
-          {{- if and (not $secret.disabled) (or (not $secret.secret_name) (eq $secret.secret_name "internal")) }}
+          {{- if and (not $secret.disabled) (not $secret.secret_name) }}
           - key: {{ include "authelia.secret.path.reset_password.jwt" $ }}
             path: {{ include "authelia.secret.path.reset_password.jwt" $ }}
           {{- end }}
           {{- end }}
           {{- with $secret := .Values.configMap.session.encryption_key }}
-          {{- if and (not $secret.disabled) (or (not $secret.secret_name) (eq $secret.secret_name "internal")) }}
+          {{- if and (not $secret.disabled) (not $secret.secret_name) }}
           - key: {{ include "authelia.secret.path.session.encryption_key" $ }}
             path: {{ include "authelia.secret.path.session.encryption_key" $ }}
           {{- end }}
           {{- end }}
           {{- with $secret := .Values.configMap.session.redis.password }}
-          {{- if and (not $secret.disabled) (or (not $secret.secret_name) (eq $secret.secret_name "internal")) $.Values.configMap.session.redis.enabled }}
+          {{- if and (not $secret.disabled) (not $secret.secret_name) $.Values.configMap.session.redis.enabled }}
           - key: {{ include "authelia.secret.path.redis.password" $ }}
             path: {{ include "authelia.secret.path.redis.password" $ }}
           {{- end }}
           {{- end }}
           {{- with $secret := .Values.configMap.session.redis.high_availability.password }}
-          {{- if and (not $secret.disabled) (or (not $secret.secret_name) (eq $secret.secret_name "internal")) $.Values.configMap.session.redis.high_availability.enabled }}
+          {{- if and (not $secret.disabled) (not $secret.secret_name) $.Values.configMap.session.redis.high_availability.enabled }}
           - key: {{ include "authelia.secret.path.redis.sentinel.password" $ }}
             path: {{ include "authelia.secret.path.redis.sentinel.password" $ }}
           {{- end }}
           {{- end }}
           {{- with $secret := .Values.configMap.authentication_backend.ldap.password }}
-          {{- if and (not $secret.disabled) (or (not $secret.secret_name) (eq $secret.secret_name "internal")) $.Values.configMap.authentication_backend.ldap.enabled }}
+          {{- if and (not $secret.disabled) (not $secret.secret_name) $.Values.configMap.authentication_backend.ldap.enabled }}
           - key: {{ include "authelia.secret.path.ldap.password" $ }}
             path: {{ include "authelia.secret.path.ldap.password" $ }}
           {{- end }}
           {{- end }}
           {{- with $secret := .Values.configMap.notifier.smtp.password }}
-          {{- if and (not $secret.disabled) (or (not $secret.secret_name) (eq $secret.secret_name "internal")) $.Values.configMap.notifier.smtp.enabled }}
+          {{- if and (not $secret.disabled) (not $secret.secret_name) $.Values.configMap.notifier.smtp.enabled }}
           - key: {{ include "authelia.secret.path.smtp.password" $ }}
             path: {{ include "authelia.secret.path.smtp.password" $ }}
           {{- end }}
           {{- end }}
           {{- with $secret := .Values.configMap.storage.encryption_key }}
-          {{- if and (not $secret.disabled) (or (not $secret.secret_name) (eq $secret.secret_name "internal")) }}
+          {{- if and (not $secret.disabled) (not $secret.secret_name) }}
           - key: {{ include "authelia.secret.path.storage.encryption_key" $ }}
             path: {{ include "authelia.secret.path.storage.encryption_key" $ }}
           {{- end }}
           {{- end }}
           {{- with $secret := .Values.configMap.storage.postgres.password }}
-          {{- if and (not $secret.disabled) (or (not $secret.secret_name) (eq $secret.secret_name "internal")) $.Values.configMap.storage.postgres.enabled }}
+          {{- if and (not $secret.disabled) (not $secret.secret_name) $.Values.configMap.storage.postgres.enabled }}
           - key: {{ include "authelia.secret.path.postgres.password" $ }}
             path: {{ include "authelia.secret.path.postgres.password" $ }}
           {{- end }}
           {{- end }}
           {{- with $secret := .Values.configMap.storage.mysql.password }}
-          {{- if and (not $secret.disabled) (or (not $secret.secret_name) (eq $secret.secret_name "internal")) $.Values.configMap.storage.mysql.enabled }}
+          {{- if and (not $secret.disabled) (not $secret.secret_name) $.Values.configMap.storage.mysql.enabled }}
           - key: {{ include "authelia.secret.path.mysql.password" $ }}
             path: {{ include "authelia.secret.path.mysql.password" $ }}
           {{- end }}
           {{- end }}
           {{- with $secret := .Values.configMap.duo_api.secret }}
-          {{- if and (not $secret.disabled) (or (not $secret.secret_name) (eq $secret.secret_name "internal")) $.Values.configMap.duo_api.enabled }}
+          {{- if and (not $secret.disabled) (not $secret.secret_name) $.Values.configMap.duo_api.enabled }}
           - key: {{ include "authelia.secret.path.duo" $ }}
             path: {{ include "authelia.secret.path.duo" $ }}
           {{- end }}
           {{- end }}
           {{- with $secret := .Values.configMap.identity_providers.oidc.hmac_secret }}
-          {{- if and (not $secret.disabled) (or (not $secret.secret_name) (eq $secret.secret_name "internal")) $.Values.configMap.identity_providers.oidc.enabled }}
+          {{- if and (not $secret.disabled) (not $secret.secret_name) $.Values.configMap.identity_providers.oidc.enabled }}
           - key: {{ include "authelia.secret.path.oidc.hmac_key" $ }}
             path: {{ include "authelia.secret.path.oidc.hmac_key" $ }}
           {{- end }}

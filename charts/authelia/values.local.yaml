@@ -681,8 +681,8 @@ configMap:
       ## Disable both the HTML element and the API for reset password functionality
       disable: false
 
-      ## External reset password url that redirects the user to an external reset portal. This disables the internal reset
-      ## functionality.
+      ## External reset password url that redirects the user to an external reset portal. This disables the internal
+      ## reset functionality.
       custom_url: ''
 
     ## The amount of time to wait before we refresh data from the authentication backend. Uses duration notation.

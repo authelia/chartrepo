@@ -10,201 +10,12 @@ deploy *Authelia* on its own. Eventually we may publish an `authelia-bundle` cha
 
 # Breaking Changes
 
-During the beta we will generally not be documenting breaking chart changes but there are exceptions and they are noted
-below.
+Breaking changes with this chart should be expected during the v0.x.x versions at any time however we aim to keep the
+breaking changes within minor releases i.e. from v0.1.0 to v0.2.0. The following versions have notable breaking changes
+which users should be aware of:
 
-## 0.9.0
-
-While we have aimed to keep documented backwards compatability for previous versions of Authelia deployed with the chart
-we have to draw a line with this release. Due to the way the chart was designed and the introduction of mutli-cookie
-domains and the new authz endpoints there is just too many scenarios to handle. We're therefore cutting off support for
-prior releases with this chart release as well as making several quality of life breaking changes. This was announced in
-several ways and we hope the message got across.
-
-It's difficult for users when we make breaking changes and this one is unfortunately quite substantial. We're hoping
-that both the documentation below will ease this transition and that we've made the best choices possible for any given
-scenario.
-
-If you spot any breaking change we've not listed please let us know respectfully. Unfortunately due to the gravity of
-the changes there may be breaking changes we have to add to this list. In addition if you were not aware of the upcoming
-breaking changes and had some constructive ideas that you think would have helped then please let us know. 
-
-### Secrets
-
-As originally planned we've overhauled the secrets configuration. In part to adapt to the new changes and also to make
-the feature much easier to understand. 
-
-The chart itself is now capable of both generating multiple secrets and utilizing a mix of existing secrets and
-generated ones. These settings are configured on a per configuration section basis. 
-
-The HashiCorp Vault Injector options have been removed as they should be configurable via the relevant 
-labels/annotations. If it's unclear how to achieve a specific chart output value that you need for this purpose please
-let us know the specific output you're after in a [discussion](https://github.com/authelia/authelia/discussions) (we are
-not experts at HashiCorp Vault, so if you're unsure of the specific output you need you can still ask but we may just 
-not be able to help).
-
-In addition you may manually add secrets as you see fit to use with the new templates filter.
-
-The following example should allow turning any option into a secret and dynamically adding the multiline formatting 
-(in the example we use an indent of 2):
-
-```yaml
-configMap:
-  exampleValue: '{{ secret "/secrets/path.file" | mindent 2 "|" | msquote }}'
-```
-
-### Sessions and Domains
-
-Several breaking changes have occurred to the domains and sessions configuration. We have no plans to support both the
-single cookie domain variation and the multi cookie domain variation going forward with Authelia, the former is left as
-a means to prevent a breaking change. As such we're making the hard change now for chart users.
-
-#### Domain, Default Redirection URL, and Subdomain
-
-The domain value has been removed and is now part of the session section. Each cookie domain configuration here will
-generate relevant manifests such as ingresses. This is so we can properly facilitate the multi-cookie domain 
-configurations. This also affects the default redirection URL which is no longer supported on 4.38.0 helm installations.
-
-See below for representations of the YAML changes (before and after respectively).
-
-```yaml
-domain: 'example.com'
-ingress:
-  subdomain: 'authelia'
-configMap:
-  default_redirection_url: 'https://www.example.com'
-```
-
-```yaml
-configMap:
-  session:
-    cookies:
-      - domain: 'example.com'
-        subdomain: 'authelia'
-        default_redirection_url: 'https://www.example.com'
-```
-
-### OpenID Connect 1.0 Changes
-
-Several OpenID Connect 1.0 changes have occurred which will not be automatically detected if you're using old values and
-may cause an error if you're still using them.
-
-#### Client Option: token_endpoint_auth_method
-
-Clients will be forced to use a specific authentication method. By default all clients will use `client_secret_post`
-however this can be changed using the `token_endpoint_auth_method` parameter for each client. This is probably the most
-impactful change as you'll need to consult the documentation for the third party application to determine what method
-it utilizes. Generally speaking the `client_secret_post` (also known as in form/body) should work, otherwise it's likely 
-`client_secret_basic` (also known as header or in header).
-
-Example:
-
-```yaml
-configMap:
-  identity_providers:
-    oidc:
-      clients:
-      - id: 'myid'
-        token_endpoint_auth_method: 'client_secret_basic'
-```
-
-#### Client Option: secret
-
-The secret must now be prefixed with a hashing prefix. You may choose to prefix it with `$plaintext$` but we're strongly
-urging users to use a proper hash as this option will not be permitted in the near future except for clients using the
-`client_secret_jwt` authentication method for the `token_endpoint_auth_method` option.
-
-In addition client secrets can now be specified via a path which you've mounted into the Pods. This option is backwards
-compatible and allows either specifying it directly as a value or using the dictionary structure. Example with commented
-alternatives below.
-
-```yaml
-configMap:
-  identity_providers:
-    oidc:
-      clients:
-      - id: 'example'
-        # secret: '$pbkdf2-sha512$310000$c8p78n7pUMln0jzvd4aK4Q$JNRBzwAo0ek5qKn50cFzzvE9RXV88h1wJn5KGiHrD0YKtZaR/nCb2CJPOsKaPK0hjf.9yHxzQGZziziccp6Yng'  # The digest of 'insecure_secret'.
-        secret:
-          # value: '$pbkdf2-sha512$310000$c8p78n7pUMln0jzvd4aK4Q$JNRBzwAo0ek5qKn50cFzzvE9RXV88h1wJn5KGiHrD0YKtZaR/nCb2CJPOsKaPK0hjf.9yHxzQGZziziccp6Yng'  # The digest of 'insecure_secret'.
-          path: '/path/to/secret'
-```
-
-#### Client Option: userinfo_signing_algorithm
-
-#### Issuer Keys
-
-The issuer keys have been removed from secrets. The new method of configuring them in a secrets-like fashion is to
-enable the template filter and add the relevant template values. This is because we now support multiple issuer keys 
-with varying algorithms. See below for representations of the new YAML values format.
-
-Important Notes:
-
-- Usage of the path feature requires that the `configMap.filters.enableTemplating` value is set to true which is 
-  considered experimental (however has proven to be very robust).
-- You can now define these values via raw values but it's not recommended.
-
-```yaml
-configMap:
-  filters:
-    enableTemplating: true
-  identity_providers:
-    oidc:
-      issuer_private_keys:
-      - key_id: ''
-        algorithm: 'RS256'
-        use: 'sig'
-        key:
-          path: '/secrets/oidc.issuer_key.rsa256.pem'
-          # value: |
-          #  -----BEGIN PRIVATE KEY-----
-          #  ....
-          #  -----END PRIVATE KEY-----
-        certificate_chain:
-          path: '/secrets/oidc.issuer_key.rsa256.crt'
-          # value: |
-          #   -----BEGIN CERTIFICATE-----
-          #   .....
-          #   -----END CERTIFICATE-----
-```
-
-#### Lifespans
-
-The lifespans configuration has drastically changed. See below for representations of the YAML changes (before and after
-respectively).
-
-```yaml
-configMap:
-  identity_providers:
-    oidc:
-      access_token_lifespan: 1h
-      authorize_code_lifespan: 1m
-      id_token_lifespan: 1h
-      refresh_token_lifespan: 90m
-```
-
-```yaml
-configMap:
-  identity_providers:
-    oidc:
-      lifespans:
-        access_token: 1h
-        authorize_code: 1m
-        id_token: 1h
-        refresh_token: 90m
-```
-
-## 0.5.0
-
-- Does not support Authelia versions lower than 4.30.0
-- Had several changes to the values.yaml file, specifically:
-  - configMap.port is now configMap.server.port
-  - configMap.log_level is now configMap.log.level
-  - configMap.log_format is now configMap.log.format
-  - configMap.log_file_path is now configMap.log.file_path
-
-See the [official migration documentation](https://www.authelia.com/configuration/prologue/migration/#4300) 
-(not specific to Kubernetes) for more information.
+- [v0.9.0](https://github.com/authelia/chartrepo/blob/master/charts/authelia/BREAKING.md#090)
+- [v0.5.0](https://github.com/authelia/chartrepo/blob/master/charts/authelia/BREAKING.md#050)
 
 # Getting Started
 
@@ -216,18 +27,40 @@ See the [official migration documentation](https://www.authelia.com/configuratio
 
 ## Values Files
 
-- **values.yaml:** production environments with LDAP (auth), PostgreSQL (storage), SMTP (notification), and Redis (
-  session).
+- **values.yaml:** basic template with no specific feature states enabled.
+- **values.production.yaml:** production environments with LDAP (auth), PostgreSQL (storage), SMTP (notification), and 
+  Redis (session).
 - **values.local.yaml:** environments with file (auth), SQLite3 (storage), filesystem (notification), and memory (
   session).
 
+## Expected Minimum Configuration
+
 It is expected you will configure at least the following sections/values:
 
-- domain (this is essential for the chart to work)
-- configMap section (the configMap follows a majority of the configuration options
+- The configMap section (the configMap follows a majority of the configuration options
   in [the documentation](https://www.authelia.com/configuration))
-- secret section configures passwords and other secret information, configuring this directly in the configMap is not
-  supported
+  - The `configMap.session.cookies` section contains the domain configuration for the Authelia portal and session
+    cookies:
+    - The full Authelia URL will be in the format of `https://[<subdomain>.]<domain>[/<subpath>]` (part within the square braces is
+      omitted if not configured) i.e. `domain` of `example.com` and `subdomain` empty yields `https://example.com` and
+      `subdomain` of `auth` yields `https://auth.example.com`. The `subpath` is also optionally included.
+    - The `domain` option is required.
+    - The `subdomain` option is generally required.
+    - The `path` option is generally **_NOT_** required or recommended. Every domain that has this option configured
+      MUST have the same value i.e. you can have one blank and one configured but all those that are configured must be
+      the same, and in addition if configured at all the `configMap.server.path` option must have the same value.
+
+  - The following sections require one of the sub-options enabled:
+    - The `configMap.storage` section:
+      - `postgres`
+      - `mysql`
+      - `local` (stateful)
+    - The `configMap.notifier` section:
+      - `smtp`
+      - `filesystem` (stateful)
+    - The `configMap.authentication_backend` section:
+      - `ldap`
+      - `file` (stateful)
 
 # Parameters
 

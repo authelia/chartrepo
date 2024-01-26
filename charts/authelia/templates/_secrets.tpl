@@ -25,7 +25,7 @@ Returns the value of .SecretValue or a randomly generated one
 {{- end -}}
 
 {{- define "authelia.secret.generate" -}}
-    {{- if and (not .disabled) (or (not .secret_name) (eq "internal" .secret_name)) (not (hasPrefix "/" .path)) }}
+    {{- if and (not .disabled) (not .secret_name) (not (hasPrefix "/" .path)) }}
         {{- true }}
     {{- end }}
 {{- end -}}
@@ -81,12 +81,4 @@ Returns the value of .SecretValue or a randomly generated one
 {{- define "authelia.secret.path.oidc.hmac_key" -}}
     {{- .Values.configMap.identity_providers.oidc.hmac_secret.path | default "identity_providers.oidc.hmac.key" }}
 {{- end -}}
-
-
-
-
-
-
-
-
 

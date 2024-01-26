@@ -1,14 +1,40 @@
+{{ if not .Values.configMap.disabled }}
+
 {{/*
     Validate the Cookies Configurations.
 */}}
 {{ if not .Values.configMap.session.cookies }}
 {{ fail "The value 'configMap.session.cookies' must have at least one configuration" }}
 {{ else }}
-{{ range .Values.configMap.session.cookies }}
-{{ if or (not .domain) (eq "" .domain) }}
+{{ range $cookie := .Values.configMap.session.cookies }}
+{{ if or (not $cookie.domain) (eq "" $cookie.domain) }}
 {{ fail "The value 'domain' for the 'configMap.session.cookies' configurations must be configured" }}
 {{ end }}
+{{ if and $cookie.path (not (eq $cookie.path "")) (not (eq $cookie.path $.Values.configMap.server.path)) }}
+{{ fail "The value 'path' for the 'configMap.session.cookies' must either not be configured or be the same value as the configMap.server.path" }}
 {{ end }}
+{{ end }}
+{{ end }}
+
+{{/*
+    Validate the Storage config.
+*/}}
+{{ if and (not .Values.configMap.storage.postgres.enabled) (not .Values.configMap.storage.mysql.enabled) (not .Values.configMap.storage.local.enabled) }}
+{{ fail "The option 'configMap.storage' must have one of the providers enabled such as 'postgres', 'mysql', or 'local'." }}
+{{ end }}
+
+{{/*
+    Validate the Notifier config.
+*/}}
+{{ if and (not .Values.configMap.notifier.smtp.enabled) (not .Values.configMap.notifier.file.enabled) }}
+{{ fail "The option 'configMap.notifier' must have one of the providers enabled such as 'smtp', or 'local'." }}
+{{ end }}
+
+{{/*
+    Validate the Authentication Backend config.
+*/}}
+{{ if and (not .Values.configMap.authentication_backend.ldap.enabled) (not .Values.configMap.authentication_backend.file.enabled) }}
+{{ fail "The option 'configMap.authentication_backend' must have one of the providers enabled such as 'ldap', or 'local'." }}
 {{ end }}
 
 {{/*
@@ -68,4 +94,6 @@
 */}}
 {{ if .Values.configMap.identity_providers.oidc.issuer_certificate_chain }}
 {{ fail "The value 'configMap.identity_providers.oidc.issuer_certificate_chain' is no longer supported and has been replaced with the 'configMap.identity_providers.oidc.issuer_private_keys' multi-value option" }}
+{{ end }}
+
 {{ end }}

@@ -5,11 +5,7 @@
 ## Repository: authelia https://charts.authelia.com
 ## Chart: authelia
 ##
-## This values file is designed for full deployment, eventually for in production once the chart makes it to 1.0.0.
-## It uses the following providers:
-##   - authentication: LDAP
-##   - storage: MySQL
-##   - session: redis
+## This values file is a baseline for other values files.
 
 ## Version Override allows changing some chart characteristics that render only on specific versions.
 ## This does NOT affect the image used, please see the below image section instead for this.
@@ -95,6 +91,13 @@ ingress:
   labels: {}
   # labels:
   #   myLabel: 'myValue'
+
+  ## A discouraged override list of hosts to create the ingress for. If this is not specified the auto-generation
+  ## characteristics of the 'configMap.session.cookies' value are not used. Should be a list of host/path pairs.
+  rulesOverride: []
+  # hostOverride:
+  # - host: 'auth.example.com'
+  #   path: '/'
 
   certManager: false
   rewriteTarget: false
@@ -182,10 +185,13 @@ ingress:
       #   existingOptions:
       #     name: 'default-traefik-options'
       #     namespace: 'default'
-      #   certResolver: 'default'
-      #   sans:
-      #     - '*.example.com'
-      #
+      certResolver: ''
+      domainsOverride: []
+      # domainsOverride:
+      #   - main: 'auth.example.com'
+      #     sans:
+      #       - 'a.example.com'
+
       options:
         # nameOverride: 'authelia-tls-options'
         nameOverride: ''
@@ -568,11 +574,11 @@ configMap:
         ## Disables this secret and leaves configuring it entirely up to you.
         disabled: false
 
-        ## The secret name. The internal name is special as it is the secret we generate either automatically or via the
+        ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
         ## secret_value option below.
-        secret_name: 'internal'
+        secret_name: ~
 
-        ## The value of a generated secret when using the 'internal' secret_name.
+        ## The value of a generated secret when using the ~ secret_name.
         value: ''
 
         ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
@@ -683,11 +689,11 @@ configMap:
       ## Disables this secret and leaves configuring it entirely up to you.
       disabled: false
 
-      ## The secret name. The internal name is special as it is the secret we generate either automatically or via the
+      ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
       ## secret_value option below.
-      secret_name: 'internal'
+      secret_name: ~
 
-      ## The value of a generated secret when using the 'internal' secret_name.
+      ## The value of a generated secret when using the ~ secret_name.
       value: ''
 
       ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
@@ -709,8 +715,8 @@ configMap:
       ## Disable both the HTML element and the API for reset password functionality
       disable: false
 
-      ## External reset password url that redirects the user to an external reset portal. This disables the internal reset
-      ## functionality.
+      ## External reset password url that redirects the user to an external reset portal. This disables the internal
+      ## reset functionality.
       custom_url: ''
 
     ## The amount of time to wait before we refresh data from the authentication backend. Uses duration notation.
@@ -833,11 +839,11 @@ configMap:
         ## Disables this secret and leaves configuring it entirely up to you.
         disabled: false
 
-        ## The secret name. The internal name is special as it is the secret we generate either automatically or via the
+        ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
         ## secret_value option below.
-        secret_name: 'internal'
+        secret_name: ~
 
-        ## The value of a generated secret when using the 'internal' secret_name.
+        ## The value of a generated secret when using the ~ secret_name.
         value: ''
 
         ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
@@ -1075,17 +1081,17 @@ configMap:
     ## See: https://www.authelia.com/configuration/prologue/common/#duration-notation-format
     ## Longer periods are considered less secure because a stolen cookie will last longer giving attackers more time to
     ## spy or attack. Currently the default is 1M or 1 month.
-    remember_me_duration: '1 month'
+    remember_me: '1 month'
 
     encryption_key:
       ## Disables this secret and leaves configuring it entirely up to you.
       disabled: false
 
-      ## The secret name. The internal name is special as it is the secret we generate either automatically or via the
+      ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
       ## secret_value option below.
-      secret_name: 'internal'
+      secret_name: ~
 
-      ## The value of a generated secret when using the 'internal' secret_name.
+      ## The value of a generated secret when using the ~ secret_name.
       value: ''
 
       ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
@@ -1093,14 +1099,43 @@ configMap:
       ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
       path: 'session.encryption.key'
 
-    cookies:
-      - domain: ''
-        subdomain: 'auth'
-        default_redirection_url: ''
-        name: ''
-        same_site: ''
-        expiration: ''
-        inactivity: ''
+    cookies: []
+    # cookies:
+      # -
+        ## The subdomain to prefix the domain with. For example using `domain` value `example.com` and `subdomain`
+        ## `auth` should yield the URL `https://auth.example.com`. This option does not affect the cookie domain.
+        # subdomain: 'auth'
+
+        ## The domain for cookie and to build the Authelia URL.
+        # domain: ''
+
+        ## The path to suffix the domain with. For example using `domain` value `example.com` and `subdomain` value
+        ## `auth` and `path` value `auth` should yield the URL `https://auth.example.com/auth`.
+        ## This option does not affect the cookie domain.
+        # path: ''
+
+        ## Default Redirection URL for this domain when there is no forwarding application.
+        # default_redirection_url: ''
+
+        ## Cookie Name override for this individual cookie. Otherwise, uses the default value above where
+        ## more descriptive information about this value exists.
+        # name: ''
+
+        ## Cookie Same Site value override for this individual cookie. Otherwise, uses the default value above where
+        ## more descriptive information about this value exists.
+        # same_site: ''
+
+        ## Cookie Expiration value override for this individual cookie. Otherwise, uses the default value above where
+        ## more descriptive information about this value exists.
+        # expiration: ''
+
+        ## Cookie Inactivity value override for this individual cookie. Otherwise, uses the default value above where
+        ## more descriptive information about this value exists.
+        # inactivity: ''
+
+        ## Cookie Remember Me value override for this individual cookie. Otherwise, uses the default value above where
+        ## more descriptive information about this value exists.
+        # inactivity: ''
 
     ##
     ## Redis Provider
@@ -1122,11 +1157,11 @@ configMap:
         ## Disables this secret and leaves configuring it entirely up to you.
         disabled: false
 
-        ## The secret name. The internal name is special as it is the secret we generate either automatically or via the
+        ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
         ## secret_value option below.
-        secret_name: 'internal'
+        secret_name: ~
 
-        ## The value of a generated secret when using the 'internal' secret_name.
+        ## The value of a generated secret when using the ~ secret_name.
         value: ''
 
         ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
@@ -1181,11 +1216,11 @@ configMap:
           ## Disables this secret and leaves configuring it entirely up to you.
           disabled: false
 
-          ## The secret name. The internal name is special as it is the secret we generate either automatically or via the
+          ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
           ## secret_value option below.
-          secret_name: 'internal'
+          secret_name: ~
 
-          ## The value of a generated secret when using the 'internal' secret_name.
+          ## The value of a generated secret when using the ~ secret_name.
           value: ''
 
           ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
@@ -1238,11 +1273,11 @@ configMap:
       ## Disables this secret and leaves configuring it entirely up to you.
       disabled: false
 
-      ## The secret name. The internal name is special as it is the secret we generate either automatically or via the
+      ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
       ## secret_value option below.
-      secret_name: 'internal'
+      secret_name: ~
 
-      ## The value of a generated secret when using the 'internal' secret_name.
+      ## The value of a generated secret when using the ~ secret_name.
       value: ''
 
       ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
@@ -1277,11 +1312,11 @@ configMap:
         ## Disables this secret and leaves configuring it entirely up to you.
         disabled: false
 
-        ## The secret name. The internal name is special as it is the secret we generate either automatically or via the
+        ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
         ## secret_value option below.
-        secret_name: 'internal'
+        secret_name: ~
 
-        ## The value of a generated secret when using the 'internal' secret_name.
+        ## The value of a generated secret when using the ~ secret_name.
         value: ''
 
         ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
@@ -1323,11 +1358,11 @@ configMap:
         ## Disables this secret and leaves configuring it entirely up to you.
         disabled: false
 
-        ## The secret name. The internal name is special as it is the secret we generate either automatically or via the
+        ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
         ## secret_value option below.
-        secret_name: 'internal'
+        secret_name: ~
 
-        ## The value of a generated secret when using the 'internal' secret_name.
+        ## The value of a generated secret when using the ~ secret_name.
         value: ''
 
         ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
@@ -1421,11 +1456,11 @@ configMap:
         ## Disables this secret and leaves configuring it entirely up to you.
         disabled: false
 
-        ## The secret name. The internal name is special as it is the secret we generate either automatically or via the
+        ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
         ## secret_value option below.
-        secret_name: 'internal'
+        secret_name: ~
 
-        ## The value of a generated secret when using the 'internal' secret_name.
+        ## The value of a generated secret when using the ~ secret_name.
         value: ''
 
         ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
@@ -1462,11 +1497,11 @@ configMap:
         ## Disables this secret and leaves configuring it entirely up to you.
         disabled: false
 
-        ## The secret name. The internal name is special as it is the secret we generate either automatically or via the
+        ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
         ## secret_value option below.
-        secret_name: 'internal'
+        secret_name: ~
 
-        ## The value of a generated secret when using the 'internal' secret_name.
+        ## The value of a generated secret when using the ~ secret_name.
         value: ''
 
         ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
@@ -1526,49 +1561,6 @@ configMap:
 
       ## Enables additional debug messages.
       enable_client_debug_messages: false
-
-      ## The issuer_certificate_chain is an optional PEM encoded certificate chain. It's used in conjunction with the
-      ## issuer_private_key to sign JWT's. All certificates in the chain must be within the validity period, and every
-      ## certificate included must be signed by the certificate immediately after it if provided.
-      issuer_certificate_chain: ''
-      # issuer_certificate_chain: |
-      #   -----BEGIN CERTIFICATE-----
-      #   MIIC5jCCAc6gAwIBAgIRAK4Sj7FiN6PXo/urPfO4E7owDQYJKoZIhvcNAQELBQAw
-      #   EzERMA8GA1UEChMIQXV0aGVsaWEwHhcNNzAwMTAxMDAwMDAwWhcNNzEwMTAxMDAw
-      #   MDAwWjATMREwDwYDVQQKEwhBdXRoZWxpYTCCASIwDQYJKoZIhvcNAQEBBQADggEP
-      #   ADCCAQoCggEBAPKv3pSyP4ozGEiVLJ14dIWFCEGEgq7WUMI0SZZqQA2ID0L59U/Q
-      #   /Usyy7uC9gfMUzODTpANtkOjFQcQAsxlR1FOjVBrX5QgjSvXwbQn3DtwMA7XWSl6
-      #   LuYx2rBYSlMSN5UZQm/RxMtXfLK2b51WgEEYDFi+nECSqKzR4R54eOPkBEWRfvuY
-      #   91AMjlhpivg8e4JWkq4LVQUKbmiFYwIdK8XQiN4blY9WwXwJFYs5sQ/UYMwBFi0H
-      #   kWOh7GEjfxgoUOPauIueZSMSlQp7zqAH39N0ZSYb6cS0Npj57QoWZSY3ak87ebcR
-      #   Nf4rCvZLby7LoN7qYCKxmCaDD3x2+NYpWH8CAwEAAaM1MDMwDgYDVR0PAQH/BAQD
-      #   AgWgMBMGA1UdJQQMMAoGCCsGAQUFBwMBMAwGA1UdEwEB/wQCMAAwDQYJKoZIhvcN
-      #   AQELBQADggEBAHSITqIQSNzonFl3DzxHPEzr2hp6peo45buAAtu8FZHoA+U7Icfh
-      #   /ZXjPg7Xz+hgFwM/DTNGXkMWacQA/PaNWvZspgRJf2AXvNbMSs2UQODr7Tbv+Fb4
-      #   lyblmMUNYFMCFVAMU0eIxXAFq2qcwv8UMcQFT0Z/35s6PVOakYnAGGQjTfp5Ljuq
-      #   wsdc/xWmM0cHWube6sdRRUD7SY20KU/kWzl8iFO0VbSSrDf1AlEhnLEkp1SPaxXg
-      #   OdBnl98MeoramNiJ7NT6Jnyb3zZ578fjaWfThiBpagItI8GZmG4s4Ovh2JbheN8i
-      #   ZsjNr9jqHTjhyLVbDRlmJzcqoj4JhbKs6/I^invalid DO NOT USE=
-      #   -----END CERTIFICATE-----
-      #   -----BEGIN CERTIFICATE-----
-      #   MIIDBDCCAeygAwIBAgIRALJsPg21kA0zY4F1wUCIuoMwDQYJKoZIhvcNAQELBQAw
-      #   EzERMA8GA1UEChMIQXV0aGVsaWEwHhcNNzAwMTAxMDAwMDAwWhcNNzEwMTAxMDAw
-      #   MDAwWjATMREwDwYDVQQKEwhBdXRoZWxpYTCCASIwDQYJKoZIhvcNAQEBBQADggEP
-      #   ADCCAQoCggEBAMXHBvVxUzYk0u34/DINMSF+uiOekKOAjOrC6Mi9Ww8ytPVO7t2S
-      #   zfTvM+XnEJqkFQFgimERfG/eGhjF9XIEY6LtnXe8ATvOK4nTwdufzBaoeQu3Gd50
-      #   5VXr6OHRo//ErrGvFXwP3g8xLePABsi/fkH3oDN+ztewOBMDzpd+KgTrk8ysv2ou
-      #   kNRMKFZZqASvCgv0LD5KWvUCnL6wgf1oTXG7aztduA4oSkUP321GpOmBC5+5ElU7
-      #   ysoRzvD12o9QJ/IfEaulIX06w9yVMo60C/h6A3U6GdkT1SiyTIqR7v7KU/IWd/Qi
-      #   Lfftcj91VhCmJ73Meff2e2S2PrpjdXbG5FMCAwEAAaNTMFEwDgYDVR0PAQH/BAQD
-      #   AgKkMA8GA1UdJQQIMAYGBFUdJQAwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQU
-      #   Z7AtA3mzFc0InSBA5fiMfeLXA3owDQYJKoZIhvcNAQELBQADggEBAEE5hm1mtlk/
-      #   kviCoHH4evbpw7rxPxDftIQlqYTtvMM4eWY/6icFoSZ4fUHEWYyps8SsPu/8f2tf
-      #   71LGgZn0FdHi1QU2H8m0HHK7TFw+5Q6RLrLdSyk0PItJ71s9en7r8pX820nAFEHZ
-      #   HkOSfJZ7B5hFgUDkMtVM6bardXAhoqcMk4YCU96e9d4PB4eI+xGc+mNuYvov3RbB
-      #   D0s8ICyojeyPVLerz4wHjZu68Z5frAzhZ68YbzNs8j2fIBKKHkHyLG1iQyF+LJVj
-      #   2PjCP+auJsj6fQQpMGoyGtpLcSDh+ptcTngUD8JsWipzTCjmaNqdPHAOYmcgtf4b
-      #   qocikt3WAdU^invalid DO NOT USE=
-      #   -----END CERTIFICATE-----
 
       issuer_private_keys:
         - key_id: ''
@@ -1708,11 +1700,7 @@ configMap:
 
 
 ##
-## Authelia Secret Generator.
-##
-## If both the values and existingSecret are not defined, this chart randomly generates a new secret on each
-## install. It is recommended that you use something like sealed-secrets (https://github.com/bitnami-labs/sealed-secrets)
-## and use the existingSecrets. All secrets can be stored in a single k8s secret if desired using the key option.
+## Authelia Secret Configuration.
 ##
 secret:
 

@@ -1,6 +1,6 @@
 {{ if (include "authelia.enabled.ingress.traefik.tlsOption" .) -}}
 ---
-apiVersion: traefik.containo.us/v1alpha1
+apiVersion: {{ include "capabilities.apiVersion.traefik.TLSOption" . }}
 kind: TLSOption
 metadata:
   name: {{ .Values.ingress.traefikCRD.tls.options.nameOverride | default (include "authelia.name" .) }}

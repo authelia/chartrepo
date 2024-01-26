@@ -16,6 +16,27 @@ spec:
   {{- end }}
   {{- end }}
   rules:
+  {{- if .Values.ingress.rulesOverride }}
+  {{- range $rule := .Values.ingress.rulesOverride }}
+  - host: {{ $rule.host | squote }}
+    http:
+      paths:
+        - path: {{ $rule.path | default "/" | squote }}
+          {{- if eq $ver "networking.k8s.io/v1" }}
+          pathType: Prefix
+          {{- end }}
+          backend:
+            {{- if eq $ver "networking.k8s.io/v1" }}
+            service:
+              name: {{ include "authelia.name" $ }}
+              port:
+                number: {{ include "authelia.service.port" $ }}
+            {{- else }}
+            serviceName: {{ include "authelia.name" $ }}
+            servicePort: {{ include "authelia.service.port" $ }}
+            {{- end }}
+  {{- end }}
+  {{- else }}
   {{- range $cookie := .Values.configMap.session.cookies }}
     - host: {{ (include "authelia.ingress.host" (merge (dict "SubDomain" $cookie.subdomain "Domain" $cookie.domain) $)) | squote }}
       http:
@@ -35,11 +56,18 @@ spec:
               servicePort: {{ include "authelia.service.port" $ }}
               {{- end }}
   {{- end }}
+  {{- end }}
   {{- if .Values.ingress.tls.enabled }}
   tls:
     - hosts:
+        {{- if .Values.ingress.rulesOverride }}
+        {{- range $rule := .Values.ingress.rulesOverride }}
+        - {{ $rule.host | squote }}
+        {{- end }}
+        {{- else }}
         {{- range $cookie := .Values.configMap.session.cookies }}
         - {{ (include "authelia.ingress.host" (merge (dict "SubDomain" $cookie.subdomain "Domain" $cookie.domain) $)) | squote }}
+        {{- end }}
         {{- end }}
       secretName: {{ default "authelia-tls" .Values.ingress.tls.secret }}
   {{- end }}

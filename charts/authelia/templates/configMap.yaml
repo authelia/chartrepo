@@ -213,7 +213,7 @@ data:
       same_site: {{ $session.same_site | default "lax" | squote }}
       inactivity: {{ include "authelia.func.dquote" ($session.inactivity | default "5 minutes") }}
       expiration: {{ include "authelia.func.dquote" ($session.expiration | default "1 hour") }}
-      remember_me_duration: {{ include "authelia.func.dquote" ($session.inactivity | default "1 month") }}
+      remember_me: {{ include "authelia.func.dquote" ($session.inactivity | default "1 month") }}
       cookies:
       {{- range $cookie := (required "The value 'configMap.session.cookies' must have at least one configuration" $session.cookies) }}
         - domain: {{ required "All 'domain' values for the 'configMap.session.cookies' configurations must be configured" .domain | squote }}
