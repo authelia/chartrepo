@@ -44,11 +44,31 @@
 {{ fail "The value 'configMap.default_redirection_url' is no longer valid" }}
 {{ end }}
 
+{{ $authzimpl := (include "authelia.authz.implementations" .) | fromJsonArray }}
 {{/*
     Validate only one authz endpoint configuration method is configured
 */}}
 {{ if and .Values.configMap.server.endpoints.authz .Values.configMap.server.endpoints.automatic_authz_implementations }}
-{{ fail "Can't specify both automatic and manual authz endpoints (configMap.server.endpoints.automatic_authz_implementations and configMap.server.endpoints.authz respectively)." }}
+    {{ fail "Can't specify both automatic and manual authz endpoints (configMap.server.endpoints.automatic_authz_implementations and configMap.server.endpoints.authz respectively)." }}
+
+{{/*
+    Validate only authz endpoint implementations with known names are configured (Automatic).
+*/}}
+{{ else if .Values.configMap.server.endpoints.automatic_authz_implementations }}
+    {{ range $implementation := .Values.configMap.server.endpoints.automatic_authz_implementations }}
+        {{ if not (has $implementation $authzimpl) }}
+            {{ fail (printf "The implementation name '%s' specified via 'configMap.server.endpoints.automatic_authz_implementations' is not known. Known values are '%s'." $implementation (join "', '" $authzimpl)) }}
+        {{ end }}
+    {{ end }}
+{{/*
+    Validate only authz endpoint implementations with known names are configured (Manual).
+*/}}
+{{ else if .Values.configMap.server.endpoints.authz }}
+    {{ range $authz := .Values.configMap.server.endpoints.authz }}
+        {{ if not (has $authz.implementation $authzimpl) }}
+            {{ fail (printf "The implementation name '%s' specified via 'configMap.server.endpoints.automatic_authz_implementations' is not known. Known values are '%s'." $authz.implementation (join "', '" $authzimpl)) }}
+        {{ end }}
+    {{ end }}
 {{ end }}
 
 {{/*

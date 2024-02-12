@@ -1,17 +1,55 @@
 Thank you for installing the {{ include "authelia.chart" . }} chart.
 
-Please report any chart issues at https://github.com/authelia/chartrepo/issues and any application issues at https://github.com/authelia/authelia/issues.
-
 IMPORTANT: This chart automatically generated an encryption key for sensitive data in your database. Please ensure you backup this key.
+
+Please report any chart issues at https://github.com/authelia/chartrepo/issues and any application issues at https://github.com/authelia/authelia/issues.
 
 You can configure your ingress or proxy in the following ways:
 
-{{- if .Values.configMap.server.endpoints.authz }}
-{{- range $name, $endpoint := .Values.configMap.server.endpoints.authz }}
-{{ include "authelia.authz.notes" (merge (dict "EndpointName" $name "Implementation" $endpoint.implementation) $) }}
-{{- end }}
-{{- else }}
-{{- range $implementation := (.Values.configMap.server.endpoints.automatic_authz_implementations | default (list "AuthRequest" "ExtAuthz" "ForwardAuth")) }}
-{{ include "authelia.authz.notes" (merge (dict "EndpointName" (include "authelia.authz.name" (dict "Implementation" $implementation)) "Implementation" $implementation) $) }}
-{{- end }}
+{{- range $name, $endpoint := (include "authelia.authz" .) | fromJson }}
+    {{- if eq $endpoint.implementation "AuthRequest" }}
+
+The following example demonstrates configuration of the AuthRequest implementation for ingresses like ingress-nginx:
+
+apiVersion: {{ (include "capabilities.apiVersion.ingress" $) }}
+kind: Ingress
+metadata:
+  name: example
+  namespace: example-namespace
+  annotations:
+    nginx.ingress.kubernetes.io/auth-url: http://{{ (printf "%s.%s" (include "authelia.name" $) $.Release.Namespace) }}.svc.cluster.local/api/authz/{{ $name }}
+    nginx.ingress.kubernetes.io/auth-response-headers: Remote-User,Remote-Name,Remote-Groups,Remote-Email
+    {{- else if eq $endpoint.implementation "ExtAuthz" }}
+
+The following examples demonstrate configuration of the ExtAuthz implementation for ingresses like Istio and Envoy:
+
+    At this stage no examples exist. Feel free to contribute.
+
+    The URL for this implementation is: http://{{ (printf "%s.%s" (include "authelia.name" $) $.Release.Namespace) }}.svc.cluster.local/api/authz/{{ $name }}
+    {{- else if eq $endpoint.implementation "ForwardAuth" }}
+
+The following examples demonstrate configuration of the ForwardAuth implementation for ingresses like Traefik using a IngressRoute CRD manifest:
+
+apiVersion: {{ (include "capabilities.apiVersion.traefik.IngressRoute" $) }}
+kind: IngressRoute
+metadata:
+  name: example
+  namespace: example-namespace
+spec:
+  routes:
+  - kind: Rule
+    middlewares:
+    - name: {{ (include "authelia.ingress.traefikCRD.middleware.chainAuth.name" (merge (dict "Name" $name) $)) }}
+      namespace: {{ $.Release.Namespace }}
+
+The following examples demonstrate configuration of the ForwardAuth implementation for ingresses like Traefik using a standard Ingress manifest:
+
+apiVersion: {{ (include "capabilities.apiVersion.ingress" $) }}
+kind: Ingress
+metadata:
+  name: example
+  namespace: example-namespace
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: {{ printf "%s-%s@kubernetescrd" $.Release.Namespace (include "authelia.ingress.traefikCRD.middleware.chainAuth.name" (merge (dict "Name" $name) $)) }}
+    {{- end }}
 {{- end }}

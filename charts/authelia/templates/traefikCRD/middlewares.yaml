@@ -1,23 +1,53 @@
 {{ if (include "authelia.enabled.ingress.traefik" .) -}}
+{{- range $name, $endpoint := (include "authelia.authz" .) | fromJson }}
+{{- if eq $endpoint.implementation "ForwardAuth" }}
 ---
-apiVersion: {{ include "capabilities.apiVersion.traefik.Middleware" . }}
+apiVersion: {{ include "capabilities.apiVersion.traefik.Middleware" $ }}
 kind: Middleware
 metadata:
-  name: {{ include "authelia.ingress.traefikCRD.middleware.name.forwardAuth" . }}
-  labels: {{ include "authelia.labels" . | nindent 4 }}
-  {{- with $annotations := include "authelia.annotations" . }}
+  name: {{ include "authelia.ingress.traefikCRD.middleware.forwardAuth.name" (merge (dict "Name" $name) $) }}
+  labels: {{ include "authelia.labels" $ | nindent 4 }}
+  {{- with $annotations := include "authelia.annotations" $ }}
   annotations: {{ $annotations | nindent 4 }}
   {{- end }}
 spec:
   forwardAuth:
-    address: {{ (include "authelia.forwardAuthPath" .) | squote }}
+    address: {{ (include "authelia.ingress.traefikCRD.middleware.forwardAuth.address" (merge (dict "Name" $name) $)) | squote }}
     trustForwardHeader: true
-    {{- with .Values.ingress.traefikCRD.middlewares.auth.authResponseHeaders }}
+    {{- with $.Values.ingress.traefikCRD.middlewares.auth.authResponseHeaders }}
     authResponseHeaders:
     {{- range . }}
     - {{ . | squote }}
     {{- end }}
   {{- end }}
+---
+apiVersion: {{ include "capabilities.apiVersion.traefik.Middleware" $ }}
+kind: Middleware
+metadata:
+  name: {{ include "authelia.ingress.traefikCRD.middleware.chainAuth.name" (merge (dict "Name" $name) $) }}
+  labels: {{ include "authelia.labels" $ | nindent 4 }}
+  {{- with $annotations := include "authelia.annotations" $ }}
+  annotations: {{ $annotations | nindent 4 }}
+  {{- end }}
+spec:
+  chain:
+    middlewares:
+    {{- range $middleware := $.Values.ingress.traefikCRD.middlewares.chains.auth.before }}
+      - name: {{ $middleware.name }}
+        {{- if $middleware.namespace }}
+        namespace: {{ $middleware.namespace }}
+        {{- end }}
+    {{- end }}
+      - name: {{ include "authelia.ingress.traefikCRD.middleware.forwardAuth.name" (merge (dict "Name" $name) $) }}
+        namespace: {{ $.Release.Namespace }}
+    {{- range $middleware := $.Values.ingress.traefikCRD.middlewares.chains.auth.after }}
+      - name: {{ $middleware.name }}
+        {{- if $middleware.namespace }}
+        namespace: {{ $middleware.namespace }}
+        {{- end }}
+    {{- end }}
+{{- end }}
+{{- end }}
 ---
 apiVersion: {{ include "capabilities.apiVersion.traefik.Middleware" . }}
 kind: Middleware
@@ -38,33 +68,7 @@ spec:
 apiVersion: {{ include "capabilities.apiVersion.traefik.Middleware" . }}
 kind: Middleware
 metadata:
-  name: {{ include "authelia.ingress.traefikCRD.middleware.name.chainAuth" . }}
-  labels: {{ include "authelia.labels" . | nindent 4 }}
-  {{- with $annotations := include "authelia.annotations" . }}
-  annotations: {{ $annotations | nindent 4 }}
-  {{- end }}
-spec:
-  chain:
-    middlewares:
-    {{- range $middleware := .Values.ingress.traefikCRD.middlewares.chains.auth.before }}
-      - name: {{ $middleware.name }}
-        {{- if $middleware.namespace }}
-        namespace: {{ $middleware.namespace }}
-        {{- end }}
-    {{- end }}
-      - name: {{ include "authelia.ingress.traefikCRD.middleware.name.forwardAuth" . }}
-        namespace: {{ .Release.Namespace }}
-    {{- range $middleware := .Values.ingress.traefikCRD.middlewares.chains.auth.after }}
-      - name: {{ $middleware.name }}
-        {{- if $middleware.namespace }}
-        namespace: {{ $middleware.namespace }}
-        {{- end }}
-    {{- end }}
----
-apiVersion: {{ include "capabilities.apiVersion.traefik.Middleware" . }}
-kind: Middleware
-metadata:
-  name: {{ include "authelia.ingress.traefikCRD.middleware.name.chainIngress" . }}
+  name: {{ include "authelia.ingress.traefikCRD.middleware.chainIngress.name" . }}
   labels:
   {{- include "authelia.labels" . | nindent 4 }}
   {{- with $annotations := (include "authelia.annotations" .) }}

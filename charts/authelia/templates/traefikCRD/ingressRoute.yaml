@@ -22,7 +22,7 @@ spec:
     match: {{ printf "Host(`%s`) && PathPrefix(`%s`)" $rule.host ($rule.path | default "/") }}
     priority: {{ $.Values.ingress.traefikCRD.priority | default 10 }}
     middlewares:
-      - name: {{ include "authelia.ingress.traefikCRD.middleware.name.chainIngress" $ }}
+      - name: {{ include "authelia.ingress.traefikCRD.middleware.chainIngress.name" $ }}
         namespace: {{ $.Release.Namespace }}
     services:
       - kind: Service
@@ -50,7 +50,7 @@ spec:
     match: {{ $.Values.ingress.traefikCRD.matchOverride | default (printf "Host(`%s`) && PathPrefix(`%s`)" (include "authelia.ingress.host" (merge (dict "SubDomain" $cookie.subdomain "Domain" $cookie.domain) $)) (include "authelia.path" $)) }}
     priority: {{ $.Values.ingress.traefikCRD.priority | default 10 }}
     middlewares:
-      - name: {{ include "authelia.ingress.traefikCRD.middleware.name.chainIngress" $ }}
+      - name: {{ include "authelia.ingress.traefikCRD.middleware.chainIngress.name" $ }}
         namespace: {{ $.Release.Namespace }}
     services:
       - kind: Service

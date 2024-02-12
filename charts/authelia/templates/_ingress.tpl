@@ -1,5 +1,5 @@
 {{/*
-Returns the file configuration list as a csv.
+    Returns the ingress host value.
 */}}
 {{- define "authelia.ingress.host" -}}
     {{- if .SubDomain }}
@@ -10,42 +10,59 @@ Returns the file configuration list as a csv.
 {{- end }}
 
 {{/*
-Returns the forward auth url
+    Returns the forward auth URL.
 */}}
-{{- define "authelia.forwardAuthPath" -}}
+{{- define "authelia.ingress.traefikCRD.middleware.forwardAuth.address" -}}
     {{- $scheme := "http" -}}
     {{- $host := printf "%s.%s" (include "authelia.name" .) .Release.Namespace -}}
-    {{- $cluster := "cluster.local" -}}
     {{- if .Namespace -}}
         {{- $host = printf "%s.%s" $host .Namespace -}}
     {{- end -}}
+    {{- $cluster := "cluster.local" -}}
     {{- if .Cluster -}}
         {{- $cluster := .Cluster -}}
     {{- end -}}
     {{- $path := (include "authelia.path" .) | trimSuffix "/" -}}
-    {{- (printf "%s://%s.svc.%s%s/api/authz/%s" $scheme $host $cluster $path (.Values.ingress.traefikCRD.middlewares.auth.endpointOverride | default "forward-auth")) -}}
+    {{- (printf "%s://%s.svc.%s%s/api/authz/%s" $scheme $host $cluster $path (.Name | default "forward-auth")) -}}
 {{- end -}}
 
 {{/*
     Returns the name of the forwardAuth Middleware for forward auth which gets applied to other IngressRoutes.
-    TODO: Rework.
 */}}
-{{- define "authelia.ingress.traefikCRD.middleware.name.forwardAuth" -}}
-    {{- if .Values.ingress.traefikCRD.middlewares.auth.nameOverride -}}
-        {{- .Values.ingress.traefikCRD.middlewares.auth.nameOverride -}}
+{{- define "authelia.ingress.traefikCRD.middleware.forwardAuth.name" -}}
+    {{- if eq .Name "forward-auth" -}}
+        {{- if .Values.ingress.traefikCRD.middlewares.auth.nameOverride -}}
+            {{- .Values.ingress.traefikCRD.middlewares.auth.nameOverride | trunc 63 -}}
+        {{- else -}}
+            {{- (printf "forwardauth-%s" (include "authelia.name" .)) | trunc 63 -}}
+        {{- end -}}
     {{- else -}}
-        {{- printf "forwardauth-%s" (include "authelia.name" .) -}}
+        {{- $name := .Name | trimPrefix "forward-auth-" -}}
+        {{- if .Values.ingress.traefikCRD.middlewares.auth.nameOverride -}}
+            {{- (printf "%s-%s" .Values.ingress.traefikCRD.middlewares.auth.nameOverride $name) | trunc 63 -}}
+        {{- else -}}
+            {{- (printf "forwardauth-%s-%s" (include "authelia.name" .) $name) | trunc 63 -}}
+        {{- end -}}
     {{- end -}}
 {{- end -}}
 
 {{/*
-Returns the name of the chain Middleware for forward auth which gets applied to other IngressRoutes.
+    Returns the name of the chain Middleware for forward auth which gets applied to other IngressRoutes.
 */}}
-{{- define "authelia.ingress.traefikCRD.middleware.name.chainAuth" -}}
-    {{- if .Values.ingress.traefikCRD.middlewares.chains.auth.nameOverride -}}
-        {{- .Values.ingress.traefikCRD.middlewares.chains.auth.nameOverride -}}
+{{- define "authelia.ingress.traefikCRD.middleware.chainAuth.name" -}}
+    {{- if eq .Name "forward-auth" -}}
+        {{- if .Values.ingress.traefikCRD.middlewares.chains.auth.nameOverride -}}
+            {{- .Values.ingress.traefikCRD.middlewares.chains.auth.nameOverride | trunc 63 -}}
+        {{- else -}}
+            {{- printf "chain-%s-auth" (include "authelia.name" .) -}}
+        {{- end -}}
     {{- else -}}
-        {{- printf "chain-%s-auth" (include "authelia.name" .) -}}
+        {{- $name := (.Name | trimPrefix "forward-auth-") -}}
+        {{- if .Values.ingress.traefikCRD.middlewares.chains.auth.nameOverride -}}
+            {{- (printf "%s-%s" .Values.ingress.traefikCRD.middlewares.chains.auth.nameOverride $name) | trunc 63 -}}
+        {{- else -}}
+            {{- (printf "chain-%s-auth-%s" (include "authelia.name" .) $name) | trunc 63 -}}
+        {{- end -}}
     {{- end -}}
 {{- end -}}
 
@@ -63,7 +80,7 @@ Special Annotations Generator for the Ingress kind.
   {{- $annotations = set $annotations "traefik.ingress.kubernetes.io/router.entryPoints" (.Values.ingress.traefikCRD.entryPoints | join ",") -}}
   {{- end -}}
   {{- if not (hasKey $annotations "traefik.ingress.kubernetes.io/router.middlewares") }}
-  {{- $annotations = set $annotations "traefik.ingress.kubernetes.io/router.middlewares" (printf "%s-%s@kubernetescrd" .Release.Namespace (include "authelia.ingress.traefikCRD.middleware.name.chainIngress" .)) -}}
+  {{- $annotations = set $annotations "traefik.ingress.kubernetes.io/router.middlewares" (printf "%s-%s@kubernetescrd" .Release.Namespace (include "authelia.ingress.traefikCRD.middleware.chainIngress.name" .)) -}}
   {{- end }}
   {{- end -}}
   {{ include "authelia.annotations" (merge (dict "Annotations" $annotations) .) }}
@@ -72,7 +89,7 @@ Special Annotations Generator for the Ingress kind.
 {{/*
 Returns the name of the chain Middleware for forward auth which gets applied to other IngressRoutes.
 */}}
-{{- define "authelia.ingress.traefikCRD.middleware.name.chainIngress" -}}
+{{- define "authelia.ingress.traefikCRD.middleware.chainIngress.name" -}}
     {{- printf "chain-%s" (include "authelia.name" .) -}}
 {{- end -}}
 

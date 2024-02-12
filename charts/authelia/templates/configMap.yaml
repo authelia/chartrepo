@@ -32,24 +32,9 @@ data:
       endpoints:
         enable_pprof: {{ .Values.configMap.server.endpoints.enable_pprof | default false }}
         enable_expvars: {{ .Values.configMap.server.endpoints.enable_expvars | default false }}
-        {{- if .Values.configMap.server.endpoints.authz }}
         authz:
-        {{- range $name, $endpoint := .Values.configMap.server.endpoints.authz }}
+        {{- range $name, $endpoint := (include "authelia.authz" .) | fromJson }}
         {{- tpl ($.Files.Get "files/configuration.server.endpoints.authz.yaml") (merge (dict "Name" $name "Endpoint" $endpoint) $) | trim | nindent 10 }}
-        {{- end }}
-        {{- else if .Values.configMap.server.endpoints.automatic_authz_implementations }}
-        {{- range $name := .Values.configMap.server.endpoints.automatic_authz_implementations }}
-          {{- if eq "AuthRequest" $name }}
-          auth-request:
-            implementation: 'AuthRequest'
-          {{- else if eq "ExtAuthz" $name }}
-          ext-authz:
-            implementation: 'ExtAuthz'
-          {{- else if eq "ForwardAuth" $name }}
-          forward-auth:
-            implementation: 'ForwardAuth'
-          {{- end }}
-        {{- end }}
         {{- end }}
     log:
       level: {{ .Values.configMap.log.level | default "info" | squote }}
