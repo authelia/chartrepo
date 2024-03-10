@@ -52,7 +52,7 @@ Returns true if pod is stateful.
 */}}
 {{- define "authelia.stateful" -}}
     {{- if .Values.configMap -}}
-        {{- if .Values.configMap.enabled -}}
+        {{- if not .Values.configMap.disabled -}}
             {{- if .Values.configMap.authentication_backend.file.enabled -}}
                 {{- true -}}
             {{- else if .Values.configMap.storage.local.enabled -}}
@@ -313,7 +313,7 @@ Returns true if we should use a ConfigMap.
 */}}
 {{- define "authelia.enabled.configMap" -}}
     {{- if .Values.configMap -}}
-        {{- if .Values.configMap.enabled -}}
+        {{- if not .Values.configMap.disabled -}}
             {{- true -}}
         {{- end -}}
     {{- end -}}
@@ -324,7 +324,7 @@ Returns true if we should use the ACL Secret.
 */}}
 {{- define "authelia.enabled.acl.secret" -}}
     {{- if hasKey .Values "configMap" -}}
-        {{- if .Values.configMap.enabled -}}
+        {{- if not .Values.configMap.disabled -}}
             {{- if .Values.configMap.access_control.secret.enabled }}
                 {{- true -}}
             {{- end -}}

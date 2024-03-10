@@ -26,7 +26,7 @@
 {{/*
     Validate the Notifier config.
 */}}
-{{ if and (not .Values.configMap.notifier.smtp.enabled) (not .Values.configMap.notifier.file.enabled) }}
+{{ if and (not .Values.configMap.notifier.smtp.enabled) (not .Values.configMap.notifier.filesystem.enabled) }}
 {{ fail "The option 'configMap.notifier' must have one of the providers enabled such as 'smtp', or 'local'." }}
 {{ end }}
 

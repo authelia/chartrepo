@@ -5,7 +5,7 @@ Returns the OpenID Connect 1.0 clients token endpoint authentication method.
     {{- if .public }}
         {{- .token_endpoint_auth_method | default "none" }}
     {{- else }}
-        {{- .token_endpoint_auth_method | default "client_secret_post" }}
+        {{- .token_endpoint_auth_method | default "client_secret_basic" }}
     {{- end }}
 {{- end }}
 

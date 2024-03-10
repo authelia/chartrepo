@@ -31,7 +31,7 @@ image:
   # registry: docker.io
   registry: ghcr.io
   repository: authelia/authelia
-  tag: v4.38.0-beta3
+  tag: v4.38.0
   pullPolicy: IfNotPresent
   pullSecrets: []
   # pullSecrets:
@@ -1562,17 +1562,34 @@ configMap:
       ## Enables additional debug messages.
       enable_client_debug_messages: false
 
-      issuer_private_keys:
-        - key_id: ''
-          algorithm: 'RS256'
-          use: 'sig'
-          key:
-            value: |
-              abc
-              123
-            path: '/secrets/oidc.jwk.RS256.pem'
-          certificate_chain:
-            path: '/secrets.oidc.jwk.RS256.crt'
+      pushed_authorizations:
+        enforce: false
+        context_lifespan: '5 minutes'
+
+      authorization_policies: {}
+
+      # authorization_policies:
+      #   policy_name:
+      #     default_policy: 'deny'
+      #     rules:
+      #       - policy: 'two_factor'
+      #         subject: 'user:abc'
+
+      ## The JWK's issuer option configures multiple JSON Web Keys. It's required that at least one of the JWK's
+      ## configured has the RS256 algorithm. For RSA keys (RS or PS) the minimum is a 2048 bit key.
+      jwks: []
+
+      # jwks:
+      #   - key_id: ''
+      #     algorithm: 'RS256'
+      #     use: 'sig'
+      #     key:
+      #       value: |
+      #         abc
+      #         123
+      #       path: '/secrets/oidc.jwk.RS256.pem'
+      #     certificate_chain:
+      #       path: '/secrets.oidc.jwk.RS256.crt'
 
       ## Cross-Origin Resource Sharing (CORS) settings.
       cors:
@@ -1602,18 +1619,18 @@ configMap:
       # clients:
         # -
           ## The ID is the OpenID Connect ClientID which is used to link an application to a configuration.
-          # id: 'myapp'
-
-          ## The description to show to users when they end up on the consent screen. Defaults to the ID above.
-          # description: 'My Application'
+          # client_id: 'myapp'
 
           ## The client secret is a shared secret between Authelia and the consumer of this client.
-          # secret: '$plaintext$apple123'
+          # client_secret: '$plaintext$apple123'
+
+          ## The description to show to users when they end up on the consent screen. Defaults to the ID above.
+          # client_name: 'My Application'
 
           ## Sector Identifiers are occasionally used to generate pairwise subject identifiers. In most cases this is not
           ## necessary. Read the documentation for more information.
           ## The subject identifier must be the host component of a URL, which is a domain name with an optional port.
-          # sector_identifier: 'example.com'
+          # sector_identifier_uri: 'example.com'
 
           ## Sets the client to public. This should typically not be set, please see the documentation for usage.
           # public: false
@@ -1686,6 +1703,14 @@ configMap:
 
           ## The key id of the issuer key used to sign User Info Responses for this client.
           # userinfo_signed_response_key_id: ''
+
+          ## The signing algorithm used for Introspection responses. An issuer JWK with a matching algorithm must be
+          ## available when configured. Has no effect if introspection_signed_response_key_id is configured.
+          # introspection_signed_response_alg: 'none'
+
+          ## The signing key id used for Introspection responses. An issuer JWK with a matching key id must be available
+          ## when configured.
+          # introspection_signed_response_key_id: ''
 
           ## The algorithm the client must sign their request objects with, must either be empty or one of the
           ## registered client key algorithms.

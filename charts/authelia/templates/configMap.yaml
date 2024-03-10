@@ -376,9 +376,29 @@ data:
         enforce_pkce: {{ .Values.configMap.identity_providers.oidc.enforce_pkce | default "public_clients_only" | squote }}
         enable_pkce_plain_challenge: {{ .Values.configMap.identity_providers.oidc.enable_pkce_plain_challenge | default false }}
         enable_client_debug_messages: {{ .Values.configMap.identity_providers.oidc.enable_client_debug_messages | default false }}
+        enable_jwt_access_token_stateless_introspection: {{ .Values.configMap.identity_providers.oidc.enable_jwt_access_token_stateless_introspection | default false }}
         minimum_parameter_entropy: {{ .Values.configMap.identity_providers.oidc.minimum_parameter_entropy | default 8 }}
-        issuer_private_keys:
-        {{- range $key := .Values.configMap.identity_providers.oidc.issuer_private_keys }}
+        discovery_signed_response_alg: {{ .Values.configMap.identity_providers.oidc.discovery_signed_response_alg | default "" | squote }}
+        discovery_signed_response_key_id: {{ .Values.configMap.identity_providers.oidc.discovery_signed_response_key_id | default "" | squote }}
+        pushed_authorizations:
+          enforce: {{ .Values.configMap.identity_providers.oidc.pushed_authorizations.enforce | default false }}
+          context_lifespan: {{ .Values.configMap.identity_providers.oidc.pushed_authorizations.enforce | default "5 minutes" | squote }}
+        {{- with .Values.configMap.identity_providers.oidc.authorization_policies }}
+        authorization_policies:
+        {{- range $name, $policy := .Values.configMap.identity_providers.oidc.authorization_policies }}
+          {{ $name }}:
+            default_policy: {{ $policy.default_policy | default "deny" | squote }}
+            {{- with $policy.rules }}
+            rules:
+            {{- range $policy.rules }}
+            - policy: {{ .policy | default "deny" | squote }}
+              subject: {{ .subject | squote }}
+            {{- end }}
+            {{- end }}
+        {{- end }}
+        {{- end }}
+        jwks:
+        {{- range $key := .Values.configMap.identity_providers.oidc.jwks }}
         {{- tpl ($.Files.Get "files/configuration.oidc.jwk.yaml") (merge (dict "Key" $key "Indent" 4) $) | trim | nindent 10 }}
         {{- end }}
         cors:
@@ -405,5 +425,5 @@ data:
     {{- tpl (.Files.Get "files/configuration.acl.yaml") . | trim | nindent 4 }}
     {{- end }}
     {{- end }}
-    {{- end }}
     ...
+    {{- end }}

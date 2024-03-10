@@ -3,7 +3,7 @@
   {{- if .Key.key.path }}
   {{- $key = (include "authelia.secrets.template" (dict "Path" .Key.key.path "Indent" (add 4 .Indent))) }}
   {{- else if .Key.key.value }}
-  {{- $key = printf "| %s" (.Key.key.value | nindent 4) }}
+  {{- $key = printf "| %s" (.Key.key.value | trimSuffix "\n" | nindent 4) }}
   {{- end }}
 {{- end }}
 {{- if .Key.certificate_chain }}
@@ -18,9 +18,7 @@
   {{- if .Key.key_id }}
   key_id: {{ .Key.key_id | squote }}
   {{- end }}
-  {{- if $key }}
   key: {{ $key }}
-  {{- end }}
   {{- if $certificate_chain }}
   certificate_chain: {{ $certificate_chain }}
   {{- end }}
