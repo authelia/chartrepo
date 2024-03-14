@@ -561,14 +561,8 @@ configMap:
   theme: 'light'
 
   identity_validation:
-    elevated_session:
-      expiration: '5 minutes'
-      elevation_expiration: '10 minutes'
-      characters: 8
-      require_second_factor: false
-      skip_second_factor: false
     reset_password:
-      expiration: '5 minutes'
+      jwt_lifespan: '5 minutes'
       jwt_algorithm: 'HS256'
       secret:
         ## Disables this secret and leaves configuring it entirely up to you.
@@ -585,6 +579,13 @@ configMap:
         ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
         ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
         path: 'identity_validation.reset_password.jwt.hmac.key'
+    elevated_session:
+      code_lifespan: '5 minutes'
+      elevation_lifespan: '10 minutes'
+      characters: 8
+      require_second_factor: false
+      skip_second_factor: false
+
 
   ##
   ## TOTP Configuration

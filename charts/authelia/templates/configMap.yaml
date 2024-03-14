@@ -56,13 +56,13 @@ data:
         {{- end }}
     identity_validation:
       elevated_session:
-        expiration: {{ include "authelia.func.dquote" (.Values.configMap.identity_validation.elevated_session.expiration | default "5 minutes") }}
-        elevation_expiration: {{ include "authelia.func.dquote" (.Values.configMap.identity_validation.elevated_session.elevation_expiration | default "10 minutes") }}
+        code_lifespan: {{ include "authelia.func.dquote" (.Values.configMap.identity_validation.elevated_session.code_lifespan | default "5 minutes") }}
+        elevation_lifespan: {{ include "authelia.func.dquote" (.Values.configMap.identity_validation.elevated_session.elevation_lifespan | default "10 minutes") }}
         characters: {{ .Values.configMap.identity_validation.elevated_session.characters | default 8 }}
         require_second_factor: {{ .Values.configMap.identity_validation.elevated_session.require_second_factor | default false }}
         skip_second_factor: {{ .Values.configMap.identity_validation.elevated_session.skip_second_factor | default false }}
       reset_password:
-        expiration: {{ include "authelia.func.dquote" (.Values.configMap.identity_validation.reset_password.expiration | default "5 minutes") }}
+        jwt_lifespan: {{ include "authelia.func.dquote" (.Values.configMap.identity_validation.reset_password.expiration | default "5 minutes") }}
         jwt_algorithm: {{ .Values.configMap.identity_validation.reset_password.jwt_algorithm | default "HS256" | squote }}
     totp:
       disable: {{ .Values.configMap.totp.disable | default false }}
@@ -380,9 +380,7 @@ data:
         minimum_parameter_entropy: {{ .Values.configMap.identity_providers.oidc.minimum_parameter_entropy | default 8 }}
         discovery_signed_response_alg: {{ .Values.configMap.identity_providers.oidc.discovery_signed_response_alg | default "" | squote }}
         discovery_signed_response_key_id: {{ .Values.configMap.identity_providers.oidc.discovery_signed_response_key_id | default "" | squote }}
-        pushed_authorizations:
-          enforce: {{ .Values.configMap.identity_providers.oidc.pushed_authorizations.enforce | default false }}
-          context_lifespan: {{ .Values.configMap.identity_providers.oidc.pushed_authorizations.enforce | default "5 minutes" | squote }}
+        require_pushed_authorization_requests: {{ .Values.configMap.identity_providers.oidc.require_pushed_authorization_requests | default false }}
         {{- with .Values.configMap.identity_providers.oidc.authorization_policies }}
         authorization_policies:
         {{- range $name, $policy := .Values.configMap.identity_providers.oidc.authorization_policies }}
