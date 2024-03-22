@@ -96,7 +96,7 @@ spec:
         {{- if not .Values.secret.disabled }}
         {{- with $secret := .Values.configMap.identity_validation.reset_password.secret }}
         {{- if and (not $secret.disabled) }}
-        - name: AUTHELIA_IDENTITY_PROVIDERS_RESET_PASSWORD_JWT_SECRET_FILE
+        - name: AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET_FILE
           value: {{ include "authelia.secret.env.path" (merge (dict "MountPath" (include "authelia.secret.mountPath" $) "SecretName" $secret.secret_name "SecretPath" (include "authelia.secret.path.reset_password.jwt" $)) $) }}
         {{- end }}
         {{- end }}
