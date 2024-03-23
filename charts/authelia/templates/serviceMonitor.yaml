@@ -1,4 +1,4 @@
-{{- if and (semverCompare ">=4.36.0" (include "authelia.version" .)) .Values.configMap.telemetry.metrics.enabled .Values.configMap.telemetry.metrics.serviceMonitor.enabled }}
+{{- if and .Values.configMap.telemetry.metrics.enabled .Values.configMap.telemetry.metrics.serviceMonitor.enabled }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor

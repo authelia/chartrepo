@@ -13,7 +13,10 @@ spec:
   clusterIP: {{ $ip }}
   {{- end }}
   {{- with $ips := .Values.service.externalIPs }}
-  externalIPs: {{ toYaml $ips | nindent 4 }}
+  externalIPs:
+  {{- range $ips }}
+  - {{ . }}
+  {{- end }}
   {{- end }}
   sessionAffinity: {{ default "None" .Values.service.sessionAffinity }}
   selector: {{- include "authelia.matchLabels" . | nindent 4 }}

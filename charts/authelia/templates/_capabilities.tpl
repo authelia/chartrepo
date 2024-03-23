@@ -9,7 +9,7 @@ Returns an overridable KubeVersion
 Returns applicable Deployment/DaemonSet/Ingress API Version
 */}}
 {{- define "capabilities.apiVersion.kind" -}}
-    {{- if eq "DaemonSet" (default "DaemonSet" .Kind) -}}
+    {{- if eq "DaemonSet" (.Kind | default "DaemonSet") -}}
         {{- include "capabilities.apiVersion.daemonSet" . -}}
     {{- else if eq "Ingress" .Kind -}}
         {{- include "capabilities.apiVersion.ingress" . -}}
@@ -125,5 +125,50 @@ PodDisruptionBudget API Version Releases: policy/v1 in 1.21, policy/v1beta1 prio
         {{- print "policy/v1" -}}
     {{- else -}}
         {{- print "policy/v1beta1" -}}
+    {{- end }}
+{{- end -}}
+
+{{- define "authelia.pod.priorityClassName.enabled" -}}
+{{- if and (hasKey .Values.pod "priorityClassName") .Values.pod.priorityClassName (semverCompare ">=1.14-0" (include "capabilities.kubeVersion" .)) }}
+{{- true -}}
+{{- end }}
+{{- end }}
+
+{{/*
+
+*/}}
+{{- define "capabilities.apiVersion.traefik.IngressRoute" -}}
+    {{- if .Capabilities.APIVersions.Has "traefik.io/v1alpha1/IngressRoute" -}}
+        {{- print "traefik.io/v1alpha1" -}}
+    {{- else if .Capabilities.APIVersions.Has "traefik.containo.us/v1alpha1/IngressRoute" -}}
+        {{- print "traefik.containo.us/v1alpha1" -}}
+    {{- else -}}
+        {{- print "traefik.containo.us/v1alpha1" -}}
+    {{- end }}
+{{- end -}}
+
+{{/*
+
+*/}}
+{{- define "capabilities.apiVersion.traefik.Middleware" -}}
+    {{- if .Capabilities.APIVersions.Has "traefik.io/v1alpha1/Middleware" -}}
+        {{- print "traefik.io/v1alpha1" -}}
+    {{- else if .Capabilities.APIVersions.Has "traefik.containo.us/v1alpha1/Middleware" -}}
+        {{- print "traefik.containo.us/v1alpha1" -}}
+    {{- else -}}
+        {{- print "traefik.containo.us/v1alpha1" -}}
+    {{- end }}
+{{- end -}}
+
+{{/*
+
+*/}}
+{{- define "capabilities.apiVersion.traefik.TLSOption" -}}
+    {{- if .Capabilities.APIVersions.Has "traefik.io/v1alpha1/TLSOption" -}}
+        {{- print "traefik.io/v1alpha1" -}}
+    {{- else if .Capabilities.APIVersions.Has "traefik.containo.us/v1alpha1/TLSOption" -}}
+        {{- print "traefik.containo.us/v1alpha1" -}}
+    {{- else -}}
+        {{- print "traefik.containo.us/v1alpha1" -}}
     {{- end }}
 {{- end -}}

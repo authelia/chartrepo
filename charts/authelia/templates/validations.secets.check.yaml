@@ -1,0 +1,43 @@
+{{- if and .Values.configMap.identity_validation.reset_password.secret.secret_name (not (hasKey .Values.secret.additionalSecrets .Values.configMap.identity_validation.reset_password.secret.secret_name)) }}
+{{- fail (printf "The secret %s must be configured as one of the additional secrets as it's being used for the 'configMap.identity_validation.reset_password.secret' secret" .Values.configMap.identity_validation.reset_password.secret.secret_name) }}
+{{- end }}
+
+{{- if and .Values.configMap.duo_api.secret.secret_name (not (hasKey .Values.secret.additionalSecrets .Values.configMap.duo_api.secret.secret_name)) }}
+{{- fail (printf "The secret %s must be configured as one of the additional secrets as it's being used for the 'configMap.duo_api.secret' secret" .Values.configMap.duo_api.secret.secret_name) }}
+{{- end }}
+
+{{- if and .Values.configMap.authentication_backend.ldap.password.secret_name (not (hasKey .Values.secret.additionalSecrets .Values.configMap.authentication_backend.ldap.password.secret_name)) }}
+{{- fail (printf "The secret %s must be configured as one of the additional secrets as it's being used for the 'configMap.authentication_backend.ldap.password' secret" .Values.configMap.authentication_backend.ldap.password.secret_name) }}
+{{- end }}
+
+{{- if and .Values.configMap.session.encryption_key.secret_name (not (hasKey .Values.secret.additionalSecrets .Values.configMap.session.encryption_key.secret_name)) }}
+{{- fail (printf "The secret %s must be configured as one of the additional secrets as it's being used for the 'configMap.session.encryption_key' secret" .Values.configMap.session.encryption_key.secret_name) }}
+{{- end }}
+
+{{- if and .Values.configMap.session.redis.password.secret_name (not (hasKey .Values.secret.additionalSecrets .Values.configMap.session.redis.password.secret_name)) }}
+{{- fail (printf "The secret %s must be configured as one of the additional secrets as it's being used for the 'configMap.session.redis.password' secret" .Values.configMap.session.redis.password.secret_name) }}
+{{- end }}
+
+{{- if and .Values.configMap.session.redis.high_availability.password.secret_name (not (hasKey .Values.secret.additionalSecrets .Values.configMap.session.redis.high_availability.password.secret_name)) }}
+{{- fail (printf "The secret %s must be configured as one of the additional secrets as it's being used for the 'configMap.session.redis.high_availability.password' secret" .Values.configMap.session.redis.high_availability.password.secret_name) }}
+{{- end }}
+
+{{- if and .Values.configMap.storage.encryption_key.secret_name (not (hasKey .Values.secret.additionalSecrets .Values.configMap.storage.encryption_key.secret_name)) }}
+{{- fail (printf "The secret %s must be configured as one of the additional secrets as it's being used for the 'configMap.storage.encryption_key' secret" .Values.configMap.storage.encryption_key.secret_name) }}
+{{- end }}
+
+{{- if and .Values.configMap.storage.mysql.password.secret_name (not (hasKey .Values.secret.additionalSecrets .Values.configMap.storage.mysql.password.secret_name)) }}
+{{- fail (printf "The secret %s must be configured as one of the additional secrets as it's being used for the 'configMap.storage.mysql.password' secret" .Values.configMap.storage.mysql.password.secret_name) }}
+{{- end }}
+
+{{- if and .Values.configMap.storage.postgres.password.secret_name (not (hasKey .Values.secret.additionalSecrets .Values.configMap.storage.postgres.password.secret_name)) }}
+{{- fail (printf "The secret %s must be configured as one of the additional secrets as it's being used for the 'configMap.storage.postgres.password' secret" .Values.configMap.storage.postgres.password.secret_name) }}
+{{- end }}
+
+{{- if and .Values.configMap.notifier.smtp.password.secret_name (not (hasKey .Values.secret.additionalSecrets .Values.configMap.notifier.smtp.password.secret_name)) }}
+{{- fail (printf "The secret %s must be configured as one of the additional secrets as it's being used for the 'configMap.notifier.smtp.password' secret" .Values.configMap.notifier.smtp.password.secret_name) }}
+{{- end }}
+
+{{- if and .Values.configMap.identity_providers.oidc.hmac_secret.secret_name (not (hasKey .Values.secret.additionalSecrets .Values.configMap.identity_providers.oidc.hmac_secret.secret_name)) }}
+{{- fail (printf "The secret %s must be configured as one of the additional secrets as it's being used for the 'configMap.identity_providers.oidc.hmac_secret' secret" .Values.configMap.identity_providers.oidc.hmac_secret.secret_name) }}
+{{- end }}

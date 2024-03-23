@@ -1,0 +1,9 @@
+{{ if not .Values.configMap.disabled }}
+
+{{ range $override := .Values.ingress.rulesOverride }}
+{{ if and (not $override.path) (not (eq $override.path "/")) (not (eq $override.path (printf "/%s" $.Values.configMap.server.path))) }}
+{{ fail "The value 'path' for the 'configMap.ingress.rulesOverride' must either not be configured, be configured as '/', or be the same value as the 'configMap.server.path' with the '/' prefix." }}
+{{ end }}
+{{ end }}
+
+{{- end }}
