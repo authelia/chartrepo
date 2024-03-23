@@ -889,7 +889,7 @@ configMap:
     ## Important: Kubernetes (or HA) users must read https://www.authelia.com/overview/authorization/statelessness/
     ##
     file:
-      enabled: true
+      enabled: false
       path: '/config/users_database.yml'
       watch: false
       search:
@@ -1100,14 +1100,8 @@ configMap:
       ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
       path: 'session.encryption.key'
 
-    cookies:
-      - domain: 'example.com'
-        subdomain: 'auth'
-        default_redirection_url: ''
-        name: ''
-        same_site: ''
-        expiration: ''
-        inactivity: ''
+    cookies: []
+    # cookies:
       # -
         ## The subdomain to prefix the domain with. For example using `domain` value `example.com` and `subdomain`
         ## `auth` should yield the URL `https://auth.example.com`. This option does not affect the cookie domain.
@@ -1301,7 +1295,7 @@ configMap:
     ## Important: Kubernetes (or HA) users must read https://www.authelia.com/overview/authorization/statelessness/
     ##
     local:
-      enabled: true
+      enabled: false
       path: /config/db.sqlite3
 
     ##
@@ -1413,7 +1407,7 @@ configMap:
     ## Important: Kubernetes (or HA) users must read https://www.authelia.com/overview/authorization/statelessness/
     ##
     filesystem:
-      enabled: true
+      enabled: false
       filename: '/config/notification.txt'
 
     ##
