@@ -45,13 +45,13 @@ spec:
       labels: {{ include "authelia.labels" (merge (dict "Labels" .Values.pod.labels) .) | nindent 8 }}
       annotations:
         {{- if (include "authelia.generate.configMap" .) }}
-        checksum/config: {{ include (print $.Template.BasePath "/configMap.yaml") . | sha256sum }}
+        authelia.com/checksum-config: {{ include (print $.Template.BasePath "/configMap.yaml") . | sha256sum }}
         {{- end }}
         {{- if (include "authelia.generate.acl.secret" .) }}
-        checksum/acl: {{ include (print $.Template.BasePath "/secretACL.yaml") . | sha256sum }}
+        authelia.com/checksum-acl: {{ include (print $.Template.BasePath "/secretACL.yaml") . | sha256sum }}
         {{- end }}
         {{ if and (include "authelia.enabled.secret" .) (not .Values.secret.excludeVolumeAndMounts) -}}
-        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        authelia.com/checksum-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
         {{- end }}
         {{- with $annotations := include "authelia.annotations" (merge (dict "Annotations" .Values.pod.annotations) .) }}
         {{- $annotations | nindent 8 }}

@@ -86,7 +86,7 @@
 {{/*
     Validate OpenID Connect 1.0 client secret if defined as a value has a known prefix.
 */}}
-{{ $secret := include "authelia.config.oidc.client.secret" $client }}
+{{ $secret := include "authelia.config.oidc.client.client_secret" $client }}
 {{ if and .public $secret }}
 {{ fail "The 'configMap.identity_providers.oidc.clients' which have the Public Client Type must not have a secret defined." }}
 {{ else if and (not .public) (not $secret) (or (not $client.secret) (not $client.secret.path)) }}
