@@ -3,8 +3,8 @@
 {{/*
     Validate the Cookies Configurations.
 */}}
-{{ if not .Values.configMap.session.cookies }}
-{{ fail "The value 'configMap.session.cookies' must have at least one configuration" }}
+{{ if not .Values.configMap.session }}
+{{ fail "The value 'configMap.session' must exist" }}
 {{ else }}
 {{ range $cookie := .Values.configMap.session.cookies }}
 {{ if or (not $cookie.domain) (eq "" $cookie.domain) }}
@@ -19,21 +19,21 @@
 {{/*
     Validate the Storage config.
 */}}
-{{ if and (not .Values.configMap.storage.postgres.enabled) (not .Values.configMap.storage.mysql.enabled) (not .Values.configMap.storage.local.enabled) }}
+{{ if and (not .Values.configMap.storage.postgres) (not .Values.configMap.storage.mysql) (not .Values.configMap.storage.local) }}
 {{ fail "The option 'configMap.storage' must have one of the providers enabled such as 'postgres', 'mysql', or 'local'." }}
 {{ end }}
 
 {{/*
     Validate the Notifier config.
 */}}
-{{ if and (not .Values.configMap.notifier.smtp.enabled) (not .Values.configMap.notifier.filesystem.enabled) }}
+{{ if and (not .Values.configMap.notifier.smtp) (not .Values.configMap.notifier.filesystem) }}
 {{ fail "The option 'configMap.notifier' must have one of the providers enabled such as 'smtp', or 'local'." }}
 {{ end }}
 
 {{/*
     Validate the Authentication Backend config.
 */}}
-{{ if and (not .Values.configMap.authentication_backend.ldap.enabled) (not .Values.configMap.authentication_backend.file.enabled) }}
+{{ if and (not .Values.configMap.authentication_backend.ldap) (not .Values.configMap.authentication_backend.file) }}
 {{ fail "The option 'configMap.authentication_backend' must have one of the providers enabled such as 'ldap', or 'local'." }}
 {{ end }}
 
@@ -86,7 +86,7 @@
 {{/*
     Validate OpenID Connect 1.0 client secret if defined as a value has a known prefix.
 */}}
-{{ $secret := include "authelia.config.oidc.client.secret" $client }}
+{{ $secret := include "authelia.config.oidc.client.client_secret" $client }}
 {{ if and .public $secret }}
 {{ fail "The 'configMap.identity_providers.oidc.clients' which have the Public Client Type must not have a secret defined." }}
 {{ else if and (not .public) (not $secret) (or (not $client.secret) (not $client.secret.path)) }}

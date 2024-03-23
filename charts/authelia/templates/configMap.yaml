@@ -222,7 +222,7 @@ data:
           remember_me: {{ include "authelia.func.dquote" $cookie.remember_me }}
           {{- end }}
       {{- end }}
-      {{- if $session.redis.enabled }}
+      {{- if and ($session.redis) ($session.redis.enabled) }}
       redis:
         host: {{ $session.redis.host | squote }}
         port: {{ $session.redis.port | default 6379 }}
@@ -261,11 +261,11 @@ data:
       ban_time: {{ include "authelia.func.dquote" (.Values.configMap.regulation.ban_time | default "2 minutes") }}
     storage:
       {{- with $storage := .Values.configMap.storage }}
-      {{- if $storage.local.enabled }}
+      {{- if and ($storage.local) ($storage.local.enabled) }}
       local:
         path: {{ $storage.local.path | squote }}
       {{- end }}
-      {{- if $storage.mysql.enabled }}
+      {{- if and ($storage.mysql) ($storage.mysql.enabled) }}
       mysql:
         address: {{ $storage.mysql.address | squote }}
         timeout: {{ include "authelia.func.dquote" ($storage.mysql.timeout | default "5 seconds") }}
@@ -277,7 +277,7 @@ data:
           minimum_version: {{ $storage.mysql.tls.minimum_version | default "TLS1.2" | squote }}
           maximum_version: {{ $storage.mysql.tls.maximum_version | default "TLS1.3" | squote }}
       {{- end }}
-      {{- if $storage.postgres.enabled }}
+      {{- if and ($storage.postgres) ($storage.postgres.enabled) }}
       postgres:
         address: {{ $storage.postgres.address | squote }}
         timeout: {{ include "authelia.func.dquote" ($storage.postgres.timeout | default "5 seconds") }}

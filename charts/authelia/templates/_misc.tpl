@@ -2,7 +2,7 @@
     Returns the file configuration list as a csv.
 */}}
 {{- define "authelia.config.paths" -}}
-    {{- $paths := (list "/configuration.yml") }}
+    {{- $paths := (list "/configuration.yaml") }}
     {{- if (include "authelia.mount.acl.secret" .) }}
         {{- $paths = append $paths "/configuration.acl.yaml" }}
     {{- end }}

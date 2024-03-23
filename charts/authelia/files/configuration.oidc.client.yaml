@@ -1,5 +1,5 @@
 - client_id: {{ .Client.client_id | squote }}
-  {{- with include "authelia.config.oidc.client.secret.render" .Client }}
+  {{- with include "authelia.config.oidc.client.client_secret.render" .Client }}
   client_secret: {{ . }}
   {{- end }}
   client_name: {{ .Client.client_name | default .Client.id | squote }}

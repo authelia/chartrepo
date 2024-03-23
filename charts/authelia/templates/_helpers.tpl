@@ -55,13 +55,13 @@ Returns true if pod is stateful.
         {{- if not .Values.configMap.disabled -}}
             {{- if .Values.configMap.authentication_backend.file.enabled -}}
                 {{- true -}}
-            {{- else if .Values.configMap.storage.local.enabled -}}
+            {{- else if and (.Values.configMap.storage.local) (.Values.configMap.storage.local.enabled) -}}
                 {{- true -}}
-            {{- else if not .Values.configMap.session.redis.enabled -}}
+            {{- else if not (and (.Values.configMap.session.redis) (.Values.configMap.session.redis.enabled)) -}}
                 {{- true -}}
-            {{- else if and (not .Values.configMap.storage.mysql.enabled) (not .Values.configMap.storage.postgres.enabled) -}}
+            {{- else if and (not (and (.Values.configMap.storage.mysql) (.Values.configMap.storage.mysql.enabled))) (not (and (.Values.configMap.storage.postgres) (.Values.configMap.storage.postgres.enabled))) -}}
                 {{- true -}}
-            {{- else if not .Values.configMap.authentication_backend.ldap.enabled -}}
+            {{- else if not (and (.Values.configMap.authentication_backend) (.Values.configMap.authentication_backend.ldap.enabled)) -}}
                 {{- true -}}
             {{- end -}}
         {{- end -}}
