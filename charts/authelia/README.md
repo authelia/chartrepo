@@ -141,7 +141,9 @@ values.yaml is based on the *Authelia* configuration. See the
 |configMap.session.redis.high_availability.enabledSecret|Forces sentinel password auth using a secret if true    |false             |
 |configMap.storage.local.enabled                        |Enables the SQLite3 storage provider                    |false             |
 |configMap.storage.mysql.enabled                        |Enables the MySQL storage provider                      |false             |
+|configMap.storage.mysql.deploy                         |Deploy a MariaDB instance                               |false             |
 |configMap.storage.postgres.enabled                     |Enables the PostgreSQL storage provider                 |true              |
+|configMap.storage.postgres.deploy                      |Deploy a PostgreSQL instance                            |false             |
 |configMap.notifier.filesystem.enabled                  |Enables the filesystem notification provider            |false             |
 |configMap.notifier.smtp.enabled                        |Enables the SMTP notification provider                  |true              |
 |configMap.notifier.smtp.enabledSecret                  |Forces smtp password auth using a secret if true        |false             |
