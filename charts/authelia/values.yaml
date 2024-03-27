@@ -1313,25 +1313,12 @@ configMap:
     ##
     mysql:
       enabled: false
-      address: 'tcp://mysql.databases.svc.cluster.local:3306'
-      timeout: '5 seconds'
-      database: 'authelia'
-      username: 'authelia'
-      password:
-        ## Disables this secret and leaves configuring it entirely up to you.
-        disabled: false
-
-        ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
-        ## secret_value option below.
-        secret_name: ~
-
-        ## The value of a generated secret when using the ~ secret_name.
-        value: ''
-
-        ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
-        ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
-        ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
-        path: 'storage.mysql.password.txt'
+      deploy: false
+      host: mysql.databases.svc.cluster.local
+      port: 3306
+      database: authelia
+      username: authelia
+      timeout: 5s
       tls:
         enabled: false
 
@@ -1357,27 +1344,14 @@ configMap:
     ## PostgreSQL (Storage Provider)
     ##
     postgres:
-      enabled: false
-      address: 'tcp://postgres.databases.svc.cluster.local:5432'
-      timeout: '5 seconds'
-      database: 'authelia'
-      schema: 'public'
-      username: 'authelia'
-      password:
-        ## Disables this secret and leaves configuring it entirely up to you.
-        disabled: false
-
-        ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
-        ## secret_value option below.
-        secret_name: ~
-
-        ## The value of a generated secret when using the ~ secret_name.
-        value: ''
-
-        ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
-        ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
-        ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
-        path: 'storage.postgres.password.txt'
+      enabled: true
+      deploy: false
+      host: postgres.databases.svc.cluster.local
+      port: 5432
+      database: authelia
+      schema: public
+      username: authelia
+      timeout: 5s
       tls:
         enabled: false
 
@@ -1853,4 +1827,38 @@ persistence:
   size: '100Mi'
 
   selector: {}
-...
+
+# -- Configure mariadb database subchart under this key.
+#    This will be deployed when storage.mysql.deploy is set to true
+#    Currently settings need to be manually copied from here to the storage.mysql section
+#    For more options see [mariadb chart documentation](https://github.com/bitnami/charts/tree/master/bitnami/mariadb)
+mariadb:
+  architecture: standalone
+  auth:
+    database: authelia
+    username: authelia
+    password: authelia
+    rootPassword: authelia
+  primary:
+    resources: {}
+    persistence:
+      enabled: false
+      size: 1Gi
+      # storageClass: ""
+
+# -- Configure postgresql database subchart under this key.
+#    This will be deployed when storage.postgres.deploy is set to true
+#    Currently settings need to be manually copied from here to the storage.postgres section
+#    For more options see [postgresql chart documentation](https://github.com/bitnami/charts/tree/master/bitnami/postgresql)
+postgresql:
+  auth:
+    postgresPassword: authelia
+    username: authelia
+    password: authelia
+    database: authelia
+  primary:
+    persistence:
+      enabled: false
+      # storageClass: ""
+      size: 1Gi
+    resources: {}

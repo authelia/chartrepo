@@ -144,27 +144,29 @@ This section only documents the sections that are specific to the helm chart. Th
 values.yaml is based on the *Authelia* configuration. See the
 [Authelia documentation](https://www.authelia.com/configuration) for more information.
 
-|                        Parameter                        |                       Description                        |      Default       |
-|:-------------------------------------------------------:|:--------------------------------------------------------:|:------------------:|
-|                    configMap.enabled                    |  If true generates the ConfigMap, otherwise it doesn't   |        true        |
-|                  configMap.annotations                  |        Extra annotations to add to the ConfigMap         |         {}         |
-|                    configMap.labels                     |           Extra labels to add to the ConfigMap           |         {}         |
-|                      configMap.key                      |  The key inside the ConfigMap which contains the config  | configuration.yaml |
-|               configMap.existingConfigMap               | Instead of generating a ConfigMap refers to an existing  |        nil         |
-|                configMap.duo_api.enabled                |  Enables the Duo integration when generating the config  |       false        |
-|      configMap.authentication_backend.ldap.enabled      |       Enables LDAP auth when generating the config       |        true        |
-|      configMap.authentication_backend.file.enabled      |       Enables file auth when generating the config       |       false        |
-|             configMap.session.redis.enabled             | Enables redis session storage when generating the config |        true        |
-|          configMap.session.redis.enabledSecret          |    Forces redis password auth using a secret if true     |       false        |
-|    configMap.session.redis.high_availability.enabled    |    Enables redis sentinel when generating the config     |       false        |
-| configMap.session.redis.high_availability.enabledSecret |   Forces sentinel password auth using a secret if true   |       false        |
-|             configMap.storage.local.enabled             |           Enables the SQLite3 storage provider           |       false        |
-|             configMap.storage.mysql.enabled             |            Enables the MySQL storage provider            |       false        |
-|           configMap.storage.postgres.enabled            |         Enables the PostgreSQL storage provider          |        true        |
-|          configMap.notifier.filesystem.enabled          |       Enables the filesystem notification provider       |       false        |
-|             configMap.notifier.smtp.enabled             |          Enables the SMTP notification provider          |        true        |
-|          configMap.notifier.smtp.enabledSecret          |     Forces smtp password auth using a secret if true     |       false        |
-|        configMap.identity_providers.oidc.enabled        |              Enables the OpenID Connect Idp              |       false        |
+|Parameter                                              |Description                                             |Default           |
+|:-----------------------------------------------------:|:------------------------------------------------------:|:----------------:|
+|configMap.enabled                                      |If true generates the ConfigMap, otherwise it doesn't   |true              |
+|configMap.annotations                                  |Extra annotations to add to the ConfigMap               |{}                |
+|configMap.labels                                       |Extra labels to add to the ConfigMap                    |{}                |
+|configMap.key                                          |The key inside the ConfigMap which contains the config  |configuration.yaml|
+|configMap.existingConfigMap                            |Instead of generating a ConfigMap refers to an existing |nil               |
+|configMap.duo_api.enabled                              |Enables the Duo integration when generating the config  |false             |
+|configMap.authentication_backend.ldap.enabled          |Enables LDAP auth when generating the config            |true              |
+|configMap.authentication_backend.file.enabled          |Enables file auth when generating the config            |false             |
+|configMap.session.redis.enabled                        |Enables redis session storage when generating the config|true              |
+|configMap.session.redis.enabledSecret                  |Forces redis password auth using a secret if true       |false             |
+|configMap.session.redis.high_availability.enabled      |Enables redis sentinel when generating the config       |false             |
+| configMap.session.redis.high_availability.enabledSecret | Forces sentinel password auth using a secret if true    |false             |
+|configMap.storage.local.enabled                        |Enables the SQLite3 storage provider                    |false             |
+|configMap.storage.mysql.enabled                        |Enables the MySQL storage provider                      |false             |
+|configMap.storage.mysql.deploy                         |Deploy a MariaDB instance                               |false             |
+|configMap.storage.postgres.enabled                     |Enables the PostgreSQL storage provider                 |true              |
+|configMap.storage.postgres.deploy                      |Deploy a PostgreSQL instance                            |false             |
+|configMap.notifier.filesystem.enabled                  |Enables the filesystem notification provider            |false             |
+|configMap.notifier.smtp.enabled                        |Enables the SMTP notification provider                  |true              |
+|configMap.notifier.smtp.enabledSecret                  |Forces smtp password auth using a secret if true        |false             |
+|configMap.identity_providers.oidc.enabled              |Enables the OpenID Connect Idp                          |false             |
 
 ## Secret
 
