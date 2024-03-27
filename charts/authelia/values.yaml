@@ -1101,6 +1101,7 @@ configMap:
     ##
     mysql:
       enabled: false
+      deploy: false
       host: mysql.databases.svc.cluster.local
       port: 3306
       database: authelia
@@ -1132,6 +1133,7 @@ configMap:
     ##
     postgres:
       enabled: true
+      deploy: false
       host: postgres.databases.svc.cluster.local
       port: 5432
       database: authelia
@@ -1715,4 +1717,38 @@ persistence:
   size: 100Mi
 
   selector: {}
-...
+
+# -- Configure mariadb database subchart under this key.
+#    This will be deployed when storage.mysql.deploy is set to true
+#    Currently settings need to be manually copied from here to the storage.mysql section
+#    For more options see [mariadb chart documentation](https://github.com/bitnami/charts/tree/master/bitnami/mariadb)
+mariadb:
+  architecture: standalone
+  auth:
+    database: authelia
+    username: authelia
+    password: authelia
+    rootPassword: authelia
+  primary:
+    resources: {}
+    persistence:
+      enabled: false
+      size: 1Gi
+      # storageClass: ""
+
+# -- Configure postgresql database subchart under this key.
+#    This will be deployed when storage.postgres.deploy is set to true
+#    Currently settings need to be manually copied from here to the storage.postgres section
+#    For more options see [postgresql chart documentation](https://github.com/bitnami/charts/tree/master/bitnami/postgresql)
+postgresql:
+  auth:
+    postgresPassword: authelia
+    username: authelia
+    password: authelia
+    database: authelia
+  primary:
+    persistence:
+      enabled: false
+      # storageClass: ""
+      size: 1Gi
+    resources: {}
