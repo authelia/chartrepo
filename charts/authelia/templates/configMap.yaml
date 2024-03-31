@@ -90,18 +90,18 @@ data:
       attestation_conveyance_preference: {{ .Values.configMap.webauthn.attestation_conveyance_preference | default "indirect" | squote }}
       user_verification: {{ .Values.configMap.webauthn.user_verification | default "preferred" | squote  }}
       timeout: {{ include "authelia.func.dquote" (.Values.configMap.webauthn.timeout | default "1 minute") }}
-    ntp:
-      address: {{ .Values.configMap.ntp.address | default "udp://time.cloudflare.com:123" | squote }}
-      version: {{ .Values.configMap.ntp.version | default 3 }}
-      max_desync: {{ include "authelia.func.dquote" (.Values.configMap.ntp.max_desync | default "3 seconds") }}
-      disable_startup_check: {{ .Values.configMap.ntp.disable_startup_check | default false }}
-      disable_failure: {{ .Values.configMap.ntp.disable_failure | default false }}
     {{- if include "authelia.configured.duo" . }}
     duo_api:
       hostname: {{ .Values.configMap.duo_api.hostname | squote }}
       integration_key: {{ .Values.configMap.duo_api.integration_key | squote }}
       enable_self_enrollment: {{ .Values.configMap.duo_api.enable_self_enrollment | default false }}
     {{- end }}
+    ntp:
+      address: {{ .Values.configMap.ntp.address | default "udp://time.cloudflare.com:123" | squote }}
+      version: {{ .Values.configMap.ntp.version | default 3 }}
+      max_desync: {{ include "authelia.func.dquote" (.Values.configMap.ntp.max_desync | default "3 seconds") }}
+      disable_startup_check: {{ .Values.configMap.ntp.disable_startup_check | default false }}
+      disable_failure: {{ .Values.configMap.ntp.disable_failure | default false }}
     {{- with $auth := .Values.configMap.authentication_backend }}
     authentication_backend:
       password_reset:
