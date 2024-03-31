@@ -1,0 +1,119 @@
+{{ if not .Values.configMap.disabled }}
+
+{{/*
+    Validate the Cookies Configurations.
+*/}}
+{{ if not .Values.configMap.session }}
+{{ fail "The value 'configMap.session' must exist" }}
+{{ else }}
+{{ range $cookie := .Values.configMap.session.cookies }}
+{{ if or (not $cookie.domain) (eq "" $cookie.domain) }}
+{{ fail "The value 'domain' for the 'configMap.session.cookies' configurations must be configured" }}
+{{ end }}
+{{ if and $cookie.path (not (eq $cookie.path "")) (not (eq $cookie.path $.Values.configMap.server.path)) }}
+{{ fail "The value 'path' for the 'configMap.session.cookies' must either not be configured or be the same value as the configMap.server.path" }}
+{{ end }}
+{{ end }}
+{{ end }}
+
+{{/*
+    Validate the Storage config.
+*/}}
+{{ if and (not .Values.configMap.storage.postgres) (not .Values.configMap.storage.mysql) (not .Values.configMap.storage.local) }}
+{{ fail "The option 'configMap.storage' must have one of the providers enabled such as 'postgres', 'mysql', or 'local'." }}
+{{ end }}
+
+{{/*
+    Validate the Notifier config.
+*/}}
+{{ if and (not .Values.configMap.notifier.smtp) (not .Values.configMap.notifier.filesystem) }}
+{{ fail "The option 'configMap.notifier' must have one of the providers enabled such as 'smtp', or 'local'." }}
+{{ end }}
+
+{{/*
+    Validate the Authentication Backend config.
+*/}}
+{{ if and (not .Values.configMap.authentication_backend.ldap) (not .Values.configMap.authentication_backend.file) }}
+{{ fail "The option 'configMap.authentication_backend' must have one of the providers enabled such as 'ldap', or 'local'." }}
+{{ end }}
+
+{{/*
+    Validate the deprecated 'default_redirection_url' is not configured
+*/}}
+{{ if .Values.configMap.default_redirection_url }}
+{{ fail "The value 'configMap.default_redirection_url' is no longer valid" }}
+{{ end }}
+
+{{ $authzimpl := (include "authelia.authz.implementations" .) | fromJsonArray }}
+{{/*
+    Validate only one authz endpoint configuration method is configured
+*/}}
+{{ if and .Values.configMap.server.endpoints.authz .Values.configMap.server.endpoints.automatic_authz_implementations }}
+    {{ fail "Can't specify both automatic and manual authz endpoints (configMap.server.endpoints.automatic_authz_implementations and configMap.server.endpoints.authz respectively)." }}
+
+{{/*
+    Validate only authz endpoint implementations with known names are configured (Automatic).
+*/}}
+{{ else if .Values.configMap.server.endpoints.automatic_authz_implementations }}
+    {{ range $implementation := .Values.configMap.server.endpoints.automatic_authz_implementations }}
+        {{ if not (has $implementation $authzimpl) }}
+            {{ fail (printf "The implementation name '%s' specified via 'configMap.server.endpoints.automatic_authz_implementations' is not known. Known values are '%s'." $implementation (join "', '" $authzimpl)) }}
+        {{ end }}
+    {{ end }}
+{{/*
+    Validate only authz endpoint implementations with known names are configured (Manual).
+*/}}
+{{ else if .Values.configMap.server.endpoints.authz }}
+    {{ range $authz := .Values.configMap.server.endpoints.authz }}
+        {{ if not (has $authz.implementation $authzimpl) }}
+            {{ fail (printf "The implementation name '%s' specified via 'configMap.server.endpoints.automatic_authz_implementations' is not known. Known values are '%s'." $authz.implementation (join "', '" $authzimpl)) }}
+        {{ end }}
+    {{ end }}
+{{ end }}
+
+{{/*
+    Validate OpenID Connect 1.0 client options.
+*/}}
+{{ range $client := .Values.configMap.identity_providers.oidc.clients }}
+
+{{/*
+    Validate OpenID Connect 1.0 client userinfo_signing_algorithm is NOT defined.
+*/}}
+{{ if $client.userinfo_signing_algorithm }}
+{{ fail "The value 'userinfo_signing_algorithm' for the 'configMap.identity_providers.oidc.clients' is no longer supported." }}
+{{ end }}
+
+{{/*
+    Validate OpenID Connect 1.0 client secret if defined as a value has a known prefix.
+*/}}
+{{ $secret := include "authelia.config.oidc.client.client_secret" $client }}
+{{ if and .public $secret }}
+{{ fail "The 'configMap.identity_providers.oidc.clients' which have the Public Client Type must not have a secret defined." }}
+{{ else if and (not .public) (not $secret) (or (not $client.secret) (not $client.secret.path)) }}
+{{ fail "The 'configMap.identity_providers.oidc.clients' which have the Confidential Client Type must have a secret." }}
+{{ else if $secret }}
+{{ if (not (include "authelia.hashes.prefix.has" $secret)) }}
+{{ if eq "client_secret_jwt" $client.token_endpoint_auth_method }}
+{{ fail "The value 'secret.value' for the 'configMap.identity_providers.oidc.clients' must have a hash prefix. Please add the '$plaintext$' or '$base64$' prefix to this value." }}
+{{ else }}
+{{ fail "The value 'secret.value' for the 'configMap.identity_providers.oidc.clients' must have a hash prefix. At this time the '$plaintext$' prefix is still accepted however we recommend taking the opportunity to properly hash it as the plaintext variants will only be accepted in the future for the 'client_secret_jwt' authentication method." }}
+{{ end }}
+{{ end }}
+{{ end }}
+{{ end }}
+
+{{/*
+    Validate OpenID Connect 1.0 provider option 'issuer_private_key' which have been removed.
+*/}}
+{{ if .Values.configMap.identity_providers.oidc.issuer_private_key }}
+{{ fail "The value 'configMap.identity_providers.oidc.issuer_private_key' is no longer supported and has been replaced with the 'configMap.identity_providers.oidc.issuer_private_keys' multi-value option" }}
+{{ end }}
+
+{{/*
+    Validate OpenID Connect 1.0 provider option 'issuer_certificate_chain' which have been removed.
+*/}}
+{{ if .Values.configMap.identity_providers.oidc.issuer_certificate_chain }}
+{{ fail "The value 'configMap.identity_providers.oidc.issuer_certificate_chain' is no longer supported and has been replaced with the 'configMap.identity_providers.oidc.issuer_private_keys' multi-value option" }}
+{{ end }}
+
+{{ end }}

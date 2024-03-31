@@ -1,0 +1,14 @@
+{{ .Name }}:
+  implementation: {{ .Endpoint.implementation | squote }}
+  {{- with $strategies := .Endpoint.authn_strategies }}
+  authn_strategies:
+  {{- range $strategy := $strategies }}
+    - name: {{ $strategy.name | squote }}
+      {{- with $schemes := $strategy.schemes }}
+      schemes:
+      {{- range $schemes }}
+      - {{ . | squote }}
+      {{- end }}
+      {{- end }}
+  {{- end }}
+  {{- end }}
