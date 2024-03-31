@@ -1660,6 +1660,11 @@ configMap:
           # redirect_uris:
           #   - 'https://oidc.example.com/oauth2/callback'
 
+          ## Request URI's specifies a list of valid case-sensitive URIs this client can ask Authelia to obtain a
+          ## Request Object from.
+          # request_uris:
+          #   - 'https://oidc.example.com/oauth2/request-object/authelia.jwk'
+
           ## Grant Types configures which grants this client can obtain.
           ## It's not recommended to configure this unless you know what you're doing.
           # grant_types:
