@@ -3,7 +3,9 @@
   client_secret: {{ . }}
   {{- end }}
   client_name: {{ .Client.client_name | default .Client.id | squote }}
+  {{- if .Client.sector_identifier_uri }}
   sector_identifier_uri: {{ .Client.sector_identifier_uri | default "" | squote }}
+  {{- end }}
   public: {{ .Client.public | default false }}
   {{- if .Client.redirect_uris }}
   redirect_uris:
@@ -47,8 +49,11 @@
   pre_configured_consent_duration: {{ .Client.pre_configured_consent_duration | squote }}
   {{- end }}
   require_pushed_authorization_requests: {{ .Client.require_pushed_authorization_requests | default false  }}
+  {{- if .Client.require_pkce }}
+  {{- else }}
+  {{- end }}
   require_pkce: {{ .Client.require_pkce | default false  }}
-  pkce_challenge_method: {{ .Client.pkce_challenge_method | default "S256" | squote }}
+  pkce_challenge_method: {{ (include "authelia.config.oidc.client.pkce_challenge_method" .Client) | squote }}
   authorization_signed_response_alg: {{ .Client.authorization_signed_response_alg | default "none" | squote }}
   authorization_signed_response_key_id: {{ .Client.authorization_signed_response_key_id | default "" | squote }}
   id_token_signed_response_alg: {{ .Client.id_token_signed_response_alg | default "RS256" | squote }}

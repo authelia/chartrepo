@@ -32,3 +32,11 @@ Returns the OpenID Connect 1.0 clients secret.
         {{- end }}
     {{- end }}
 {{- end -}}
+
+{{- define "authelia.config.oidc.client.pkce_challenge_method" -}}
+    {{- if .enforce_pkce }}
+    {{- .pkce_challenge_method | default "S256" -}}
+    {{- else }}
+    {{- .pkce_challenge_method | default "" -}}
+    {{- end }}
+{{- end -}}
