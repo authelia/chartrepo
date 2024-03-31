@@ -1350,7 +1350,7 @@ configMap:
     ## PostgreSQL (Storage Provider)
     ##
     postgres:
-      enabled: true
+      enabled: false
       deploy: false
       address: 'tcp://postgres.databases.svc.cluster.local:5432'
       timeout: '5 seconds'
