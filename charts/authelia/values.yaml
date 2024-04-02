@@ -1146,6 +1146,7 @@ configMap:
     ## The redis connection details
     redis:
       enabled: false
+      deploy: false
       enabledSecret: false
       host: 'redis.databases.svc.cluster.local'
       port: 6379
@@ -1880,3 +1881,36 @@ postgresql:
       # storageClass: ""
       size: 1Gi
     resources: {}
+
+# -- Configure redis database subchart under this key.
+#    This will be deployed when session.redis.deploy is set to true
+#    Currently settings need to be manually copied from here to the session.redis section
+#    For more options see [redis chart documentation](https://github.com/bitnami/charts/tree/main/bitnami/redis)
+redis:
+  architecture: standalone
+  auth:
+    enabled: false
+    sentinel: true
+    password: "redis"
+    existingSecret: ""
+    existingSecretPasswordKey: ""
+    usePasswordFiles: false
+  master:
+    resources: {}
+    priorityClassName: ""
+    persistence:
+      enabled: false
+      # storageClass: ""
+      accessModes:
+        - ReadWriteOnce
+      size: 1Gi
+  replica:
+    replicaCount: 3
+    resources: {}
+    priorityClassName: ""
+    persistence:
+      enabled: false
+      # storageClass: ""
+      accessModes:
+        - ReadWriteOnce
+      size: 1Gi
