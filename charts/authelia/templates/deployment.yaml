@@ -50,7 +50,7 @@ spec:
         {{- if (include "authelia.generate.acl.secret" .) }}
         authelia.com/checksum-acl: {{ include (print $.Template.BasePath "/secretACL.yaml") . | sha256sum }}
         {{- end }}
-        {{ if and (include "authelia.enabled.secret" .) (not .Values.secret.excludeVolumeAndMounts) -}}
+        {{- if and (include "authelia.enabled.secret" .) (not .Values.secret.excludeVolumeAndMounts) }}
         authelia.com/checksum-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
         {{- end }}
         {{- with $annotations := include "authelia.annotations" (merge (dict "Annotations" .Values.pod.annotations) .) }}
