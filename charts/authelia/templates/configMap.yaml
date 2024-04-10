@@ -397,7 +397,7 @@ data:
         {{- end }}
         jwks:
         {{- range $key := .Values.configMap.identity_providers.oidc.jwks }}
-        {{- tpl ($.Files.Get "files/configuration.oidc.jwk.yaml") (merge (dict "Key" $key "Indent" 4) $) | trim | nindent 10 }}
+        {{- tpl ($.Files.Get "files/configuration.oidc.jwk.yaml") (merge (dict "Key" $key "Indent" 6) $) | trim | nindent 10 }}
         {{- end }}
         cors:
           {{- if .Values.configMap.identity_providers.oidc.cors.endpoints }}
