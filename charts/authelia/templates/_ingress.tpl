@@ -18,12 +18,8 @@
     {{- if .Namespace -}}
         {{- $host = printf "%s.%s" $host .Namespace -}}
     {{- end -}}
-    {{- $cluster := "cluster.local" -}}
-    {{- if .Cluster -}}
-        {{- $cluster := .Cluster -}}
-    {{- end -}}
     {{- $path := (include "authelia.path" .) | trimSuffix "/" -}}
-    {{- (printf "%s://%s.svc.%s%s/api/authz/%s" $scheme $host $cluster $path (.Name | default "forward-auth")) -}}
+    {{- (printf "%s://%s.svc.%s%s/api/authz/%s" $scheme $host (include "kube.DNSDomain" $) $path (.Name | default "forward-auth")) -}}
 {{- end -}}
 
 {{/*

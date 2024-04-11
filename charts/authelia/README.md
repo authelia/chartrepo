@@ -85,6 +85,8 @@ This documents the parameters in the chart values. As the chart values are quite
 |     service.labels      |           Extra labels to add to the Service           |         {}         |
 |      service.port       |       The exposed port on the ClusterIP Service        |         80         |
 |    service.clusterIP    |         The ClusterIP to assign to the Service         |        nil         |
+|   kubeVersionOverride   |   Allows overriding the detected Kubernetes Version    |        nil         |
+|  kubeDNSDomainOverride  |  Allows overriding the default Kubernetes DNS Domain   |        nil         |
 
 ## Pod
 

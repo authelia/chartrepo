@@ -24,6 +24,9 @@ versionOverride: ''
 ## detected by helm.
 kubeVersionOverride: ''
 
+## Kubernetes DNS Domain Override allows forcibly overriding the default DNS Domain for Kubernetes 'cluster.local'.
+kubeDNSDomainOverride: ''
+
 ## Image Parameters
 ## ref: https://hub.docker.com/r/authelia/authelia/tags/
 ##
