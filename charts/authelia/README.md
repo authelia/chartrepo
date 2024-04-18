@@ -4,8 +4,9 @@
 not recommended at this stage for production environments without manual intervention to check the templated manifests
 match your desired state.
 
-This chart uses api version 2 which is only supported by helm v3+. This chart includes Bitnami subcharts to optionally
-deploy `redis`, `postgresql` and/or `mariadb`.
+This chart uses api version 2 which is only supported by helm v3+. This is a ***standalone*** chart intended just to
+deploy *Authelia* on its own. Eventually we may publish an `authelia-bundle` chart which includes `redis` and
+`postgresql`.
 
 # Breaking Changes
 
@@ -154,7 +155,6 @@ values.yaml is based on the *Authelia* configuration. See the
 |      configMap.authentication_backend.ldap.enabled      |       Enables LDAP auth when generating the config       |        true        |
 |      configMap.authentication_backend.file.enabled      |       Enables file auth when generating the config       |       false        |
 |             configMap.session.redis.enabled             | Enables redis session storage when generating the config |        true        |
-|             configMap.session.redis.deploy              |                 Deploy a redis instance                  |       false        |
 |          configMap.session.redis.enabledSecret          |    Forces redis password auth using a secret if true     |       false        |
 |    configMap.session.redis.high_availability.enabled    |    Enables redis sentinel when generating the config     |       false        |
 | configMap.session.redis.high_availability.enabledSecret |   Forces sentinel password auth using a secret if true   |       false        |
@@ -167,9 +167,6 @@ values.yaml is based on the *Authelia* configuration. See the
 |             configMap.notifier.smtp.enabled             |          Enables the SMTP notification provider          |        true        |
 |          configMap.notifier.smtp.enabledSecret          |     Forces smtp password auth using a secret if true     |       false        |
 |        configMap.identity_providers.oidc.enabled        |              Enables the OpenID Connect Idp              |       false        |
-
-If any of `configMap.session.redis.deploy`, `configMap.storage.mysql.deploy` or `configMap.storage.postgres.deploy` are
-enabled, the corresponding top-level `redis`, `mariadb` or `postgresql` sections must be configured.
 
 ## Secret
 
