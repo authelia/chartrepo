@@ -9,17 +9,39 @@ metadata:
   annotations: {{ $annotations | nindent 4 }}
   {{- end }}
 spec:
-  accessModes: {{ toYaml (default (list "ReadWriteOnce") .Values.persistence.accessModes) | nindent 2 }}
+  accessModes:
+  {{- range (.Values.persistence.accessModes | default (list "ReadWriteOnce")) }}
+  - {{ . }}
+  {{- end }}
   {{- with $storageClass := .Values.persistence.storageClass }}
   storageClassName: {{ $storageClass }}
   {{- end }}
   resources:
     requests:
       storage: {{ default "100Mi" .Values.persistence.size }}
-  {{- with $selector := .Values.persistence.selector }}
-  selector: {{ toYaml $selector | nindent 4 }}
+  {{- if .Values.persistence.selector }}
+  selector:
+  {{- if .Values.persistence.selector.matchLabels }}
+    matchLabels:
+  {{- range $key, $value := .Values.persistence.selector.matchLabels }}
+      {{ $key}}: {{ $value | squote }}
+  {{- end }}
+  {{- end }}
+  {{- if .Values.persistence.selector.matchExpressions }}
+  matchExpressions:
+  {{- range $expression := .Values.persistence.selector.matchExpressions }}
+  - key: {{ $expression.key }}
+    operator: {{ $expression.operator }}
+    {{- if $expression.values }}
+    values:
+    {{- range $expression.values }}
+    - {{ . }}
+    {{- end }}
+    {{- end }}
+  {{- end }}
+  {{- end }}
+  {{- end }}
   {{- if .Values.persistence.volumeName }}
   volumeName: "{{ .Values.persistence.volumeName }}"
   {{- end -}}
-  {{- end }}
   {{- end }}

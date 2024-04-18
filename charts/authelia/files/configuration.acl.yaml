@@ -1,7 +1,18 @@
 access_control:
-  default_policy: {{ include "authelia.accessControl.defaultPolicy" . | trim }}
-  {{- if (gt (len .Values.configMap.access_control.networks) 0) }}
-  networks: {{ toYaml .Values.configMap.access_control.networks | nindent 2 }}
+  default_policy: {{ include "authelia.accessControl.defaultPolicy" . | trim | squote }}
+  {{- if .Values.configMap.access_control.networks }}
+  networks:
+  {{- range $network := .Values.configMap.access_control.networks }}
+    - name: {{ $network.name }}
+      networks:
+    {{- if kindIs "string" $network.networks }}
+        - {{ $network.networks | squote }}
+    {{- else }}
+    {{- range $value := $network.networks }}
+        - {{ $value | squote }}
+    {{- end }}
+    {{- end }}
+  {{- end }}
   {{- end }}
   {{- if .Values.configMap.access_control.rules }}
   rules:
@@ -9,38 +20,38 @@ access_control:
     - policy: {{ .policy | default "deny" }}
       {{- if .domain }}
       domain:
-        {{- if kindIs "string" .domain }}
+      {{- if kindIs "string" .domain }}
         - {{ .domain | squote }}
-        {{- else }}
-          {{- include "authelia.squote.list" .domain | indent 8 }}
-        {{- end }}
+      {{- else }}
+        {{- include "authelia.squote.list" .domain | indent 8 }}
       {{- end }}
-      {{- if and .domain_regex (semverCompare ">=4.35.0" (include "authelia.version" $)) }}
+      {{- end }}
+      {{- if .domain_regex }}
       domain_regex:
-        {{- if kindIs "string" .domain_regex }}
+      {{- if kindIs "string" .domain_regex }}
         - {{ .domain_regex | squote }}
-        {{- else }}
-          {{- include "authelia.squote.list" .domain_regex | indent 8 }}
-        {{- end }}
+      {{- else }}
+        {{- include "authelia.squote.list" .domain_regex | indent 8 }}
+      {{- end }}
       {{- end }}
       {{- if .networks }}
       networks:
-        {{- if kindIs "string" .networks }}
+      {{- if kindIs "string" .networks }}
         - {{ .networks }}
-        {{- else }}
-        {{- range .networks }}
+      {{- else }}
+      {{- range .networks }}
         - {{ . }}
-        {{- end }}
-        {{- end }}
+      {{- end }}
+      {{- end }}
       {{- end }}
       {{- if .subject }}
       subject:
       {{- if kindIs "string" .subject }}
-        - {{ .subject | squote }}
+        - [{{ .subject | squote }}]
       {{- else }}
-        {{- range .subject }}
+      {{- range .subject }}
         - [{{ include "authelia.squote.join" . }}]
-        {{- end }}
+      {{- end }}
       {{- end }}
       {{- end }}
       {{- if .methods }}
@@ -48,20 +59,20 @@ access_control:
       {{- if kindIs "string" .methods }}
         - {{ .methods | squote }}
       {{- else }}
-        {{- range .methods }}
+      {{- range .methods }}
         - {{ . | squote }}
-        {{- end }}
+      {{- end }}
       {{- end }}
       {{- end }}
       {{- if .resources }}
       resources:
-        {{- if kindIs "string" .resources }}
+      {{- if kindIs "string" .resources }}
         - {{ .resources | squote }}
-        {{- else }}
-        {{- range .resources }}
+      {{- else }}
+      {{- range .resources }}
         - {{ . | squote }}
-        {{- end }}
-        {{- end }}
+      {{- end }}
+      {{- end }}
       {{- end }}
   {{- end }}
   {{- end }}

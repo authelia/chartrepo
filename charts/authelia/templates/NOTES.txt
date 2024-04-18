@@ -1,42 +1,55 @@
 Thank you for installing the {{ include "authelia.chart" . }} chart.
 
-Please report any chart issues at https://github.com/authelia/chartrepo/issues and any application issues at https://github.com/authelia/authelia/issues.
-
 IMPORTANT: This chart automatically generated an encryption key for sensitive data in your database. Please ensure you backup this key.
 
-{{ if (include "authelia.enabled.ingress.standard" .) -}}
-You have selected to use a regular ingress.
+Please report any chart issues at https://github.com/authelia/chartrepo/issues and any application issues at https://github.com/authelia/authelia/issues.
 
-You should be able to access Authelia soon via https://{{ include "authelia.ingressHostWithPath" . }} if everything is configured correctly in your values and the DNS record points to the correct location.
+You can configure your ingress or proxy in the following ways:
 
-You will also need to direct your ingress to use the following path for forward auth: {{ include "authelia.forwardAuthPath" (merge (dict "Namespace" .Release.Namespace) .) }}.
+{{- range $name, $endpoint := (include "authelia.authz" .) | fromJson }}
+    {{- if eq $endpoint.implementation "AuthRequest" }}
 
-The following are the suggested annotations for 'ingress-nginx':
-    nginx.ingress.kubernetes.io/auth-url: http://{{ include "authelia.name" . }}.{{ .Release.Namespace }}.svc.cluster.local/api/verify
-    nginx.ingress.kubernetes.io/auth-signin: https://{{ include "authelia.ingressHostWithPath" . }}
+The following example demonstrates configuration of the AuthRequest implementation for ingresses like ingress-nginx:
+
+apiVersion: {{ (include "capabilities.apiVersion.ingress" $) }}
+kind: Ingress
+metadata:
+  name: example
+  namespace: example-namespace
+  annotations:
+    nginx.ingress.kubernetes.io/auth-url: http://{{ (printf "%s.%s" (include "authelia.name" $) $.Release.Namespace) }}.svc.{{ include "kube.DNSDomain" $ }}/api/authz/{{ $name }}
     nginx.ingress.kubernetes.io/auth-response-headers: Remote-User,Remote-Name,Remote-Groups,Remote-Email
-    nginx.ingress.kubernetes.io/auth-snippet: |
-      proxy_set_header X-Forwarded-Method $request_method;
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      proxy_set_header X-Forwarded-Method $request_method;
+    {{- else if eq $endpoint.implementation "ExtAuthz" }}
 
-{{ else if (include "authelia.enabled.ingress.traefik" .) -}}
-You have selected the Traefik CRD to deploy the ingress.
+The following examples demonstrate configuration of the ExtAuthz implementation for ingresses like Istio and Envoy:
 
-If you wish to protect an IngressRoute apply the following middleware:
+    At this stage no examples exist. Feel free to contribute.
 
+    The URL for this implementation is: http://{{ (printf "%s.%s" (include "authelia.name" $) $.Release.Namespace) }}.svc.{{ include "kube.DNSDomain" $ }}/api/authz/{{ $name }}
+    {{- else if eq $endpoint.implementation "ForwardAuth" }}
+
+The following examples demonstrate configuration of the ForwardAuth implementation for ingresses like Traefik using a IngressRoute CRD manifest:
+
+apiVersion: {{ (include "capabilities.apiVersion.traefik.IngressRoute" $) }}
+kind: IngressRoute
+metadata:
+  name: example
+  namespace: example-namespace
+spec:
+  routes:
+  - kind: Rule
     middlewares:
-    - name: {{ include "authelia.ingress.traefikCRD.middleware.name.chainAuth" . }}
-      namespace: {{ .Release.Namespace }}
+    - name: {{ (include "authelia.ingress.traefikCRD.middleware.chainAuth.name" (merge (dict "Name" $name) $)) }}
+      namespace: {{ $.Release.Namespace }}
 
-If you wish to protect a regular Ingress apply the following annotation:
+The following examples demonstrate configuration of the ForwardAuth implementation for ingresses like Traefik using a standard Ingress manifest:
 
-    annotations:
-      traefik.ingress.kubernetes.io/router.middlewares: {{ (printf "%s-%s@kubernetescrd" .Release.Namespace (include "authelia.ingress.traefikCRD.middleware.name.chainAuth" .)) }}
-
-You should be able to access Authelia soon via https://{{ include "authelia.ingressHostWithPath" . }} if everything is configured correctly in your values and the DNS record points to the correct location.
-{{ else -}}
-You have not installed an ingress which you can do manually by specifying {{ include "authelia.name" . }} as the service and {{ include "authelia.service.port" . }} as the port.
+apiVersion: {{ (include "capabilities.apiVersion.ingress" $) }}
+kind: Ingress
+metadata:
+  name: example
+  namespace: example-namespace
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: {{ printf "%s-%s@kubernetescrd" $.Release.Namespace (include "authelia.ingress.traefikCRD.middleware.chainAuth.name" (merge (dict "Name" $name) $)) }}
+    {{- end }}
 {{- end }}
-
-You can also direct your ingress to use the following path for forward auth: {{ include "authelia.forwardAuthPath" (merge (dict "Namespace" .Release.Namespace) .) }}.
