@@ -16,6 +16,15 @@ steps:
     charts: "true"
   if: build.branch != "gh-pages" && build.env("CHART_CHANGES") == "true"
 
+- command: "ct --config .buildkite/ct.yaml list-changed --since HEAD~1 | xargs -n1 cr --config .buildkite/cr.yaml package"
+  key: "package-test"
+  label: ":package: Package Chart (Chart Releaser)"
+  artifact_paths:
+    - ".cr-release-packages/*"
+  agents:
+    charts: "true"
+  if: build.branch != "gh-pages" && build.branch != "master" && build.env("CHART_CHANGES") == "true"
+
 - wait: ~
   continue_on_failure: true
   if: build.branch == "master" && build.env("CHART_CHANGES") == "true"
