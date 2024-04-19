@@ -118,7 +118,7 @@ ingress:
   tls:
     enabled: true
     secret: authelia-tls
-    hostNameOverride: ""
+    hostNameOverride: ''
 
   traefikCRD:
     enabled: false
