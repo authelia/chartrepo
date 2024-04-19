@@ -1631,7 +1631,9 @@ configMap:
           # client_id: 'myapp'
 
           ## The client secret is a shared secret between Authelia and the consumer of this client.
-          # client_secret: '$plaintext$apple123'
+          # client_secret:
+            # value: '$plaintext$apple123'
+            # path: '/secrets/oidc.client.myapp.value'
 
           ## The description to show to users when they end up on the consent screen. Defaults to the ID above.
           # client_name: 'My Application'

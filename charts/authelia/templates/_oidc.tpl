@@ -14,10 +14,8 @@ Returns the OpenID Connect 1.0 clients token endpoint authentication method.
 Returns the OpenID Connect 1.0 clients secret.
 */}}
 {{- define "authelia.config.oidc.client.client_secret" -}}
-    {{- if or .public (not .client_secret) }}
+    {{- if or .public (and (not .client_secret) (not .client_secret.value) (not .client_secret.path)) }}
         {{- "" }}
-    {{- else if kindIs "string" .client_secret }}
-        {{- .client_secret }}
     {{- else if hasKey .client_secret "value" }}
         {{- .client_secret.value }}
     {{- end }}
@@ -26,9 +24,9 @@ Returns the OpenID Connect 1.0 clients secret.
 {{- define "authelia.config.oidc.client.client_secret.render" -}}
     {{- if not .public }}
         {{- if and (not (kindIs "string" .client_secret)) .client_secret.path }}
-            {{- printf "{{ client_secret %s | squote }}" .client_secret.path }}
+            {{- printf "'{{ secret \"%s\" }}'" .client_secret.path }}
         {{- else }}
-            {{- (include "authelia.config.oidc.client.client_secret" .) | squote }}
+            {{- (include "authelia.config.oidc.client.client_secret.value" .) | squote }}
         {{- end }}
     {{- end }}
 {{- end -}}
