@@ -88,9 +88,9 @@
 */}}
 {{ $secret := include "authelia.config.oidc.client.client_secret" $client }}
 {{ if and .public $secret }}
-{{ fail "The 'configMap.identity_providers.oidc.clients' which have the Public Client Type must not have a secret defined." }}
-{{ else if and (not .public) (not $secret) (or (not $client.secret) (not $client.secret.path)) }}
-{{ fail "The 'configMap.identity_providers.oidc.clients' which have the Confidential Client Type must have a secret." }}
+{{ fail (printf "The 'configMap.identity_providers.oidc.clients' which have the Public Client Type must not have a secret defined. The client with id '%s' does have a secret but has the Public Client Type." $client.client_id) }}
+{{ else if and (not .public) (not $secret) (or (not $client.client_secret) (not $client.client_secret.path)) }}
+{{ fail (printf "The 'configMap.identity_providers.oidc.clients' which have the Confidential Client Type must have a secret. The client with id '%s' does not have a secret but is Confidential." $client.client_id) }}
 {{ else if $secret }}
 {{ if (not (include "authelia.hashes.prefix.has" $secret)) }}
 {{ if eq "client_secret_jwt" $client.token_endpoint_auth_method }}

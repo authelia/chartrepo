@@ -1,8 +1,8 @@
 - client_id: {{ .Client.client_id | squote }}
-  {{- with include "authelia.config.oidc.client.client_secret.render" .Client }}
+  client_name: {{ .Client.client_name | default .Client.client_id | squote }}
+  {{- with (include "authelia.config.oidc.client.client_secret.render" .Client) }}
   client_secret: {{ . }}
   {{- end }}
-  client_name: {{ .Client.client_name | default .Client.client_id | squote }}
   {{- if .Client.sector_identifier_uri }}
   sector_identifier_uri: {{ .Client.sector_identifier_uri | default "" | squote }}
   {{- end }}
