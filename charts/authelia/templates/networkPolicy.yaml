@@ -11,7 +11,10 @@ metadata:
 spec:
   podSelector:
     matchLabels: {{- include "authelia.matchLabels" . | nindent 6 }}
-  policyTypes: {{ toYaml .Values.networkPolicy.policyTypes | nindent 4 }}
+  policyTypes:
+  {{- range .Values.networkPolicy.policyTypes }}
+  - {{ . }}
+  {{- end }}
   {{- with $ingress := .Values.networkPolicy.ingress }}
   ingress: {{ toYaml $ingress | nindent 4 }}
   {{- end }}

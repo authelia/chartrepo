@@ -10,20 +10,12 @@ deploy *Authelia* on its own. Eventually we may publish an `authelia-bundle` cha
 
 # Breaking Changes
 
-During the beta we will generally not be documenting breaking chart changes but there are exceptions and they are noted
-below.
+Breaking changes with this chart should be expected during the v0.x.x versions at any time however we aim to keep the
+breaking changes within minor releases i.e. from v0.1.0 to v0.2.0. The following versions have notable breaking changes
+which users should be aware of:
 
-## 0.5.0
-
-- Does not support Authelia versions lower than 4.30.0
-- Had several changes to the values.yaml file, specifically:
-  - configMap.port is now configMap.server.port
-  - configMap.log_level is now configMap.log.level
-  - configMap.log_format is now configMap.log.format
-  - configMap.log_file_path is now configMap.log.file_path
-
-See the [official migration documentation](https://www.authelia.com/configuration/prologue/migration/#4300) 
-(not specific to Kubernetes) for more information.
+- [v0.9.0](https://github.com/authelia/chartrepo/blob/master/charts/authelia/BREAKING.md#090)
+- [v0.5.0](https://github.com/authelia/chartrepo/blob/master/charts/authelia/BREAKING.md#050)
 
 # Getting Started
 
@@ -35,18 +27,40 @@ See the [official migration documentation](https://www.authelia.com/configuratio
 
 ## Values Files
 
-- **values.yaml:** production environments with LDAP (auth), PostgreSQL (storage), SMTP (notification), and Redis (
-  session).
+- **values.yaml:** basic template with no specific feature states enabled.
+- **values.production.yaml:** production environments with LDAP (auth), PostgreSQL (storage), SMTP (notification), and 
+  Redis (session).
 - **values.local.yaml:** environments with file (auth), SQLite3 (storage), filesystem (notification), and memory (
   session).
 
+## Expected Minimum Configuration
+
 It is expected you will configure at least the following sections/values:
 
-- domain (this is essential for the chart to work)
-- configMap section (the configMap follows a majority of the configuration options
+- The configMap section (the configMap follows a majority of the configuration options
   in [the documentation](https://www.authelia.com/configuration))
-- secret section configures passwords and other secret information, configuring this directly in the configMap is not
-  supported
+  - The `configMap.session.cookies` section contains the domain configuration for the Authelia portal and session
+    cookies:
+    - The full Authelia URL will be in the format of `https://[<subdomain>.]<domain>[/<subpath>]` (part within the square braces is
+      omitted if not configured) i.e. `domain` of `example.com` and `subdomain` empty yields `https://example.com` and
+      `subdomain` of `auth` yields `https://auth.example.com`. The `subpath` is also optionally included.
+    - The `domain` option is required.
+    - The `subdomain` option is generally required.
+    - The `path` option is generally **_NOT_** required or recommended. Every domain that has this option configured
+      MUST have the same value i.e. you can have one blank and one configured but all those that are configured must be
+      the same, and in addition if configured at all the `configMap.server.path` option must have the same value.
+
+  - The following sections require one of the sub-options enabled:
+    - The `configMap.storage` section:
+      - `postgres`
+      - `mysql`
+      - `local` (stateful)
+    - The `configMap.notifier` section:
+      - `smtp`
+      - `filesystem` (stateful)
+    - The `configMap.authentication_backend` section:
+      - `ldap`
+      - `file` (stateful)
 
 # Parameters
 
@@ -54,70 +68,75 @@ This documents the parameters in the chart values. As the chart values are quite
 
 ## General
 
-|Parameter              |Description                                            |Default           |
-|:---------------------:|:-----------------------------------------------------:|:----------------:|
-|image.registry         |The container registry to use when pulling the image   |docker.io         |
-|image.repository       |The registry repository to use when pulling the image  |authelia/authelia |
-|image.tag              |The image tag to pull                                  |(latest supported)|
-|image.pullSecrets      |The k8s secret names to use for the pullSecrets        |[]                |
-|nameOverride           |To be refactored                                       |nil               |
-|appNameOverride        |To be refactored                                       |nil               |
-|annotations            |A map of extra annotations to add to all manifests     |{}                |
-|labels                 |A map of extra labels to add to all manifests          |{}                |
-|rbac.enabled           |Enable creation of a ServiceAccount to bind to the pod |false             |
-|rbac.annotations       |Extra annotations to add to the ServiceAccount         |{}                |
-|rbac.labels            |Extra labels to add to the ServiceAccount              |{}                |
-|rbac.serviceAccountName|The name to use for the ServiceAccount                 |authelia          |
-|domain                 |The domain to use                                      |example.com       |
-|service.annotations    |Extra annotations to add to the service                |{}                |
-|service.labels         |Extra labels to add to the Service                     |{}                |
-|service.port           |The exposed port on the ClusterIP Service              |80                |
-|service.clusterIP      |The ClusterIP to assign to the Service                 |nil               |
+|        Parameter        |                      Description                       |      Default       |
+|:-----------------------:|:------------------------------------------------------:|:------------------:|
+|     image.registry      |  The container registry to use when pulling the image  |     docker.io      |
+|    image.repository     | The registry repository to use when pulling the image  | authelia/authelia  |
+|        image.tag        |                 The image tag to pull                  | (latest supported) |
+|    image.pullSecrets    |    The k8s secret names to use for the pullSecrets     |         []         |
+|      nameOverride       |                    To be refactored                    |        nil         |
+|     appNameOverride     |                    To be refactored                    |        nil         |
+|       annotations       |   A map of extra annotations to add to all manifests   |         {}         |
+|         labels          |     A map of extra labels to add to all manifests      |         {}         |
+|      rbac.enabled       | Enable creation of a ServiceAccount to bind to the pod |       false        |
+|    rbac.annotations     |     Extra annotations to add to the ServiceAccount     |         {}         |
+|       rbac.labels       |       Extra labels to add to the ServiceAccount        |         {}         |
+| rbac.serviceAccountName |         The name to use for the ServiceAccount         |      authelia      |
+|   service.annotations   |        Extra annotations to add to the service         |         {}         |
+|     service.labels      |           Extra labels to add to the Service           |         {}         |
+|      service.port       |       The exposed port on the ClusterIP Service        |         80         |
+|    service.clusterIP    |         The ClusterIP to assign to the Service         |        nil         |
+|   kubeVersionOverride   |   Allows overriding the detected Kubernetes Version    |        nil         |
+|  kubeDNSDomainOverride  |  Allows overriding the default Kubernetes DNS Domain   |        nil         |
 
 ## Pod
 
-|Parameter                                |Description                                            |Default           |
-|:---------------------------------------:|:-----------------------------------------------------:|:----------------:|
-|pod.kind                                 |Configures the kind of pod: StatefulSet, Deployment, DaemonSet|DaemonSet  |
-|pod.annotations                          |Adds annotations specifically to the pod               |{}                |
-|pod.labels                               |Adds labels specifically to the pod                    |{}                |
-|pod.replicas                             |Configures the replicas for Deployment's/statefulSet's |1                 |
-|pod.revisionHistoryLimit                 |Configures the revisionHistoryLimit                    |1                 |
-|pod.strategy.type                        |Configures the pods strategy/updateStrategy type       |RollingUpdate     |
-|pod.strategy.rollingUpdate.maxSurge      |Configures the pods rolling update max surge           |25%               |
-|pod.strategy.rollingUpdate.maxUnavailable|Configures the pods rolling update max unavailable     |25%               |
-|pod.strategy.rollingUpdate.partition     |Configures the pods rolling update partition           |1                 |
-|pod.securityContext.container            |Configures the main container's security context       |{}                |
-|pod.securityContext.pod                  |Configures the pod's security context                  |{}                |
-|pod.tolerations                          |Configures the pods tolerations                        |[]                |
-|pod.selectors.nodeSelector               |Configures the pod to select nodes based on node labels|{}                |
-|pod.selectors.affinity.nodeAffinity      |Configures the pod to select nodes based affinity      |{}                |
-|pod.selectors.affinity.podAffinity       |Configures the pod to select nodes based pods on the node|{}              |
-|pod.selectors.affinity.podAntiAffinity   |Configures the pod to select nodes based pods on the node|{}              |
-|pod.env                                  |Configures extra env to add to the node                |[]                |
-|pod.resources.limits.cpu                 |Configures the resource limit for CPU                  |nil               |
-|pod.resources.limits.memory              |Configures the resource limit for memory               |nil               |
-|pod.resources.requests.cpu               |Configures the resource request for CPU                |nil               |
-|pod.resources.requests.memory            |Configures the resource request for memory             |nil               |
+|                 Parameter                 |                          Description                           |    Default    |
+|:-----------------------------------------:|:--------------------------------------------------------------:|:-------------:|
+|                 pod.kind                  | Configures the kind of pod: StatefulSet, Deployment, DaemonSet |   DaemonSet   |
+|              pod.annotations              |            Adds annotations specifically to the pod            |      {}       |
+|                pod.labels                 |              Adds labels specifically to the pod               |      {}       |
+|               pod.replicas                |     Configures the replicas for Deployment's/statefulSet's     |       1       |
+|         pod.revisionHistoryLimit          |              Configures the revisionHistoryLimit               |       1       |
+|             pod.strategy.type             |        Configures the pods strategy/updateStrategy type        | RollingUpdate |
+|    pod.strategy.rollingUpdate.maxSurge    |          Configures the pods rolling update max surge          |      25%      |
+| pod.strategy.rollingUpdate.maxUnavailable |       Configures the pods rolling update max unavailable       |      25%      |
+|   pod.strategy.rollingUpdate.partition    |          Configures the pods rolling update partition          |       1       |
+|       pod.securityContext.container       |        Configures the main container's security context        |      {}       |
+|          pod.securityContext.pod          |             Configures the pod's security context              |      {}       |
+|              pod.tolerations              |                Configures the pods tolerations                 |      []       |
+|        pod.selectors.nodeSelector         |    Configures the pod to select nodes based on node labels     |      {}       |
+|    pod.selectors.affinity.nodeAffinity    |       Configures the pod to select nodes based affinity        |      {}       |
+|    pod.selectors.affinity.podAffinity     |   Configures the pod to select nodes based pods on the node    |      {}       |
+|  pod.selectors.affinity.podAntiAffinity   |   Configures the pod to select nodes based pods on the node    |      {}       |
+|                  pod.env                  |            Configures extra env to add to the node             |      []       |
+|         pod.resources.limits.cpu          |             Configures the resource limit for CPU              |      nil      |
+|        pod.resources.limits.memory        |            Configures the resource limit for memory            |      nil      |
+|        pod.resources.requests.cpu         |            Configures the resource request for CPU             |      nil      |
+|       pod.resources.requests.memory       |           Configures the resource request for memory           |      nil      |
 
 ## Ingress
 
-|Parameter                                    |Description                                                                               |Default           |
-|:-------------------------------------------:|:----------------------------------------------------------------------------------------:|:----------------:|
-|ingress.enabled                              |Enable the ingress for any type of proxy integration                                      |false             |
-|ingress.annotations                          |Adds annotations specifically to the ingress                                              |{}                |
-|ingress.labels                               |Adds labels specifically to the ingress                                                   |{}                |
-|ingress.subdomain                            |Configures the subdomain of the authelia endpoint                                         |auth              |
-|tls.enabled                                  |Enable the tls cert for the ingress                                                       |true              |
-|tls.secret                                   |The tls cert that will be used in the ingress                                             |authelia-tls      |
-|ingress.traefikCRD.enabled                   |Enable the traefik for the proxy                                                          |false             |
-|ingress.traefikCRD.disableIngressRoute       |The ingress route can be disabled using the value                                         |false             |
-|ingress.traefikCRD.entryPoints               |Entrypoints configuration in the ingress route                                            |[]                |
-|ingress.traefikCRD.sticky                    |enable the sticky cookie in the ingress route                                             |false             |
-|ingress.traefikCRD.chains.auth.before        |List of Middlewares to apply before the forwardAuth Middleware in the authentication chain|[]                |
-|ingress.traefikCRD.chains.auth.after         |List of Middlewares to apply after the forwardAuth Middleware in the authentication chain |[]                |
-|ingress.traefikCRD.chains.ingressRoute.before|List of Middlewares to apply before the middleware in the IngressRoute chain              |[]                |
-|ingress.traefikCRD.chains.ingressRoute.after |List of Middlewares to apply after the middleware in the IngressRoute chain               |[]                |
+In addition to the below configuration parameters it should be noted that the generated ingress manifests use the values
+from configMap.session.cookies to determine how many ingress manifests to generate and how they should be configured.
+The configMap.session.cookies is a list of objects which have some key properties for this purpose, the `domain` is the
+suffix of the host, and if configured the `subdomain` is the prefix of the host (separated by a period). 
+
+|                   Parameter                   |                                        Description                                         |   Default    |
+|:---------------------------------------------:|:------------------------------------------------------------------------------------------:|:------------:|
+|                ingress.enabled                |                    Enable the ingress for any type of proxy integration                    |    false     |
+|              ingress.annotations              |                        Adds annotations specifically to the ingress                        |      {}      |
+|                ingress.labels                 |                          Adds labels specifically to the ingress                           |      {}      |
+|                  tls.enabled                  |                            Enable the tls cert for the ingress                             |     true     |
+|                  tls.secret                   |                       The tls cert that will be used in the ingress                        | authelia-tls |
+|          ingress.traefikCRD.enabled           |                              Enable the traefik for the proxy                              |    false     |
+|    ingress.traefikCRD.disableIngressRoute     |                     The ingress route can be disabled using the value                      |    false     |
+|        ingress.traefikCRD.entryPoints         |                      Entry Points configuration in the ingress route                       |      []      |
+|           ingress.traefikCRD.sticky           |                       enable the sticky cookie in the ingress route                        |    false     |
+|     ingress.traefikCRD.chains.auth.before     | List of Middlewares to apply before the forwardAuth Middleware in the authentication chain |      []      |
+|     ingress.traefikCRD.chains.auth.after      | List of Middlewares to apply after the forwardAuth Middleware in the authentication chain  |      []      |
+| ingress.traefikCRD.chains.ingressRoute.before |        List of Middlewares to apply before the middleware in the IngressRoute chain        |      []      |
+| ingress.traefikCRD.chains.ingressRoute.after  |        List of Middlewares to apply after the middleware in the IngressRoute chain         |      []      |
 
 ## ConfigMap
 
@@ -125,34 +144,34 @@ This section only documents the sections that are specific to the helm chart. Th
 values.yaml is based on the *Authelia* configuration. See the
 [Authelia documentation](https://www.authelia.com/configuration) for more information.
 
-|Parameter                                              |Description                                             |Default           |
-|:-----------------------------------------------------:|:------------------------------------------------------:|:----------------:|
-|configMap.enabled                                      |If true generates the ConfigMap, otherwise it doesn't   |true              |
-|configMap.annotations                                  |Extra annotations to add to the ConfigMap               |{}                |
-|configMap.labels                                       |Extra labels to add to the ConfigMap                    |{}                |
-|configMap.key                                          |The key inside the ConfigMap which contains the config  |configuration.yaml|
-|configMap.existingConfigMap                            |Instead of generating a ConfigMap refers to an existing |nil               |
-|configMap.duo_api.enabled                              |Enables the Duo integration when generating the config  |false             |
-|configMap.authentication_backend.ldap.enabled          |Enables LDAP auth when generating the config            |true              |
-|configMap.authentication_backend.file.enabled          |Enables file auth when generating the config            |false             |
-|configMap.session.redis.enabled                        |Enables redis session storage when generating the config|true              |
-|configMap.session.redis.enabledSecret                  |Forces redis password auth using a secret if true       |false             |
-|configMap.session.redis.high_availability.enabled      |Enables redis sentinel when generating the config       |false             |
-|configMap.session.redis.high_availability.enabledSecret|Forces sentinel password auth using a secret if true    |false             |
-|configMap.storage.local.enabled                        |Enables the SQLite3 storage provider                    |false             |
-|configMap.storage.mysql.enabled                        |Enables the MySQL storage provider                      |false             |
-|configMap.storage.postgres.enabled                     |Enables the PostgreSQL storage provider                 |true              |
-|configMap.notifier.filesystem.enabled                  |Enables the filesystem notification provider            |false             |
-|configMap.notifier.smtp.enabled                        |Enables the SMTP notification provider                  |true              |
-|configMap.notifier.smtp.enabledSecret                  |Forces smtp password auth using a secret if true        |false             |
-|configMap.identity_providers.oidc.enabled              |Enables the OpenID Connect Idp                          |false             |
+|                        Parameter                        |                       Description                        |      Default       |
+|:-------------------------------------------------------:|:--------------------------------------------------------:|:------------------:|
+|                    configMap.enabled                    |  If true generates the ConfigMap, otherwise it doesn't   |        true        |
+|                  configMap.annotations                  |        Extra annotations to add to the ConfigMap         |         {}         |
+|                    configMap.labels                     |           Extra labels to add to the ConfigMap           |         {}         |
+|                      configMap.key                      |  The key inside the ConfigMap which contains the config  | configuration.yaml |
+|               configMap.existingConfigMap               | Instead of generating a ConfigMap refers to an existing  |        nil         |
+|                configMap.duo_api.enabled                |  Enables the Duo integration when generating the config  |       false        |
+|      configMap.authentication_backend.ldap.enabled      |       Enables LDAP auth when generating the config       |        true        |
+|      configMap.authentication_backend.file.enabled      |       Enables file auth when generating the config       |       false        |
+|             configMap.session.redis.enabled             | Enables redis session storage when generating the config |        true        |
+|          configMap.session.redis.enabledSecret          |    Forces redis password auth using a secret if true     |       false        |
+|    configMap.session.redis.high_availability.enabled    |    Enables redis sentinel when generating the config     |       false        |
+| configMap.session.redis.high_availability.enabledSecret |   Forces sentinel password auth using a secret if true   |       false        |
+|             configMap.storage.local.enabled             |           Enables the SQLite3 storage provider           |       false        |
+|             configMap.storage.mysql.enabled             |            Enables the MySQL storage provider            |       false        |
+|           configMap.storage.postgres.enabled            |         Enables the PostgreSQL storage provider          |        true        |
+|          configMap.notifier.filesystem.enabled          |       Enables the filesystem notification provider       |       false        |
+|             configMap.notifier.smtp.enabled             |          Enables the SMTP notification provider          |        true        |
+|          configMap.notifier.smtp.enabledSecret          |     Forces smtp password auth using a secret if true     |       false        |
+|        configMap.identity_providers.oidc.enabled        |              Enables the OpenID Connect Idp              |       false        |
 
 ## Secret
 
 The secret section defines how the secret values are added to Authelia. All values that can be a secret are forced as
 secrets with this chart. There are likely ways around this but we do not recommend it. Most secrets are automatically
 and randomly generated if the value is not defined, however we recommend manually generating the secret and mapping the
-chart to it so sensitive material isn't leaked. Alternatively, use HashiCorp Vault.
+chart to it so sensitive material isn't leaked.
 
 The `*` below can be one of any of the following values:
 
@@ -168,36 +187,15 @@ The `*` below can be one of any of the following values:
 - oidcPrivateKey
 - oidcHMACSecret
 
-### Standard Secret
-
-|Parameter                     |Description                                            |Default                |
-|:----------------------------:|:-----------------------------------------------------:|:---------------------:|
-|secret.annotations            |A map of extra annotations to add to the Secret        |{}                     |
-|secret.labels                 |A map of extra labels to add to the Secret             |{}                     |
-|secret.existingSecret         |The name of the existing Secret instead of generating  |nil                    |
-|secret.mountPath              |The path where to mount all of the secrets             |/secrets               |
-|secret.*.key                  |The key in the secret where the secret value is stored |varies                 |
-|secret.*.value                |The value to inject into this secret when generating   |nil                    |
-|secret.*.filename             |The filename of this secret within the mountPath       |varies                 |
-
-### HashiCorp Vault
-
-|Parameter                                   |Description                                             |Default                |
-|:------------------------------------------:|:------------------------------------------------------:|:---------------------:|
-|secret.annotations                          |A map of extra annotations to add to the pod for Vault  |{}                     |
-|secret.mountPath                            |The path where to mount all of the secrets              |/secrets               |
-|secret.vaultInjector.enabled                |Enables HashiCorp Vault Injector annotations            |false                  |
-|secret.vaultInjector.role                   |Vault role to use                                       |authelia               |
-|secret.vaultInjector.agent.status           |Value to inject to prevent further mutations            |update                 |
-|secret.vaultInjector.agent.configMap        |Name of configMap where the agent config can be found   |nil                    |
-|secret.vaultInjector.agent.image            |Customizes the image to use for the agent               |nil                    |
-|secret.vaultInjector.agent.initFirst        |Configures the agent to init first if true              |false                  |
-|secret.vaultInjector.agent.command          |Configures the default command to run on inject         |sh -c 'kill HUP $(pidof authelia)'|
-|secret.vaultInjector.agent.runAsSameUser    |Runs the agent as the same user as the pod              |true                   |
-|secret.vaultInjector.agent.templateValue    |Configures the default secret rendering template        |nil                    |
-|secret.vaultInjector.secrets.*.path         |Configures the vault path to obtain the secret from     |varies                 |
-|secret.vaultInjector.secrets.*.templateValue|Configures the secret rendering template for this secret|nil                    |
-|secret.vaultInjector.secrets.*.command      |Configures the secret post-render cmd for this secret   |nil                    |
+|       Parameter       |                      Description                       | Default  |
+|:---------------------:|:------------------------------------------------------:|:--------:|
+|  secret.annotations   |    A map of extra annotations to add to the Secret     |    {}    |
+|     secret.labels     |       A map of extra labels to add to the Secret       |    {}    |
+| secret.existingSecret | The name of the existing Secret instead of generating  |   nil    |
+|   secret.mountPath    |       The path where to mount all of the secrets       | /secrets |
+|     secret.*.key      | The key in the secret where the secret value is stored |  varies  |
+|    secret.*.value     |  The value to inject into this secret when generating  |   nil    |
+|   secret.*.filename   |    The filename of this secret within the mountPath    |  varies  |
 
 # TODO
 

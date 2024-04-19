@@ -9,7 +9,7 @@ Returns an overridable KubeVersion
 Returns applicable Deployment/DaemonSet/Ingress API Version
 */}}
 {{- define "capabilities.apiVersion.kind" -}}
-    {{- if eq "DaemonSet" (default "DaemonSet" .Kind) -}}
+    {{- if eq "DaemonSet" (.Kind | default "DaemonSet") -}}
         {{- include "capabilities.apiVersion.daemonSet" . -}}
     {{- else if eq "Ingress" .Kind -}}
         {{- include "capabilities.apiVersion.ingress" . -}}
@@ -126,4 +126,50 @@ PodDisruptionBudget API Version Releases: policy/v1 in 1.21, policy/v1beta1 prio
     {{- else -}}
         {{- print "policy/v1beta1" -}}
     {{- end }}
+{{- end -}}
+
+{{- define "authelia.pod.priorityClassName.enabled" -}}
+{{- if and (hasKey .Values.pod "priorityClassName") .Values.pod.priorityClassName (semverCompare ">=1.14-0" (include "capabilities.kubeVersion" .)) }}
+{{- true -}}
+{{- end }}
+{{- end }}
+
+{{/*
+
+*/}}
+{{- define "capabilities.apiVersion.traefik" -}}
+    {{- $group := "traefik.io" }}
+    {{- if .Values.ingress.traefikCRD.apiGroupOverride }}
+    {{- $group = .Values.ingress.traefikCRD.apiGroupOverride }}
+    {{- else if .Capabilities.APIVersions.Has "traefik.io/v1alpha1/IngressRoute" -}}
+    {{- $group = "traefik.io" }}
+    {{- else if .Capabilities.APIVersions.Has "traefik.containo.us/v1alpha1/IngressRoute" -}}
+    {{- $group = "traefik.containo.us" }}
+    {{- end }}
+    {{- $version := "v1alpha1" }}
+    {{- if .Values.ingress.traefikCRD.apiVersionOverride }}
+    {{- $version = .Values.ingress.traefikCRD.apiVersionOverride }}
+    {{- end }}
+    {{- printf "%s/%s" $group $version }}
+{{- end -}}
+
+{{/*
+
+*/}}
+{{- define "capabilities.apiVersion.traefik.IngressRoute" -}}
+    {{- include "capabilities.apiVersion.traefik" . }}
+{{- end -}}
+
+{{/*
+
+*/}}
+{{- define "capabilities.apiVersion.traefik.Middleware" -}}
+    {{- include "capabilities.apiVersion.traefik" . }}
+{{- end -}}
+
+{{/*
+
+*/}}
+{{- define "capabilities.apiVersion.traefik.TLSOption" -}}
+    {{- include "capabilities.apiVersion.traefik" . }}
 {{- end -}}
