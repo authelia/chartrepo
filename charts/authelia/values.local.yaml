@@ -116,7 +116,7 @@ ingress:
   tls:
     enabled: false
     secret: 'authelia-tls'
-
+    hostNameOverride: ''
     # hostNameOverride: 'example.com'
 
   traefikCRD:
