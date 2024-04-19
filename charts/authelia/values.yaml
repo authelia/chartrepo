@@ -122,6 +122,11 @@ ingress:
 
     # matchOverride: Host(`auth.example.com`) && PathPrefix(`/`)
 
+    ## The TraefikCRD apiVersion Overrides. The apiGroupOverride controls the first part, apiVersionOverride controls
+    ## the second.
+    # apiGroupOverride: 'traefik.io'
+    # apiVersionOverride: 'v1alpha1'
+
     entryPoints: []
     # entryPoints:
     # - 'http'

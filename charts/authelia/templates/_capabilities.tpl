@@ -137,38 +137,39 @@ PodDisruptionBudget API Version Releases: policy/v1 in 1.21, policy/v1beta1 prio
 {{/*
 
 */}}
-{{- define "capabilities.apiVersion.traefik.IngressRoute" -}}
-    {{- if .Capabilities.APIVersions.Has "traefik.io/v1alpha1/IngressRoute" -}}
-        {{- print "traefik.io/v1alpha1" -}}
+{{- define "capabilities.apiVersion.traefik" -}}
+    {{- $group := "traefik.io" }}
+    {{- if .Values.ingress.traefikCRD.apiGroupOverride }}
+    {{- $group = .Values.ingress.traefikCRD.apiGroupOverride }}
+    {{- else if .Capabilities.APIVersions.Has "traefik.io/v1alpha1/IngressRoute" -}}
+    {{- $group = "traefik.io" }}
     {{- else if .Capabilities.APIVersions.Has "traefik.containo.us/v1alpha1/IngressRoute" -}}
-        {{- print "traefik.containo.us/v1alpha1" -}}
-    {{- else -}}
-        {{- print "traefik.containo.us/v1alpha1" -}}
+    {{- $group = "traefik.containo.us" }}
     {{- end }}
+    {{- $version := "v1alpha1" }}
+    {{- if .Values.ingress.traefikCRD.apiVersionOverride }}
+    {{- $version = .Values.ingress.traefikCRD.apiVersionOverride }}
+    {{- end }}
+    {{- printf "%s/%s" $group $version }}
+{{- end -}}
+
+{{/*
+
+*/}}
+{{- define "capabilities.apiVersion.traefik.IngressRoute" -}}
+    {{- include "capabilities.apiVersion.traefik" . }}
 {{- end -}}
 
 {{/*
 
 */}}
 {{- define "capabilities.apiVersion.traefik.Middleware" -}}
-    {{- if .Capabilities.APIVersions.Has "traefik.io/v1alpha1/Middleware" -}}
-        {{- print "traefik.io/v1alpha1" -}}
-    {{- else if .Capabilities.APIVersions.Has "traefik.containo.us/v1alpha1/Middleware" -}}
-        {{- print "traefik.containo.us/v1alpha1" -}}
-    {{- else -}}
-        {{- print "traefik.containo.us/v1alpha1" -}}
-    {{- end }}
+    {{- include "capabilities.apiVersion.traefik" . }}
 {{- end -}}
 
 {{/*
 
 */}}
 {{- define "capabilities.apiVersion.traefik.TLSOption" -}}
-    {{- if .Capabilities.APIVersions.Has "traefik.io/v1alpha1/TLSOption" -}}
-        {{- print "traefik.io/v1alpha1" -}}
-    {{- else if .Capabilities.APIVersions.Has "traefik.containo.us/v1alpha1/TLSOption" -}}
-        {{- print "traefik.containo.us/v1alpha1" -}}
-    {{- else -}}
-        {{- print "traefik.containo.us/v1alpha1" -}}
-    {{- end }}
+    {{- include "capabilities.apiVersion.traefik" . }}
 {{- end -}}
