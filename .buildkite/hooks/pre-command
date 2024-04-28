@@ -17,3 +17,18 @@ if [[ "${BUILDKITE_STEP_KEY}" == "upload" ]] || [[ "${BUILDKITE_STEP_KEY}" == "i
 
   buildkite-agent artifact download .cr-release-packages/* .cr-release-packages
 fi
+
+if [[ "${BUILDKITE_STEP_KEY}" == "package" ]] || [[ "${BUILDKITE_STEP_KEY}" == "package-test" ]]; then
+  echo "--- :testobject: Adding Bitnami Chart Repo"
+
+  helm repo add bitnami https://charts.bitnami.com/bitnami
+fi
+
+if [[ "${BUILDKITE_STEP_KEY}" == "package" ]] || [[ "${BUILDKITE_STEP_KEY}" == "package-test" ]]; then
+  echo "--- :lock: Updating and Locking Dependencies"
+
+  ct --config .buildkite/ct.yaml list-changed --since HEAD~1 | xargs -n1 helm dependency build
+
+  ls charts/authelia/charts -al
+  ls charts -al
+fi
