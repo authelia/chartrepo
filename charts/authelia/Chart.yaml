@@ -1,6 +1,6 @@
 apiVersion: v2
 name: authelia
-version: 0.9.0-beta3
+version: 0.9.0-beta4
 kubeVersion: ">= 1.13.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
@@ -20,7 +20,19 @@ home: https://www.authelia.com
 sources:
   - https://github.com/authelia/chartrepo/tree/master/charts/authelia
   - https://www.github.com/authelia/authelia
-dependencies: []
+dependencies:
+  - name: postgresql
+    version: ~15.1.4
+    repository: https://charts.bitnami.com/bitnami
+    condition: storage.postgres.deploy
+  - name: mariadb
+    version: ~17.0.1
+    repository: https://charts.bitnami.com/bitnami
+    condition: storage.mysql.deploy
+  - name: redis
+    version: ~19.0.2
+    repository: https://charts.bitnami.com/bitnami
+    condition: session.redis.deploy
 maintainers:
   - name: james-d-elliott
     email: james-d-elliott@users.noreply.github.com

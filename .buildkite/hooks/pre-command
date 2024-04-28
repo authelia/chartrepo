@@ -17,3 +17,9 @@ if [[ "${BUILDKITE_STEP_KEY}" == "upload" ]] || [[ "${BUILDKITE_STEP_KEY}" == "i
 
   buildkite-agent artifact download .cr-release-packages/* .cr-release-packages
 fi
+
+if [[ "${BUILDKITE_STEP_KEY}" == "package" ]]; then
+  echo "--- :testobject: Adding Bitnami Chart Repo"
+
+  helm repo add bitnami https://charts.bitnami.com/bitnami
+fi
