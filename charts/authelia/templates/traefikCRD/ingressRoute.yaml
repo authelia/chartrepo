@@ -35,14 +35,14 @@ spec:
         weight: {{ $.Values.ingress.traefikCRD.weight | default 10 }}
         responseForwarding:
           flushInterval: {{ $.Values.ingress.traefikCRD.responseForwardingFlushInterval | default "100ms" }}
-      {{- if $.Values.ingress.traefikCRD.sticky }}
-      sticky:
-        cookie:
-          httpOnly: true
-          name: {{ $.Values.ingress.traefikCRD.stickyCookieNameOverride | default (printf "%s_traefik_lb" (include "authelia.name" $)) }}
-          secure: true
-          sameSite: None
-    {{- end }}
+        {{- if $.Values.ingress.traefikCRD.sticky }}
+        sticky:
+          cookie:
+            httpOnly: true
+            name: {{ $.Values.ingress.traefikCRD.stickyCookieNameOverride | default (printf "%s_traefik_lb" (include "authelia.name" $)) }}
+            secure: true
+            sameSite: None
+        {{- end }}
   {{- end }}
   {{- else }}
   {{- range $cookie := .Values.configMap.session.cookies }}
@@ -63,14 +63,14 @@ spec:
         weight: {{ $.Values.ingress.traefikCRD.weight | default 10 }}
         responseForwarding:
           flushInterval: {{ $.Values.ingress.traefikCRD.responseForwardingFlushInterval | default "100ms" }}
-      {{- if $.Values.ingress.traefikCRD.sticky }}
-      sticky:
-        cookie:
-          httpOnly: true
-          name: {{ $.Values.ingress.traefikCRD.stickyCookieNameOverride | default (printf "%s_traefik_lb" (include "authelia.name" $)) }}
-          secure: true
-          sameSite: None
-      {{- end }}
+        {{- if $.Values.ingress.traefikCRD.sticky }}
+        sticky:
+          cookie:
+            httpOnly: true
+            name: {{ $.Values.ingress.traefikCRD.stickyCookieNameOverride | default (printf "%s_traefik_lb" (include "authelia.name" $)) }}
+            secure: true
+            sameSite: None
+        {{- end }}
   {{- end }}
   {{- end }}
   {{- if .Values.ingress.tls.enabled }}
