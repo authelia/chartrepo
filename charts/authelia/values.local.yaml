@@ -106,7 +106,7 @@ ingress:
   tls:
     enabled: true
     secret: 'authelia-tls'
-
+    hostNameOverride: ''
     # hostNameOverride: 'example.com'
 
   traefikCRD:
@@ -213,6 +213,12 @@ pod:
   labels: {}
   # labels:
   #   myLabel: 'myValue'
+
+  initContainers: []
+  # initContainers:
+  # - name: myapp-init
+  #   image: busybox:1.36
+  #   command: ['sh', '-c', 'echo The app is starting! && sleep 5']
 
   replicas: 1
   revisionHistoryLimit: 5

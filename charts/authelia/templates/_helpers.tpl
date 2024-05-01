@@ -61,7 +61,7 @@ Returns true if pod is stateful.
                 {{- true -}}
             {{- else if and (not (and (.Values.configMap.storage.mysql) (.Values.configMap.storage.mysql.enabled))) (not (and (.Values.configMap.storage.postgres) (.Values.configMap.storage.postgres.enabled))) -}}
                 {{- true -}}
-            {{- else if not (and (.Values.configMap.authentication_backend) (.Values.configMap.authentication_backend.ldap.enabled)) -}}
+            {{- else if or (not .Values.configMap.authentication_backend) (not .Values.configMap.authentication_backend.ldap.enabled) (and .Values.configMap.authentication_backend.file.enabled (not .Values.configMap.authentication_backend.file.watch)) -}}
                 {{- true -}}
             {{- end -}}
         {{- end -}}
@@ -474,6 +474,19 @@ Renders a probe
             {{ toYaml (dict "readinessProbe" $probe) }}
         {{- end -}}
     {{- end -}}
+{{- end -}}
+
+{{/*
+Renders a value that contains template.
+Usage:
+{{ include "authelia.snippets.render" ( dict "value" .Values.path.to.the.Value "context" $) }}
+*/}}
+{{- define "authelia.snippets.render" -}}
+    {{- if typeIs "string" .value }}
+        {{- tpl .value .context }}
+    {{- else }}
+        {{- tpl (.value | toYaml) .context }}
+    {{- end }}
 {{- end -}}
 
 {{/*
