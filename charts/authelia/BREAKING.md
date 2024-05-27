@@ -6,7 +6,7 @@ below.
 ## 0.9.0
 
 While we have aimed to keep documented backwards compatability for previous versions of Authelia deployed with the chart
-we have to draw a line with this release. Due to the way the chart was designed and the introduction of mutli-cookie
+we have to draw a line with this release. Due to the way the chart was designed and the introduction of multi-cookie
 domains and the new authz endpoints there is just too many scenarios to handle. We're therefore cutting off support for
 prior releases with this chart release as well as making several quality of life breaking changes. This was announced in
 several ways and we hope the message got across.
