@@ -198,7 +198,7 @@ data:
       same_site: {{ $session.same_site | default "lax" | squote }}
       inactivity: {{ include "authelia.func.dquote" ($session.inactivity | default "5 minutes") }}
       expiration: {{ include "authelia.func.dquote" ($session.expiration | default "1 hour") }}
-      remember_me: {{ include "authelia.func.dquote" ($session.inactivity | default "1 month") }}
+      remember_me: {{ include "authelia.func.dquote" ($session.remember_me | default "1 month") }}
       cookies:
       {{- range $cookie := (required "The value 'configMap.session.cookies' must have at least one configuration" $session.cookies) }}
         - domain: {{ required "All 'domain' values for the 'configMap.session.cookies' configurations must be configured" .domain | squote }}
@@ -271,11 +271,13 @@ data:
         timeout: {{ include "authelia.func.dquote" ($storage.mysql.timeout | default "5 seconds") }}
         database: {{ $storage.mysql.database | default "authelia" | squote }}
         username: {{ $storage.mysql.username |  default "authelia" | squote }}
+        {{- if $storage.mysql.tls.enabled }}
         tls:
           server_name: {{ $storage.mysql.tls.server_name | default "" | squote }}
           skip_verify: {{ $storage.mysql.tls.skip_verify | default false }}
           minimum_version: {{ $storage.mysql.tls.minimum_version | default "TLS1.2" | squote }}
           maximum_version: {{ $storage.mysql.tls.maximum_version | default "TLS1.3" | squote }}
+        {{- end }}
       {{- end }}
       {{- if and ($storage.postgres) ($storage.postgres.enabled) }}
       postgres:
@@ -284,11 +286,13 @@ data:
         database: {{ $storage.postgres.database | default "authelia" | squote }}
         schema: {{ $storage.postgres.schema | default "public" | squote }}
         username: {{ $storage.postgres.username | default "authelia" | squote }}
+        {{- if $storage.postgres.tls.enabled }}
         tls:
           server_name: {{ $storage.postgres.tls.server_name | default "" | squote }}
           skip_verify: {{ $storage.postgres.tls.skip_verify | default false }}
           minimum_version: {{ $storage.postgres.tls.minimum_version | default "TLS1.2" | squote }}
           maximum_version: {{ $storage.postgres.tls.maximum_version | default "TLS1.3" | squote }}
+        {{- end }}
     {{- end }}
     {{- end }}
     {{- with $notifier := .Values.configMap.notifier }}
