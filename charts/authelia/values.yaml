@@ -1319,6 +1319,7 @@ configMap:
       port: 3306
       database: authelia
       username: authelia
+      password: authelia
       timeout: 5s
       tls:
         enabled: false
@@ -1352,6 +1353,7 @@ configMap:
       database: authelia
       schema: public
       username: authelia
+      password: authelia
       timeout: 5s
       tls:
         enabled: false

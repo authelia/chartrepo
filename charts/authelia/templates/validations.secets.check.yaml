@@ -26,14 +26,6 @@
 {{- fail (printf "The secret %s must be configured as one of the additional secrets as it's being used for the 'configMap.storage.encryption_key' secret" .Values.configMap.storage.encryption_key.secret_name) }}
 {{- end }}
 
-{{- if and .Values.configMap.storage.mysql.password.secret_name (not (hasKey .Values.secret.additionalSecrets .Values.configMap.storage.mysql.password.secret_name)) }}
-{{- fail (printf "The secret %s must be configured as one of the additional secrets as it's being used for the 'configMap.storage.mysql.password' secret" .Values.configMap.storage.mysql.password.secret_name) }}
-{{- end }}
-
-{{- if and .Values.configMap.storage.postgres.password.secret_name (not (hasKey .Values.secret.additionalSecrets .Values.configMap.storage.postgres.password.secret_name)) }}
-{{- fail (printf "The secret %s must be configured as one of the additional secrets as it's being used for the 'configMap.storage.postgres.password' secret" .Values.configMap.storage.postgres.password.secret_name) }}
-{{- end }}
-
 {{- if and .Values.configMap.notifier.smtp.password.secret_name (not (hasKey .Values.secret.additionalSecrets .Values.configMap.notifier.smtp.password.secret_name)) }}
 {{- fail (printf "The secret %s must be configured as one of the additional secrets as it's being used for the 'configMap.notifier.smtp.password' secret" .Values.configMap.notifier.smtp.password.secret_name) }}
 {{- end }}
