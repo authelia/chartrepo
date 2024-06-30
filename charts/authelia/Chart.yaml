@@ -22,15 +22,15 @@ sources:
   - https://www.github.com/authelia/authelia
 dependencies:
   - name: postgresql
-    version: ~15.1.4
+    version: ~15.5.11
     repository: https://charts.bitnami.com/bitnami
     condition: configMap.storage.postgres.deploy
   - name: mariadb
-    version: ~17.0.1
+    version: ~18.2.4
     repository: https://charts.bitnami.com/bitnami
     condition: configMap.storage.mysql.deploy
   - name: redis
-    version: ~19.0.2
+    version: ~19.6.0
     repository: https://charts.bitnami.com/bitnami
     condition: configMap.session.redis.deploy
 maintainers:
