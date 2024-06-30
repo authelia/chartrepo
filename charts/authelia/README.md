@@ -168,9 +168,8 @@ values.yaml is based on the *Authelia* configuration. See the
 |          configMap.notifier.smtp.enabledSecret          |     Forces smtp password auth using a secret if true     |       false        |
 |        configMap.identity_providers.oidc.enabled        |              Enables the OpenID Connect Idp              |       false        |
 
-If any of `configMap.session.redis.deploy`, `configMap.storage.mysql.deploy` or `configMap.storage.postgres.deploy` are
-enabled, the corresponding top-level `redis`, `mariadb` or `postgresql` sections must be configured.
-
+If any of `configMap.session.redis.deploy`, `configMap.storage.mysql.deploy` or `configMap.storage.postgres.deploy` are enabled, the corresponding top-level `redis`, `mariadb` or `postgresql` sections must be configured.
+For more information, refer to the [Bitnami Redis Chart](https://github.com/bitnami/charts/tree/master/bitnami/redis), [Bitnami MariaDB Chart](https://github.com/bitnami/charts/tree/master/bitnami/mariadb), and [Bitnami PostgreSQL Chart](https://github.com/bitnami/charts/tree/master/bitnami/postgresql) documentation.
 ## Secret
 
 The secret section defines how the secret values are added to Authelia. All values that can be a secret are forced as
