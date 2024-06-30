@@ -4,8 +4,7 @@
 not recommended at this stage for production environments without manual intervention to check the templated manifests
 match your desired state.
 
-This chart uses api version 2 which is only supported by helm v3+. This chart includes Bitnami subcharts to optionally
-deploy `redis`, `postgresql` and/or `mariadb`.
+This chart uses api version 2 which is only supported by helm v3+. This chart includes optional Bitnami subcharts to deploy `redis`, `postgresql`, and/or `mariadb`.
 
 # Breaking Changes
 
