@@ -168,7 +168,6 @@ values.yaml is based on the *Authelia* configuration. See the
 |          configMap.notifier.smtp.enabledSecret          |     Forces smtp password auth using a secret if true     |       false        |
 |        configMap.identity_providers.oidc.enabled        |              Enables the OpenID Connect Idp              |       false        |
 
-
 If any of `configMap.session.redis.deploy`, `configMap.storage.mysql.deploy` or `configMap.storage.postgres.deploy` are
 enabled, the corresponding top-level `redis`, `mariadb` or `postgresql` sections must be configured.
 
