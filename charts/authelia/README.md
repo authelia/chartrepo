@@ -4,9 +4,7 @@
 not recommended at this stage for production environments without manual intervention to check the templated manifests
 match your desired state.
 
-This chart uses api version 2 which is only supported by helm v3+. This is a ***standalone*** chart intended just to
-deploy *Authelia* on its own. Eventually we may publish an `authelia-bundle` chart which includes `redis` and
-`postgresql`.
+This chart uses api version 2 which is only supported by helm v3+. This chart includes optional Bitnami subcharts to deploy `redis`, `postgresql`, and/or `mariadb`.
 
 # Breaking Changes
 
@@ -155,17 +153,22 @@ values.yaml is based on the *Authelia* configuration. See the
 |      configMap.authentication_backend.ldap.enabled      |       Enables LDAP auth when generating the config       |        true        |
 |      configMap.authentication_backend.file.enabled      |       Enables file auth when generating the config       |       false        |
 |             configMap.session.redis.enabled             | Enables redis session storage when generating the config |        true        |
+|             configMap.session.redis.deploy              |                 Deploy a redis instance                  |       false        |
 |          configMap.session.redis.enabledSecret          |    Forces redis password auth using a secret if true     |       false        |
 |    configMap.session.redis.high_availability.enabled    |    Enables redis sentinel when generating the config     |       false        |
 | configMap.session.redis.high_availability.enabledSecret |   Forces sentinel password auth using a secret if true   |       false        |
 |             configMap.storage.local.enabled             |           Enables the SQLite3 storage provider           |       false        |
 |             configMap.storage.mysql.enabled             |            Enables the MySQL storage provider            |       false        |
+|             configMap.storage.mysql.deploy              |                Deploy a MariaDB instance                 |       false        |
 |           configMap.storage.postgres.enabled            |         Enables the PostgreSQL storage provider          |        true        |
+|           configMap.storage.postgres.deploy             |               Deploy a PostgreSQL instance               |       false        |
 |          configMap.notifier.filesystem.enabled          |       Enables the filesystem notification provider       |       false        |
 |             configMap.notifier.smtp.enabled             |          Enables the SMTP notification provider          |        true        |
 |          configMap.notifier.smtp.enabledSecret          |     Forces smtp password auth using a secret if true     |       false        |
 |        configMap.identity_providers.oidc.enabled        |              Enables the OpenID Connect Idp              |       false        |
 
+If any of `configMap.session.redis.deploy`, `configMap.storage.mysql.deploy` or `configMap.storage.postgres.deploy` are enabled, the corresponding top-level `redis`, `mariadb` or `postgresql` sections must be configured.
+For more information, refer to the [Bitnami Redis Chart](https://github.com/bitnami/charts/tree/master/bitnami/redis), [Bitnami MariaDB Chart](https://github.com/bitnami/charts/tree/master/bitnami/mariadb), and [Bitnami PostgreSQL Chart](https://github.com/bitnami/charts/tree/master/bitnami/postgresql) documentation.
 ## Secret
 
 The secret section defines how the secret values are added to Authelia. All values that can be a secret are forced as
