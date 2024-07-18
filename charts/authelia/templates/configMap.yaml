@@ -18,7 +18,7 @@ data:
     theme: {{ .Values.configMap.theme | default "light" | squote }}
     default_2fa_method: {{ .Values.configMap.default_2fa_method | default "" | squote }}
     server:
-      address: {{ printf "tcp://0.0.0.0:%d" ((.Values.configMap.server.port | default 9091) | int) | squote }}
+      address: {{ printf "tcp://0.0.0.0:%d%s" ((.Values.configMap.server.port | default 9091) | int) (include "authelia.path" .) | squote }}
       asset_path: {{ .Values.configMap.server.asset_path | default "" | squote }}
       headers:
         csp_template: {{ .Values.configMap.server.headers.csp_template | default "" | squote }}
