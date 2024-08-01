@@ -1,16 +1,11 @@
 ---
 ## @formatter:off
-## values.local.yaml
+## values.yaml
 ##
 ## Repository: authelia https://charts.authelia.com
 ## Chart: authelia
 ##
-## This values file is designed for a StatefulSet deployment with a single pod. It is not intended for production environments
-## It uses the following providers:
-##   - authentication: file (yaml)
-##   - storage: local (SQLite3)
-##   - session: memory
-##   - notification: filesystem (yaml)
+## This values file is a baseline for other values files.
 
 ## Version Override allows changing some chart characteristics that render only on specific versions.
 ## This does NOT affect the image used, please see the below image section instead for this.
@@ -28,6 +23,9 @@ versionOverride: ''
 ## APIVersion for a manifest which occurs with some CI/CD tooling. This value will completely override the value
 ## detected by helm.
 kubeVersionOverride: ''
+
+## Kubernetes DNS Domain Override allows forcibly overriding the default DNS Domain for Kubernetes 'cluster.local'.
+kubeDNSDomainOverride: ''
 
 ## Image Parameters
 ## ref: https://hub.docker.com/r/authelia/authelia/tags/
@@ -97,14 +95,21 @@ ingress:
   # labels:
   #   myLabel: 'myValue'
 
+  ## A discouraged override list of hosts to create the ingress for. If this is not specified the auto-generation
+  ## characteristics of the 'configMap.session.cookies' value are not used. Should be a list of host/path pairs.
+  rulesOverride: []
+  # hostOverride:
+  # - host: 'auth.example.com'
+  #   path: '/'
+
   certManager: false
-  rewriteTarget: true
+  rewriteTarget: false
 
   ## The Ingress Class Name.
   # className: 'ingress-nginx'
 
   tls:
-    enabled: true
+    enabled: false
     secret: 'authelia-tls'
 
     # hostNameOverride: 'example.com'
@@ -116,6 +121,11 @@ ingress:
     disableIngressRoute: false
 
     # matchOverride: Host(`auth.example.com`) && PathPrefix(`/`)
+
+    ## The TraefikCRD apiVersion Overrides. The apiGroupOverride controls the first part, apiVersionOverride controls
+    ## the second.
+    # apiGroupOverride: 'traefik.io'
+    # apiVersionOverride: 'v1alpha1'
 
     entryPoints: []
     # entryPoints:
@@ -183,10 +193,13 @@ ingress:
       #   existingOptions:
       #     name: 'default-traefik-options'
       #     namespace: 'default'
-      #   certResolver: 'default'
-      #   sans:
-      #     - '*.example.com'
-      #
+      certResolver: ''
+      domainsOverride: []
+      # domainsOverride:
+      #   - main: 'auth.example.com'
+      #     sans:
+      #       - 'a.example.com'
+
       options:
         # nameOverride: 'authelia-tls-options'
         nameOverride: ''
@@ -233,7 +246,7 @@ pod:
     #   fsGroup: 2000
     pod: {}
     # pod:
-    #   readOnlyRootFilesystem: true
+    #   readOnlyRootFilesystem: false
     #   allowPrivilegeEscalation: false
     #   privileged: false
 
@@ -396,7 +409,7 @@ configMap:
 
   # Enable the configMap source for the Authelia config.
   # If this is false you need to provide a volumeMount via PV/PVC or other means that mounts to /config.
-  enabled: true
+  disabled: false
 
   annotations: {}
   # annotations:
@@ -415,7 +428,7 @@ configMap:
   # - '/configuration.oidc.yaml'
 
   filters:
-    enableTemplating: false
+    disabled: false
 
   ##
   ## Server Configuration
@@ -556,16 +569,31 @@ configMap:
   theme: 'light'
 
   identity_validation:
+    reset_password:
+      jwt_lifespan: '5 minutes'
+      jwt_algorithm: 'HS256'
+      secret:
+        ## Disables this secret and leaves configuring it entirely up to you.
+        disabled: false
+
+        ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
+        ## secret_value option below.
+        secret_name: ~
+
+        ## The value of a generated secret when using the ~ secret_name.
+        value: ''
+
+        ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+        ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+        ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+        path: 'identity_validation.reset_password.jwt.hmac.key'
     elevated_session:
-      expiration: '5 minutes'
-      elevation_expiration: '10 minutes'
+      code_lifespan: '5 minutes'
+      elevation_lifespan: '10 minutes'
       characters: 8
       require_second_factor: false
       skip_second_factor: false
-    reset_password:
-      expiration: '5 minutes'
-      jwt_algorithm: 'HS256'
-      jwt_secret: ''
+
 
   ##
   ## TOTP Configuration
@@ -666,6 +694,21 @@ configMap:
     hostname: ''
     integration_key: ''
     enable_self_enrollment: false
+    secret:
+      ## Disables this secret and leaves configuring it entirely up to you.
+      disabled: false
+
+      ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
+      ## secret_value option below.
+      secret_name: ~
+
+      ## The value of a generated secret when using the ~ secret_name.
+      value: ''
+
+      ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+      ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+      ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+      path: 'duo.key'
 
   ##
   ## Authentication Backend Provider Configuration
@@ -801,6 +844,22 @@ configMap:
       ## The username of the admin user.
       user: 'CN=Authelia,DC=example,DC=com'
 
+      password:
+        ## Disables this secret and leaves configuring it entirely up to you.
+        disabled: false
+
+        ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
+        ## secret_value option below.
+        secret_name: ~
+
+        ## The value of a generated secret when using the ~ secret_name.
+        value: ''
+
+        ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+        ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+        ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+        path: 'authentication.ldap.password.txt'
+
       attributes:
         distinguished_name: ''
 
@@ -887,16 +946,16 @@ configMap:
       max_length: 0
 
       ## Require uppercase characters.
-      require_uppercase: true
+      require_uppercase: false
 
       ## Require lowercase characters.
-      require_lowercase: true
+      require_lowercase: false
 
       ## Require numeric characters.
-      require_number: true
+      require_number: false
 
       ## Require special characters.
-      require_special: true
+      require_special: false
 
     ## zxcvbn is a well known and used password strength algorithm. It does not have tunable settings.
     zxcvbn:
@@ -1031,16 +1090,61 @@ configMap:
     ## See: https://www.authelia.com/configuration/prologue/common/#duration-notation-format
     ## Longer periods are considered less secure because a stolen cookie will last longer giving attackers more time to
     ## spy or attack. Currently the default is 1M or 1 month.
-    remember_me_duration: '1 month'
+    remember_me: '1 month'
 
-    cookies:
-      - domain: ''
-        subdomain: 'auth'
-        default_redirection_url: ''
-        name: ''
-        same_site: ''
-        expiration: ''
-        inactivity: ''
+    encryption_key:
+      ## Disables this secret and leaves configuring it entirely up to you.
+      disabled: false
+
+      ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
+      ## secret_value option below.
+      secret_name: ~
+
+      ## The value of a generated secret when using the ~ secret_name.
+      value: ''
+
+      ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+      ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+      ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+      path: 'session.encryption.key'
+
+    cookies: []
+    # cookies:
+      # -
+        ## The subdomain to prefix the domain with. For example using `domain` value `example.com` and `subdomain`
+        ## `auth` should yield the URL `https://auth.example.com`. This option does not affect the cookie domain.
+        # subdomain: 'auth'
+
+        ## The domain for cookie and to build the Authelia URL.
+        # domain: ''
+
+        ## The path to suffix the domain with. For example using `domain` value `example.com` and `subdomain` value
+        ## `auth` and `path` value `auth` should yield the URL `https://auth.example.com/auth`.
+        ## This option does not affect the cookie domain.
+        # path: ''
+
+        ## Default Redirection URL for this domain when there is no forwarding application.
+        # default_redirection_url: ''
+
+        ## Cookie Name override for this individual cookie. Otherwise, uses the default value above where
+        ## more descriptive information about this value exists.
+        # name: ''
+
+        ## Cookie Same Site value override for this individual cookie. Otherwise, uses the default value above where
+        ## more descriptive information about this value exists.
+        # same_site: ''
+
+        ## Cookie Expiration value override for this individual cookie. Otherwise, uses the default value above where
+        ## more descriptive information about this value exists.
+        # expiration: ''
+
+        ## Cookie Inactivity value override for this individual cookie. Otherwise, uses the default value above where
+        ## more descriptive information about this value exists.
+        # inactivity: ''
+
+        ## Cookie Remember Me value override for this individual cookie. Otherwise, uses the default value above where
+        ## more descriptive information about this value exists.
+        # inactivity: ''
 
     ##
     ## Redis Provider
@@ -1050,6 +1154,7 @@ configMap:
     ## The redis connection details
     redis:
       enabled: false
+      deploy: false
       enabledSecret: false
       host: 'redis.databases.svc.cluster.local'
       port: 6379
@@ -1057,6 +1162,22 @@ configMap:
       ## Optional username to be used with authentication.
       # username: authelia
       username: ''
+
+      password:
+        ## Disables this secret and leaves configuring it entirely up to you.
+        disabled: false
+
+        ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
+        ## secret_value option below.
+        secret_name: ~
+
+        ## The value of a generated secret when using the ~ secret_name.
+        value: ''
+
+        ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+        ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+        ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+        path: 'session.redis.password.txt'
 
       ## This is the Redis DB Index https://redis.io/commands/select (sometimes referred to as database number, DB, etc).
       database_index: 0
@@ -1101,6 +1222,22 @@ configMap:
         ## authentication. If left blank, authentication to sentinels will be done via `requirepass`.
         username: ''
 
+        password:
+          ## Disables this secret and leaves configuring it entirely up to you.
+          disabled: false
+
+          ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
+          ## secret_value option below.
+          secret_name: ~
+
+          ## The value of a generated secret when using the ~ secret_name.
+          value: ''
+
+          ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+          ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+          ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+          path: 'session.redis.sentinel.password.txt'
+
         ## The additional nodes to pre-seed the redis provider with (for sentinel).
         ## If the host in the above section is defined, it will be combined with this list to connect to sentinel.
         ## For high availability to be used you must have either defined; the host above or at least one node below.
@@ -1143,10 +1280,20 @@ configMap:
   storage:
 
     encryption_key:
-      enabled: false
-      secret_name: ''
-      secret_namespace: ''
-      secret_key: ''
+      ## Disables this secret and leaves configuring it entirely up to you.
+      disabled: false
+
+      ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
+      ## secret_value option below.
+      secret_name: ~
+
+      ## The value of a generated secret when using the ~ secret_name.
+      value: ''
+
+      ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+      ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+      ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+      path: 'storage.encryption.key'
 
     ##
     ## Local (Storage Provider)
@@ -1167,15 +1314,26 @@ configMap:
     ##
     mysql:
       enabled: false
+      deploy: false
       address: 'tcp://mysql.databases.svc.cluster.local:3306'
       timeout: '5 seconds'
       database: 'authelia'
       username: 'authelia'
       password:
-        enabled: false
-        secret_name: ''
-        secret_namespace: ''
-        secret_key: ''
+        ## Disables this secret and leaves configuring it entirely up to you.
+        disabled: false
+
+        ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
+        ## secret_value option below.
+        secret_name: ~
+
+        ## The value of a generated secret when using the ~ secret_name.
+        value: ''
+
+        ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+        ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+        ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+        path: 'storage.mysql.password.txt'
       tls:
         enabled: false
 
@@ -1202,16 +1360,27 @@ configMap:
     ##
     postgres:
       enabled: false
+      deploy: false
       address: 'tcp://postgres.databases.svc.cluster.local:5432'
       timeout: '5 seconds'
       database: 'authelia'
       schema: 'public'
       username: 'authelia'
       password:
-        enabled: false
-        secret_name: ''
-        secret_namespace: ''
-        secret_key: ''
+        ## Disables this secret and leaves configuring it entirely up to you.
+        disabled: false
+
+        ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
+        ## secret_value option below.
+        secret_name: ~
+
+        ## The value of a generated secret when using the ~ secret_name.
+        value: ''
+
+        ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+        ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+        ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+        path: 'storage.postgres.password.txt'
       tls:
         enabled: false
 
@@ -1296,10 +1465,20 @@ configMap:
 
       username: 'test'
       password:
-        enabled: false
-        secret_name: ''
-        secret_namespace: ''
-        secret_key: ''
+        ## Disables this secret and leaves configuring it entirely up to you.
+        disabled: false
+
+        ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
+        ## secret_value option below.
+        secret_name: ~
+
+        ## The value of a generated secret when using the ~ secret_name.
+        value: ''
+
+        ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+        ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+        ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+        path: 'notifier.smtp.password.txt'
 
       tls:
         ## The server subject name to check the servers certificate against during the validation process.
@@ -1325,6 +1504,22 @@ configMap:
       ## Enables this in the config map. Currently in beta stage.
       ## See https://www.authelia.com/r/openid-connect/
       enabled: false
+
+      hmac_secret:
+        ## Disables this secret and leaves configuring it entirely up to you.
+        disabled: false
+
+        ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
+        ## secret_value option below.
+        secret_name: ~
+
+        ## The value of a generated secret when using the ~ secret_name.
+        value: ''
+
+        ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+        ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+        ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+        path: 'identity_providers.oidc.hmac.key'
 
       lifespans:
         access_token: '1 hour'
@@ -1379,60 +1574,34 @@ configMap:
       ## Enables additional debug messages.
       enable_client_debug_messages: false
 
-      ## The issuer_certificate_chain is an optional PEM encoded certificate chain. It's used in conjunction with the
-      ## issuer_private_key to sign JWT's. All certificates in the chain must be within the validity period, and every
-      ## certificate included must be signed by the certificate immediately after it if provided.
-      issuer_certificate_chain: ''
-      # issuer_certificate_chain: |
-      #   -----BEGIN CERTIFICATE-----
-      #   MIIC5jCCAc6gAwIBAgIRAK4Sj7FiN6PXo/urPfO4E7owDQYJKoZIhvcNAQELBQAw
-      #   EzERMA8GA1UEChMIQXV0aGVsaWEwHhcNNzAwMTAxMDAwMDAwWhcNNzEwMTAxMDAw
-      #   MDAwWjATMREwDwYDVQQKEwhBdXRoZWxpYTCCASIwDQYJKoZIhvcNAQEBBQADggEP
-      #   ADCCAQoCggEBAPKv3pSyP4ozGEiVLJ14dIWFCEGEgq7WUMI0SZZqQA2ID0L59U/Q
-      #   /Usyy7uC9gfMUzODTpANtkOjFQcQAsxlR1FOjVBrX5QgjSvXwbQn3DtwMA7XWSl6
-      #   LuYx2rBYSlMSN5UZQm/RxMtXfLK2b51WgEEYDFi+nECSqKzR4R54eOPkBEWRfvuY
-      #   91AMjlhpivg8e4JWkq4LVQUKbmiFYwIdK8XQiN4blY9WwXwJFYs5sQ/UYMwBFi0H
-      #   kWOh7GEjfxgoUOPauIueZSMSlQp7zqAH39N0ZSYb6cS0Npj57QoWZSY3ak87ebcR
-      #   Nf4rCvZLby7LoN7qYCKxmCaDD3x2+NYpWH8CAwEAAaM1MDMwDgYDVR0PAQH/BAQD
-      #   AgWgMBMGA1UdJQQMMAoGCCsGAQUFBwMBMAwGA1UdEwEB/wQCMAAwDQYJKoZIhvcN
-      #   AQELBQADggEBAHSITqIQSNzonFl3DzxHPEzr2hp6peo45buAAtu8FZHoA+U7Icfh
-      #   /ZXjPg7Xz+hgFwM/DTNGXkMWacQA/PaNWvZspgRJf2AXvNbMSs2UQODr7Tbv+Fb4
-      #   lyblmMUNYFMCFVAMU0eIxXAFq2qcwv8UMcQFT0Z/35s6PVOakYnAGGQjTfp5Ljuq
-      #   wsdc/xWmM0cHWube6sdRRUD7SY20KU/kWzl8iFO0VbSSrDf1AlEhnLEkp1SPaxXg
-      #   OdBnl98MeoramNiJ7NT6Jnyb3zZ578fjaWfThiBpagItI8GZmG4s4Ovh2JbheN8i
-      #   ZsjNr9jqHTjhyLVbDRlmJzcqoj4JhbKs6/I^invalid DO NOT USE=
-      #   -----END CERTIFICATE-----
-      #   -----BEGIN CERTIFICATE-----
-      #   MIIDBDCCAeygAwIBAgIRALJsPg21kA0zY4F1wUCIuoMwDQYJKoZIhvcNAQELBQAw
-      #   EzERMA8GA1UEChMIQXV0aGVsaWEwHhcNNzAwMTAxMDAwMDAwWhcNNzEwMTAxMDAw
-      #   MDAwWjATMREwDwYDVQQKEwhBdXRoZWxpYTCCASIwDQYJKoZIhvcNAQEBBQADggEP
-      #   ADCCAQoCggEBAMXHBvVxUzYk0u34/DINMSF+uiOekKOAjOrC6Mi9Ww8ytPVO7t2S
-      #   zfTvM+XnEJqkFQFgimERfG/eGhjF9XIEY6LtnXe8ATvOK4nTwdufzBaoeQu3Gd50
-      #   5VXr6OHRo//ErrGvFXwP3g8xLePABsi/fkH3oDN+ztewOBMDzpd+KgTrk8ysv2ou
-      #   kNRMKFZZqASvCgv0LD5KWvUCnL6wgf1oTXG7aztduA4oSkUP321GpOmBC5+5ElU7
-      #   ysoRzvD12o9QJ/IfEaulIX06w9yVMo60C/h6A3U6GdkT1SiyTIqR7v7KU/IWd/Qi
-      #   Lfftcj91VhCmJ73Meff2e2S2PrpjdXbG5FMCAwEAAaNTMFEwDgYDVR0PAQH/BAQD
-      #   AgKkMA8GA1UdJQQIMAYGBFUdJQAwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQU
-      #   Z7AtA3mzFc0InSBA5fiMfeLXA3owDQYJKoZIhvcNAQELBQADggEBAEE5hm1mtlk/
-      #   kviCoHH4evbpw7rxPxDftIQlqYTtvMM4eWY/6icFoSZ4fUHEWYyps8SsPu/8f2tf
-      #   71LGgZn0FdHi1QU2H8m0HHK7TFw+5Q6RLrLdSyk0PItJ71s9en7r8pX820nAFEHZ
-      #   HkOSfJZ7B5hFgUDkMtVM6bardXAhoqcMk4YCU96e9d4PB4eI+xGc+mNuYvov3RbB
-      #   D0s8ICyojeyPVLerz4wHjZu68Z5frAzhZ68YbzNs8j2fIBKKHkHyLG1iQyF+LJVj
-      #   2PjCP+auJsj6fQQpMGoyGtpLcSDh+ptcTngUD8JsWipzTCjmaNqdPHAOYmcgtf4b
-      #   qocikt3WAdU^invalid DO NOT USE=
-      #   -----END CERTIFICATE-----
+      pushed_authorizations:
+        enforce: false
+        context_lifespan: '5 minutes'
 
-      issuer_private_keys:
-        - key_id: ''
-          algorithm: 'RS256'
-          use: 'sig'
-          key:
-            value: |
-              abc
-              123
-            path: '/secrets/oidc.jwk.RS256.pem'
-          certificate_chain:
-            path: '/secrets.oidc.jwk.RS256.crt'
+      authorization_policies: {}
+
+      # authorization_policies:
+      #   policy_name:
+      #     default_policy: 'deny'
+      #     rules:
+      #       - policy: 'two_factor'
+      #         subject: 'user:abc'
+
+      ## The JWK's issuer option configures multiple JSON Web Keys. It's required that at least one of the JWK's
+      ## configured has the RS256 algorithm. For RSA keys (RS or PS) the minimum is a 2048 bit key.
+      jwks: []
+
+      # jwks:
+      #   - key_id: ''
+      #     algorithm: 'RS256'
+      #     use: 'sig'
+      #     key:
+      #       value: |
+      #         abc
+      #         123
+      #       path: '/secrets/oidc.jwk.RS256.pem'
+      #     certificate_chain:
+      #       path: '/secrets.oidc.jwk.RS256.crt'
 
       ## Cross-Origin Resource Sharing (CORS) settings.
       cors:
@@ -1455,24 +1624,27 @@ configMap:
 
         ## Automatically adds the origin portion of all redirect URI's on all clients to the list of allowed_origins,
         ## provided they have the scheme http or https and do not have the hostname of localhost.
-        allowed_origins_from_client_redirect_uris: true
+        allowed_origins_from_client_redirect_uris: false
 
       clients: []
+
       # clients:
         # -
           ## The ID is the OpenID Connect ClientID which is used to link an application to a configuration.
-          # id: 'myapp'
-
-          ## The description to show to users when they end up on the consent screen. Defaults to the ID above.
-          # description: 'My Application'
+          # client_id: 'myapp'
 
           ## The client secret is a shared secret between Authelia and the consumer of this client.
-          # secret: '$plaintext$apple123'
+          # client_secret:
+            # value: '$plaintext$apple123'
+            # path: '/secrets/oidc.client.myapp.value'
+
+          ## The description to show to users when they end up on the consent screen. Defaults to the ID above.
+          # client_name: 'My Application'
 
           ## Sector Identifiers are occasionally used to generate pairwise subject identifiers. In most cases this is not
           ## necessary. Read the documentation for more information.
           ## The subject identifier must be the host component of a URL, which is a domain name with an optional port.
-          # sector_identifier: 'example.com'
+          # sector_identifier_uri: 'example.com'
 
           ## Sets the client to public. This should typically not be set, please see the documentation for usage.
           # public: false
@@ -1500,6 +1672,11 @@ configMap:
           ## Redirect URI's specifies a list of valid case-sensitive callbacks for this client.
           # redirect_uris:
           #   - 'https://oidc.example.com/oauth2/callback'
+
+          ## Request URI's specifies a list of valid case-sensitive URIs this client can ask Authelia to obtain a
+          ## Request Object from.
+          # request_uris:
+          #   - 'https://oidc.example.com/oauth2/request-object/authelia.jwk'
 
           ## Grant Types configures which grants this client can obtain.
           ## It's not recommended to configure this unless you know what you're doing.
@@ -1546,6 +1723,14 @@ configMap:
           ## The key id of the issuer key used to sign User Info Responses for this client.
           # userinfo_signed_response_key_id: ''
 
+          ## The signing algorithm used for Introspection responses. An issuer JWK with a matching algorithm must be
+          ## available when configured. Has no effect if introspection_signed_response_key_id is configured.
+          # introspection_signed_response_alg: 'none'
+
+          ## The signing key id used for Introspection responses. An issuer JWK with a matching key id must be available
+          ## when configured.
+          # introspection_signed_response_key_id: ''
+
           ## The algorithm the client must sign their request objects with, must either be empty or one of the
           ## registered client key algorithms.
           # request_object_signing_alg: ''
@@ -1559,13 +1744,12 @@ configMap:
 
 
 ##
-## Authelia Secret Generator.
-##
-## If both the values and existingSecret are not defined, this chart randomly generates a new secret on each
-## install. It is recommended that you use something like sealed-secrets (https://github.com/bitnami-labs/sealed-secrets)
-## and use the existingSecrets. All secrets can be stored in a single k8s secret if desired using the key option.
+## Authelia Secret Configuration.
 ##
 secret:
+
+  disabled: false
+
   existingSecret: ''
   # existingSecret: authelia
 
@@ -1579,53 +1763,19 @@ secret:
 
   mountPath: '/secrets'
 
-  excludeVolumeAndMounts: false
-
-  ## Secrets.
-  jwt:
-    key: 'JWT_TOKEN'
-    value: ''
-    filename: 'JWT_TOKEN'
-  ldap:
-    key: 'LDAP_PASSWORD'
-    value: ''
-    filename: 'LDAP_PASSWORD'
-  storage:
-    key: 'STORAGE_PASSWORD'
-    value: ''
-    filename: 'STORAGE_PASSWORD'
-  storageEncryptionKey:
-    key: 'STORAGE_ENCRYPTION_KEY'
-    value: ''
-    filename: 'STORAGE_ENCRYPTION_KEY'
-  session:
-    key: 'SESSION_ENCRYPTION_KEY'
-    value: ''
-    filename: 'SESSION_ENCRYPTION_KEY'
-  duo:
-    key: 'DUO_API_KEY'
-    value: ''
-    filename: 'DUO_API_KEY'
-  redis:
-    key: 'REDIS_PASSWORD'
-    value: ''
-    filename: 'REDIS_PASSWORD'
-  redisSentinel:
-    key: 'REDIS_SENTINEL_PASSWORD'
-    value: ''
-    filename: 'REDIS_SENTINEL_PASSWORD'
-  smtp:
-    key: 'SMTP_PASSWORD'
-    value: ''
-    filename: 'SMTP_PASSWORD'
-  oidcPrivateKey:
-    key: 'OIDC_PRIVATE_KEY'
-    value: ''
-    filename: 'OIDC_PRIVATE_KEY'
-  oidcHMACSecret:
-    key: 'OIDC_HMAC_SECRET'
-    value: ''
-    filename: 'OIDC_HMAC_SECRET'
+  ## additionalSecrets contains a list of additional secrets to mount.
+  ## They will all be mounted in the format of '/{mountPath}/{key}' where the '{mountPath}' is the value above and
+  ## '{key}' is the key from the dictionary below (in our example we named it 'example'). If the items are specified
+  ## then those options will be rendered in the volumes spec. See 'example-without-items' for an example that doesn't
+  ## specify this.
+  ##
+  additionalSecrets: {}
+  # additionalSecrets:
+  #   example:
+  #     items:
+  #       - key: 'key-example'
+  #         path: 'path-example'
+  #   example-without-items: {}
 
 certificates:
   existingSecret: ''
@@ -1706,4 +1856,71 @@ persistence:
   size: '100Mi'
 
   selector: {}
-...
+
+# -- Configure mariadb database subchart under this key.
+#    This will be deployed when storage.mysql.deploy is set to true
+#    Currently settings need to be manually copied from here to the storage.mysql section
+#    For more options see [mariadb chart documentation](https://github.com/bitnami/charts/tree/master/bitnami/mariadb)
+mariadb:
+  architecture: standalone
+  auth:
+    database: authelia
+    username: authelia
+    password: authelia
+    rootPassword: authelia
+  primary:
+    resources: {}
+    persistence:
+      enabled: false
+      size: 1Gi
+      # storageClass: ""
+
+# -- Configure postgresql database subchart under this key.
+#    This will be deployed when storage.postgres.deploy is set to true
+#    Currently settings need to be manually copied from here to the storage.postgres section
+#    For more options see [postgresql chart documentation](https://github.com/bitnami/charts/tree/master/bitnami/postgresql)
+postgresql:
+  auth:
+    postgresPassword: authelia
+    username: authelia
+    password: authelia
+    database: authelia
+  primary:
+    persistence:
+      enabled: false
+      # storageClass: ""
+      size: 1Gi
+    resources: {}
+
+# -- Configure redis database subchart under this key.
+#    This will be deployed when session.redis.deploy is set to true
+#    Currently settings need to be manually copied from here to the session.redis section
+#    For more options see [redis chart documentation](https://github.com/bitnami/charts/tree/main/bitnami/redis)
+redis:
+  architecture: standalone
+  auth:
+    enabled: false
+    sentinel: true
+    password: "redis"
+    existingSecret: ""
+    existingSecretPasswordKey: ""
+    usePasswordFiles: false
+  master:
+    resources: {}
+    priorityClassName: ""
+    persistence:
+      enabled: false
+      # storageClass: ""
+      accessModes:
+        - ReadWriteOnce
+      size: 1Gi
+  replica:
+    replicaCount: 3
+    resources: {}
+    priorityClassName: ""
+    persistence:
+      enabled: false
+      # storageClass: ""
+      accessModes:
+        - ReadWriteOnce
+      size: 1Gi
