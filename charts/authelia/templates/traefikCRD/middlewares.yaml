@@ -79,10 +79,10 @@ spec:
   chain:
     middlewares:
     {{- range $middleware := .Values.ingress.traefikCRD.middlewares.chains.ingressRoute.before }}
-    - name: {{ $middleware.name }}
-      {{- if $middleware.namespace }}
-      namespace: {{ $middleware.namespace }}
-      {{- end }}
+      - name: {{ $middleware.name }}
+        {{- if $middleware.namespace }}
+        namespace: {{ $middleware.namespace }}
+        {{- end }}
     {{- end }}
       - name: {{ printf "headers-%s" (include "authelia.name" .) }}
         namespace: {{ .Release.Namespace }}
