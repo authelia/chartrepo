@@ -118,6 +118,33 @@ configMap:
 Several OpenID Connect 1.0 changes have occurred which will not be automatically detected if you're using old values and
 may cause an error if you're still using them.
 
+#### Client Option: id and secret
+
+Client options `id` and `secret` have been renamed to `client_id` and `client_secert` respectively to closely match the
+specification. In addition the `client_secret` must use one of the hash formats (even if it's the `$plaintext$` format).
+
+Before:
+
+```yaml
+configMap:
+  identity_providers:
+    oidc:
+      clients:
+      - id: 'myid'
+        secret: '$pbkdf2-sha512$310000$c8p78n7pUMln0jzvd4aK4Q$JNRBzwAo0ek5qKn50cFzzvE9RXV88h1wJn5KGiHrD0YKtZaR/nCb2CJPOsKaPK0hjf.9yHxzQGZziziccp6Yng'
+```
+
+After:
+
+```yaml
+configMap:
+  identity_providers:
+    oidc:
+      clients:
+      - client_id: 'myid'
+        client_secret: '$pbkdf2-sha512$310000$c8p78n7pUMln0jzvd4aK4Q$JNRBzwAo0ek5qKn50cFzzvE9RXV88h1wJn5KGiHrD0YKtZaR/nCb2CJPOsKaPK0hjf.9yHxzQGZziziccp6Yng'
+```
+
 #### Client Option: token_endpoint_auth_method
 
 Clients will be forced to use a specific authentication method. By default all clients will use `client_secret_post`
@@ -133,7 +160,7 @@ configMap:
   identity_providers:
     oidc:
       clients:
-      - id: 'myid'
+      - client_id: 'myid'
         token_endpoint_auth_method: 'client_secret_basic'
 ```
 
@@ -152,9 +179,9 @@ configMap:
   identity_providers:
     oidc:
       clients:
-      - id: 'example'
+      - client_id: 'example'
         # secret: '$pbkdf2-sha512$310000$c8p78n7pUMln0jzvd4aK4Q$JNRBzwAo0ek5qKn50cFzzvE9RXV88h1wJn5KGiHrD0YKtZaR/nCb2CJPOsKaPK0hjf.9yHxzQGZziziccp6Yng'  # The digest of 'insecure_secret'.
-        secret:
+        client_secret:
           # value: '$pbkdf2-sha512$310000$c8p78n7pUMln0jzvd4aK4Q$JNRBzwAo0ek5qKn50cFzzvE9RXV88h1wJn5KGiHrD0YKtZaR/nCb2CJPOsKaPK0hjf.9yHxzQGZziziccp6Yng'  # The digest of 'insecure_secret'.
           path: '/path/to/secret'
 ```
