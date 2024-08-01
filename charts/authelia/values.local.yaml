@@ -1,11 +1,16 @@
 ---
 ## @formatter:off
-## values.yaml
+## values.local.yaml
 ##
 ## Repository: authelia https://charts.authelia.com
 ## Chart: authelia
 ##
-## This values file is a baseline for other values files.
+## This values file is designed for a StatefulSet deployment with a single pod. It is not intended for production environments
+## It uses the following providers:
+##   - authentication: file (yaml)
+##   - storage: local (SQLite3)
+##   - session: memory
+##   - notification: filesystem (yaml)
 
 ## Version Override allows changing some chart characteristics that render only on specific versions.
 ## This does NOT affect the image used, please see the below image section instead for this.
