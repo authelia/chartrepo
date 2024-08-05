@@ -387,7 +387,7 @@ data:
         require_pushed_authorization_requests: {{ .Values.configMap.identity_providers.oidc.require_pushed_authorization_requests | default false }}
         {{- with .Values.configMap.identity_providers.oidc.authorization_policies }}
         authorization_policies:
-        {{- range $name, $policy := .Values.configMap.identity_providers.oidc.authorization_policies }}
+        {{- range $name, $policy := $.Values.configMap.identity_providers.oidc.authorization_policies }}
           {{ $name }}:
             default_policy: {{ $policy.default_policy | default "deny" | squote }}
             {{- with $policy.rules }}
