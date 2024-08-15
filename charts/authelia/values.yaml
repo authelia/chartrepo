@@ -485,6 +485,7 @@ configMap:
       # - 'AuthRequest'
       # - 'ExtAuthz'
       # - 'ForwardAuth'
+      # - 'Legacy'
 
       authz: {}
       # authz:
@@ -509,6 +510,11 @@ configMap:
       #       schemes:
       #       - 'Basic'
       #     - name: 'CookieSession'
+      #   legacy:
+      #     implementation: 'Legacy'
+      #     authn_strategies:
+      #       - name: 'HeaderLegacy'
+      #       - name: 'CookieSession'
 
   log:
     ## Level of verbosity for logs: info, debug, trace.
