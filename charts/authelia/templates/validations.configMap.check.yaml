@@ -66,7 +66,7 @@
 {{ else if .Values.configMap.server.endpoints.authz }}
     {{ range $authz := .Values.configMap.server.endpoints.authz }}
         {{ if not (has $authz.implementation $authzimpl) }}
-            {{ fail (printf "The implementation name '%s' specified via 'configMap.server.endpoints.authz' is not known. Known values are '%s'." $authz.implementation (join "', '" $authzimpl)) }}
+            {{ fail (printf "The implementation name '%s' specified via 'configMap.server.endpoints.automatic_authz_implementations' is not known. Known values are '%s'." $authz.implementation (join "', '" $authzimpl)) }}
         {{ end }}
     {{ end }}
 {{ end }}
