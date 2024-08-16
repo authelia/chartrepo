@@ -282,7 +282,13 @@ Returns the number of replicas
       {{- if (include "authelia.stateful" .) }}
         {{- 1 -}}
       {{- else -}}
+        # Value 0 is bad interpreted it goes to 1 by default
+        # github.com/helm/helm/issues/3164
+        {{- if (eq 0 (int .Values.pod.replicas))}}
+        {{- 0 -}}
+        {{- else }}
         {{- default 1 .Values.pod.replicas -}}
+        {{- end }}
       {{- end -}}
 {{- end -}}
 
