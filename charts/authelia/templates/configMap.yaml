@@ -306,7 +306,9 @@ data:
       smtp:
         address: {{ $notifier.smtp.address | squote }}
         timeout: {{ include "authelia.func.dquote" ($notifier.smtp.timeout | default "5 seconds") }}
+      {{- if $notifier.smtp.username }}
         username: {{ $notifier.smtp.username | squote }}
+      {{- end }}
         sender: {{ $notifier.smtp.sender | squote }}
         identifier: {{ $notifier.smtp.identifier | squote }}
         subject: {{ $notifier.smtp.subject | squote }}
