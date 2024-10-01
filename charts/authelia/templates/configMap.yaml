@@ -202,7 +202,7 @@ data:
       cookies:
       {{- range $cookie := (required "The value 'configMap.session.cookies' must have at least one configuration" $session.cookies) }}
         - domain: {{ required "All 'domain' values for the 'configMap.session.cookies' configurations must be configured" .domain | squote }}
-          authelia_url: {{ printf "https://%s" (include "authelia.ingress.host" (merge (dict "SubDomain" $cookie.subdomain "Domain" $cookie.domain) $)) | squote }}
+          authelia_url: {{ include "authelia.ingress.uri" (merge (dict "SubDomain" $cookie.subdomain "Domain" $cookie.domain "Path" $cookie.path) $) | squote }}
           {{- if $cookie.default_redirection_url }}
           default_redirection_url: {{ $cookie.default_redirection_url | squote }}
           {{- end }}

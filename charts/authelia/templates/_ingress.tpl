@@ -1,3 +1,11 @@
+{{- define "authelia.ingress.uri" -}}
+    {{- if .Path }}
+    {{- printf "https://%s/%s" (include "authelia.ingress.host" .) .Path }}
+    {{- else }}
+    {{- printf "https://%s" (include "authelia.ingress.host" .) }}
+    {{- end }}
+{{- end -}}
+
 {{/*
     Returns the ingress host value.
 */}}
