@@ -2,6 +2,51 @@ apiVersion: v1
 entries:
   authelia:
   - apiVersion: v2
+    appVersion: 4.38.15
+    created: "2024-10-02T10:46:31.144644617+10:00"
+    dependencies:
+    - condition: configMap.storage.postgres.deploy
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: ~15.5.11
+    - condition: configMap.storage.mysql.deploy
+      name: mariadb
+      repository: https://charts.bitnami.com/bitnami
+      version: ~18.2.4
+    - condition: configMap.session.redis.deploy
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: ~19.6.0
+    description: Authelia is a Single Sign-On Multi-Factor portal for web apps
+    digest: f198bd4d0e752a1859297e3c30b5b33577a340ddec8d81eb47cb6ee3c96c7cf0
+    home: https://www.authelia.com
+    icon: https://avatars2.githubusercontent.com/u/59122411?s=200&v=4
+    keywords:
+    - SSO
+    - Authentication
+    - Security
+    - Two-Factor
+    - YubiKey
+    - Webauthn
+    - Duo
+    - TOTP
+    - Time-based One Time Password
+    - Push Notifications
+    - LDAP
+    kubeVersion: '>= 1.13.0-0'
+    maintainers:
+    - email: james-d-elliott@users.noreply.github.com
+      name: james-d-elliott
+      url: https://github.com/james-d-elliott
+    name: authelia
+    sources:
+    - https://github.com/authelia/chartrepo/tree/master/charts/authelia
+    - https://www.github.com/authelia/authelia
+    type: application
+    urls:
+    - https://github.com/authelia/chartrepo/releases/download/authelia-0.9.8/authelia-0.9.8.tgz
+    version: 0.9.8
+  - apiVersion: v2
     appVersion: 4.38.14
     created: "2024-10-02T10:13:46.651907251+10:00"
     dependencies:
@@ -5309,4 +5354,4 @@ entries:
     urls:
     - https://github.com/authelia/chartrepo/releases/download/authelia-0.1.0/authelia-0.1.0.tgz
     version: 0.1.0
-generated: "2024-10-02T10:13:46.652642346+10:00"
+generated: "2024-10-02T10:46:31.145718067+10:00"
