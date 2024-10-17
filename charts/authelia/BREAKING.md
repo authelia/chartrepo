@@ -63,6 +63,44 @@ the option they want rather than having to wrestle the chart into obedience.
 As originally planned we've overhauled the secrets configuration. In part to adapt to the new changes and also to make
 the feature much easier to understand.
 
+These changes are separated into two distinct elements:
+
+1. The secrets are now local to where they're used in the configuration instead of in a single location.
+   1. This has the advantage of if you're for example configuring PostgreSQL that you configure the username and 
+      password at the same time.
+2. The implementation specifics have been adjusted so the syntax for all secrets is generally the same.
+3. You're able to include varied secrets instead of the single secret like before.
+
+The following section shows a before and after look at the secret generation method.
+
+Before:
+
+```yaml
+name:
+  key: 'KEY_NAME'
+  value: ""
+  filename: 'FILE_NAME'
+```
+
+After:
+
+```yaml
+secret:
+  ## Disables this secret allowing you to handle it yourself in any way you see fit.
+  disabled: false
+  
+  ## Sets the name of the secret to use. The ~ value indicates the internal secret. Value will be mounted into the 
+  ## '/secrets/<secret_name>/<path>' location, where secret_name for ~ is 'internal'.
+  secret_name: ~
+  
+  ## When using the internal secret this allows setting the value arbitrarily. Only required on the first `helm install`
+  ## or `helm upgrade`, after which it's only required to overwrite it.
+  value: ''
+  
+  ## Key name within the secret which is the mounted location.
+  path: 'FILE_NAME'
+```
+
 The chart itself is now capable of both generating multiple secrets and utilizing a mix of existing secrets and
 generated ones. These settings are configured on a per configuration section basis.
 
@@ -94,7 +132,9 @@ The domain value has been removed and is now part of the session section. Each c
 generate relevant manifests such as ingresses. This is so we can properly facilitate the multi-cookie domain
 configurations. This also affects the default redirection URL which is no longer supported on 4.38.0 helm installations.
 
-See below for representations of the YAML changes (before and after respectively).
+See below for representations of the YAML changes.
+
+Before:
 
 ```yaml
 domain: 'example.com'
@@ -103,6 +143,8 @@ ingress:
 configMap:
   default_redirection_url: 'https://www.example.com'
 ```
+
+After:
 
 ```yaml
 configMap:
