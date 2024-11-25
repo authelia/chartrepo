@@ -227,6 +227,12 @@ pod:
   # labels:
   #   myLabel: 'myValue'
 
+  # Modifies the command. Useful for debugging.
+  command: []
+
+  # Modifies the args for the command. Useful for debugging.
+  args: []
+
   replicas: 1
   revisionHistoryLimit: 5
   priorityClassName: ''
