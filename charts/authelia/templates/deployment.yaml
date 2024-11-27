@@ -82,11 +82,35 @@ spec:
       serviceAccountName: {{ default (include "authelia.name" .) .Values.rbac.serviceAccountName }}
       {{- end }}
       enableServiceLinks: {{ .Values.pod.enableServiceLinks | default false }}
+      {{- if .Values.pod.initContainers }}
+      initContainers: {{- include "authelia.snippets.render" (dict "value" .Values.pod.initContainers "context" $) | nindent 8 }}
+      {{- end }}
       containers:
       - name: authelia
         image: {{ include "authelia.image" . }}
         imagePullPolicy: {{ default "IfNotPresent" .Values.image.pullPolicy }}
-        command: ["authelia"]
+        {{- $command := list "authelia" }}
+        {{- if .Values.pod.command }}
+          {{- if kindIs "slice" .Values.pod.command }}{{ $command = .Values.pod.command }}
+          {{- else if kindIs "string" .Values.pod.command }}{{ $command = list .Values.pod.command }}
+          {{- end }}
+        {{- end }}
+        command:
+        {{- range $command }}
+        - {{ . | squote }}
+        {{- end }}
+        {{- $args := list }}
+        {{- if .Values.pod.args }}
+          {{- if kindIs "slice" .Values.pod.args }}{{ $args = .Values.pod.args }}
+          {{- else if kindIs "string" .Values.pod.args }}{{ $args = list .Values.pod.args }}
+          {{- end }}
+        {{- end }}
+        {{- if not (eq 0 (len $args)) }}
+        args:
+        {{- range $args }}
+        - {{ . | squote }}
+        {{- end }}
+        {{- end }}
         {{- with $resources :=.Values.pod.resources }}
         resources: {{ toYaml $resources | nindent 10 }}
         {{- end }}

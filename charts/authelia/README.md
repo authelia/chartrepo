@@ -94,6 +94,7 @@ This documents the parameters in the chart values. As the chart values are quite
 |                 pod.kind                  | Configures the kind of pod: StatefulSet, Deployment, DaemonSet |   DaemonSet   |
 |              pod.annotations              |            Adds annotations specifically to the pod            |      {}       |
 |                pod.labels                 |              Adds labels specifically to the pod               |      {}       |
+|            pod.initContainers             |    Adds additional init containers specifically to the pod     |      []       |
 |               pod.replicas                |     Configures the replicas for Deployment's/statefulSet's     |       1       |
 |         pod.revisionHistoryLimit          |              Configures the revisionHistoryLimit               |       1       |
 |             pod.strategy.type             |        Configures the pods strategy/updateStrategy type        | RollingUpdate |

@@ -232,6 +232,18 @@ pod:
   # labels:
   #   myLabel: 'myValue'
 
+  # Modifies the command. Useful for debugging.
+  command: []
+
+  # Modifies the args for the command. Useful for debugging.
+  args: []
+
+  initContainers: []
+  # initContainers:
+  # - name: myapp-init
+  #   image: busybox:1.36
+  #   command: ['sh', '-c', 'echo The app is starting! && sleep 5']
+
   replicas: 1
   revisionHistoryLimit: 5
   priorityClassName: ''
