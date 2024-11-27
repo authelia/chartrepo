@@ -38,7 +38,7 @@ steps:
     charts: "true"
   if: build.branch == "master" && build.env("CHART_CHANGES") == "true"
 
-- command: "cr --config .buildkite/cr.yaml upload"
+- command: "cr --config .buildkite/cr.yaml upload  --auto-release"
   key: "upload"
   label: ":github: Deploy Artifacts (Chart Releaser)"
   agents:

@@ -227,6 +227,18 @@ pod:
   # labels:
   #   myLabel: 'myValue'
 
+  # Modifies the command. Useful for debugging.
+  command: []
+
+  # Modifies the args for the command. Useful for debugging.
+  args: []
+
+  initContainers: []
+  # initContainers:
+  # - name: myapp-init
+  #   image: busybox:1.36
+  #   command: ['sh', '-c', 'echo The app is starting! && sleep 5']
+
   replicas: 1
   revisionHistoryLimit: 5
   priorityClassName: ''
@@ -1154,6 +1166,7 @@ configMap:
     ## The redis connection details
     redis:
       enabled: false
+      deploy: false
       enabledSecret: false
       host: 'redis.databases.svc.cluster.local'
       port: 6379
@@ -1313,6 +1326,7 @@ configMap:
     ##
     mysql:
       enabled: false
+      deploy: false
       address: 'tcp://mysql.databases.svc.cluster.local:3306'
       timeout: '5 seconds'
       database: 'authelia'
@@ -1358,6 +1372,7 @@ configMap:
     ##
     postgres:
       enabled: false
+      deploy: false
       address: 'tcp://postgres.databases.svc.cluster.local:5432'
       timeout: '5 seconds'
       database: 'authelia'
@@ -1853,4 +1868,71 @@ persistence:
   size: '100Mi'
 
   selector: {}
-...
+
+# -- Configure mariadb database subchart under this key.
+#    This will be deployed when storage.mysql.deploy is set to true
+#    Currently settings need to be manually copied from here to the storage.mysql section
+#    For more options see [mariadb chart documentation](https://github.com/bitnami/charts/tree/master/bitnami/mariadb)
+mariadb:
+  architecture: standalone
+  auth:
+    database: authelia
+    username: authelia
+    password: authelia
+    rootPassword: authelia
+  primary:
+    resources: {}
+    persistence:
+      enabled: false
+      size: 1Gi
+      # storageClass: ""
+
+# -- Configure postgresql database subchart under this key.
+#    This will be deployed when storage.postgres.deploy is set to true
+#    Currently settings need to be manually copied from here to the storage.postgres section
+#    For more options see [postgresql chart documentation](https://github.com/bitnami/charts/tree/master/bitnami/postgresql)
+postgresql:
+  auth:
+    postgresPassword: authelia
+    username: authelia
+    password: authelia
+    database: authelia
+  primary:
+    persistence:
+      enabled: false
+      # storageClass: ""
+      size: 1Gi
+    resources: {}
+
+# -- Configure redis database subchart under this key.
+#    This will be deployed when session.redis.deploy is set to true
+#    Currently settings need to be manually copied from here to the session.redis section
+#    For more options see [redis chart documentation](https://github.com/bitnami/charts/tree/main/bitnami/redis)
+redis:
+  architecture: standalone
+  auth:
+    enabled: false
+    sentinel: true
+    password: "redis"
+    existingSecret: ""
+    existingSecretPasswordKey: ""
+    usePasswordFiles: false
+  master:
+    resources: {}
+    priorityClassName: ""
+    persistence:
+      enabled: false
+      # storageClass: ""
+      accessModes:
+        - ReadWriteOnce
+      size: 1Gi
+  replica:
+    replicaCount: 3
+    resources: {}
+    priorityClassName: ""
+    persistence:
+      enabled: false
+      # storageClass: ""
+      accessModes:
+        - ReadWriteOnce
+      size: 1Gi

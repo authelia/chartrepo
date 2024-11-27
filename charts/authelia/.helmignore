@@ -6,7 +6,6 @@
 .idea
 *.tmproj
 *.png
-*.tgz
 docs/
 screenshots/
 scripts/

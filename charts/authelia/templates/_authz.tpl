@@ -8,6 +8,8 @@
         {{- "ext-authz" }}
     {{- else if eq .Implementation "ForwardAuth" }}
         {{- "forward-auth" }}
+    {{- else if eq .Implementation "Legacy" }}
+        {{- "legacy" }}
     {{- end }}
 {{- end -}}
 
@@ -33,5 +35,5 @@
 {{- end -}}
 
 {{- define "authelia.authz.implementations" -}}
-    {{ (list "AuthRequest" "ExtAuthz" "ForwardAuth") | toJson }}
+    {{ (list "AuthRequest" "ExtAuthz" "ForwardAuth" "Legacy") | toJson }}
 {{- end -}}
