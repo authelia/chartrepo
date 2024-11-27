@@ -285,7 +285,7 @@ Returns the number of replicas
         {{- if (eq 0 (int .Values.pod.replicas))}}
         {{- 0 -}}
         {{- else }}
-        {{- default 1 .Values.pod.replicas -}}
+        {{- .Values.pod.replicas | default 1 -}}
         {{- end }}
       {{- end -}}
 {{- end -}}
