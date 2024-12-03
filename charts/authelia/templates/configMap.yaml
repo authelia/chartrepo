@@ -394,7 +394,14 @@ data:
             rules:
             {{- range $policy.rules }}
             - policy: {{ .policy | default "deny" | squote }}
-              subject: {{ .subject | squote }}
+              subject:
+              {{- if kindIs "string" .subject }}
+                - [{{ .subject | squote }}]
+              {{- else }}
+              {{- range .subject }}
+                - [{{ include "authelia.squote.join" . }}]
+              {{- end }}
+              {{- end }}
             {{- end }}
             {{- end }}
         {{- end }}
