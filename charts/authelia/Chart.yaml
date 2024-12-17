@@ -1,6 +1,6 @@
 apiVersion: v2
 name: authelia
-version: 0.9.13
+version: 0.9.15
 kubeVersion: ">= 1.13.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
