@@ -1475,6 +1475,7 @@ configMap:
       ## more information.
       disable_starttls: false
 
+      # Leave empty to authenticate PLAIN: username: ''
       username: 'test'
       password:
         ## Disables this secret and leaves configuring it entirely up to you.
