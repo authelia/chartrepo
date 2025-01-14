@@ -75,7 +75,7 @@ spec:
       {{- with $affinity := .Values.pod.selectors.affinity }}
       affinity: {{ toYaml $affinity | nindent 8 }}
       {{- end }}
-      {{- with $context := .Values.pod.securityContext.container }}
+      {{- with $context := .Values.pod.securityContext.pod }}
       securityContext: {{ toYaml $context | nindent 8 }}
       {{- end }}
       {{- if .Values.rbac.enabled }}
@@ -269,7 +269,7 @@ spec:
         {{- with $mounts := .Values.pod.extraVolumeMounts }}
           {{- toYaml $mounts | nindent 8 }}
         {{- end }}
-      {{- with $context := .Values.pod.securityContext.pod }}
+      {{- with $context := .Values.pod.securityContext.container }}
         securityContext: {{ toYaml $context | nindent 10 }}
       {{- end }}
       {{- with $pullSecrets := .Values.image.pullSecrets }}
