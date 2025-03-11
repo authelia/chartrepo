@@ -585,10 +585,41 @@ configMap:
 
   theme: 'light'
 
+  definitions:
+    network: {}
+      # network:
+      # network_name:
+      # - '192.168.1.0/24'
+      # - '192.168.2.20'
+      # - '2001:db8::/32'
+    # - '2001:db8:1234:5678::1'
+    user_attributes: {}
+      # user_attributes:
+      ## Boolean attribute example
+      # is_admin:
+      # expression: '"admin" in groups'
+      ## String attribute example
+      # department:
+      # expression: 'groups[0]'
+      ## Number attribute example
+      # access_level:
+    # expression: '"admin" in groups ? 10 : 5'
+
+  ## Identity Validation configures additional means of identifying legitimate users.
   identity_validation:
+
+    ## The Reset Password Identity Validation implementation ensures that users cannot perform a reset password flow
+    ## without first ensuring the user is adequately identified. The settings below therefore can affect the level of
+    ## security Authelia provides to your users so they should be carefully considered.
     reset_password:
+
+      ## The lifespan of the JSON Web Token after it’s initially generated after which it’s considered invalid.
       jwt_lifespan: '5 minutes'
+
+      ## The JSON Web Token Algorithm used to sign the JWT. Must be HS256, HS384, or HS512.
       jwt_algorithm: 'HS256'
+
+      ## The secret used with the HMAC algorithm to sign the JWT minted by Authelia.
       secret:
         ## Disables this secret and leaves configuring it entirely up to you.
         disabled: false
@@ -604,11 +635,29 @@ configMap:
         ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
         ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
         path: 'identity_validation.reset_password.jwt.hmac.key'
+
+    ## The Elevated Session Identity Validation implementation ensures that users cannot perform actions which may
+    ## adjust the security characteristics of their account without first ensuring the user is adequately identified.
+    ## The settings below therefore can affect the level of security Authelia provides to your users so they should be
+    ## carefully considered.
     elevated_session:
+
+      ## The lifespan of the randomly generated One Time Code after which it’s considered invalid.
       code_lifespan: '5 minutes'
+
+      ## The lifespan of the elevation after initially validating the One-Time Code before it expires.
       elevation_lifespan: '10 minutes'
+
+      ## The number of characters the random One-Time Code has. Maximum value is currently 20, but we recommend keeping
+      ## it between 8 and 12. It’s strongly discouraged to reduce it below 8.
       characters: 8
+
+      ## Requires second factor authentication for all protected actions in addition to the elevated session provided
+      ## the user has configured a second factor authentication method.
       require_second_factor: false
+
+      ## Skips the elevated session requirement if the user has performed second factor authentication. Can be combined
+      ## with the require_second_factor option to always (and only) require second factor authentication.
       skip_second_factor: false
 
 
@@ -647,12 +696,18 @@ configMap:
     ## Changing this option only affects newly generated TOTP configurations.
     period: 30
 
+    ## Similar to algorithm with the same restrictions except this option allows users to pick from this list. This list
+    ## will always contain the value configured in the algorithm option.
     allowed_algorithms:
       - 'SHA1'
 
+    ## Similar to digits with the same restrictions except this option allows users to pick from this list. This list
+    ## will always contain the value configured in the digits option.
     allowed_digits:
       - 6
 
+    ## Similar to period with the same restrictions except this option allows users to pick from this list. This list
+    ## will always contain the value configured in the period option.
     allowed_periods:
       - 30
 
@@ -674,9 +729,64 @@ configMap:
     ## Options are none, indirect, direct.
     attestation_conveyance_preference: 'indirect'
 
-    ## User verification controls if the user must make a gesture or action to confirm they are present.
-    ## Options are required, preferred, discouraged.
-    user_verification: 'preferred'
+    ## This section configures various filtering options during registration
+    filtering:
+
+      ## A list of Authenticator Attestation GUID’s that are the only ones allowed to be registered. Useful if you have
+      ## a company policy that requires certain authenticators. Mutually exclusive with prohibited_aaguids.
+      permitted_aaguids: []
+
+      ## A list of Authenticator Attestation GUID’s that users will not be able to register. Useful if company policy
+      ## prevents certain authenticators. Mutually exclusive with permitted_aaguids.
+      prohibited_aaguids: []
+
+      ## Setting this value to true will ensure Authenticators which can export credentials will not be able to
+      ## register. This will likely prevent synchronized credentials from being registered.
+      prohibit_backup_eligibility: false
+
+    ## The selection criteria options set preferences for selecting a suitable authenticator.
+    selection_criteria:
+
+      ## Sets the attachment preference for newly created credentials.
+      attachment: ''
+
+      ## Sets the discoverability preference. May affect the creation of Passkeys.
+      discoverability: 'preferred'
+
+      ## Sets the user verification preference.
+      user_verification: 'preferred'
+
+    ## Configures the metadata service which is used to check the authenticity of authenticators. Useful if company
+    ## policy requires only conformant authenticators.
+    metadata:
+
+      ## Enables metadata service validation of authenticators and credentials. This requires the download of the
+      ## metadata service blob which will utilize about 5MB of data in your configured storage backend.
+      enabled: false
+
+      ## Enables validation of the attestation certificate against the Certificate Authority certificate in the
+      ## validated MDS3 blob. It’s recommended this value is always the default value.
+      validate_trust_anchor: true
+
+      ## Enables validation that an entry exists for the authenticator in the MDS3 blob. It’s recommended that this
+      ## option is the default value, however this may exclude some authenticators which DO NOT have FIDO compliance
+      ## certification or have otherwise not registered with the MDS3. The recommendation is based on the fact that the
+      ## authenticity of a particular authenticator cannot be validated without this.
+      validate_entry: true
+
+      ## Allows authenticators which have provided an empty Authenticator Attestation GUID. This may be required for
+      ## certain authenticators which DO NOT have FIDO compliance certification.
+      validate_entry_permit_zero_aaguid: false
+
+      ## Enables validation of the attestation entry statuses. There is generally never a reason to disable this as the
+      ## authenticators excluded by default are likely compromised.
+      validate_status: true
+
+      ## A list of exclusively required statuses for an authenticator to pass validation.
+      validate_status_permitted: []
+
+      ## A list of authenticator statuses which for an authenticator that are prohibited from being registered.
+      validate_status_prohibited: []
 
   ##
   ## NTP Configuration
@@ -804,6 +914,12 @@ configMap:
         ## Maximum TLS version for the connection.
         maximum_version: 'TLS1.3'
 
+      pooling:
+        enable: false
+        count: 5
+        retries: 2
+        timeout: '10 seconds'
+
       ## The base dn for every LDAP query.
       base_dn: 'DC=example,DC=com'
 
@@ -893,6 +1009,25 @@ configMap:
         ## The attribute holding the display name of the user. This will be used to greet an authenticated user.
         display_name: ''
 
+        family_name: ''
+        given_name: ''
+        middle_name: ''
+        nickname: ''
+        gender: ''
+        birthdate: ''
+        website: ''
+        profile: ''
+        picture: ''
+        zoneinfo: ''
+        locale: ''
+        phone_number: ''
+        phone_extension: ''
+        street_address: ''
+        locality: ''
+        region: ''
+        postal_code: ''
+        country: ''
+
         ## The attribute holding the mail address of the user. If multiple email addresses are defined for a user, only the
         ## first one returned by the LDAP server is used.
         mail: ''
@@ -901,6 +1036,13 @@ configMap:
 
         ## The attribute holding the name of the group
         group_name: ''
+
+        extra: {}
+          # extra:
+          # extra_example:
+          # name: ''
+          # multi_valued: false
+        # value_type: 'string'
 
     ##
     ## File (Authentication Provider)
@@ -920,6 +1062,7 @@ configMap:
       search:
         email: false
         case_insensitive: false
+      extra_attributes: {}
       password:
         algorithm: 'argon2'
         argon2:
@@ -1379,6 +1522,14 @@ configMap:
       enabled: false
       deploy: false
       address: 'tcp://postgres.databases.svc.cluster.local:5432'
+      servers: []
+      # servers:
+        # - address: 'tcp://postgres2:5432'
+        #   tls:
+        #     server_name: 'postgres2.local'
+        # - address: 'tcp://postgres3:5432'
+        #   tls:
+        #     server_name: 'postgres3.local'
       timeout: '5 seconds'
       database: 'authelia'
       schema: 'public'
@@ -1576,6 +1727,21 @@ configMap:
         #         id_token: '1 hour'
         #         refresh_token: '1 hour and 30 minutes'
 
+      claims_policies: {}
+        # claims_policies:
+        # policy_name:
+        # id_token: []
+        # access_token: []
+        # id_token_audience_mode: 'specification'
+        # custom_claims:
+        # claim_name:
+      # attribute: 'attribute_name'
+
+      scopes: {}
+        # scopes:
+        # scope_name:
+      # claims: []
+
       ## Adjusts the PKCE enforcement. Options are always, public_clients_only, never.
       ## For security reasons it's recommended this option is public_clients_only or always, however always is not
       ## compatible with all clients.
@@ -1645,120 +1811,129 @@ configMap:
 
       clients: []
 
-      # clients:
+        # clients:
         # -
-          ## The ID is the OpenID Connect ClientID which is used to link an application to a configuration.
-          # client_id: 'myapp'
+        ## The ID is the OpenID Connect ClientID which is used to link an application to a configuration.
+        # client_id: 'myapp'
 
-          ## The client secret is a shared secret between Authelia and the consumer of this client.
-          # client_secret:
-            # value: '$plaintext$apple123'
-            # path: '/secrets/oidc.client.myapp.value'
+        ## The description to show to users when they end up on the consent screen. Defaults to the ID above.
+        # client_name: 'My Application'
 
-          ## The description to show to users when they end up on the consent screen. Defaults to the ID above.
-          # client_name: 'My Application'
+        ## The client secret is a shared secret between Authelia and the consumer of this client.
+        # client_secret:
+        # value: '$plaintext$apple123'
+        # path: '/secrets/oidc.client.myapp.value'
 
-          ## Sector Identifiers are occasionally used to generate pairwise subject identifiers. In most cases this is not
-          ## necessary. Read the documentation for more information.
-          ## The subject identifier must be the host component of a URL, which is a domain name with an optional port.
-          # sector_identifier_uri: 'example.com'
+        ## Sector Identifiers are occasionally used to generate pairwise subject identifiers. In most cases this is not
+        ## necessary. Read the documentation for more information.
+        ## The subject identifier must be the host component of a URL, which is a domain name with an optional port.
+        # sector_identifier_uri: 'example.com'
 
-          ## Sets the client to public. This should typically not be set, please see the documentation for usage.
-          # public: false
+        ## Sets the client to public. This should typically not be set, please see the documentation for usage.
+        # public: false
 
-          ## The policy to require for this client; one_factor or two_factor.
-          # authorization_policy: 'two_factor'
+        ## Redirect URI's specifies a list of valid case-sensitive callbacks for this client.
+        # redirect_uris:
+        #   - 'https://oidc.example.com/oauth2/callback'
 
-          ## The consent mode controls how consent is obtained.
-          # consent_mode: 'auto'
+        ## Request URI's specifies a list of valid case-sensitive URIs this client can ask Authelia to obtain a
+        ## Request Object from.
+        # request_uris:
+        #   - 'https://oidc.example.com/oauth2/request-object/authelia.jwk'
 
-          ## This value controls the duration a consent on this client remains remembered when the consent mode is
-          ## configured as 'auto' or 'pre-configured'.
-          # pre_configured_consent_duration: '30 days'
+        ## Audience this client is allowed to request.
+        # audience: []
 
-          ## Audience this client is allowed to request.
-          # audience: []
+        ## Scopes this client is allowed to request.
+        # scopes:
+        #   - 'openid'
+        #   - 'profile'
+        #   - 'email'
+        #   - 'groups'
 
-          ## Scopes this client is allowed to request.
-          # scopes:
-          #   - 'openid'
-          #   - 'profile'
-          #   - 'email'
-          #   - 'groups'
+        ## Grant Types configures which grants this client can obtain.
+        ## It's not recommended to configure this unless you know what you're doing.
+        # grant_types:
+        #   - 'refresh_token'
+        #   - 'authorization_code'
 
-          ## Redirect URI's specifies a list of valid case-sensitive callbacks for this client.
-          # redirect_uris:
-          #   - 'https://oidc.example.com/oauth2/callback'
+        ## Response Types configures which responses this client can be sent.
+        ## It's not recommended to configure this unless you know what you're doing.
+        # response_types:
+        #   - 'code'
 
-          ## Request URI's specifies a list of valid case-sensitive URIs this client can ask Authelia to obtain a
-          ## Request Object from.
-          # request_uris:
-          #   - 'https://oidc.example.com/oauth2/request-object/authelia.jwk'
+        ## Response Modes configures which response modes this client supports.
+        ## It's not recommended to configure this unless you know what you're doing.
+        # response_modes:
+        #   - 'form_post'
+        #   - 'query'
+        #   - 'fragment'
 
-          ## Grant Types configures which grants this client can obtain.
-          ## It's not recommended to configure this unless you know what you're doing.
-          # grant_types:
-          #   - 'refresh_token'
-          #   - 'authorization_code'
+        ## The policy to require for this client; one_factor or two_factor.
+        # authorization_policy: 'two_factor'
 
-          ## Response Types configures which responses this client can be sent.
-          ## It's not recommended to configure this unless you know what you're doing.
-          # response_types:
-          #   - 'code'
+        # lifespan: ''
 
-          ## Response Modes configures which response modes this client supports.
-          ## It's not recommended to configure this unless you know what you're doing.
-          # response_modes:
-          #   - 'form_post'
-          #   - 'query'
-          #   - 'fragment'
+        # claims_policy: ''
 
-          # enforce_par: false
-          # enforce_pkce: false
-          # pkce_challenge_method: 'S256'
-          # authorization_signed_response_alg: 'RS256'
-          # authorization_signed_response_key_id: ''
+        # requested_audience_mode: ''
 
-          ## The algorithm of the issuer key used to sign ID Tokens for this client, must be one of the
-          ## registered issuer key algorithms.
-          # id_token_signed_response_alg: 'RS256'
+        ## The consent mode controls how consent is obtained.
+        # consent_mode: 'auto'
 
-          ## The key id of the issuer key used to sign ID Tokens for this client.
-          # id_token_signed_response_key_id: ''
+        ## This value controls the duration a consent on this client remains remembered when the consent mode is
+        ## configured as 'auto' or 'pre-configured'.
+        # pre_configured_consent_duration: '30 days'
 
-          ## The algorithm of the issuer key used to sign Access Tokens for this client, must be either none or one of
-          ## the registered issuer key algorithms.
-          # access_token_signed_response_alg: 'none'
+        # require_pushed_authorization_requests: false
+        # require_pkce: false
+        # pkce_challenge_method: 'S256'
 
-          ## The key id of the issuer key used to sign Access Tokens for this client.
-          # access_token_signed_response_key_id: ''
+        # authorization_signed_response_key_id: ''
+        # authorization_signed_response_alg: 'none'
+        # authorization_encrypted_response_key_id: ''
+        # authorization_encrypted_response_alg: 'none'
+        # authorization_encrypted_response_enc: 'A128CBC-HS256'
 
-          ## The algorithm of the issuer key used to sign User Info Responses for this client, must be either none or
-          ## one of the registered issuer key algorithms.
-          # userinfo_signed_response_alg: 'none'
+        # id_token_signed_response_key_id: ''
+        # id_token_signed_response_alg: 'RS256'
+        # id_token_encrypted_response_key_id: ''
+        # id_token_encrypted_response_alg: 'none'
+        # id_token_encrypted_response_enc: 'A128CBC-HS256'
 
-          ## The key id of the issuer key used to sign User Info Responses for this client.
-          # userinfo_signed_response_key_id: ''
+        # access_token_signed_response_key_id: ''
+        # access_token_signed_response_alg: 'none'
+        # access_token_encrypted_response_key_id: ''
+        # access_token_encrypted_response_alg: 'none'
+        # access_token_encrypted_response_enc: 'A128CBC-HS256'
 
-          ## The signing algorithm used for Introspection responses. An issuer JWK with a matching algorithm must be
-          ## available when configured. Has no effect if introspection_signed_response_key_id is configured.
-          # introspection_signed_response_alg: 'none'
+        # userinfo_signed_response_key_id: ''
+        # userinfo_signed_response_alg: 'none'
+        # userinfo_encrypted_response_key_id: ''
+        # userinfo_encrypted_response_alg: 'none'
+        # userinfo_encrypted_response_enc: 'A128CBC-HS256'
 
-          ## The signing key id used for Introspection responses. An issuer JWK with a matching key id must be available
-          ## when configured.
-          # introspection_signed_response_key_id: ''
+        # introspection_signed_response_key_id: ''
+        # introspection_signed_response_alg: 'none'
+        # introspection_encrypted_response_key_id: ''
+        # introspection_encrypted_response_alg: 'none'
+        # introspection_encrypted_response_enc: 'A128CBC-HS256'
 
-          ## The algorithm the client must sign their request objects with, must either be empty or one of the
-          ## registered client key algorithms.
-          # request_object_signing_alg: ''
+        # request_object_signing_alg: 'RS256'
+        # request_object_encryption_alg: ''
+        # request_object_encryption_enc: ''
 
-          ## The algorithm the client must sign the object when using the 'private_key_jwt' auth method, must either be
-          ## empty or one of the registered client key algorithms.
-          # token_endpoint_auth_signing_alg: 'RS256'
+        # token_endpoint_auth_method: 'client_secret_basic'
+        # token_endpoint_auth_signing_alg: 'RS256'
 
-          ## The authentication method the client must use to authenticate.
-          # token_endpoint_auth_method: 'client_secret_post'
+        # revocation_endpoint_auth_method: 'client_secret_basic'
+        # revocation_endpoint_auth_signing_alg: 'RS256'
 
+        # introspection_endpoint_auth_method: 'client_secret_basic'
+        # introspection_endpoint_auth_signing_alg: 'RS256'
+
+        # pushed_authorization_request_endpoint_auth_method: 'client_secret_basic'
+      # pushed_authorization_request_endpoint_auth_signing_alg: 'RS256'
 
 ##
 ## Authelia Secret Configuration.
