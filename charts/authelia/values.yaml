@@ -607,6 +607,7 @@ configMap:
       # access_level:
         # expression: '"admin" in groups ? 10 : 5'
 
+  ## Identity Validation configures additional means of identifying legitimate users.
   identity_validation:
 
     ## The Reset Password Identity Validation implementation ensures that users cannot perform a reset password flow
@@ -855,6 +856,9 @@ configMap:
       ## External reset password url that redirects the user to an external reset portal. This disables the internal
       ## reset functionality.
       custom_url: ''
+
+    password_change:
+      disable: false
 
     ## The amount of time to wait before we refresh data from the authentication backend. Uses duration notation.
     ## To disable this feature set it to 'disable', this will slightly reduce security because for Authelia, users will
@@ -1800,7 +1804,6 @@ configMap:
         allowed_origins_from_client_redirect_uris: false
 
       clients: []
-
       # clients:
         # -
           ## The ID is the OpenID Connect ClientID which is used to link an application to a configuration.

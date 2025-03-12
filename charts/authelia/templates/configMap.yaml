@@ -162,6 +162,10 @@ data:
       password_reset:
         disable: {{ include "authelia.config.password_reset.disable" $ }}
         custom_url: {{ $auth.password_reset.custom_url | default "" | squote }}
+      {{- if semverCompare ">=4.39.0" (include "authelia.version" $) }}
+      password_change:
+        disable: {{ $auth.password_change.disable | default false }}
+      {{- end }}
       {{- if $auth.file.enabled }}
       file:
         path: {{ $auth.file.path | squote }}
@@ -356,6 +360,9 @@ data:
       {{- end }}
     {{- end }}
     regulation:
+      {{- if semverCompare ">=4.39.0" (include "authelia.version" $) }}
+      mode: {{ .Values.configMap.regulation.mode | default ''}}
+      {{- end }}
       max_retries: {{ .Values.configMap.regulation.max_retries | default 3 }}
       find_time: {{ include "authelia.func.dquote" (.Values.configMap.regulation.find_time | default "2 minutes") }}
       ban_time: {{ include "authelia.func.dquote" (.Values.configMap.regulation.ban_time | default "2 minutes") }}

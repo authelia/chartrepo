@@ -585,25 +585,32 @@ configMap:
 
   theme: 'light'
 
+  ## The definitions section controls several definitions which can be reused in other areas of the configuration rather
+  ## than repeating values elsewhere.
   definitions:
+
+    ## The network section configures named network lists.
     network: {}
-      # network:
+    # network:
       # network_name:
-      # - '192.168.1.0/24'
-      # - '192.168.2.20'
-      # - '2001:db8::/32'
-    # - '2001:db8:1234:5678::1'
+        # - '192.168.1.0/24'
+        # - '192.168.2.20'
+        # - '2001:db8::/32'
+        # - '2001:db8:1234:5678::1'
+
+    ## The user attributes section allows you to define custom attributes for your users using Common Expression
+    ## Language (CEL).
     user_attributes: {}
-      # user_attributes:
+    # user_attributes:
       ## Boolean attribute example
       # is_admin:
-      # expression: '"admin" in groups'
+        # expression: '"admin" in groups'
       ## String attribute example
       # department:
-      # expression: 'groups[0]'
+        # expression: 'groups[0]'
       ## Number attribute example
       # access_level:
-    # expression: '"admin" in groups ? 10 : 5'
+        # expression: '"admin" in groups ? 10 : 5'
 
   ## Identity Validation configures additional means of identifying legitimate users.
   identity_validation:
@@ -855,6 +862,9 @@ configMap:
       ## reset functionality.
       custom_url: ''
 
+    password_change:
+      disable: false
+
     ## The amount of time to wait before we refresh data from the authentication backend. Uses duration notation.
     ## To disable this feature set it to 'disable', this will slightly reduce security because for Authelia, users will
     ## always belong to groups they belonged to at the time of login even if they have been removed from them in LDAP.
@@ -1038,11 +1048,11 @@ configMap:
         group_name: ''
 
         extra: {}
-          # extra:
+        # extra:
           # extra_example:
-          # name: ''
-          # multi_valued: false
-        # value_type: 'string'
+            # name: ''
+            # multi_valued: false
+            # value_type: 'string'
 
     ##
     ## File (Authentication Provider)
@@ -1168,17 +1178,6 @@ configMap:
     ## Default policy can either be 'bypass', 'one_factor', 'two_factor' or 'deny'. It is the policy applied to any
     ## resource if there is no policy to be applied to the user.
     default_policy: 'deny'
-
-    networks: []
-    # networks:
-    # - name: 'private'
-    #   networks:
-    #   - '10.0.0.0/8'
-    #   - '172.16.0.0/12'
-    #   - '192.168.0.0/16'
-    # - name: 'vpn'
-    #   networks:
-    #   - '10.9.0.0/16'
 
     rules: []
     # rules:
@@ -1728,19 +1727,19 @@ configMap:
         #         refresh_token: '1 hour and 30 minutes'
 
       claims_policies: {}
-        # claims_policies:
+      # claims_policies:
         # policy_name:
-        # id_token: []
-        # access_token: []
-        # id_token_audience_mode: 'specification'
-        # custom_claims:
-        # claim_name:
-      # attribute: 'attribute_name'
+          # id_token: []
+          # access_token: []
+          # id_token_audience_mode: 'specification'
+          # custom_claims:
+            # claim_name:
+              # attribute: 'attribute_name'
 
       scopes: {}
-        # scopes:
+      # scopes:
         # scope_name:
-      # claims: []
+          # claims: []
 
       ## Adjusts the PKCE enforcement. Options are always, public_clients_only, never.
       ## For security reasons it's recommended this option is public_clients_only or always, however always is not
@@ -1810,130 +1809,129 @@ configMap:
         allowed_origins_from_client_redirect_uris: false
 
       clients: []
-
-        # clients:
+      # clients:
         # -
-        ## The ID is the OpenID Connect ClientID which is used to link an application to a configuration.
-        # client_id: 'myapp'
+          ## The ID is the OpenID Connect ClientID which is used to link an application to a configuration.
+          # client_id: 'myapp'
 
-        ## The description to show to users when they end up on the consent screen. Defaults to the ID above.
-        # client_name: 'My Application'
+          ## The description to show to users when they end up on the consent screen. Defaults to the ID above.
+          # client_name: 'My Application'
 
-        ## The client secret is a shared secret between Authelia and the consumer of this client.
-        # client_secret:
-        # value: '$plaintext$apple123'
-        # path: '/secrets/oidc.client.myapp.value'
+          ## The client secret is a shared secret between Authelia and the consumer of this client.
+          # client_secret:
+            # value: '$plaintext$apple123'
+            # path: '/secrets/oidc.client.myapp.value'
 
-        ## Sector Identifiers are occasionally used to generate pairwise subject identifiers. In most cases this is not
-        ## necessary. Read the documentation for more information.
-        ## The subject identifier must be the host component of a URL, which is a domain name with an optional port.
-        # sector_identifier_uri: 'example.com'
+          ## Sector Identifiers are occasionally used to generate pairwise subject identifiers. In most cases this is not
+          ## necessary. Read the documentation for more information.
+          ## The subject identifier must be the host component of a URL, which is a domain name with an optional port.
+          # sector_identifier_uri: 'example.com'
 
-        ## Sets the client to public. This should typically not be set, please see the documentation for usage.
-        # public: false
+          ## Sets the client to public. This should typically not be set, please see the documentation for usage.
+          # public: false
 
-        ## Redirect URI's specifies a list of valid case-sensitive callbacks for this client.
-        # redirect_uris:
-        #   - 'https://oidc.example.com/oauth2/callback'
+          ## Redirect URI's specifies a list of valid case-sensitive callbacks for this client.
+          # redirect_uris:
+          #   - 'https://oidc.example.com/oauth2/callback'
 
-        ## Request URI's specifies a list of valid case-sensitive URIs this client can ask Authelia to obtain a
-        ## Request Object from.
-        # request_uris:
-        #   - 'https://oidc.example.com/oauth2/request-object/authelia.jwk'
+          ## Request URI's specifies a list of valid case-sensitive URIs this client can ask Authelia to obtain a
+          ## Request Object from.
+          # request_uris:
+          #   - 'https://oidc.example.com/oauth2/request-object/authelia.jwk'
 
-        ## Audience this client is allowed to request.
-        # audience: []
+          ## Audience this client is allowed to request.
+          # audience: []
 
-        ## Scopes this client is allowed to request.
-        # scopes:
-        #   - 'openid'
-        #   - 'profile'
-        #   - 'email'
-        #   - 'groups'
+          ## Scopes this client is allowed to request.
+          # scopes:
+          #   - 'openid'
+          #   - 'profile'
+          #   - 'email'
+          #   - 'groups'
 
-        ## Grant Types configures which grants this client can obtain.
-        ## It's not recommended to configure this unless you know what you're doing.
-        # grant_types:
-        #   - 'refresh_token'
-        #   - 'authorization_code'
+          ## Grant Types configures which grants this client can obtain.
+          ## It's not recommended to configure this unless you know what you're doing.
+          # grant_types:
+          #   - 'refresh_token'
+          #   - 'authorization_code'
 
-        ## Response Types configures which responses this client can be sent.
-        ## It's not recommended to configure this unless you know what you're doing.
-        # response_types:
-        #   - 'code'
+          ## Response Types configures which responses this client can be sent.
+          ## It's not recommended to configure this unless you know what you're doing.
+          # response_types:
+          #   - 'code'
 
-        ## Response Modes configures which response modes this client supports.
-        ## It's not recommended to configure this unless you know what you're doing.
-        # response_modes:
-        #   - 'form_post'
-        #   - 'query'
-        #   - 'fragment'
+          ## Response Modes configures which response modes this client supports.
+          ## It's not recommended to configure this unless you know what you're doing.
+          # response_modes:
+          #   - 'form_post'
+          #   - 'query'
+          #   - 'fragment'
 
-        ## The policy to require for this client; one_factor or two_factor.
-        # authorization_policy: 'two_factor'
+          ## The policy to require for this client; one_factor or two_factor.
+          # authorization_policy: 'two_factor'
 
-        # lifespan: ''
+          # lifespan: ''
 
-        # claims_policy: ''
+          # claims_policy: ''
 
-        # requested_audience_mode: ''
+          # requested_audience_mode: ''
 
-        ## The consent mode controls how consent is obtained.
-        # consent_mode: 'auto'
+          ## The consent mode controls how consent is obtained.
+          # consent_mode: 'auto'
 
-        ## This value controls the duration a consent on this client remains remembered when the consent mode is
-        ## configured as 'auto' or 'pre-configured'.
-        # pre_configured_consent_duration: '30 days'
+          ## This value controls the duration a consent on this client remains remembered when the consent mode is
+          ## configured as 'auto' or 'pre-configured'.
+          # pre_configured_consent_duration: '30 days'
 
-        # require_pushed_authorization_requests: false
-        # require_pkce: false
-        # pkce_challenge_method: 'S256'
+          # require_pushed_authorization_requests: false
+          # require_pkce: false
+          # pkce_challenge_method: 'S256'
 
-        # authorization_signed_response_key_id: ''
-        # authorization_signed_response_alg: 'none'
-        # authorization_encrypted_response_key_id: ''
-        # authorization_encrypted_response_alg: 'none'
-        # authorization_encrypted_response_enc: 'A128CBC-HS256'
+          # authorization_signed_response_key_id: ''
+          # authorization_signed_response_alg: 'none'
+          # authorization_encrypted_response_key_id: ''
+          # authorization_encrypted_response_alg: 'none'
+          # authorization_encrypted_response_enc: 'A128CBC-HS256'
 
-        # id_token_signed_response_key_id: ''
-        # id_token_signed_response_alg: 'RS256'
-        # id_token_encrypted_response_key_id: ''
-        # id_token_encrypted_response_alg: 'none'
-        # id_token_encrypted_response_enc: 'A128CBC-HS256'
+          # id_token_signed_response_key_id: ''
+          # id_token_signed_response_alg: 'RS256'
+          # id_token_encrypted_response_key_id: ''
+          # id_token_encrypted_response_alg: 'none'
+          # id_token_encrypted_response_enc: 'A128CBC-HS256'
 
-        # access_token_signed_response_key_id: ''
-        # access_token_signed_response_alg: 'none'
-        # access_token_encrypted_response_key_id: ''
-        # access_token_encrypted_response_alg: 'none'
-        # access_token_encrypted_response_enc: 'A128CBC-HS256'
+          # access_token_signed_response_key_id: ''
+          # access_token_signed_response_alg: 'none'
+          # access_token_encrypted_response_key_id: ''
+          # access_token_encrypted_response_alg: 'none'
+          # access_token_encrypted_response_enc: 'A128CBC-HS256'
 
-        # userinfo_signed_response_key_id: ''
-        # userinfo_signed_response_alg: 'none'
-        # userinfo_encrypted_response_key_id: ''
-        # userinfo_encrypted_response_alg: 'none'
-        # userinfo_encrypted_response_enc: 'A128CBC-HS256'
+          # userinfo_signed_response_key_id: ''
+          # userinfo_signed_response_alg: 'none'
+          # userinfo_encrypted_response_key_id: ''
+          # userinfo_encrypted_response_alg: 'none'
+          # userinfo_encrypted_response_enc: 'A128CBC-HS256'
 
-        # introspection_signed_response_key_id: ''
-        # introspection_signed_response_alg: 'none'
-        # introspection_encrypted_response_key_id: ''
-        # introspection_encrypted_response_alg: 'none'
-        # introspection_encrypted_response_enc: 'A128CBC-HS256'
+          # introspection_signed_response_key_id: ''
+          # introspection_signed_response_alg: 'none'
+          # introspection_encrypted_response_key_id: ''
+          # introspection_encrypted_response_alg: 'none'
+          # introspection_encrypted_response_enc: 'A128CBC-HS256'
 
-        # request_object_signing_alg: 'RS256'
-        # request_object_encryption_alg: ''
-        # request_object_encryption_enc: ''
+          # request_object_signing_alg: 'RS256'
+          # request_object_encryption_alg: ''
+          # request_object_encryption_enc: ''
 
-        # token_endpoint_auth_method: 'client_secret_basic'
-        # token_endpoint_auth_signing_alg: 'RS256'
+          # token_endpoint_auth_method: 'client_secret_basic'
+          # token_endpoint_auth_signing_alg: 'RS256'
 
-        # revocation_endpoint_auth_method: 'client_secret_basic'
-        # revocation_endpoint_auth_signing_alg: 'RS256'
+          # revocation_endpoint_auth_method: 'client_secret_basic'
+          # revocation_endpoint_auth_signing_alg: 'RS256'
 
-        # introspection_endpoint_auth_method: 'client_secret_basic'
-        # introspection_endpoint_auth_signing_alg: 'RS256'
+          # introspection_endpoint_auth_method: 'client_secret_basic'
+          # introspection_endpoint_auth_signing_alg: 'RS256'
 
-        # pushed_authorization_request_endpoint_auth_method: 'client_secret_basic'
-      # pushed_authorization_request_endpoint_auth_signing_alg: 'RS256'
+          # pushed_authorization_request_endpoint_auth_method: 'client_secret_basic'
+          # pushed_authorization_request_endpoint_auth_signing_alg: 'RS256'
 
 ##
 ## Authelia Secret Configuration.

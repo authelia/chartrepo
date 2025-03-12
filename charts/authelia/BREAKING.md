@@ -9,13 +9,31 @@ This chart will be the required version for 4.39.0 and it will have a couple min
 
 ### WebAuthn User Verification
 
-**_This change will silently ignore your configuration if you do not fix it._**
+**_This change will cause an error when doing a `helm install` for 4.39.0 if you do not fix it._**
 
-A lot of additional options have been added to the helm chart in 4.39.0. 
+A lot of additional options have been added to the helm chart in 4.39.0, this has resulted in a single option being
+reorganized.
+
+Before:
+
+```yaml
+configMap:
+  webauthn:
+    user_verification: 'preferred'
+```
+
+After:
+
+```yaml
+configMap:
+  webauthn:
+    selection_criteria:
+      user_verification: 'preferred'
+```
 
 ### Access Control Networks
 
-**_This change will cause an error on `helm install` if you do not fix it._**
+**_This change will cause an error when doing a `helm install` for 4.39.0 if you do not fix it._**
 
 The networks section in access control has been moved to a definitions section where the networks can be reused in
 multiple places. While automatic mapping is available without the chart, the chart will require this adjustment for

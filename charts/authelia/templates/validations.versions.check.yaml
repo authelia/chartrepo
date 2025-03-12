@@ -1,0 +1,19 @@
+{{/*
+    Validate 4.39.0 changes
+*/}}
+{{ if semverCompare ">=4.39.0" (include "authelia.version" $) }}
+
+{{/*
+    Validate access_control networks move.
+*/}}
+{{ if and .Values.configMap.access_control.networks (gt (len .Values.configMap.access_control.networks) 0) }}
+{{ fail "The value 'configMap.access_control.networks' is no longer supported and has been replaced with the 'configMap.definitions.network' for the chart when deployed with 4.39.0 and above" }}
+{{ end }}
+
+{{/*
+    Validate webauthn user_verification move.
+*/}}
+{{ if .Values.configMap.webauthn.user_verfication }}
+{{ fail "The value 'configMap.webauthn.user_verfication ' is no longer supported and has been replaced with the 'configMap.webauthn.selection_criteria.user_verfication' for the chart when deployed with 4.39.0 and above" }}
+{{ end }}
+{{ end }}
