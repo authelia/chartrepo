@@ -1414,6 +1414,9 @@ configMap:
   ## This mechanism prevents attackers from brute forcing the first factor. It bans the user if too many attempts are done
   ## in a short period of time.
   regulation:
+    modes:
+      - 'user'
+
     ## The number of failed login attempts before user is banned. Set it to 0 to disable regulation.
     max_retries: 3
 

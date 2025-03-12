@@ -361,7 +361,10 @@ data:
     {{- end }}
     regulation:
       {{- if semverCompare ">=4.39.0" (include "authelia.version" $) }}
-      mode: {{ .Values.configMap.regulation.mode | default ''}}
+      modes:
+      {{- range .Values.configMap.regulation.modes | default (list "user") }}
+      - {{ . | squote }}
+      {{- end }}
       {{- end }}
       max_retries: {{ .Values.configMap.regulation.max_retries | default 3 }}
       find_time: {{ include "authelia.func.dquote" (.Values.configMap.regulation.find_time | default "2 minutes") }}
