@@ -54,6 +54,25 @@ data:
           write: {{ include "authelia.func.dquote" (.Values.configMap.telemetry.metrics.timeouts.write | default "6 seconds") }}
           idle: {{ include "authelia.func.dquote" (.Values.configMap.telemetry.metrics.timeouts.idle | default "30 seconds") }}
         {{- end }}
+    {{- if and (semverCompare ">=4.39.0" (include "authelia.version" $)) .Values.configMap.definitions (or (and .Values.configMap.definitions.network (gt (len .Values.configMap.definitions.network) 0)) (and .Values.configMap.definitions.user_attributes (gt (len .Values.configMap.definitions.user_attributes) 0))) }}
+    definitions:
+      {{- if and .Values.configMap.definitions.network (gt (len .Values.configMap.definitions.network) 0) }}
+      network:
+      {{- range $network_name, $networks := .Values.configMap.definitions.network }}
+        {{ $network_name }}:
+        {{- range $networks }}
+        - {{ . | squote }}
+        {{- end }}
+      {{- end }}
+      {{- end }}
+      {{- if and .Values.configMap.definitions.user_attributes (gt (len .Values.configMap.definitions.user_attributes) 0) }}
+      user_attributes:
+        {{- range $attribute, $definition := .Values.configMap.definitions.user_attribute }}
+        {{ $attribute }}:
+          expression: {{ $definition.expression | default "" | squote }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
     identity_validation:
       elevated_session:
         code_lifespan: {{ include "authelia.func.dquote" (.Values.configMap.identity_validation.elevated_session.code_lifespan | default "5 minutes") }}
@@ -86,10 +105,46 @@ data:
       {{- end }}
     webauthn:
       disable: {{ .Values.configMap.webauthn.disable | default false }}
+      {{- if semverCompare ">=4.39.0" (include "authelia.version" $) }}
+      enable_passkey_login: {{ .Values.configMap.webauthn.enable_passkey_login | default false }}
+      {{- end }}
       display_name: {{ .Values.configMap.webauthn.display_name | default "Authelia" | squote }}
       attestation_conveyance_preference: {{ .Values.configMap.webauthn.attestation_conveyance_preference | default "indirect" | squote }}
-      user_verification: {{ .Values.configMap.webauthn.user_verification | default "preferred" | squote  }}
       timeout: {{ include "authelia.func.dquote" (.Values.configMap.webauthn.timeout | default "1 minute") }}
+      {{- if semverCompare ">=4.39.0" (include "authelia.version" $) }}
+      filtering:
+        permitted_aaguids: []
+        prohibited_aaguids: []
+        prohibit_backup_eligibility: {{ .Values.configMap.webauthn.filtering.prohibit_backup_eligibility | default false }}
+      selection_criteria:
+        attachment: {{ .Values.configMap.webauthn.selection_criteria.attachment | default "" | squote }}
+        discoverability: {{ .Values.configMap.webauthn.selection_criteria.discoverability | default "preferred" | squote }}
+        user_verification: {{ .Values.configMap.webauthn.selection_criteria.user_verification | default "preferred" | squote }}
+      metadata:
+        enabled: {{ .Values.configMap.webauthn.metadata.enabled | default false }}
+        validate_trust_anchor: {{ .Values.configMap.webauthn.metadata.validate_trust_anchor }}
+        validate_entry: {{ .Values.configMap.webauthn.metadata.validate_entry }}
+        validate_entry_permit_zero_aaguid: {{ .Values.configMap.webauthn.metadata.validate_entry_permit_zero_aaguid | default false }}
+        validate_status: {{ .Values.configMap.webauthn.metadata.validate_status }}
+        {{- if and .Values.configMap.webauthn.metadata.validate_status_permitted (gt (len .Values.configMap.webauthn.metadata.validate_status_permitted) 0) }}
+        validate_status_permitted:
+        {{- range .Values.configMap.webauthn.metadata.validate_status_permitted }}
+        - {{ . | squote }}
+        {{- end }}
+        {{- else }}
+        validate_status_permitted: []
+        {{- end }}
+        {{- if and .Values.configMap.webauthn.metadata.validate_status_prohibited (gt (len .Values.configMap.webauthn.metadata.validate_status_prohibited) 0) }}
+        validate_status_prohibited:
+        {{- range .Values.configMap.webauthn.metadata.validate_status_prohibited }}
+        - {{ . | squote }}
+        {{- end }}
+        {{- else }}
+        validate_status_prohibited: []
+        {{- end }}
+      {{- else }}
+      user_verification: {{ .Values.configMap.webauthn.user_verification | default "preferred" | squote  }}
+      {{- end }}
     {{- if include "authelia.configured.duo" . }}
     duo_api:
       hostname: {{ .Values.configMap.duo_api.hostname | squote }}
@@ -107,6 +162,10 @@ data:
       password_reset:
         disable: {{ include "authelia.config.password_reset.disable" $ }}
         custom_url: {{ $auth.password_reset.custom_url | default "" | squote }}
+      {{- if semverCompare ">=4.39.0" (include "authelia.version" $) }}
+      password_change:
+        disable: {{ $auth.password_change.disable | default false }}
+      {{- end }}
       {{- if $auth.file.enabled }}
       file:
         path: {{ $auth.file.path | squote }}
@@ -114,6 +173,14 @@ data:
         search:
           email: {{ $auth.file.search.email | default false }}
           case_insensitive: {{ $auth.file.search.case_insensitive | default false }}
+        {{- if and (semverCompare ">=4.39.0" (include "authelia.version" $)) $auth.file.extra_attributes (gt (len $auth.file.extra_attributes) 0) }}
+        extra_attributes:
+        {{- range $attribute, $attribute_config := $auth.file.extra_attributes }}
+          {{ $attribute }}:
+            multi_valued: {{ $attribute_config.multi_valued | default false }}
+            value_type: {{ $attribute_config.value_type | default "string" | squote }}
+        {{- end }}
+        {{- end }}
         password:
           algorithm: {{ $auth.file.password.algorithm | squote }}
           argon2:
@@ -152,6 +219,13 @@ data:
           skip_verify: {{ $auth.ldap.tls.skip_verify | default false }}
           minimum_version: {{ $auth.ldap.tls.minimum_version | default "TLS1.2" | squote }}
           maximum_version: {{ $auth.ldap.tls.maximum_version | default "TLS1.3" | squote }}
+        {{- if semverCompare ">=4.39.0" (include "authelia.version" $) }}
+        pooling:
+          enable: {{ $auth.ldap.pooling.enable | default false }}
+          count: {{ $auth.ldap.pooling.count | default 5 }}
+          retries: {{ $auth.ldap.pooling.retries | default 2 }}
+          timeout: {{ include "authelia.func.dquote" ($auth.ldap.pooling.timeout | default "10 seconds") }}
+        {{- end }}
         {{- if $auth.ldap.base_dn }}
         base_dn: {{ $auth.ldap.base_dn | squote }}
         {{- end }}
@@ -167,6 +241,7 @@ data:
         {{- if $auth.ldap.groups_filter }}
         groups_filter: {{ $auth.ldap.groups_filter | squote }}
         {{- end }}
+        group_search_mode: {{ $auth.ldap.group_search_mode | default "filter" | squote }}
         permit_referrals: {{ $auth.ldap.permit_referrals }}
         permit_unauthenticated_bind: {{ $auth.ldap.permit_unauthenticated_bind }}
         permit_feature_detection_failure: {{ $auth.ldap.permit_feature_detection_failure }}
@@ -175,9 +250,38 @@ data:
           distinguished_name: {{ $auth.ldap.attributes.distinguished_name | default "" | squote }}
           username: {{ $auth.ldap.attributes.username | default "" | squote }}
           display_name: {{ $auth.ldap.attributes.display_name | default "" | squote }}
+          {{- if semverCompare ">=4.39.0" (include "authelia.version" $) }}
+          family_name: {{ $auth.ldap.attributes.family_name | default "" | squote }}
+          given_name: {{ $auth.ldap.attributes.given_name | default "" | squote }}
+          middle_name: {{ $auth.ldap.attributes.middle_name | default "" | squote }}
+          nickname: {{ $auth.ldap.attributes.nickname | default "" | squote }}
+          gender: {{ $auth.ldap.attributes.gender | default "" | squote }}
+          birthdate: {{ $auth.ldap.attributes.birthdate | default "" | squote }}
+          website: {{ $auth.ldap.attributes.website | default "" | squote }}
+          profile: {{ $auth.ldap.attributes.profile | default "" | squote }}
+          picture: {{ $auth.ldap.attributes.picture | default "" | squote }}
+          zoneinfo: {{ $auth.ldap.attributes.zoneinfo | default "" | squote }}
+          locale: {{ $auth.ldap.attributes.locale | default "" | squote }}
+          phone_number: {{ $auth.ldap.attributes.phone_number | default "" | squote }}
+          phone_extension: {{ $auth.ldap.attributes.phone_extension | default "" | squote }}
+          street_address: {{ $auth.ldap.attributes.street_address | default "" | squote }}
+          locality: {{ $auth.ldap.attributes.locality | default "" | squote }}
+          region: {{ $auth.ldap.attributes.region | default "" | squote }}
+          postal_code: {{ $auth.ldap.attributes.postal_code | default "" | squote }}
+          country: {{ $auth.ldap.attributes.country | default "" | squote }}
+          {{- end }}
           mail:  {{ $auth.ldap.attributes.mail | default "" | squote }}
           member_of:  {{ $auth.ldap.attributes.member_of | default "" | squote }}
           group_name:  {{ $auth.ldap.attributes.group_name | default "" | squote }}
+          {{- if and (semverCompare ">=4.39.0" (include "authelia.version" $)) $auth.ldap.attributes.extra (gt (len $auth.ldap.attributes.extra) 0) }}
+          extra:
+          {{- range $attribute, $attribute_config := $auth.ldap.attributes.extra }}
+            {{ $attribute }}:
+              name: {{ $attribute_config.name | default $attribute | squote }}
+              multi_valued: {{ $attribute_config.multi_valued | default false }}
+              value_type: {{ $attribute_config.value_type | default "string" | squote }}
+          {{- end }}
+          {{- end }}
       {{- end }}
     {{- end }}
     password_policy:
@@ -256,6 +360,12 @@ data:
       {{- end }}
     {{- end }}
     regulation:
+      {{- if semverCompare ">=4.39.0" (include "authelia.version" $) }}
+      modes:
+      {{- range .Values.configMap.regulation.modes | default (list "user") }}
+      - {{ . | squote }}
+      {{- end }}
+      {{- end }}
       max_retries: {{ .Values.configMap.regulation.max_retries | default 3 }}
       find_time: {{ include "authelia.func.dquote" (.Values.configMap.regulation.find_time | default "2 minutes") }}
       ban_time: {{ include "authelia.func.dquote" (.Values.configMap.regulation.ban_time | default "2 minutes") }}
@@ -282,6 +392,25 @@ data:
       {{- if and ($storage.postgres) ($storage.postgres.enabled) }}
       postgres:
         address: {{ $storage.postgres.address | squote }}
+        {{- if semverCompare ">=4.39.0" (include "authelia.version" $) }}
+        {{- if and $storage.postgres (gt (len $storage.postgres.servers) 0) }}
+        servers:
+        {{- range $storage.postgres.servers }}
+        - address: {{ .address | squote }}
+          {{- if .tls }}
+          tls:
+            {{- if .tls.server_name }}
+            server_name: {{ .tls.server_name | squote }}
+            {{- end }}
+            skip_verify: {{ .tls.skip_verify | default false }}
+            minimum_version: {{ .tls.minimum_version| default "TLS1.2" | squote }}
+            maximum_version: {{ .tls.maximum_version | default "TLS1.3" | squote }}
+          {{- end }}
+        {{- end }}
+        {{- else }}
+        servers: []
+        {{- end }}
+        {{- end }}
         timeout: {{ include "authelia.func.dquote" ($storage.postgres.timeout | default "5 seconds") }}
         database: {{ $storage.postgres.database | default "authelia" | squote }}
         schema: {{ $storage.postgres.schema | default "public" | squote }}
@@ -394,6 +523,7 @@ data:
             rules:
             {{- range $policy.rules }}
             - policy: {{ .policy | default "deny" | squote }}
+              {{- if .subject }}
               subject:
               {{- if kindIs "string" .subject }}
                 - [{{ .subject | squote }}]
@@ -402,9 +532,60 @@ data:
                 - [{{ include "authelia.squote.join" . }}]
               {{- end }}
               {{- end }}
+              {{- end }}
+              {{- if and .networks (semverCompare ">=4.39.0" (include "authelia.version" $)) }}
+              networks:
+              {{- range .networks }}
+              - {{ . | squote }}
+              {{- end }}
+              {{- end }}
+              {{- end }}
+            {{- end }}
+        {{- end }}
+        {{- end }}
+        {{- if and .Values.configMap.identity_providers.oidc.claims_policies (gt (len .Values.configMap.identity_providers.oidc.claims_policies) 0) (semverCompare ">=4.39.0" (include "authelia.version" $)) }}
+        claims_policies:
+        {{- range $policy_name, $policy := .Values.configMap.identity_providers.oidc.claims_policies }}
+          {{ $policy_name }}:
+            {{- if $policy.id_token }}
+            id_token:
+            {{- range $policy.id_token }}
+            - {{ . | squote }}
+            {{- end }}
+            {{- end }}
+            {{- if $policy.access_token }}
+            access_token:
+            {{- range $policy.access_token }}
+            - {{ . | squote }}
+            {{- end }}
+            {{- end }}
+            id_token_audience_mode: {{ $policy.id_token_audience_mode | default "specification" | squote }}
+            {{- if $policy.custom_claims }}
+            custom_claims:
+            {{- range $claim_name, $claim := $policy.custom_claims }}
+              {{ $claim_name }}:
+                {{- if $claim }}
+                attribute: {{ $claim.attribute | default $claim_name | squote }}
+                {{- else }}
+                attribute: {{ $claim_name | squote }}
+                {{- end }}
             {{- end }}
             {{- end }}
         {{- end }}
+        {{- end }}
+        {{- if and .Values.configMap.identity_providers.oidc.scopes (gt (len .Values.configMap.identity_providers.oidc.scopes) 0) (semverCompare ">=4.39.0" (include "authelia.version" $)) }}
+        scopes:
+          {{- range $scope_name, $scope := .Values.configMap.identity_providers.oidc.scopes }}
+          {{ $scope_name }}:
+            {{- if le (len $scope.claims) 0 }}
+            claims: []
+            {{- else }}
+            claims:
+            {{- range $scope.claims }}
+            - {{ . | squote }}
+            {{- end }}
+            {{- end }}
+          {{- end }}
         {{- end }}
         jwks:
         {{- range $key := .Values.configMap.identity_providers.oidc.jwks }}

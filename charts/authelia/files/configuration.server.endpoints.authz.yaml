@@ -10,5 +10,8 @@
       - {{ . | squote }}
       {{- end }}
       {{- end }}
+      {{- if semverCompare ">=4.39.0" (include "authelia.version" $) }}
+      scheme_basic_cache_lifespan: {{ $strategy.scheme_basic_cache_lifespan | default 0 }}
+      {{- end }}
   {{- end }}
   {{- end }}

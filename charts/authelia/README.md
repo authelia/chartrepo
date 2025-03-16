@@ -12,6 +12,7 @@ Breaking changes with this chart should be expected during the v0.x.x versions a
 breaking changes within minor releases i.e. from v0.1.0 to v0.2.0. The following versions have notable breaking changes
 which users should be aware of:
 
+- [v0.10.0](https://github.com/authelia/chartrepo/blob/master/charts/authelia/BREAKING.md#0100)
 - [v0.9.0](https://github.com/authelia/chartrepo/blob/master/charts/authelia/BREAKING.md#090)
 - [v0.5.0](https://github.com/authelia/chartrepo/blob/master/charts/authelia/BREAKING.md#050)
 

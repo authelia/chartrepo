@@ -1,6 +1,6 @@
 access_control:
   default_policy: {{ include "authelia.accessControl.defaultPolicy" . | trim | squote }}
-  {{- if .Values.configMap.access_control.networks }}
+  {{- if and .Values.configMap.access_control.networks (semverCompare "<4.39.0" (include "authelia.version" $)) }}
   networks:
   {{- range $network := .Values.configMap.access_control.networks }}
     - name: {{ $network.name }}
