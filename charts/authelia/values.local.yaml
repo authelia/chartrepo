@@ -1633,7 +1633,7 @@ configMap:
       ## more information.
       disable_starttls: false
 
-      username: 'test'
+      username: ''
       password:
         ## Disables this secret and leaves configuring it entirely up to you.
         disabled: false
