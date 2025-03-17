@@ -67,35 +67,35 @@
   authorization_signed_response_key_id: {{ .Client.authorization_signed_response_key_id | default "" | squote }}
   {{- if semverCompare ">=4.39.0" (include "authelia.version" $) }}
   authorization_encrypted_response_key_id: {{ .Client.authorization_encrypted_response_key_id | default "" | squote }}
-  authorization_encrypted_response_alg: {{ .Client.authorization_encrypted_response_alg | default "none" | squote }}
+  authorization_encrypted_response_alg: {{ .Client.authorization_encrypted_response_alg | default "" | squote }}
   authorization_encrypted_response_enc: {{ .Client.authorization_encrypted_response_enc | default "" | squote }}
   {{- end }}
   id_token_signed_response_alg: {{ .Client.id_token_signed_response_alg | default "RS256" | squote }}
   id_token_signed_response_key_id: {{ .Client.id_token_signed_response_key_id | default "" | squote }}
   {{- if semverCompare ">=4.39.0" (include "authelia.version" $) }}
   id_token_encrypted_response_key_id: {{ .Client.id_token_encrypted_response_key_id | default "" | squote }}
-  id_token_encrypted_response_alg: {{ .Client.id_token_encrypted_response_alg | default "none" | squote }}
+  id_token_encrypted_response_alg: {{ .Client.id_token_encrypted_response_alg | default "" | squote }}
   id_token_encrypted_response_enc: {{ .Client.id_token_encrypted_response_enc | default "" | squote }}
   {{- end }}
   access_token_signed_response_alg: {{ .Client.access_token_signed_response_alg | default "none" | squote }}
   access_token_signed_response_key_id: {{ .Client.access_token_signed_response_key_id | default "" | squote }}
   {{- if semverCompare ">=4.39.0" (include "authelia.version" $) }}
   access_token_encrypted_response_key_id: {{ .Client.access_token_encrypted_response_key_id | default "" | squote }}
-  access_token_encrypted_response_alg: {{ .Client.access_token_encrypted_response_alg | default "none" | squote }}
+  access_token_encrypted_response_alg: {{ .Client.access_token_encrypted_response_alg | default "" | squote }}
   access_token_encrypted_response_enc: {{ .Client.access_token_encrypted_response_enc | default "" | squote }}
   {{- end }}
   userinfo_signed_response_alg: {{ .Client.userinfo_signed_response_alg | default "none" | squote }}
   userinfo_signed_response_key_id: {{ .Client.userinfo_signed_response_key_id | default "" | squote }}
   {{- if semverCompare ">=4.39.0" (include "authelia.version" $) }}
   userinfo_encrypted_response_key_id: {{ .Client.userinfo_encrypted_response_key_id | default "" | squote }}
-  userinfo_encrypted_response_alg: {{ .Client.userinfo_encrypted_response_alg | default "none" | squote }}
+  userinfo_encrypted_response_alg: {{ .Client.userinfo_encrypted_response_alg | default "" | squote }}
   userinfo_encrypted_response_enc: {{ .Client.userinfo_encrypted_response_enc | default "" | squote }}
   {{- end }}
   introspection_signed_response_alg: {{ .Client.introspection_signed_response_alg | default "none" | squote }}
   introspection_signed_response_key_id: {{ .Client.introspection_signed_response_key_id | default "" | squote }}
   {{- if semverCompare ">=4.39.0" (include "authelia.version" $) }}
   introspection_encrypted_response_key_id: {{ .Client.introspection_encrypted_response_key_id | default "" | squote }}
-  introspection_encrypted_response_alg: {{ .Client.introspection_encrypted_response_alg | default "none" | squote }}
+  introspection_encrypted_response_alg: {{ .Client.introspection_encrypted_response_alg | default "" | squote }}
   introspection_encrypted_response_enc: {{ .Client.introspection_encrypted_response_enc | default "" | squote }}
   introspection_endpoint_auth_method: {{ .Client.introspection_endpoint_auth_method | default "client_secret_basic" | squote }}
   introspection_endpoint_auth_signing_alg: {{ .Client.introspection_endpoint_auth_signing_alg | default "RS256" | squote }}
