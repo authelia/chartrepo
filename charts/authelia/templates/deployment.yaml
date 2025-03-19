@@ -238,6 +238,10 @@ spec:
           {{- with $mountPropagation := .Values.persistence.mountPropagation }}
           mountPropagation: {{ $mountPropagation }}
           {{- end }}
+        {{- else if and (eq (len .Values.pod.extraVolumes) 0) (eq (len .Values.pod.extraVolumeMounts) 0) }}
+        - mountPath: /config
+          name: authelia
+          readOnly: false
         {{- end }}
         {{- if (include "authelia.enabled.configMap" .) }}
         - mountPath: /configuration.yaml
@@ -282,6 +286,10 @@ spec:
       - name: authelia
         persistentVolumeClaim:
           claimName: {{ default (include "authelia.name" .) .Values.persistence.existingClaim }}
+      {{- else if and (eq (len .Values.pod.extraVolumes) 0) (eq (len .Values.pod.extraVolumeMounts) 0) }}
+      - name: authelia
+        emptyDir:
+          sizeLimit: 100Mi
       {{- end }}
       {{- if (include "authelia.enabled.configMap" .) }}
       - name: config
