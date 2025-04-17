@@ -21,7 +21,7 @@ data:
       address: {{ printf "tcp://0.0.0.0:%d%s" ((.Values.configMap.server.port | default 9091) | int) (include "authelia.path" .) | squote }}
       asset_path: {{ .Values.configMap.server.asset_path | default "" | squote }}
       headers:
-        csp_template: {{ .Values.configMap.server.headers.csp_template | default "" | squote }}
+        csp_template: {{ .Values.configMap.server.headers.csp_template | default "" | quote }}
       buffers:
         read: {{ .Values.configMap.server.buffers.read | default 4096 }}
         write: {{ .Values.configMap.server.buffers.write | default 4096 }}
