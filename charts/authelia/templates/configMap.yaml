@@ -67,7 +67,7 @@ data:
       {{- end }}
       {{- if and .Values.configMap.definitions.user_attributes (gt (len .Values.configMap.definitions.user_attributes) 0) }}
       user_attributes:
-        {{- range $attribute, $definition := .Values.configMap.definitions.user_attribute }}
+        {{- range $attribute, $definition := .Values.configMap.definitions.user_attributes }}
         {{ $attribute }}:
           expression: {{ $definition.expression | default "" | squote }}
         {{- end }}
