@@ -6,7 +6,7 @@
 {{/*
     Validate access_control networks move.
 */}}
-{{ if and (hasKey .Values.configMap.access_control "networks") (ne .Values.configMap.access_control.networks nil) (gt (len .Values.configMap.access_control.networks) 0) }}
+{{ if and (hasKey .Values.configMap.access_control "networks") (ne .Values.configMap.access_control.networks nil) }}
 {{ fail "The value 'configMap.access_control.networks' is no longer supported and has been replaced with the 'configMap.definitions.network' for the chart when deployed with 4.39.0 and above" }}
 {{ end }}
 
