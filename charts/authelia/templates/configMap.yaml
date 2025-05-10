@@ -191,6 +191,9 @@ data:
             key_length: {{ $auth.file.password.argon2.key_length | default 32 }}
             salt_length: {{ $auth.file.password.argon2.salt_length | default 16 }}
           scrypt:
+            {{- if semverCompare ">=4.39.2" (include "authelia.version" $) }}
+            variant: {{ $auth.file.password.scrypt.variant | default "scrypt" | squote }}
+            {{- end }}
             iterations: {{ $auth.file.password.scrypt.iterations | default 16 }}
             block_size: {{ $auth.file.password.scrypt.block_size | default 8 }}
             parallelism: {{ $auth.file.password.scrypt.parallelism | default 1 }}
@@ -455,53 +458,60 @@ data:
       oidc:
         lifespans:
           access_token: {{ include "authelia.func.dquote" (.Values.configMap.identity_providers.oidc.lifespans.access_token | default "1 hour") }}
-          authorize_code: {{ include "authelia.func.dquote" (.Values.configMap.identity_providers.oidc.lifespans.authorize_code | default "1 minute") }}
-          id_token: {{ include "authelia.func.dquote" (.Values.configMap.identity_providers.oidc.lifespans.id_token | default "1 hour") }}
           refresh_token: {{ include "authelia.func.dquote" (.Values.configMap.identity_providers.oidc.lifespans.refresh_token | default "1 hour and 30 minutes") }}
+          id_token: {{ include "authelia.func.dquote" (.Values.configMap.identity_providers.oidc.lifespans.id_token | default "1 hour") }}
+          authorize_code: {{ include "authelia.func.dquote" (.Values.configMap.identity_providers.oidc.lifespans.authorize_code | default "1 minute") }}
+          {{- if semverCompare ">=4.39.2" (include "authelia.version" $) }}
+          device_code: {{ include "authelia.func.dquote" (.Values.configMap.identity_providers.oidc.lifespans.device_code | default "10 minutes") }}
+          {{- end }}
         {{- if .Values.configMap.identity_providers.oidc.lifespans.custom }}
           custom:
           {{- range $key, $lifespan := .Values.configMap.identity_providers.oidc.lifespans.custom }}
             {{ $key }}:
               access_token: {{ include "authelia.func.dquote" ($lifespan.access_token | default $.Values.configMap.identity_providers.oidc.lifespans.access_token | default "1 hour") }}
-              authorize_code: {{ include "authelia.func.dquote" ($lifespan.authorize_code | default $.Values.configMap.identity_providers.oidc.lifespans.authorize_code | default "1 minute") }}
-              id_token: {{ include "authelia.func.dquote" ($lifespan.id_token | default $.Values.configMap.identity_providers.oidc.lifespans.id_token | default "1 hour") }}
               refresh_token: {{ include "authelia.func.dquote" ($lifespan.refresh_token | default $.Values.configMap.identity_providers.oidc.lifespans.refresh_token | default "1 hour and 30 minutes") }}
+              id_token: {{ include "authelia.func.dquote" ($lifespan.id_token | default $.Values.configMap.identity_providers.oidc.lifespans.id_token | default "1 hour") }}
+              authorize_code: {{ include "authelia.func.dquote" ($lifespan.authorize_code | default $.Values.configMap.identity_providers.oidc.lifespans.authorize_code | default "1 minute") }}
+              {{- if semverCompare ">=4.39.2" (include "authelia.version" $) }}
+              device_code: {{ include "authelia.func.dquote" ($lifespan.device_code | default "10 minutes") }}
+              {{- end }}
             {{- if $lifespan.grants }}
               grants:
               {{- if $lifespan.grants.authorize_code }}
                 authorize_code:
                   access_token: {{ include "authelia.func.dquote" ($lifespan.grants.authorize_code.access_token | default $lifespan.access_token | default $.Values.configMap.identity_providers.oidc.lifespans.access_token | default "1 hour") }}
-                  authorize_code: {{ include "authelia.func.dquote" ($lifespan.grants.authorize_code.authorize_code | default $lifespan.authorize_code | default $.Values.configMap.identity_providers.oidc.lifespans.authorize_code | default "1 minute") }}
-                  id_token: {{ include "authelia.func.dquote" ($lifespan.grants.authorize_code.id_token | default $lifespan.id_token | default $.Values.configMap.identity_providers.oidc.lifespans.id_token | default "1 hour") }}
                   refresh_token: {{ include "authelia.func.dquote" ($lifespan.grants.authorize_code.refresh_token | default $lifespan.refresh_token | default $.Values.configMap.identity_providers.oidc.lifespans.refresh_token | default "1 hour and 30 minutes") }}
+                  id_token: {{ include "authelia.func.dquote" ($lifespan.grants.authorize_code.id_token | default $lifespan.id_token | default $.Values.configMap.identity_providers.oidc.lifespans.id_token | default "1 hour") }}
+              {{- end }}
+              {{- if and (semverCompare ">=4.39.2" (include "authelia.version" $)) $lifespan.grants.device_code }}
+                device_code:
+                  access_token: {{ include "authelia.func.dquote" ($lifespan.grants.device_code.access_token | default $lifespan.access_token | default $.Values.configMap.identity_providers.oidc.lifespans.access_token | default "1 hour") }}
+                  refresh_token: {{ include "authelia.func.dquote" ($lifespan.grants.device_code.refresh_token | default $lifespan.refresh_token | default $.Values.configMap.identity_providers.oidc.lifespans.refresh_token | default "1 hour and 30 minutes") }}
+                  id_token: {{ include "authelia.func.dquote" ($lifespan.grants.device_code.id_token | default $lifespan.id_token | default $.Values.configMap.identity_providers.oidc.lifespans.id_token | default "1 hour") }}
               {{- end }}
               {{- if $lifespan.grants.implicit }}
                 implicit:
                   access_token: {{ include "authelia.func.dquote" ($lifespan.grants.implicit.access_token | default $lifespan.access_token | default $.Values.configMap.identity_providers.oidc.lifespans.access_token | default "1 hour") }}
-                  authorize_code: {{ include "authelia.func.dquote" ($lifespan.grants.implicit.authorize_code | default $lifespan.authorize_code | default $.Values.configMap.identity_providers.oidc.lifespans.authorize_code | default "1 minute") }}
-                  id_token: {{ include "authelia.func.dquote" ($lifespan.grants.implicit.id_token | default $lifespan.id_token | default $.Values.configMap.identity_providers.oidc.lifespans.id_token | default "1 hour") }}
                   refresh_token: {{ include "authelia.func.dquote" ($lifespan.grants.implicit.refresh_token | default $lifespan.refresh_token | default $.Values.configMap.identity_providers.oidc.lifespans.refresh_token | default "1 hour and 30 minutes") }}
+                  id_token: {{ include "authelia.func.dquote" ($lifespan.grants.implicit.id_token | default $lifespan.id_token | default $.Values.configMap.identity_providers.oidc.lifespans.id_token | default "1 hour") }}
               {{- end }}
               {{- if $lifespan.grants.client_credentials }}
                 client_credentials:
                   access_token: {{ include "authelia.func.dquote" ($lifespan.grants.client_credentials.access_token | default $lifespan.access_token | default $.Values.configMap.identity_providers.oidc.lifespans.access_token | default "1 hour") }}
-                  authorize_code: {{ include "authelia.func.dquote" ($lifespan.grants.client_credentials.authorize_code | default $lifespan.authorize_code | default $.Values.configMap.identity_providers.oidc.lifespans.authorize_code | default "1 minute") }}
-                  id_token: {{ include "authelia.func.dquote" ($lifespan.grants.client_credentials.id_token | default $lifespan.id_token | default $.Values.configMap.identity_providers.oidc.lifespans.id_token | default "1 hour") }}
                   refresh_token: {{ include "authelia.func.dquote" ($lifespan.grants.client_credentials.refresh_token | default $lifespan.refresh_token | default $.Values.configMap.identity_providers.oidc.lifespans.refresh_token | default "1 hour and 30 minutes") }}
+                  id_token: {{ include "authelia.func.dquote" ($lifespan.grants.client_credentials.id_token | default $lifespan.id_token | default $.Values.configMap.identity_providers.oidc.lifespans.id_token | default "1 hour") }}
               {{- end }}
               {{- if $lifespan.grants.refresh_token }}
                 refresh_token:
                   access_token: {{ include "authelia.func.dquote" ($lifespan.grants.refresh_token.access_token | default $lifespan.access_token | default $.Values.configMap.identity_providers.oidc.lifespans.access_token | default "1 hour") }}
-                  authorize_code: {{ include "authelia.func.dquote" ($lifespan.grants.refresh_token.authorize_code | default $lifespan.authorize_code | default $.Values.configMap.identity_providers.oidc.lifespans.authorize_code | default "1 minute") }}
-                  id_token: {{ include "authelia.func.dquote" ($lifespan.grants.refresh_token.id_token | default $lifespan.id_token | default $.Values.configMap.identity_providers.oidc.lifespans.id_token | default "1 hour") }}
                   refresh_token: {{ include "authelia.func.dquote" ($lifespan.grants.refresh_token.refresh_token | default $lifespan.refresh_token | default $.Values.configMap.identity_providers.oidc.lifespans.refresh_token | default "1 hour and 30 minutes") }}
+                  id_token: {{ include "authelia.func.dquote" ($lifespan.grants.refresh_token.id_token | default $lifespan.id_token | default $.Values.configMap.identity_providers.oidc.lifespans.id_token | default "1 hour") }}
               {{- end }}
               {{- if $lifespan.grants.jwt_bearer }}
                 jwt_bearer:
                   access_token: {{ include "authelia.func.dquote" ($lifespan.grants.jwt_bearer.access_token | default $lifespan.access_token | default $.Values.configMap.identity_providers.oidc.lifespans.access_token | default "1 hour") }}
-                  authorize_code: {{ include "authelia.func.dquote" ($lifespan.grants.jwt_bearer.authorize_code | default $lifespan.authorize_code | default $.Values.configMap.identity_providers.oidc.lifespans.authorize_code | default "1 minute") }}
-                  id_token: {{ include "authelia.func.dquote" ($lifespan.grants.jwt_bearer.id_token | default $lifespan.id_token | default $.Values.configMap.identity_providers.oidc.lifespans.id_token | default "1 hour") }}
                   refresh_token: {{ include "authelia.func.dquote" ($lifespan.grants.jwt_bearer.refresh_token | default $lifespan.refresh_token | default $.Values.configMap.identity_providers.oidc.lifespans.refresh_token | default "1 hour and 30 minutes") }}
+                  id_token: {{ include "authelia.func.dquote" ($lifespan.grants.jwt_bearer.id_token | default $lifespan.id_token | default $.Values.configMap.identity_providers.oidc.lifespans.id_token | default "1 hour") }}
               {{- end }}
             {{- end }}
           {{- end }}

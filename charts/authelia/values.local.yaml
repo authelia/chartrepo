@@ -1083,6 +1083,7 @@ configMap:
           key_length: 32
           salt_length: 16
         scrypt:
+          variant: 'scrypt'
           iterations: 16
           block_size: 8
           parallelism: 1
@@ -1693,41 +1694,42 @@ configMap:
 
       lifespans:
         access_token: '1 hour'
-        authorize_code: '1 minute'
-        id_token: '1 hour'
         refresh_token: '1 hour and 30 minutes'
+        id_token: '1 hour'
+        authorize_code: '1 minute'
+        device_code: '10 minutes'
         # custom:
         #   lifespan_name:
         #     access_token: '1 hour'
-        #     authorize_code: '1 minute'
-        #     id_token: '1 hour'
         #     refresh_token: '1 hour and 30 minutes'
+        #     id_token: '1 hour'
+        #     authorize_code: '1 minute'
+        #     device_code: '10 minutes'
         #     grants:
         #       authorize_code:
         #         access_token: '1 hour'
-        #         authorize_code: '1 minute'
-        #         id_token: '1 hour'
         #         refresh_token: '1 hour and 30 minutes'
+        #         id_token: '1 hour'
+        #       device_code:
+        #         access_token: '1 hour'
+        #         refresh_token: '1 hour and 30 minutes'
+        #         id_token: '1 hour'
         #       implicit:
         #         access_token: '1 hour'
-        #         authorize_code: '1 minute'
-        #         id_token: '1 hour'
         #         refresh_token: '1 hour and 30 minutes'
+        #         id_token: '1 hour'
         #       client_credentials:
         #         access_token: '1 hour'
-        #         authorize_code: '1 minute'
-        #         id_token: '1 hour'
         #         refresh_token: '1 hour and 30 minutes'
+        #         id_token: '1 hour'
         #       refresh_token:
         #         access_token: '1 hour'
-        #         authorize_code: '1 minute'
-        #         id_token: '1 hour'
         #         refresh_token: '1 hour and 30 minutes'
+        #         id_token: '1 hour'
         #       jwt_bearer:
         #         access_token: '1 hour'
-        #         authorize_code: '1 minute'
-        #         id_token: '1 hour'
         #         refresh_token: '1 hour and 30 minutes'
+        #         id_token: '1 hour'
 
       claims_policies: {}
       # claims_policies:
