@@ -246,7 +246,11 @@ pod:
 
   replicas: 1
   revisionHistoryLimit: 5
+  minReadySeconds: 0
   priorityClassName: ''
+  hostPID: false
+  hostIPC: false
+  hostNetwork: false
 
   strategy:
     type: 'RollingUpdate'
