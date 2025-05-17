@@ -4,6 +4,7 @@ apiVersion: {{ include "capabilities.apiVersion.kind" (merge (dict "Kind" $kind)
 kind: {{ $kind }}
 metadata:
   name: {{ include "authelia.name" . }}
+  namespace: {{ .Release.Namespace }}
   labels: {{ include "authelia.labels" (merge (dict "Labels" .Values.pod.labels) .) | nindent 4 }}
   {{- with $annotations := include "authelia.annotations" (merge (dict "Annotations" .Values.pod.annotations) .) }}
   annotations: {{ $annotations | nindent 4 }}
@@ -11,12 +12,16 @@ metadata:
 spec:
   selector:
     matchLabels: {{ include "authelia.matchLabels" . | nindent 6 }}
-  revisionHistoryLimit: {{ default 5 .Values.pod.revisionHistoryLimit }}
+  {{- with .Values.pod.revisionHistoryLimit }}
+  revisionHistoryLimit: {{ . }}
+  {{- end }}
   {{- if or (eq "StatefulSet" $kind) (eq "Deployment" $kind) }}
   replicas: {{ include "authelia.replicas" . }}
   {{- end }}
   {{- if or (eq "Deployment" $kind) (eq "DaemonSet" $kind) }}
-  minReadySeconds: {{ default 0 .Values.pod.minReadySeconds }}
+  {{- with .Values.pod.minReadySeconds }}
+  minReadySeconds: {{ . }}
+  {{- end }}
   {{- end }}
   {{- if (eq "Deployment" $kind)}}
   {{- $type := include "authelia.deploymentStrategy" . }}
@@ -60,9 +65,15 @@ spec:
       {{- with $tolerations := .Values.pod.tolerations }}
       tolerations: {{ toYaml $tolerations | nindent 8 }}
       {{- end }}
-      hostNetwork: false
-      hostPID: false
-      hostIPC: false
+      {{- with .Values.pod.hostNetwork }}
+      hostNetwork: {{ . }}
+      {{- end }}
+      {{- with .Values.pod.hostPID }}
+      hostPID: {{ . }}
+      {{- end }}
+      {{- with .Values.pod.hostIPC }}
+      hostIPC: {{ . }}
+      {{- end }}
       {{- if (include "authelia.pod.priorityClassName.enabled" .) }}
       priorityClassName: {{ .Values.pod.priorityClassName }}
       {{- end }}
@@ -88,7 +99,9 @@ spec:
       containers:
       - name: authelia
         image: {{ include "authelia.image" . }}
-        imagePullPolicy: {{ default "IfNotPresent" .Values.image.pullPolicy }}
+        {{- with .Values.image.pullPolicy }}
+        imagePullPolicy: {{ . }}
+        {{- end }}
         {{- $command := list "authelia" }}
         {{- if .Values.pod.command }}
           {{- if kindIs "slice" .Values.pod.command }}{{ $command = .Values.pod.command }}
@@ -111,8 +124,8 @@ spec:
         - {{ . | squote }}
         {{- end }}
         {{- end }}
-        {{- with $resources :=.Values.pod.resources }}
-        resources: {{ toYaml $resources | nindent 10 }}
+        {{- with .Values.pod.resources }}
+        resources: {{ toYaml . | nindent 10 }}
         {{- end }}
         env:
         - name: AUTHELIA_SERVER_DISABLE_HEALTHCHECK
@@ -228,7 +241,9 @@ spec:
         {{- if (include "authelia.enabled.persistentVolumeClaim" .) }}
         - mountPath: /config
           name: authelia
-          readOnly: {{ .Values.persistence.readOnly }}
+          {{- with .Values.persistence.readOnly }}
+          readOnly: {{ . }}
+          {{- end }}
           {{- with $subPath := .Values.persistence.subPath }}
           subPath: {{ $subPath }}
           {{- end }}
@@ -241,7 +256,6 @@ spec:
         {{- else if and (eq (len .Values.pod.extraVolumes) 0) (eq (len .Values.pod.extraVolumeMounts) 0) }}
         - mountPath: /config
           name: authelia
-          readOnly: false
         {{- end }}
         {{- if (include "authelia.enabled.configMap" .) }}
         - mountPath: /configuration.yaml
