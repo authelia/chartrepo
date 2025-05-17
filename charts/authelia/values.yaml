@@ -241,7 +241,11 @@ pod:
 
   replicas: 1
   revisionHistoryLimit: 5
+  minReadySeconds: 0
   priorityClassName: ''
+  hostPID: false
+  hostIPC: false
+  hostNetwork: false
 
   strategy:
     type: 'RollingUpdate'
@@ -325,12 +329,10 @@ pod:
   # - name: 'TZ'
   #   value: 'Australia/Melbourne'
 
-  resources:
-    limits: {}
+  resources: {}
     # limits:
     #   cpu: '4.00'
     #   memory: '125Mi'
-    requests: {}
     # requests:
     #   cpu: '0.25'
     #   memory: '50Mi'
@@ -343,14 +345,12 @@ pod:
         scheme: 'HTTP'
 
     liveness:
-      initialDelaySeconds: 0
       periodSeconds: 30
       timeoutSeconds: 5
       successThreshold: 1
       failureThreshold: 5
 
     readiness:
-      initialDelaySeconds: 0
       periodSeconds: 5
       timeoutSeconds: 5
       successThreshold: 1
