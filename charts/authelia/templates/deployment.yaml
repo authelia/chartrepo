@@ -44,6 +44,7 @@ spec:
     metadata:
       labels: {{ include "authelia.labels" (merge (dict "Labels" .Values.pod.labels) .) | nindent 8 }}
       annotations:
+        {{- if not .Values.pod.disableRestartOnChanges }}
         {{- if (include "authelia.generate.configMap" .) }}
         authelia.com/checksum-config: {{ include (print $.Template.BasePath "/configMap.yaml") . | sha256sum }}
         {{- end }}
@@ -52,6 +53,7 @@ spec:
         {{- end }}
         {{ if and (include "authelia.enabled.secret" .) (not .Values.secret.excludeVolumeAndMounts) -}}
         authelia.com/checksum-secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        {{- end }}
         {{- end }}
         {{- with $annotations := include "authelia.annotations" (merge (dict "Annotations" .Values.pod.annotations) .) }}
         {{- $annotations | nindent 8 }}

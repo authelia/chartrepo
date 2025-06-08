@@ -114,6 +114,14 @@ ingress:
 
     # hostNameOverride: 'example.com'
 
+  gatewayAPI:
+    enabled: false
+    hostsOverride: []
+    parentRefs: []
+    #  - name: example-lb
+    #    sectionName: example-lb-sn
+    #    port: 80
+
   traefikCRD:
     enabled: false
 
@@ -218,6 +226,10 @@ ingress:
 pod:
   # Must be Deployment, DaemonSet, or StatefulSet.
   kind: 'DaemonSet'
+
+  ## Normally when a change is detected via helm install to something that only indirectly affects the pod, the pod
+  ## will restart. This setting allows disabling this behaviour.
+  disableRestartOnChanges: false
 
   annotations: {}
   # annotations:

@@ -156,7 +156,18 @@ Returns true if generation of an Ingress is enabled.
 */}}
 {{- define "authelia.enabled.ingress.ingress" -}}
     {{- if .Values.ingress.enabled -}}
-        {{- if or (not (include "authelia.enabled.ingress.traefik" .)) (.Values.ingress.traefikCRD.disableIngressRoute) -}}
+        {{- if and (not .Values.ingress.gatewayAPI.enabled) (or (not (include "authelia.enabled.ingress.traefik" .)) (.Values.ingress.traefikCRD.disableIngressRoute)) -}}
+            {{- true -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+
+{{/*
+Returns true if generation of an Ingress is enabled.
+*/}}
+{{- define "authelia.enabled.gatewayAPI" -}}
+    {{- if .Values.ingress.enabled -}}
+        {{- if and .Values.ingress.gatewayAPI.enabled (or (not (include "authelia.enabled.ingress.traefik" .)) (.Values.ingress.traefikCRD.disableIngressRoute)) -}}
             {{- true -}}
         {{- end -}}
     {{- end -}}
@@ -166,7 +177,7 @@ Returns true if generation of an Ingress is enabled.
 Returns true if generation of an IngressRoute is enabled.
 */}}
 {{- define "authelia.enabled.ingress.ingressRoute" -}}
-    {{- if and (include "authelia.enabled.ingress.traefik" .) (not .Values.ingress.traefikCRD.disableIngressRoute) -}}
+    {{- if and (not .Values.ingress.gatewayAPI.enabled) (include "authelia.enabled.ingress.traefik" .) (not .Values.ingress.traefikCRD.disableIngressRoute) -}}
         {{- true -}}
     {{- end -}}
 {{- end -}}
