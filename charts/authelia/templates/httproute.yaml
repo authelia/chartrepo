@@ -1,0 +1,42 @@
+{{- if (include "authelia.enabled.gatewayAPI" .) }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ include "authelia.name" . }}
+  labels: {{ include "authelia.labels" (merge (dict "Labels" .Values.ingress.labels) .) | nindent 4 }}
+  {{- with $annotations := include "authelia.annotations" (merge (dict "Annotations" .Values.ingress.annotations) .) }}
+  annotations: {{ $annotations | nindent 4 }}
+  {{- end }}
+spec:
+  {{- with $refs := .Values.ingress.gatewayAPI.parentRefs }}
+  parentRefs:
+    {{- range $ref := $refs }}
+    - name: {{ $ref.name | squote }}
+      {{- if $ref.sectionName }}
+      sectionName: {{ $ref.sectionName }}
+      {{- end }}
+      {{- if $ref.port }}
+      port: {{ $ref.port }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+  hostnames:
+    {{- if .Values.ingress.gatewayAPI.hostsOverride }}
+    {{- range $host := .Values.ingress.gatewayAPI.hostsOverride }}
+    - {{ . | squote }}
+    {{- end }}
+    {{- else }}
+    {{- range $cookie := .Values.configMap.session.cookies }}
+    - {{ (include "authelia.ingress.host" (merge (dict "SubDomain" $cookie.subdomain "Domain" $cookie.domain) $)) | squote }}
+    {{- end }}
+    {{- end }}
+  rules:
+    - matches:
+        - path:
+            type: 'Prefix'
+            value: {{ (include "authelia.path" $) | squote }}
+      backendRefs:
+        - name: {{ include "authelia.name" $ }}
+          port: {{ include "authelia.service.port" $ }}
+{{- end -}}

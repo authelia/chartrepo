@@ -7,3 +7,11 @@
 {{ end }}
 
 {{- end }}
+
+{{ if and .Values.ingress.gatewayAPI.enabled .Values.ingress.traefikCRD.enabled }}
+{{ fail "The GatewayAPI and TraefikCRD can't be enabled at the same time" }}
+{{- end }}
+
+{{- if and .Values.ingress.enabled (eq (len .Values.configMap.session.cookies) 0) }}
+{{ fail "An Ingress can't be configured without configured session cookies" }}
+{{- end }}
