@@ -3,7 +3,8 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "authelia.name" . }}
+  name: {{ template "authelia.name" . }}
+  namespace: {{ template "authelia.namespace" . }}
   labels: {{ include "authelia.labels" (merge (dict "Labels" .Values.configMap.telemetry.metrics.serviceMonitor.labels) .) | nindent 4 }}
   {{- with $annotations := include "authelia.annotations" (merge (dict "Annotations" .Values.configMap.telemetry.metrics.serviceMonitor.annotations) .) }}
   annotations: {{ $annotations | nindent 4 }}
@@ -14,7 +15,7 @@ spec:
       port: metrics
   namespaceSelector:
     matchNames:
-      - {{ .Release.Namespace }}
+      - {{ template "authelia.namespace" . }}
   selector:
     matchLabels: {{ include "authelia.labels" (merge (dict "Labels" .Values.service.labels) .) | nindent 6 }}
 ...

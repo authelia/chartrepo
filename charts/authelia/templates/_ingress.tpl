@@ -22,7 +22,7 @@
 */}}
 {{- define "authelia.ingress.traefikCRD.middleware.forwardAuth.address" -}}
     {{- $scheme := "http" -}}
-    {{- $host := printf "%s.%s" (include "authelia.name" .) .Release.Namespace -}}
+    {{- $host := printf "%s.%s" (include "authelia.name" .) (include "authelia.namespace" .) -}}
     {{- if .Namespace -}}
         {{- $host = printf "%s.%s" $host .Namespace -}}
     {{- end -}}
@@ -84,7 +84,7 @@ Special Annotations Generator for the Ingress kind.
   {{- $annotations = set $annotations "traefik.ingress.kubernetes.io/router.entryPoints" (.Values.ingress.traefikCRD.entryPoints | join ",") -}}
   {{- end -}}
   {{- if not (hasKey $annotations "traefik.ingress.kubernetes.io/router.middlewares") }}
-  {{- $annotations = set $annotations "traefik.ingress.kubernetes.io/router.middlewares" (printf "%s-%s@kubernetescrd" .Release.Namespace (include "authelia.ingress.traefikCRD.middleware.chainIngress.name" .)) -}}
+  {{- $annotations = set $annotations "traefik.ingress.kubernetes.io/router.middlewares" (printf "%s-%s@kubernetescrd" (include "authelia.namespace" .) (include "authelia.ingress.traefikCRD.middleware.chainIngress.name" .)) -}}
   {{- end }}
   {{- end -}}
   {{ include "authelia.annotations" (merge (dict "Annotations" $annotations) .) }}

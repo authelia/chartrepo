@@ -3,7 +3,8 @@
 apiVersion: {{ include "capabilities.apiVersion.kind" (merge (dict "Kind" $kind) .) }}
 kind: {{ $kind }}
 metadata:
-  name: {{ include "authelia.name" . }}
+  name: {{ template "authelia.name" . }}
+  namespace: {{ template "authelia.namespace" . }}
   labels: {{ include "authelia.labels" (merge (dict "Labels" .Values.pod.labels) .) | nindent 4 }}
   {{- with $annotations := include "authelia.annotations" (merge (dict "Annotations" .Values.pod.annotations) .) }}
   annotations: {{ $annotations | nindent 4 }}

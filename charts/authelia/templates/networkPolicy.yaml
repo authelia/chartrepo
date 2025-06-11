@@ -3,7 +3,8 @@
 apiVersion: {{ include "capabilities.apiVersion.networkPolicy" . }}
 kind: NetworkPolicy
 metadata:
-  name: {{ include "authelia.name" . }}
+  name: {{ template "authelia.name" . }}
+  namespace: {{ template "authelia.namespace" . }}
   labels: {{ include "authelia.labels" (merge (dict "Labels" .Values.networkPolicy.labels) .) | nindent 4 }}
   {{- with $annotations := include "authelia.annotations" (merge (dict "Annotations" .Values.networkPolicy.annotations) .) }}
   annotations: {{ $annotations | nindent 4 }}

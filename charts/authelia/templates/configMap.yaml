@@ -3,7 +3,8 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "authelia.name" . }}
+  name: {{ template "authelia.name" . }}
+  namespace: {{ template "authelia.namespace" . }}
   labels: {{ include "authelia.labels" (merge (dict "Labels" .Values.configMap.labels) .) | nindent 4 }}
   {{- with $annotations := include "authelia.annotations" (merge (dict "Annotations" .Values.configMap.annotations) .) }}
   annotations: {{ $annotations | nindent 4 }}

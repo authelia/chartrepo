@@ -4,7 +4,8 @@
 apiVersion: {{ $ver }}
 kind: Ingress
 metadata:
-  name: {{ include "authelia.name" . }}
+  name: {{ template "authelia.name" . }}
+  namespace: {{ template "authelia.namespace" . }}
   labels: {{ include "authelia.labels" (merge (dict "Labels" .Values.ingress.labels) .) | nindent 4 }}
   {{- with $annotations := (include "authelia.ingress.annotations" .) }}
   annotations: {{ $annotations | nindent 4 }}

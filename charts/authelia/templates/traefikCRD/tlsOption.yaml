@@ -4,7 +4,7 @@ apiVersion: {{ include "capabilities.apiVersion.traefik.TLSOption" . }}
 kind: TLSOption
 metadata:
   name: {{ .Values.ingress.traefikCRD.tls.options.nameOverride | default (include "authelia.name" .) }}
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ template "authelia.namespace" . }}
   labels: {{ include "authelia.labels" (merge (dict "Labels" .Values.ingress.labels) .) | nindent 4 }}
   {{- with $annotations := include "authelia.annotations" (merge (dict "Annotations" .Values.ingress.annotations) .) }}
   annotations: {{ $annotations | nindent 4 }}

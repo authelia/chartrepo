@@ -1,0 +1,104 @@
+{{- if (include "authelia.pod.autoscaling" .) }}
+{{- $kind := (include "authelia.pod.kind" .) }}
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ template "authelia.name" . }}
+  namespace: {{ template "authelia.namespace" . }}
+  labels: {{ include "authelia.labels" (merge (dict "Labels" .Values.pod.autoscaling.labels) .) | nindent 4 }}
+  {{- with $annotations := include "authelia.annotations" (merge (dict "Annotations" .Values.pod.autoscaling.annotations) .) }}
+  annotations: {{ $annotations | nindent 4 }}
+  {{- end }}
+spec:
+  behavior:
+    {{- with .Values.pod.autoscaling.behaviour.scaleDown }}
+    scaleDown:
+      {{- with .policies }}
+      policies:
+        {{- range . }}
+        - type: {{ required "Horizontal Pod Autoscaler Policies require a type" .type }}
+          value: {{ required "Horizontal Pod Autoscaler Policies require a value" .value }}
+          periodSeconds: {{ .periodSeconds | default 60 }}
+      {{- end }}
+      {{- end }}
+      {{- if .selectPolicy }}
+      selectPolicy: {{ .selectPolicy }}
+      {{- end }}
+      {{- if .stabilizationWindowSeconds }}
+      stabilizationWindowSeconds: {{ .stabilizationWindowSeconds }}
+      {{- end }}
+      {{- if .tolerance }}
+      tolerance: {{ .tolerance }}
+      {{- end }}
+    {{- end }}
+    {{- with .Values.pod.autoscaling.behaviour.scaleUp }}
+    scaleUp:
+      {{- with .policies }}
+      policies:
+        {{- range . }}
+        - type: {{ required "Horizontal Pod Autoscaler Policies require a type" .type }}
+          value: {{ required "Horizontal Pod Autoscaler Policies require a value" .value }}
+          periodSeconds: {{ .periodSeconds | default 60 }}
+      {{- end }}
+      {{- end }}
+      {{- if .selectPolicy }}
+      selectPolicy: {{ .selectPolicy }}
+      {{- end }}
+      {{- if .stabilizationWindowSeconds }}
+      stabilizationWindowSeconds: {{ .stabilizationWindowSeconds }}
+      {{- end }}
+      {{- if .tolerance }}
+      tolerance: {{ .tolerance }}
+      {{- end }}
+    {{- end }}
+  maxReplicas: {{ .Values.pod.autoscaling.maxReplicas | default (add 1 (include "authelia.pod.autoscaling.minReplicas" .)) }}
+  minReplicas: {{ template "authelia.pod.autoscaling.minReplicas" . }}
+  scaleTargetRef:
+    apiVersion: {{ template "capabilities.apiVersion.kind" (merge (dict "Kind" $kind) .) }}
+    kind: {{ template "authelia.pod.kind" . }}
+    name: {{ template "authelia.name" . }}
+  {{- with .Values.pod.autoscaling.metrics }}
+  metrics:
+    {{- range . }}
+    - type: {{ required "Metrics must have a type" .type }}
+      {{- if and .containerResource (eq .type "ContainerResource") }}
+      containerResource:
+        container: {{ .containerResource.container }}
+        name: {{ .containerResource.name }}
+        target:
+          type: {{ .containerResource.target.type }}
+      {{- end }}
+      {{- if and .external (eq .type "External") }}
+      external:
+        metric:
+          name: {{ .containerResource.external.metric.name }}
+        target:
+          type: {{ .containerResource.external.target.type }}
+      {{- end }}
+      {{- if and .object (eq .type "Object") }}
+      object:
+        describedObject:
+          kind: {{ .containerResource.object.describedObject.kind }}
+          name: {{ .containerResource.object.describedObject.name }}
+        metric:
+          name: {{ .containerResource.object.metric.name }}
+        target:
+          type: {{ .containerResource.object.target.name }}
+      {{- end }}
+      {{- if and .pods (eq .type "Pods") }}
+      pods:
+        metric:
+          name: {{ .containerResource.pods.metric.name }}
+        target:
+          type: {{ .containerResource.pods.target.type }}
+      {{- end }}
+      {{- if and .resource (eq .type "Resource") }}
+      resource:
+        name: {{ .containerResource.resource.name }}
+        target:
+          type: {{ .containerResource.resource.target.type }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+{{- end }}

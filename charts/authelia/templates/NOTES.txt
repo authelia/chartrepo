@@ -17,7 +17,7 @@ metadata:
   name: example
   namespace: example-namespace
   annotations:
-    nginx.ingress.kubernetes.io/auth-url: http://{{ (printf "%s.%s" (include "authelia.name" $) $.Release.Namespace) }}.svc.{{ include "kube.DNSDomain" $ }}/api/authz/{{ $name }}
+    nginx.ingress.kubernetes.io/auth-url: http://{{ (printf "%s.%s" (include "authelia.name" $) (include "authelia.namespace" $)) }}.svc.{{ include "kube.DNSDomain" $ }}/api/authz/{{ $name }}
     nginx.ingress.kubernetes.io/auth-response-headers: Remote-User,Remote-Name,Remote-Groups,Remote-Email
     {{- else if eq $endpoint.implementation "ExtAuthz" }}
 
@@ -25,7 +25,7 @@ The following examples demonstrate configuration of the ExtAuthz implementation 
 
     At this stage no examples exist. Feel free to contribute.
 
-    The URL for this implementation is: http://{{ (printf "%s.%s" (include "authelia.name" $) $.Release.Namespace) }}.svc.{{ include "kube.DNSDomain" $ }}/api/authz/{{ $name }}
+    The URL for this implementation is: http://{{ (printf "%s.%s" (include "authelia.name" $) (include "authelia.namespace" $)) }}.svc.{{ include "kube.DNSDomain" $ }}/api/authz/{{ $name }}
     {{- else if eq $endpoint.implementation "ForwardAuth" }}
 
 The following examples demonstrate configuration of the ForwardAuth implementation for ingresses like Traefik using a IngressRoute CRD manifest:
@@ -40,7 +40,7 @@ spec:
   - kind: Rule
     middlewares:
     - name: {{ (include "authelia.ingress.traefikCRD.middleware.chainAuth.name" (merge (dict "Name" $name) $)) }}
-      namespace: {{ $.Release.Namespace }}
+      namespace: {{ template "authelia.namespace" $ }}
 
 The following examples demonstrate configuration of the ForwardAuth implementation for ingresses like Traefik using a standard Ingress manifest:
 
@@ -50,6 +50,6 @@ metadata:
   name: example
   namespace: example-namespace
   annotations:
-    traefik.ingress.kubernetes.io/router.middlewares: {{ printf "%s-%s@kubernetescrd" $.Release.Namespace (include "authelia.ingress.traefikCRD.middleware.chainAuth.name" (merge (dict "Name" $name) $)) }}
+    traefik.ingress.kubernetes.io/router.middlewares: {{ printf "%s-%s@kubernetescrd" (include "authelia.namespace" $) (include "authelia.ingress.traefikCRD.middleware.chainAuth.name" (merge (dict "Name" $name) $)) }}
     {{- end }}
 {{- end }}
