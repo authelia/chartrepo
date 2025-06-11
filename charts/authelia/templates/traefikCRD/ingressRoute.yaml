@@ -3,7 +3,8 @@
 apiVersion: {{ include "capabilities.apiVersion.traefik.IngressRoute" . }}
 kind: IngressRoute
 metadata:
-  name: {{ include "authelia.name" . }}
+  name: {{ template "authelia.name" . }}
+  namespace: {{ template "authelia.namespace" . }}
   labels: {{ include "authelia.labels" (merge (dict "Labels" .Values.ingress.labels) .) | nindent 4 }}
   {{- with $annotations := include "authelia.annotations" (merge (dict "Annotations" .Values.ingress.annotations) .) }}
   annotations: {{ $annotations | nindent 4 }}
@@ -23,12 +24,12 @@ spec:
     priority: {{ $.Values.ingress.traefikCRD.priority | default 10 }}
     middlewares:
       - name: {{ include "authelia.ingress.traefikCRD.middleware.chainIngress.name" $ }}
-        namespace: {{ $.Release.Namespace }}
+        namespace: {{ template "authelia.namespace" $ }}
     services:
       - kind: Service
         name: {{ include "authelia.name" $ }}
         port: {{ include "authelia.service.port" $ }}
-        namespace: {{ $.Release.Namespace }}
+        namespace: {{ template "authelia.namespace" $ }}
         passHostHeader: true
         strategy: {{ $.Values.ingress.traefikCRD.strategy | default "RoundRobin" }}
         scheme: {{ $.Values.ingress.traefikCRD.scheme | default "http" }}
@@ -51,12 +52,12 @@ spec:
     priority: {{ $.Values.ingress.traefikCRD.priority | default 10 }}
     middlewares:
       - name: {{ include "authelia.ingress.traefikCRD.middleware.chainIngress.name" $ }}
-        namespace: {{ $.Release.Namespace }}
+        namespace: {{ template "authelia.namespace" $ }}
     services:
       - kind: Service
         name: {{ include "authelia.name" $ }}
         port: {{ include "authelia.service.port" $ }}
-        namespace: {{ $.Release.Namespace }}
+        namespace: {{ template "authelia.namespace" $ }}
         passHostHeader: true
         strategy: {{ $.Values.ingress.traefikCRD.strategy | default "RoundRobin" }}
         scheme: {{ $.Values.ingress.traefikCRD.scheme | default "http" }}
@@ -113,7 +114,7 @@ spec:
     {{- if (include "authelia.existing.ingress.traefik.tlsOption" $) }}
       {{- $name = $.Values.ingress.traefikCRD.tls.existingOptions.name }}
       {{- if $.Values.ingress.traefikCRD.tls.existingOptions.namespace }}{{ $namespace = $.Values.ingress.traefikCRD.tls.existingOptions.namespace }}{{ end }}
-    {{- else }}{{ $namespace = $.Release.Namespace }}{{ end }}
+    {{- else }}{{ $namespace = (include "authelia.namespace" $) }}{{ end }}
       name: {{ $name }}
       {{- if $namespace }}
       namespace: {{ $namespace }}

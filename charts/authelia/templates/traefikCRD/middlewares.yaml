@@ -6,6 +6,7 @@ apiVersion: {{ include "capabilities.apiVersion.traefik.Middleware" $ }}
 kind: Middleware
 metadata:
   name: {{ include "authelia.ingress.traefikCRD.middleware.forwardAuth.name" (merge (dict "Name" $name) $) }}
+  namespace: {{ template "authelia.namespace" . }}
   labels: {{ include "authelia.labels" $ | nindent 4 }}
   {{- with $annotations := include "authelia.annotations" $ }}
   annotations: {{ $annotations | nindent 4 }}
@@ -25,6 +26,7 @@ apiVersion: {{ include "capabilities.apiVersion.traefik.Middleware" $ }}
 kind: Middleware
 metadata:
   name: {{ include "authelia.ingress.traefikCRD.middleware.chainAuth.name" (merge (dict "Name" $name) $) }}
+  namespace: {{ template "authelia.namespace" . }}
   labels: {{ include "authelia.labels" $ | nindent 4 }}
   {{- with $annotations := include "authelia.annotations" $ }}
   annotations: {{ $annotations | nindent 4 }}
@@ -39,7 +41,7 @@ spec:
         {{- end }}
     {{- end }}
       - name: {{ include "authelia.ingress.traefikCRD.middleware.forwardAuth.name" (merge (dict "Name" $name) $) }}
-        namespace: {{ $.Release.Namespace }}
+        namespace: {{ template "authelia.namespace" $ }}
     {{- range $middleware := $.Values.ingress.traefikCRD.middlewares.chains.auth.after }}
       - name: {{ $middleware.name }}
         {{- if $middleware.namespace }}
@@ -53,6 +55,7 @@ apiVersion: {{ include "capabilities.apiVersion.traefik.Middleware" . }}
 kind: Middleware
 metadata:
   name: {{ printf "headers-%s" (include "authelia.name" .) }}
+  namespace: {{ template "authelia.namespace" . }}
   labels: {{ include "authelia.labels" . | nindent 4 }}
   {{- with $annotations := include "authelia.annotations" . }}
   annotations: {{ $annotations | nindent 4 }}
@@ -69,6 +72,7 @@ apiVersion: {{ include "capabilities.apiVersion.traefik.Middleware" . }}
 kind: Middleware
 metadata:
   name: {{ include "authelia.ingress.traefikCRD.middleware.chainIngress.name" . }}
+  namespace: {{ template "authelia.namespace" . }}
   labels:
   {{- include "authelia.labels" . | nindent 4 }}
   {{- with $annotations := (include "authelia.annotations" .) }}
@@ -85,7 +89,7 @@ spec:
         {{- end }}
     {{- end }}
       - name: {{ printf "headers-%s" (include "authelia.name" .) }}
-        namespace: {{ .Release.Namespace }}
+        namespace: {{ template "authelia.namespace" . }}
     {{- range $middleware := .Values.ingress.traefikCRD.middlewares.chains.ingressRoute.after }}
       - name: {{ $middleware.name }}
         {{- if $middleware.namespace }}

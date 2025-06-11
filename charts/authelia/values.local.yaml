@@ -260,6 +260,60 @@ pod:
   revisionHistoryLimit: 5
   priorityClassName: ''
 
+  autoscaling:
+    enabled: false
+    annotations: {}
+    labels: {}
+
+    behaviour:
+      scaleDown:
+        policies:
+          - type: ~
+            value: ~
+            periodSeconds: 60
+        selectPolicy: ~
+        stabilizationWindowSeconds: ~
+        tolerance: ~
+      scaleUp:
+        policies:
+          - type: ~
+            value: ~
+            periodSeconds: 60
+        selectPolicy: ~
+        stabilizationWindowSeconds: ~
+        tolerance: ~
+    maxReplicas: ~
+    minReplicas: ~
+  metrics:
+    - type: ~
+      containerResource:
+        container: ~
+        name: ~
+        target:
+          type: ~
+      external:
+        metric:
+          name: ~
+        target:
+          type: ~
+      object:
+        describedObject:
+          kind: ~
+          name: ~
+        metric:
+          name: ~
+        target:
+          type: ~
+      pods:
+        metric:
+          name: ~
+        target:
+          type: ~
+      resource:
+        name: ~
+        target:
+          type: ~
+
   strategy:
     type: 'RollingUpdate'
     # rollingUpdate:

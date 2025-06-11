@@ -28,6 +28,14 @@ Return the name for this install
     {{- end -}}
 {{- end -}}
 
+{{- define "authelia.namespace" -}}
+    {{- if .NamespaceOverride }}
+        {{ .NamespaceOverride }}
+    {{- else }}
+        {{ .Release.Namespace }}
+    {{- end }}
+{{- end -}}
+
 {{/*
 Return the name for this chart
 */}}
@@ -218,6 +226,17 @@ Returns the kind for the pod.
             {{- "DaemonSet" -}}
         {{- end -}}
     {{- end -}}
+{{- end -}}
+
+{{- define "authelia.pod.autoscaling" -}}
+    {{- $kind := (include "authelia.pod.kind" .) }}
+    {{- if and .Values.pod.autoscaling.enabled (or (eq $kind "Deployment") (eq $kind "StatefulSet")) }}
+        {{- true -}}
+    {{- end }}
+{{- end -}}
+
+{{- define "authelia.pod.autoscaling.minReplicas" -}}
+    {{ .Values.pod.autoscaling.minReplicas | default .Values.pod.replicas | default 1 }}
 {{- end -}}
 
 {{/*
