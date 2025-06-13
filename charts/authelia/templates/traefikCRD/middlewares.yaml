@@ -6,7 +6,7 @@ apiVersion: {{ include "capabilities.apiVersion.traefik.Middleware" $ }}
 kind: Middleware
 metadata:
   name: {{ include "authelia.ingress.traefikCRD.middleware.forwardAuth.name" (merge (dict "Name" $name) $) }}
-  namespace: {{ template "authelia.namespace" . }}
+  namespace: {{ template "authelia.namespace" $ }}
   labels: {{ include "authelia.labels" $ | nindent 4 }}
   {{- with $annotations := include "authelia.annotations" $ }}
   annotations: {{ $annotations | nindent 4 }}
@@ -26,7 +26,7 @@ apiVersion: {{ include "capabilities.apiVersion.traefik.Middleware" $ }}
 kind: Middleware
 metadata:
   name: {{ include "authelia.ingress.traefikCRD.middleware.chainAuth.name" (merge (dict "Name" $name) $) }}
-  namespace: {{ template "authelia.namespace" . }}
+  namespace: {{ template "authelia.namespace" $ }}
   labels: {{ include "authelia.labels" $ | nindent 4 }}
   {{- with $annotations := include "authelia.annotations" $ }}
   annotations: {{ $annotations | nindent 4 }}

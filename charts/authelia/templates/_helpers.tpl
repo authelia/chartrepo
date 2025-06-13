@@ -30,9 +30,9 @@ Return the name for this install
 
 {{- define "authelia.namespace" -}}
     {{- if .NamespaceOverride }}
-        {{ .NamespaceOverride }}
+        {{- .NamespaceOverride }}
     {{- else }}
-        {{ .Release.Namespace }}
+        {{- .Release.Namespace }}
     {{- end }}
 {{- end -}}
 
