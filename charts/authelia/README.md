@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.10.14](https://img.shields.io/badge/Version-0.10.14-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.4](https://img.shields.io/badge/AppVersion-4.39.4-informational?style=flat-square)
+![Version: 0.10.15](https://img.shields.io/badge/Version-0.10.15-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.4](https://img.shields.io/badge/AppVersion-4.39.4-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -23,6 +23,35 @@ which users should be aware of:
    in the next step.
 3. Install the chart with `helm install authelia authelia/authelia` and optionally set your values with `--values values.yaml` or
    via `--set [parameter]=[value]`.
+
+### Expected Minimum Configuration
+
+It is expected you will configure at least the following sections/values:
+
+- The configMap section (the configMap follows a majority of the configuration options
+  in [the documentation](https://www.authelia.com/configuration))
+  - The `configMap.session.cookies` section contains the domain configuration for the Authelia portal and session
+    cookies:
+    - The full Authelia URL will be in the format of `https://[<subdomain>.]<domain>[/<subpath>]` (part within the square braces is
+      omitted if not configured) i.e. `domain` of `example.com` and `subdomain` empty yields `https://example.com` and
+      `subdomain` of `auth` yields `https://auth.example.com`. The `subpath` is also optionally included.
+    - The `domain` option is required.
+    - The `subdomain` option is generally required.
+    - The `path` option is generally **_NOT_** required or recommended. Every domain that has this option configured
+      MUST have the same value i.e. you can have one blank and one configured but all those that are configured must be
+      the same, and in addition if configured at all the `configMap.server.path` option must have the same value.
+
+  - The following sections require one of the sub-options enabled:
+    - The `configMap.storage` section:
+      - `postgres`
+      - `mysql`
+      - `local` (stateful)
+    - The `configMap.notifier` section:
+      - `smtp`
+      - `filesystem` (stateful)
+    - The `configMap.authentication_backend` section:
+      - `ldap`
+      - `file` (stateful)
 
 ## Maintainers
 
