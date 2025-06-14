@@ -4699,7 +4699,7 @@ false
 			<td>service.clusterIP</td>
 			<td>string</td>
 			<td><pre lang="json">
-"10.0.0.1"
+null
 </pre>
 </td>
 			<td>Cluster IP for the Authelia service manifest.</td>

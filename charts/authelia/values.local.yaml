@@ -98,8 +98,8 @@ service:
   # -- Node Port for the Authelia service manifest.
   nodePort: 30091
 
-  # -- Cluster IP for the Authelia service manifest.
-  clusterIP: '10.0.0.1'
+  # -- (string) Cluster IP for the Authelia service manifest.
+  clusterIP: ~
 
 ingress:
 
