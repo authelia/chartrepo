@@ -19,7 +19,7 @@ spec:
   {{- end }}
   resources:
     requests:
-      storage: {{ default "100Mi" .Values.persistence.size }}
+      storage: {{ .Values.persistence.size | default "100Mi" }}
   {{- if .Values.persistence.selector }}
   selector:
   {{- if .Values.persistence.selector.matchLabels }}

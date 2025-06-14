@@ -70,6 +70,6 @@ spec:
         - {{ (include "authelia.ingress.host" (merge (dict "SubDomain" $cookie.subdomain "Domain" $cookie.domain) $)) | squote }}
         {{- end }}
         {{- end }}
-      secretName: {{ default "authelia-tls" .Values.ingress.tls.secret }}
+      secretName: {{ .Values.ingress.tls.secret | default "authelia-tls" }}
   {{- end }}
 {{- end -}}

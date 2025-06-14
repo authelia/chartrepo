@@ -273,21 +273,21 @@ Returns the rollingUpdate spec
         {{ $result = dict "partition" 0 }}
         {{- if .Values.pod.strategy -}}
             {{- if .Values.pod.strategy.rollingUpdate -}}
-                {{- $_ := set $result "partition" (default 0 .Values.pod.strategy.rollingUpdate.partition) -}}
+                {{- $_ := set $result "partition" (.Values.pod.strategy.rollingUpdate.partition | default 0) -}}
             {{- end -}}
         {{- end -}}
     {{- else if eq "DaemonSet" (include "authelia.pod.kind" .) -}}
         {{ $result = dict "maxUnavailable" "25%" }}
         {{- if .Values.pod.strategy -}}
             {{- if .Values.pod.strategy.rollingUpdate -}}
-                {{- $_ := set $result "maxUnavailable" (default "25%" .Values.pod.strategy.rollingUpdate.maxUnavailable) -}}
+                {{- $_ := set $result "maxUnavailable" (.Values.pod.strategy.rollingUpdate.maxUnavailable | default "25%") -}}
             {{- end -}}
         {{- end -}}
     {{- else -}}
         {{ $result = dict "maxSurge" "25%" "maxUnavailable" "25%" }}
         {{- if .Values.pod.strategy -}}
             {{- if .Values.pod.strategy.rollingUpdate -}}
-                {{- $_ := set $result "maxSurge" (default "25%" .Values.pod.strategy.rollingUpdate.maxSurge) "maxUnavailable" (default "25%" .Values.pod.strategy.rollingUpdate.maxUnavailable) -}}
+                {{- $_ := set $result "maxSurge" (.Values.pod.strategy.rollingUpdate.maxSurge | default "25%") "maxUnavailable" (default "25%" .Values.pod.strategy.rollingUpdate.maxUnavailable) -}}
             {{- end -}}
         {{- end -}}
     {{- end -}}

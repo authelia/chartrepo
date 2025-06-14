@@ -12,12 +12,12 @@ metadata:
 spec:
   selector:
     matchLabels: {{ include "authelia.matchLabels" . | nindent 6 }}
-  revisionHistoryLimit: {{ default 5 .Values.pod.revisionHistoryLimit }}
+  revisionHistoryLimit: {{ .Values.pod.revisionHistoryLimit | default 5 }}
   {{- if or (eq "StatefulSet" $kind) (eq "Deployment" $kind) }}
-  replicas: {{ include "authelia.replicas" . }}
+  replicas: {{ template "authelia.replicas" . }}
   {{- end }}
   {{- if or (eq "Deployment" $kind) (eq "DaemonSet" $kind) }}
-  minReadySeconds: {{ default 0 .Values.pod.minReadySeconds }}
+  minReadySeconds: {{ .Values.pod.minReadySeconds | default 0 }}
   {{- end }}
   {{- if (eq "Deployment" $kind)}}
   {{- $type := include "authelia.deploymentStrategy" . }}
@@ -37,7 +37,7 @@ spec:
   {{- end }}
   {{- if eq "StatefulSet" $kind }}
   podManagementPolicy: {{ include "authelia.podManagementPolicy" . }}
-  serviceName: {{ default (include "authelia.name" .) .Values.pod.serviceName }}
+  serviceName: {{ .Values.pod.serviceName | default (include "authelia.name" .) }}
   {{- end }}
   {{- if eq "Deployment" $kind }}
   {{- end }}
@@ -82,7 +82,7 @@ spec:
       securityContext: {{ toYaml $context | nindent 8 }}
       {{- end }}
       {{- if .Values.rbac.enabled }}
-      serviceAccountName: {{ default (include "authelia.name" .) .Values.rbac.serviceAccountName }}
+      serviceAccountName: {{ .Values.rbac.serviceAccountName | default (include "authelia.name" .) }}
       {{- end }}
       enableServiceLinks: {{ .Values.pod.enableServiceLinks | default false }}
       {{- if .Values.pod.initContainers }}
@@ -90,8 +90,8 @@ spec:
       {{- end }}
       containers:
       - name: authelia
-        image: {{ include "authelia.image" . }}
-        imagePullPolicy: {{ default "IfNotPresent" .Values.image.pullPolicy }}
+        image: {{ template "authelia.image" . }}
+        imagePullPolicy: {{ .Values.image.pullPolicy | default "IfNotPresent" }}
         {{- $command := list "authelia" }}
         {{- if .Values.pod.command }}
           {{- if kindIs "slice" .Values.pod.command }}{{ $command = .Values.pod.command }}
@@ -288,7 +288,7 @@ spec:
       {{- if (include "authelia.enabled.persistentVolumeClaim" .) }}
       - name: authelia
         persistentVolumeClaim:
-          claimName: {{ default (include "authelia.name" .) .Values.persistence.existingClaim }}
+          claimName: {{ .Values.persistence.existingClaim | default (include "authelia.name" .) }}
       {{- else if and (eq (len .Values.pod.extraVolumes) 0) (eq (len .Values.pod.extraVolumeMounts) 0) }}
       - name: authelia
         emptyDir:
@@ -297,9 +297,9 @@ spec:
       {{- if (include "authelia.enabled.configMap" .) }}
       - name: config
         configMap:
-          name: {{ default (include "authelia.name" .) .Values.configMap.existingConfigMap }}
+          name: {{ .Values.configMap.existingConfigMap | default (include "authelia.name" .) }}
           items:
-          - key: {{ default "configuration.yaml" .Values.configMap.key }}
+          - key: {{ .Values.configMap.key | default "configuration.yaml" }}
             path: configuration.yaml
       {{- end }}
       {{- if (include "authelia.mount.acl.secret" .) }}
@@ -307,13 +307,13 @@ spec:
         secret:
           secretName: {{ include "authelia.name.acl.secret" . }}
           items:
-          - key: {{ default "configuration.acl.yaml" .Values.configMap.access_control.secret.key }}
+          - key: {{ .Values.configMap.access_control.secret.key | default "configuration.acl.yaml" }}
             path: configuration.acl.yaml
       {{- end }}
       {{- if (not .Values.secret.disabled) }}
       - name: secrets
         secret:
-          secretName: {{ default (include "authelia.name" .) .Values.secret.existingSecret }}
+          secretName: {{ .Values.secret.existingSecret | default (include "authelia.name" .) }}
           items:
           {{- with $secret := .Values.configMap.identity_validation.reset_password.secret }}
           {{- if and (not $secret.disabled) (not $secret.secret_name) }}
