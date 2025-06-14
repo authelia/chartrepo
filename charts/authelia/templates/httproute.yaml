@@ -23,8 +23,8 @@ spec:
     {{- end }}
   {{- end }}
   hostnames:
-    {{- if .Values.ingress.gatewayAPI.hostsOverride }}
-    {{- range $host := .Values.ingress.gatewayAPI.hostsOverride }}
+    {{- if .Values.ingress.gatewayAPI.hostnamesOverride }}
+    {{- range $host := .Values.ingress.gatewayAPI.hostnamesOverride }}
     - {{ . | squote }}
     {{- end }}
     {{- else }}

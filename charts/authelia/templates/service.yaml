@@ -19,12 +19,12 @@ spec:
   - {{ . }}
   {{- end }}
   {{- end }}
-  sessionAffinity: {{ default "None" .Values.service.sessionAffinity }}
+  sessionAffinity: {{ .Values.service.sessionAffinity | default "None" }}
   selector: {{- include "authelia.matchLabels" . | nindent 4 }}
   ports:
     - name: http
       protocol: TCP
-      port: {{ include "authelia.service.port" . }}
+      port: {{ template "authelia.service.port" . }}
       targetPort: http
       {{- if eq .Values.service.type "NodePort" }}
       nodePort: {{ .Values.service.nodePort }}

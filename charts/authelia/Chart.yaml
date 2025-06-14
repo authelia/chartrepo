@@ -1,6 +1,6 @@
 apiVersion: v2
 name: authelia
-version: 0.10.13
+version: 0.10.14
 kubeVersion: ">= 1.13.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
@@ -34,7 +34,7 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
     condition: configMap.session.redis.deploy
 maintainers:
-  - name: james-d-elliott
+  - name: James Elliott
     email: james-d-elliott@users.noreply.github.com
     url: https://github.com/james-d-elliott
 icon: https://avatars2.githubusercontent.com/u/59122411?s=200&v=4

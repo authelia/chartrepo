@@ -5,176 +5,211 @@
 ## Repository: authelia https://charts.authelia.com
 ## Chart: authelia
 ##
-## This values file is a baseline for other values files.
+# -- This values file is a baseline for other values files.
 
-## Version Override allows changing some chart characteristics that render only on specific versions.
-## This does NOT affect the image used, please see the below image section instead for this.
-## If this value is not specified, it's assumed the appVersion of the chart is the version.
-## The format of this value  is x.x.x, for example 4.100.0.
-##
-## Important Points:
-##   - No guarantees of support for prior versions is given. The chart is intended to be used with the AppVersion.
-##   - Does not and will not support any version prior to 4.38.0 due to a significant refactor of the configuration
-##     system.
+# -- Version Override allows changing some chart characteristics that render only on specific versions.
+# This does NOT affect the image used, please see the below image section instead for this.
+# If this value is not specified, it's assumed the appVersion of the chart is the version.
+# The format of this value  is x.x.x, for example 4.100.0. Minimum value is 4.38.0, and support is not guaranteed.
 versionOverride: ''
 
-## Kubernetes Version Override allows forcibly overriding the detected KubeVersion for fallback capabilities assessment.
-## The fallback capabilities assessment only occurs if the APIVersions Capabilities list does not include a known
-## APIVersion for a manifest which occurs with some CI/CD tooling. This value will completely override the value
-## detected by helm.
+# -- Kubernetes Version Override allows forcibly overriding the detected KubeVersion for fallback capabilities
+# assessment. The fallback capabilities assessment only occurs if the APIVersions Capabilities list does not include a
+# known # APIVersion for a manifest which occurs with some CI/CD tooling. This value will completely override the value
+# detected by helm.
 kubeVersionOverride: ''
 
-## Kubernetes DNS Domain Override allows forcibly overriding the default DNS Domain for Kubernetes 'cluster.local'.
+# -- Kubernetes DNS Domain Override allows forcibly overriding the default DNS Domain for Kubernetes 'cluster.local'.
 kubeDNSDomainOverride: ''
 
 ## Image Parameters
 ## ref: https://hub.docker.com/r/authelia/authelia/tags/
 ##
 image:
-  # registry: docker.io
-  registry: ghcr.io
-  repository: authelia/authelia
+
+  # -- The registry to use.
+  registry: 'ghcr.io'
+
+  # -- The repository location on the registry.
+  repository: 'authelia/authelia'
+
+  # -- The tag to use from the registry.
+  # @default -- appVersion
   tag: ''
-  pullPolicy: IfNotPresent
+
+  # -- The pull policy for the standard image.
+  pullPolicy: 'IfNotPresent'
+
+  # -- The pull secrets to use.
   pullSecrets: []
-  # pullSecrets:
-  #   - myPullSecretName
 
-# nameOverride: 'authelia-deployment-name'
-# appNameOverride: 'authelia'
 
-##
-## extra labels/annotations applied to all resources
-##
+# -- (string) The name override for this deployment.
+nameOverride: ~
+
+# -- (string) The app name override for this deployment.
+appNameOverride: ~
+
+# -- Extra annotations for all generated resources. Most manifest types have a more specific annotations value
+# associated with them.
 annotations: {}
-# annotations:
-#   myAnnotation: 'myValue'
 
+# -- Extra labels for all generated resources. Most manifest types have a more specific labels value
+# associated with them.
 labels: {}
-# labels:
-#   myLabel: 'myValue'
 
 ##
 ## RBAC Configuration.
 ##
 rbac:
 
-  ## Enable RBAC. Turning this on associates Authelia with a service account.
+  # -- Enable RBAC. Turning this on associates Authelia with a service account.
   enabled: false
 
+  # -- Extra annotations for RBAC related manifests.
   annotations: {}
+
+  # -- Extra labels for RBAC related manifests.
   labels: {}
 
+  # -- Kubernetes service account name to generate.
   serviceAccountName: 'authelia'
 
 
 service:
+
+  # -- The service type to generate for the Authelia pods.
   type: 'ClusterIP'
+
+  # -- Extra annotations for service manifest.
   annotations: {}
-  # annotations:
-  #   myAnnotation: 'myValue'
 
+  # -- Extra labels for service manifest.
   labels: {}
-  # labels:
-  #   myLabel: 'myValue'
 
+  # -- Port for the Authelia service manifest.
   port: 80
-  nodePort: 30091
-  # clusterIP: '10.0.0.1'
 
+  # -- Node Port for the Authelia service manifest.
+  nodePort: 30091
+
+  # -- Cluster IP for the Authelia service manifest.
+  clusterIP: '10.0.0.1'
 
 ingress:
+
+  # -- Enable generating ingress related resources.
   enabled: false
 
+  # -- Extra annotations for ingress related manifests.
   annotations: {}
-  # annotations:
-  #   kubernetes.io/ingress.class: 'nginx'
-  #   kubernetes.io/tls-acme: 'true'
 
+  # -- Extra labels for ingress related manifests.
   labels: {}
-  # labels:
-  #   myLabel: 'myValue'
 
   ## A discouraged override list of hosts to create the ingress for. If this is not specified the auto-generation
   ## characteristics of the 'configMap.session.cookies' value are not used. Should be a list of host/path pairs.
+
+  # -- Override to the rules values for the Ingress type manifest.
   rulesOverride: []
-  # hostOverride:
-  # - host: 'auth.example.com'
-  #   path: '/'
 
+  # -- Enable Cert Manager annotations.
   certManager: false
-  rewriteTarget: false
 
-  ## The Ingress Class Name.
-  # className: 'ingress-nginx'
+  # -- Ingress Class Name for the Ingress manifests.
+  className: ''
 
   tls:
+
+    # -- Enable TLS for the Ingress.
     enabled: false
+
+    ## -- TLS Secret for Authelia.
     secret: 'authelia-tls'
 
-    # hostNameOverride: 'example.com'
-
   gatewayAPI:
+
+    # -- Enable Gateway API HTTP Route generation.
     enabled: false
-    hostsOverride: []
+
+    # -- Override the hostnames for the HTTPRoute manifest.
+    hostnamesOverride: []
+
+    # -- Configure the parent references for the HTTPRoute manifest.
     parentRefs: []
     #  - name: example-lb
     #    sectionName: example-lb-sn
     #    port: 80
 
   traefikCRD:
+
+    # -- Enable generating the Traefik 3.x CRD Middleware etc manifests.
     enabled: false
 
-    ## Use a standard Ingress object, not an IngressRoute.
+    # -- Use a standard Ingress object, not an IngressRoute.
     disableIngressRoute: false
 
-    # matchOverride: Host(`auth.example.com`) && PathPrefix(`/`)
+    # -- IngressRoute match rule override.
+    matchOverride: ''
 
-    ## The TraefikCRD apiVersion Overrides. The apiGroupOverride controls the first part, apiVersionOverride controls
-    ## the second.
-    # apiGroupOverride: 'traefik.io'
-    # apiVersionOverride: 'v1alpha1'
+    # -- The apiGroupOverride overrides the first part of the apiVersion for TraefikCRD manifests.
+    apiGroupOverride: ''
 
+    # -- The apiVersionOverride overrides the second part of the apiVersion for TraefikCRD manifests.
+    apiVersionOverride: ''
+
+    # -- Defines the valid entryPoints to route for the IngressRoute.
     entryPoints: []
-    # entryPoints:
-    # - 'http'
 
-    # priority: 10
+    # -- Defines the rule priority for the IngressRoute.
+    priority: 500
 
-    # weight: 10
+    # -- Defines the service weight for the IngressRoute.
+    weight: 10
 
+    # -- Defines the sticky value for the IngressRoute.
     sticky: false
 
-    # stickyCookieNameOverride: 'authelia_traefik_lb'
+    # -- Overrides the default sticky cookie name for the IngressRoute.
+    stickyCookieNameOverride: ''
 
-    # strategy: 'RoundRobin'
+    # -- Defines the IngressRoute service strategy.
+    strategy: 'RoundRobin'
 
-    # responseForwardingFlushInterval: '100ms'
+    # -- Defines the Response Forwarding Flush Interval for the IngressRoute.
+    responseForwardingFlushInterval: '100ms'
 
     middlewares:
-      auth:
-        # nameOverride: 'authelia-auth'
 
-        ## Overrides the endpoint used for the middleware. This is the portion of the endpoint after '/api/authz/'.
+      auth:
+
+        # -- Overrides the ForwardAuth Middleware (auth) name.
+        nameOverride: ''
+
+        # -- Overrides the endpoint used for the middleware. This is the portion of the endpoint after '/api/authz/'.
         endpointOverride: ''
 
+        # -- Defines the ForwardAuth Middleware Auth Response Headers.
         authResponseHeaders:
-        - 'Remote-User'
-        - 'Remote-Name'
-        - 'Remote-Email'
-        - 'Remote-Groups'
+          - 'Remote-User'
+          - 'Remote-Name'
+          - 'Remote-Email'
+          - 'Remote-Groups'
 
       chains:
-        auth:
-          # nameOverride: 'authelia-auth-chain'
 
-          # List of Middlewares to apply before the forwardAuth Middleware in the authentication chain.
+        auth:
+
+          # -- Overrides the Chain Middleware (auth) name.
+          nameOverride: ''
+
+          # -- List of Middlewares to apply before the forwardAuth Middleware in the authentication chain.
           before: []
           # before:
           # - name: 'extra-middleware-name'
           #   namespace: 'default'
 
-          # List of Middlewares to apply after the forwardAuth Middleware in the authentication chain.
+          # -- List of Middlewares to apply after the forwardAuth Middleware in the authentication chain.
           after: []
           # after:
           # - name: 'extra-middleware-name'
@@ -182,26 +217,31 @@ ingress:
 
         ingressRoute:
 
-          # List of Middlewares to apply before the middleware in the IngressRoute chain.
+          # -- List of Middlewares to apply before the middleware in the IngressRoute chain.
           before: []
           # before:
           # - name: 'extra-middleware-name'
           #   namespace: 'default'
 
-          # List of Middlewares to apply after the middleware in the IngressRoute chain.
+          # -- List of Middlewares to apply after the middleware in the IngressRoute chain.
           after: []
           # after:
           # - name: 'extra-middleware-name'
           #   namespace: 'default'
 
-    # Specific options for the TraefikCRD TLS configuration. The above TLS section is still used.
+    ## Specific options for the TraefikCRD TLS configuration. The above TLS section is still used.
     tls:
-      ## Disables inclusion of the IngressRoute TLSOptions.
+
+      # -- Disables inclusion of the IngressRoute TLSOptions.
       disableTLSOptions: false
       #   existingOptions:
       #     name: 'default-traefik-options'
       #     namespace: 'default'
+
+      # -- Name of the Certificate Resolver to use.
       certResolver: ''
+
+      # -- Override the domains values for TLS operations.
       domainsOverride: []
       # domainsOverride:
       #   - main: 'auth.example.com'
@@ -209,125 +249,320 @@ ingress:
       #       - 'a.example.com'
 
       options:
-        # nameOverride: 'authelia-tls-options'
+
+        # -- Override the TLSOptions name.
         nameOverride: ''
 
+        # -- Minimum TLS Version.
         minVersion: 'VersionTLS12'
+
+        # -- Maximum TLS Version.
         maxVersion: 'VersionTLS13'
+
+        # -- Require Strict SNI requirement.
         sniStrict: false
-        cipherSuites:
-          - 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256'
-          - 'TLS_RSA_WITH_AES_256_GCM_SHA384'
+
+        # -- Override the default Cipher Suites.
+        cipherSuites: []
+
+        # -- Override the default Curve Preferences.
         curvePreferences: []
-        # curvePreferences:
-        # - 'CurveP521'
-        # - 'CurveP384'
 
 pod:
-  # Must be Deployment, DaemonSet, or StatefulSet.
+
+  # -- The Pod Kind to use. Must be Deployment, DaemonSet, or StatefulSet.
   kind: 'DaemonSet'
 
-  ## Normally when a change is detected via helm install to something that only indirectly affects the pod, the pod
-  ## will restart. This setting allows disabling this behaviour.
+  # -- Normally when a change is detected via helm install to something that only indirectly affects the pod, the pod
+  # will restart. This setting allows disabling this behaviour.
   disableRestartOnChanges: false
 
+  # -- Extra annotations for the Pod spec.
   annotations: {}
-  # annotations:
-  #   myAnnotation: 'myValue'
 
+  # -- Extra labels for the Pod spec.
   labels: {}
-  # labels:
-  #   myLabel: 'myValue'
 
-  # Modifies the command. Useful for debugging.
+  # -- Modifies the command. Useful for debugging.
   command: []
 
-  # Modifies the args for the command. Useful for debugging.
+  # -- Modifies the args for the command. Useful for debugging.
   args: []
 
+  # -- The list of custom initialization containers.
   initContainers: []
   # initContainers:
   # - name: myapp-init
   #   image: busybox:1.36
   #   command: ['sh', '-c', 'echo The app is starting! && sleep 5']
 
+  # -- The number of replicas if relevant.
   replicas: 1
+
+  # -- The revision history limit.
   revisionHistoryLimit: 5
+
+  # -- The priority class name for the Pod spec.
   priorityClassName: ''
 
   autoscaling:
+
+    # -- Enable the HorizontalPodAutoscaler which requires the in cluster metrics server.
     enabled: false
+
+    # -- Extra annotations for the HorizontalPodAutoscaler manifest.
     annotations: {}
+
+    # -- Extra labels for the HorizontalPodAutoscaler manifest.
     labels: {}
 
     behaviour:
+
       scaleDown:
+
+        # The list of scale down policies.
         policies:
+
+            # -- (string) The scale down policy type.
           - type: ~
+
+            # -- (int) The scale down policy value.
             value: ~
+
+            # -- The scale down policy period seconds.
             periodSeconds: 60
+
+        # -- (string) The select policy value.
         selectPolicy: ~
+
+        # -- (int) The number of seconds to allow stabilization before scaling.
         stabilizationWindowSeconds: ~
+
+        # -- (int) The amount of tolerance percentage.
         tolerance: ~
+
       scaleUp:
+
+        # The list of scale up policies.
         policies:
+
+          # -- (string) The scale up policy type.
           - type: ~
+
+            # -- (int) The scale up policy value.
             value: ~
+
+            # -- The scale down policy period seconds.
             periodSeconds: 60
+
+        # -- (string) The select policy value.
         selectPolicy: ~
+
+        # -- (int) The number of seconds to allow stabilization before scaling.
         stabilizationWindowSeconds: ~
+
+        # -- (int) The amount of tolerance percentage.
         tolerance: ~
+
+    # -- (int) The maximum replicas for this policy.
     maxReplicas: ~
+
+    # -- (int) The minimum replicas for this policy.
     minReplicas: ~
-  metrics:
-    - type: ~
-      containerResource:
-        container: ~
-        name: ~
-        target:
-          type: ~
-      external:
-        metric:
+
+    # The list of metrics that inform this HorizontalPodAutoscaler.
+    metrics:
+
+      # -- (string) The type of metric to use for this rule. ContainerResource, External, Object, Pods, or Resource.
+      - type: ~
+
+        # The ContainerResource metric options.
+        containerResource:
+
+          # -- (string) Name of the container within the Pod.
+          container: ~
+
+          # -- (string) Name of resource.
           name: ~
-        target:
-          type: ~
-      object:
-        describedObject:
-          kind: ~
+
+          # The target metric.
+          target:
+
+            # -- (string) Represents the metric type. Utilization, Value, or AverageValue.
+            type: ~
+
+            # -- (string) Average Utilization value.
+            averageUtilization: ~
+
+            # -- (string) Average value.
+            averageValue: ~
+
+            # -- (string) Value.
+            value: ~
+
+        # The External metric options.
+        external:
+
+          # The metric selector.
+          metric:
+
+            # -- (string) Name of the given metric.
+            name: ~
+
+            selector:
+
+              # -- List of Match Expressions.
+              matchExpressions: []
+
+              # -- Dictionary of Match Labels.
+              matchLabels: {}
+
+          # The target metric.
+          target:
+
+            # -- (string) Represents the metric type. Utilization, Value, or AverageValue.
+            type: ~
+
+            # -- (string) Average Utilization value.
+            averageUtilization: ~
+
+            # -- (string) Average value.
+            averageValue: ~
+
+            # -- (string) Value.
+            value: ~
+
+        # The Object metric options.
+        object:
+
+          # The described object.
+          describedObject:
+
+            # -- (string) API Version of the referent.
+            apiVersion: ~
+
+            # -- (string) Kind of the referent.
+            kind: ~
+
+            # -- (string) Name of the referent.
+            name: ~
+
+          # The metric selector.
+          metric:
+
+            # -- (string) Name of the given metric.
+            name: ~
+
+            selector:
+
+              # -- List of Match Expressions.
+              matchExpressions: []
+
+              # -- Dictionary of Match Labels.
+              matchLabels: {}
+
+          # The target metric.
+          target:
+
+            # -- (string) Represents the metric type. Utilization, Value, or AverageValue.
+            type: ~
+
+            # -- (string) Average Utilization value.
+            averageUtilization: ~
+
+            # -- (string) Average value.
+            averageValue: ~
+
+            # -- (string) Value.
+            value: ~
+
+        # The Pods metric options.
+        pods:
+
+          # The metric selector.
+          metric:
+
+            # -- (string) Name of the given metric.
+            name: ~
+
+            selector:
+
+              # -- List of Match Expressions.
+              matchExpressions: []
+
+              # -- Dictionary of Match Labels.
+              matchLabels: {}
+
+          # The target metric.
+          target:
+
+            # -- (string) Represents the metric type. Utilization, Value, or AverageValue.
+            type: ~
+
+            # -- (string) Average Utilization value.
+            averageUtilization: ~
+
+            # -- (string) Average value.
+            averageValue: ~
+
+            # -- (string) Value.
+            value: ~
+
+        # The Resource metric options.
+        resource:
+
+          # -- (string) Name of the resource.
           name: ~
-        metric:
-          name: ~
-        target:
-          type: ~
-      pods:
-        metric:
-          name: ~
-        target:
-          type: ~
-      resource:
-        name: ~
-        target:
-          type: ~
+
+          # The target metric.
+          target:
+
+            # -- (string) Represents the metric type. Utilization, Value, or AverageValue.
+            type: ~
+
+            # -- (string) Average Utilization value.
+            averageUtilization: ~
+
+            # -- (string) Average value.
+            averageValue: ~
+
+            # -- (string) Value.
+            value: ~
 
   strategy:
+
+    # -- Deployment Strategy Type.
     type: 'RollingUpdate'
-    # rollingUpdate:
-    #   partition: 1
-    #   maxSurge: '25%'
-    #   maxUnavailable: '25%'
+
+    # RollingUpdate settings.
+    rollingUpdate:
+
+      # -- RollingUpdate partition value.
+      partition: 0
+
+      # -- RollingUpdate max surge value.
+      maxSurge: '25%'
+
+      # -- RollingUpdate max unavailable value.
+      maxUnavailable: '25%'
 
   securityContext:
+
+    # -- Container Security Context.
     container: {}
     # container:
     #   runAsUser: 2000
     #   runAsGroup: 2000
     #   fsGroup: 2000
+
+    # -- Pod Security Context.
     pod: {}
     # pod:
     #   readOnlyRootFilesystem: false
     #   allowPrivilegeEscalation: false
     #   privileged: false
 
+  # -- List of tolerations.
   tolerations: []
   # tolerations:
   # - key: 'key1'
@@ -337,14 +572,19 @@ pod:
   #   tolerationSeconds: 3600
 
   selectors:
-  #   nodeName: 'worker-1'
 
+    # -- Specific node name selector.
+    nodeName: ''
+
+    # -- Node selector.
     nodeSelector: {}
     # nodeSelector:
     #   disktype: 'ssd'
     #   kubernetes.io/hostname: 'worker-1'
 
     affinity:
+
+      # -- Node affinity selector.
       nodeAffinity: {}
       # nodeAffinity:
       #   requiredDuringSchedulingIgnoredDuringExecution:
@@ -363,6 +603,8 @@ pod:
       #         operator: 'NotIn'
       #         values:
       #         - 'not-this'
+
+      # -- Pod affinity selector.
       podAffinity: {}
       # podAffinity:
       #   requiredDuringSchedulingIgnoredDuringExecution:
@@ -373,6 +615,8 @@ pod:
       #         values:
       #         - S1
       #     topologyKey: 'topology.kubernetes.io/zone'
+
+      # -- Pod anti-affinity selector.
       podAntiAffinity: {}
       # podAntiAffinity:
       #     preferredDuringSchedulingIgnoredDuringExecution:
@@ -386,16 +630,18 @@ pod:
       #             - S2
       #         topologyKey: 'topology.kubernetes.io/zone'
 
+  # -- List of additional environment variables for the Pod.
   env: []
-  # env:
-  # - name: 'TZ'
-  #   value: 'Australia/Melbourne'
 
   resources:
+
+    # -- Resource Limits.
     limits: {}
     # limits:
     #   cpu: '4.00'
     #   memory: '125Mi'
+
+    # -- Resource Requests.
     requests: {}
     # requests:
     #   cpu: '0.25'
@@ -404,80 +650,122 @@ pod:
   probes:
     method:
       httpGet:
+
+        # -- Adjusts the probe path.
         path: '/api/health'
+
+        # -- Adjusts the probe port.
         port: 'http'
+
+        # -- Adjusts the probe scheme.
         scheme: 'HTTP'
 
     liveness:
+
+      # -- Liveness Probe initial delay seconds.
       initialDelaySeconds: 0
+
+      # -- Liveness Probe period seconds.
       periodSeconds: 30
+
+      # -- Liveness Probe timeout seconds.
       timeoutSeconds: 5
+
+      # -- Liveness Probe success threshold.
       successThreshold: 1
+
+      # -- Liveness Probe failure threshold.
       failureThreshold: 5
 
     readiness:
+
+      # -- Readiness Probe initial delay seconds.
       initialDelaySeconds: 0
+
+      # -- Readiness Probe period seconds.
       periodSeconds: 5
+
+      # -- Readiness Probe timeout seconds.
       timeoutSeconds: 5
+
+      # -- Readiness Probe success threshold.
       successThreshold: 1
+
+      # -- Readiness Probe failure threshold.
       failureThreshold: 5
 
-    ## Note: Startup Probes are a Kubernetes feature gate which must be manually enabled pre-1.18.
-    ## Ref: https://kubernetes.io/docs/reference/command-line-tools-reference/feature-gates/
     startup:
+
+      # -- Startup Probe initial delay seconds.
       initialDelaySeconds: 10
+
+      # -- Startup Probe period seconds.
       periodSeconds: 5
+
+      # -- Startup Probe timeout seconds.
       timeoutSeconds: 5
+
+      # -- Startup Probe success threshold.
       successThreshold: 1
+
+      # -- Startup Probe failure threshold.
       failureThreshold: 6
 
+  # -- Extra Volume Mounts.
   extraVolumeMounts: []
+
+  # -- Extra Volumes.
   extraVolumes: []
 
 ##
 ## Kubernetes Pod Disruption Budget
 ##
 podDisruptionBudget:
+
+  # -- Enable the PodDisruptionBudget.
   enabled: false
 
+  # -- Extra annotations for the PodDisruptionBudget manifest.
   annotations: {}
-  # annotations:
-  #   myAnnotation: 'myValue'
 
+  # -- Extra labels for the PodDisruptionBudget manifest.
   labels: {}
-  # labels:
-  #   myLabel: 'myValue'
 
+  # -- Minimum available value for the PodDisruptionBudget manifest.
   minAvailable: 0
+
+  # -- Maximum available value for the PodDisruptionBudget manifest.
   maxUnavailable: 0
 
 ##
 ## Kubernetes Network Policy
 ##
 networkPolicy:
+
+  # -- Enable the NetworkPolicy.
   enabled: false
 
+  # -- Extra annotations for the NetworkPolicy manifest.
   annotations: {}
-  # annotations:
-  #   myAnnotation: 'myValue'
 
+  # -- Extra labels for the NetworkPolicy manifest.
   labels: {}
-  # labels:
-  #   myLabel: 'myValue'
 
+  # -- The Policy Types such as Ingress or Egress.
   policyTypes:
-  - 'Ingress'
+    - 'Ingress'
+
   ingress:
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          authelia.com/network-policy: 'namespace'
-    - podSelector:
-        matchLabels:
-          authelia.com/network-policy: 'pod'
-    ports:
-    - protocol: 'TCP'
-      port: 9091
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            authelia.com/network-policy: 'namespace'
+      - podSelector:
+          matchLabels:
+            authelia.com/network-policy: 'pod'
+      ports:
+      - protocol: 'TCP'
+        port: 9091
 
 
 ##
@@ -485,85 +773,89 @@ networkPolicy:
 ##
 configMap:
 
-  # Enable the configMap source for the Authelia config.
-  # If this is false you need to provide a volumeMount via PV/PVC or other means that mounts to /config.
+  # -- Disable the configMap source for the Authelia config. If this is false you need to provide a volumeMount via
+  # PV/PVC or other means that mounts to /config.
   disabled: false
 
+  # -- Extra annotations for the ConfigMap manifest.
   annotations: {}
-  # annotations:
-  #   myAnnotation: 'myValue'
 
+  # -- Extra labels for the ConfigMap manifest.
   labels: {}
-  # labels:
-  #   myLabel: 'myValue'
 
+  # -- The key from the ConfigMap manifest to generate and mount the configuration.
   key: 'configuration.yaml'
 
+  # -- The name of an existing ConfigMap instead of generating one.
   existingConfigMap: ''
 
+  # -- The paths of extra configs that are mounted into the Pod which should be used.
   extraConfigs: []
-  # extraConfigs:
-  # - '/configuration.oidc.yaml'
 
   filters:
+
+    # -- Disables the template filters. This is not recommended.
     disabled: false
 
   ##
   ## Server Configuration
   ##
   server:
-    ##
-    ## Port sets the configured port for the daemon, service, and the probes.
-    ## Default is 9091 and should not need to be changed.
-    ##
+
+    # -- Port sets the configured port for the daemon, service, and the probes. Default is 9091 and should not need
+    # to be changed.
     port: 9091
 
-    ## Set the single level path Authelia listens on.
-    ## Must be alphanumeric chars and should not contain any slashes.
+    # -- Set the single level path Authelia listens on.  Must be alphanumeric chars and should not contain any slashes.
     path: ''
 
-    ## Set the path on disk to Authelia assets.
-    ## Useful to allow overriding of specific static assets.
-    # asset_path: '/config/assets/'
+    # -- Set the path on disk to Authelia assets. Useful to allow overriding of specific static assets.
     asset_path: ''
 
     ## Customize Authelia headers.
     headers:
-      ## Read the Authelia docs before setting this advanced option.
-      ## https://www.authelia.com/configuration/miscellaneous/server/#csp_template.
+      # -- Read the Authelia docs before setting this advanced option.
+      # https://www.authelia.com/configuration/miscellaneous/server/#csp_template.
       csp_template: ''
 
-    ## Server Buffers configuration.
+    # Server Buffers configuration.
     buffers:
-      ## Read buffer.
+
+      # -- Read buffer.
       read: 4096
 
-      ## Write buffer.
+      # -- Write buffer.
       write: 4096
 
-    ## Server Timeouts configuration.
+    # Server Timeouts configuration.
     timeouts:
-      ## Read timeout.
+
+      # -- Read timeout.
       read: '6 seconds'
 
-      ## Write timeout.
+      # -- Write timeout.
       write: '6 seconds'
 
-      ## Idle timeout.
+      # -- Idle timeout.
       idle: '30 seconds'
 
     endpoints:
+
+      # -- Enable the developer pprof handlers.
       enable_pprof: false
+
+      # -- Enable the developer expvars handlers.
       enable_expvars: false
 
-      ## A list of automatically configured authz implementations if you don't wish to manually configure each one.
-      ## Important Note: If you configure the 'authz' section this is completely ignored.
+      # -- A list of automatically configured authz implementations if you don't wish to manually configure each one.
+      # Important Note: If you configure the 'authz' section this is completely ignored.
       automatic_authz_implementations: []
       # automatic_authz_implementations:
       # - 'AuthRequest'
       # - 'ExtAuthz'
       # - 'ForwardAuth'
 
+      # -- Dictionary of individually configured Authz endpoints.
       authz: {}
       # authz:
       #   auth-request:
@@ -589,15 +881,14 @@ configMap:
       #     - name: 'CookieSession'
 
   log:
-    ## Level of verbosity for logs: info, debug, trace.
+
+    # -- Level of verbosity for logs: info, debug, trace.
     level: 'info'
 
-    ## Format the logs are written as: json, text.
+    # -- Format the logs are written as: json, text.
     format: 'text'
 
-    ## TODO: Statefulness check should check if this is set, and the configMap should enable it.
-    ## File path where the logs will be written. If not set logs are written to stdout.
-    # file_path: /config/authelia.log
+    # -- File path where the logs will be written. If not set logs are written to stdout.
     file_path: ''
 
   ##
@@ -609,48 +900,58 @@ configMap:
     ## Metrics Configuration
     ##
     metrics:
-      ## Enable Metrics.
+
+      # -- Enable Metrics.
       enabled: false
 
-      ## The port to listen on for metrics. This should be on a different port to the main server.port value.
+      # -- The port to listen on for metrics. This should be on a different port to the main server.port value.
       port: 9959
 
-      ## Metrics Server Buffers configuration.
+      # Metrics Server Buffers configuration.
       buffers:
-        ## Read buffer.
+
+        # -- Read buffer.
         read: 4096
 
-        ## Write buffer.
+        # -- Write buffer.
         write: 4096
 
-      ## Metrics Server Timeouts configuration.
+      # Metrics Server Timeouts configuration.
       timeouts:
-        ## Read timeout.
+
+        # -- Read timeout.
         read: '6 seconds'
 
-        ## Write timeout.
+        # -- Write timeout.
         write: '6 seconds'
 
-        ## Idle timeout.
+        # -- Idle timeout.
         idle: '30 seconds'
 
       serviceMonitor:
+
+        # -- Enable generating a Prometheus ServiceMonitor.
         enabled: false
+
+        # -- Extra annotations for the ServiceMonitor manifest.
         annotations: {}
+
+        # -- Extra labels for the ServiceMonitor manifest.
         labels: {}
 
-  ## Set the default 2FA method for new users and for when a user has a preferred method configured that has been
-  ## disabled. This setting must be a method that is enabled.
-  ## Options are totp, webauthn, mobile_push.
+  # -- Set the default 2FA method for new users and for when a user has a preferred method configured that has been
+  # disabled. This setting must be a method that is enabled.
+  # Options are totp, webauthn, mobile_push.
   default_2fa_method: ''
 
+  # -- Theme name to use for the frontend.
   theme: 'light'
 
   ## The definitions section controls several definitions which can be reused in other areas of the configuration rather
   ## than repeating values elsewhere.
   definitions:
 
-    ## The network section configures named network lists.
+    # -- The network section configures named network lists.
     network: {}
     # network:
       # network_name:
@@ -659,8 +960,8 @@ configMap:
         # - '2001:db8::/32'
         # - '2001:db8:1234:5678::1'
 
-    ## The user attributes section allows you to define custom attributes for your users using Common Expression
-    ## Language (CEL).
+    # -- The user attributes section allows you to define custom attributes for your users using Common Expression
+    # Language (CEL).
     user_attributes: {}
     # user_attributes:
       ## Boolean attribute example
@@ -676,32 +977,33 @@ configMap:
   ## Identity Validation configures additional means of identifying legitimate users.
   identity_validation:
 
-    ## The Reset Password Identity Validation implementation ensures that users cannot perform a reset password flow
-    ## without first ensuring the user is adequately identified. The settings below therefore can affect the level of
-    ## security Authelia provides to your users so they should be carefully considered.
+    # The Reset Password Identity Validation implementation ensures that users cannot perform a reset password flow
+    # without first ensuring the user is adequately identified. The settings below therefore can affect the level of
+    # security Authelia provides to your users so they should be carefully considered.
     reset_password:
 
-      ## The lifespan of the JSON Web Token after it’s initially generated after which it’s considered invalid.
+      # -- The lifespan of the JSON Web Token after it’s initially generated after which it’s considered invalid.
       jwt_lifespan: '5 minutes'
 
-      ## The JSON Web Token Algorithm used to sign the JWT. Must be HS256, HS384, or HS512.
+      # -- The JSON Web Token Algorithm used to sign the JWT. Must be HS256, HS384, or HS512.
       jwt_algorithm: 'HS256'
 
       ## The secret used with the HMAC algorithm to sign the JWT minted by Authelia.
       secret:
-        ## Disables this secret and leaves configuring it entirely up to you.
+
+        # -- Disables this secret and leaves configuring it entirely up to you.
         disabled: false
 
-        ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
-        ## secret_value option below.
+        # -- The secret name. The ~ name is special as it is the secret we generate either automatically or via the
+        # secret_value option below.
         secret_name: ~
 
-        ## The value of a generated secret when using the ~ secret_name.
+        # -- The value of a generated secret when using the ~ secret_name.
         value: ''
 
-        ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
-        ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
-        ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+        # -- The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+        # it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+        # value, '{secret_name}' is the secret_name above, and '{path}' is this value.
         path: 'identity_validation.reset_password.jwt.hmac.key'
 
     ## The Elevated Session Identity Validation implementation ensures that users cannot perform actions which may
@@ -710,22 +1012,22 @@ configMap:
     ## carefully considered.
     elevated_session:
 
-      ## The lifespan of the randomly generated One Time Code after which it’s considered invalid.
+      # -- The lifespan of the randomly generated One Time Code after which it’s considered invalid.
       code_lifespan: '5 minutes'
 
-      ## The lifespan of the elevation after initially validating the One-Time Code before it expires.
+      # -- The lifespan of the elevation after initially validating the One-Time Code before it expires.
       elevation_lifespan: '10 minutes'
 
-      ## The number of characters the random One-Time Code has. Maximum value is currently 20, but we recommend keeping
-      ## it between 8 and 12. It’s strongly discouraged to reduce it below 8.
+      # -- The number of characters the random One-Time Code has. Maximum value is currently 20, but we recommend keeping
+      # it between 8 and 12. It’s strongly discouraged to reduce it below 8.
       characters: 8
 
-      ## Requires second factor authentication for all protected actions in addition to the elevated session provided
-      ## the user has configured a second factor authentication method.
+      # -- Requires second factor authentication for all protected actions in addition to the elevated session provided
+      # the user has configured a second factor authentication method.
       require_second_factor: false
 
-      ## Skips the elevated session requirement if the user has performed second factor authentication. Can be combined
-      ## with the require_second_factor option to always (and only) require second factor authentication.
+      # -- Skips the elevated session requirement if the user has performed second factor authentication. Can be combined
+      # with the require_second_factor option to always (and only) require second factor authentication.
       skip_second_factor: false
 
 
@@ -734,48 +1036,49 @@ configMap:
   ##
   ## Parameters used for TOTP generation.
   totp:
-    ## Disable TOTP.
+
+    # -- Disable TOTP.
     disable: false
 
-    ## The issuer name displayed in the Authenticator application of your choice.
-    ## Defaults to 'Authelia'.
+    # -- The issuer name displayed in the Authenticator application of your choice.
+    # Defaults to 'Authelia'.
     issuer: 'Authelia'
 
-    ## The skew controls number of one-time passwords either side of the current one that are valid.
-    ## Warning: before changing skew read the docs link below.
-    ## See: https://www.authelia.com/configuration/second-factor/time-based-one-time-password/#input-validation to read the documentation.
+    # -- The skew controls number of one-time passwords either side of the current one that are valid.
+    # Warning: before changing skew read the docs link below.
+    # See: https://www.authelia.com/configuration/second-factor/time-based-one-time-password/#input-validation to read the documentation.
     skew: 1
 
-    ## The size of the generated shared secrets. Default is 32 and is sufficient in most use cases, minimum is 20.
+    # -- The size of the generated shared secrets. Default is 32 and is sufficient in most use cases, minimum is 20.
     secret_size: 32
 
-    ## The TOTP algorithm to use.
-    ## It is CRITICAL you read the documentation before changing this option:
-    ## https://www.authelia.com/configuration/second-factor/time-based-one-time-password/#algorithm
+    # -- The TOTP algorithm to use.
+    # It is CRITICAL you read the documentation before changing this option:
+    # https://www.authelia.com/configuration/second-factor/time-based-one-time-password/#algorithm
     algorithm: 'SHA1'
 
-    ## The number of digits a user has to input. Must either be 6 or 8.
-    ## Changing this option only affects newly generated TOTP configurations.
-    ## It is CRITICAL you read the documentation before changing this option:
-    ## https://www.authelia.com/configuration/second-factor/time-based-one-time-password/#digits
+    # -- The number of digits a user has to input. Must either be 6 or 8.
+    # Changing this option only affects newly generated TOTP configurations.
+    # It is CRITICAL you read the documentation before changing this option:
+    # https://www.authelia.com/configuration/second-factor/time-based-one-time-password/#digits
     digits: 6
 
-    ## The period in seconds a one-time password is valid for.
-    ## Changing this option only affects newly generated TOTP configurations.
+    # -- The period in seconds a one-time password is valid for.
+    # Changing this option only affects newly generated TOTP configurations.
     period: 30
 
-    ## Similar to algorithm with the same restrictions except this option allows users to pick from this list. This list
-    ## will always contain the value configured in the algorithm option.
+    # -- Similar to algorithm with the same restrictions except this option allows users to pick from this list. This list
+    # will always contain the value configured in the algorithm option.
     allowed_algorithms:
       - 'SHA1'
 
-    ## Similar to digits with the same restrictions except this option allows users to pick from this list. This list
-    ## will always contain the value configured in the digits option.
+    # -- Similar to digits with the same restrictions except this option allows users to pick from this list. This list
+    # will always contain the value configured in the digits option.
     allowed_digits:
       - 6
 
-    ## Similar to period with the same restrictions except this option allows users to pick from this list. This list
-    ## will always contain the value configured in the period option.
+    # -- Similar to period with the same restrictions except this option allows users to pick from this list. This list
+    # will always contain the value configured in the period option.
     allowed_periods:
       - 30
 
@@ -784,76 +1087,77 @@ configMap:
   ##
   ## Parameters used for WebAuthn.
   webauthn:
-    ## Disable Webauthn.
+
+    # -- Disable Webauthn.
     disable: false
 
-    ## Adjust the interaction timeout for Webauthn dialogues.
+    # -- Adjust the interaction timeout for Webauthn dialogues.
     timeout: '60 seconds'
 
-    ## The display name the browser should show the user for when using Webauthn to login/register.
+    # -- The display name the browser should show the user for when using Webauthn to login/register.
     display_name: 'Authelia'
 
-    ## Conveyance preference controls if we collect the attestation statement including the AAGUID from the device.
-    ## Options are none, indirect, direct.
+    # -- Conveyance preference controls if we collect the attestation statement including the AAGUID from the device.
+    # Options are none, indirect, direct.
     attestation_conveyance_preference: 'indirect'
 
     ## This section configures various filtering options during registration
     filtering:
 
-      ## A list of Authenticator Attestation GUID’s that are the only ones allowed to be registered. Useful if you have
-      ## a company policy that requires certain authenticators. Mutually exclusive with prohibited_aaguids.
+      # -- A list of Authenticator Attestation GUID’s that are the only ones allowed to be registered. Useful if you have
+      # a company policy that requires certain authenticators. Mutually exclusive with prohibited_aaguids.
       permitted_aaguids: []
 
-      ## A list of Authenticator Attestation GUID’s that users will not be able to register. Useful if company policy
-      ## prevents certain authenticators. Mutually exclusive with permitted_aaguids.
+      # -- A list of Authenticator Attestation GUID’s that users will not be able to register. Useful if company policy
+      # prevents certain authenticators. Mutually exclusive with permitted_aaguids.
       prohibited_aaguids: []
 
-      ## Setting this value to true will ensure Authenticators which can export credentials will not be able to
-      ## register. This will likely prevent synchronized credentials from being registered.
+      # -- Setting this value to true will ensure Authenticators which can export credentials will not be able to
+      # register. This will likely prevent synchronized credentials from being registered.
       prohibit_backup_eligibility: false
 
     ## The selection criteria options set preferences for selecting a suitable authenticator.
     selection_criteria:
 
-      ## Sets the attachment preference for newly created credentials.
+      # -- Sets the attachment preference for newly created credentials.
       attachment: ''
 
-      ## Sets the discoverability preference. May affect the creation of Passkeys.
+      # -- Sets the discoverability preference. May affect the creation of Passkeys.
       discoverability: 'preferred'
 
-      ## Sets the user verification preference.
+      # -- Sets the user verification preference.
       user_verification: 'preferred'
 
     ## Configures the metadata service which is used to check the authenticity of authenticators. Useful if company
     ## policy requires only conformant authenticators.
     metadata:
 
-      ## Enables metadata service validation of authenticators and credentials. This requires the download of the
-      ## metadata service blob which will utilize about 5MB of data in your configured storage backend.
+      # -- Enables metadata service validation of authenticators and credentials. This requires the download of the
+      # metadata service blob which will utilize about 5MB of data in your configured storage backend.
       enabled: false
 
-      ## Enables validation of the attestation certificate against the Certificate Authority certificate in the
-      ## validated MDS3 blob. It’s recommended this value is always the default value.
+      # -- Enables validation of the attestation certificate against the Certificate Authority certificate in the
+      # validated MDS3 blob. It’s recommended this value is always the default value.
       validate_trust_anchor: true
 
-      ## Enables validation that an entry exists for the authenticator in the MDS3 blob. It’s recommended that this
-      ## option is the default value, however this may exclude some authenticators which DO NOT have FIDO compliance
-      ## certification or have otherwise not registered with the MDS3. The recommendation is based on the fact that the
-      ## authenticity of a particular authenticator cannot be validated without this.
+      # -- Enables validation that an entry exists for the authenticator in the MDS3 blob. It’s recommended that this
+      # option is the default value, however this may exclude some authenticators which DO NOT have FIDO compliance
+      # certification or have otherwise not registered with the MDS3. The recommendation is based on the fact that the
+      # authenticity of a particular authenticator cannot be validated without this.
       validate_entry: true
 
-      ## Allows authenticators which have provided an empty Authenticator Attestation GUID. This may be required for
-      ## certain authenticators which DO NOT have FIDO compliance certification.
+      # -- Allows authenticators which have provided an empty Authenticator Attestation GUID. This may be required for
+      # certain authenticators which DO NOT have FIDO compliance certification.
       validate_entry_permit_zero_aaguid: false
 
-      ## Enables validation of the attestation entry statuses. There is generally never a reason to disable this as the
-      ## authenticators excluded by default are likely compromised.
+      # -- Enables validation of the attestation entry statuses. There is generally never a reason to disable this as the
+      # authenticators excluded by default are likely compromised.
       validate_status: true
 
-      ## A list of exclusively required statuses for an authenticator to pass validation.
+      # -- A list of exclusively required statuses for an authenticator to pass validation.
       validate_status_permitted: []
 
-      ## A list of authenticator statuses which for an authenticator that are prohibited from being registered.
+      # -- A list of authenticator statuses which for an authenticator that are prohibited from being registered.
       validate_status_prohibited: []
 
   ##
@@ -861,22 +1165,23 @@ configMap:
   ##
   ## This is used to validate the servers time is accurate enough to validate TOTP.
   ntp:
-    ## NTP server address.
+
+    # -- NTP server address.
     address: 'udp://time.cloudflare.com:123'
 
-    ## NTP version.
+    # -- NTP version.
     version: 4
 
-    ## Maximum allowed time offset between the host and the NTP server.
+    # -- Maximum allowed time offset between the host and the NTP server.
     max_desync: '3 seconds'
 
-    ## Disables the NTP check on startup entirely. This means Authelia will not contact a remote service at all if you
-    ## set this to true, and can operate in a truly offline mode.
+    # -- Disables the NTP check on startup entirely. This means Authelia will not contact a remote service at all if you
+    # set this to true, and can operate in a truly offline mode.
     disable_startup_check: false
 
-    ## The default of false will prevent startup only if we can contact the NTP server and the time is out of sync with
-    ## the NTP server more than the configured max_desync. If you set this to true, an error will be logged but startup
-    ## will continue regardless of results.
+    # -- The default of false will prevent startup only if we can contact the NTP server and the time is out of sync with
+    # the NTP server more than the configured max_desync. If you set this to true, an error will be logged but startup
+    # will continue regardless of results.
     disable_failure: false
 
   ##
@@ -885,24 +1190,34 @@ configMap:
   ## Parameters used to contact the Duo API. Those are generated when you protect an application of type
   ## 'Partner Auth API' in the management panel.
   duo_api:
+
+    # -- Enables Duo.
     enabled: false
+
+    # -- The Duo API hostname. This is provided in the Duo dashboard.
     hostname: ''
+
+    # -- The non-secret Duo integration key. Similar to a client identifier. This is provided in the Duo dashboard.
     integration_key: ''
+
+    # -- Enables Duo device self-enrollment from within the Authelia portal.
     enable_self_enrollment: false
+
     secret:
-      ## Disables this secret and leaves configuring it entirely up to you.
+
+      # -- Disables this secret and leaves configuring it entirely up to you.
       disabled: false
 
-      ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
-      ## secret_value option below.
+      # -- The secret name. The ~ name is special as it is the secret we generate either automatically or via the
+      # secret_value option below.
       secret_name: ~
 
-      ## The value of a generated secret when using the ~ secret_name.
+      # -- The value of a generated secret when using the ~ secret_name.
       value: ''
 
-      ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
-      ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
-      ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+      # -- The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+      # it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+      # value, '{secret_name}' is the secret_name above, and '{path}' is this value.
       path: 'duo.key'
 
   ##
@@ -916,23 +1231,19 @@ configMap:
     ## Password Reset Options.
     password_reset:
 
-      ## Disable both the HTML element and the API for reset password functionality
+      # -- Disable both the HTML element and the API for reset password functionality.
       disable: false
 
-      ## External reset password url that redirects the user to an external reset portal. This disables the internal
-      ## reset functionality.
+      # -- External reset password url that redirects the user to an external reset portal. This disables the internal
+      # reset functionality.
       custom_url: ''
 
     password_change:
+
+      # -- Disable both the HTML element and the API for change password functionality.
       disable: false
 
-    ## The amount of time to wait before we refresh data from the authentication backend. Uses duration notation.
-    ## To disable this feature set it to 'disable', this will slightly reduce security because for Authelia, users will
-    ## always belong to groups they belonged to at the time of login even if they have been removed from them in LDAP.
-    ## To force update on every request you can set this to '0' or 'always', this will increase processor demand.
-    ## See the below documentation for more information.
-    ## Duration Notation docs:  https://www.authelia.com/configuration/prologue/common/#duration-notation-format
-    ## Refresh Interval docs: https://www.authelia.com/configuration/first-factor/ldap/#refresh-interval
+    # -- The amount of time to wait before we refresh data from the authentication backend. Uses duration notation.
     refresh_interval: '5 minutes'
 
     ## LDAP backend configuration.
@@ -942,172 +1253,177 @@ configMap:
     ## production.
     ldap:
 
-      ## Enable LDAP Backend.
+      # -- Enable LDAP Backend.
       enabled: false
 
-      ## The LDAP implementation, this affects elements like the attribute utilised for resetting a password.
-      ## Acceptable options are as follows:
-      ## - 'activedirectory' - For Microsoft Active Directory.
-      ## - 'custom' - For custom specifications of attributes and filters.
-      ## This currently defaults to 'custom' to maintain existing behaviour.
-      ##
-      ## Depending on the option here certain other values in this section have a default value, notably all of the
-      ## attribute mappings have a default value that this config overrides, you can read more about these default values
-      ## at https://www.authelia.com/reference/guides/ldap/#defaults
+      # -- The LDAP implementation, this affects elements like the attribute utilised for resetting a password.
       implementation: 'activedirectory'
 
-      ## The address for the ldap server. Format: <scheme>://<address>[:<port>].
-      ## Scheme can be ldap or ldaps in the format (port optional).
+      # -- The address for the ldap server. Format: <scheme>://<address>[:<port>].
+      # Scheme can be ldap or ldaps in the format (port optional).
       address: 'ldap://openldap.default.svc.cluster.local'
 
-      ## Connection Timeout.
+      # -- Connection Timeout.
       timeout: '5 seconds'
 
-      ## Use StartTLS with the LDAP connection.
+      # -- Use StartTLS with the LDAP connection.
       start_tls: false
 
       tls:
-        ## The server subject name to check the servers certificate against during the validation process.
-        ## This option is not required if the certificate has a SAN which matches the host portion of the url option.
+
+        # -- The server subject name to check the servers certificate against during the validation process.
+        # This option is not required if the certificate has a SAN which matches the host portion of the url option.
         server_name: ''
 
-        ## Skip verifying the server certificate entirely. In preference to setting this we strongly recommend you add the
-        ## certificate or the certificate of the authority signing the certificate to the certificates directory which is
-        ## defined by the `certificates_directory` option at the top of the configuration.
-        ## It's important to note the public key should be added to the directory, not the private key.
-        ## This option is strongly discouraged but may be useful in some self-signed situations where validation is not
-        ## important to the administrator.
+        # -- Skip verifying the server certificate entirely.
         skip_verify: false
 
-        ## Minimum TLS version for the connection.
+        # -- Minimum TLS version for the connection.
         minimum_version: 'TLS1.2'
 
-        ## Maximum TLS version for the connection.
+        # -- Maximum TLS version for the connection.
         maximum_version: 'TLS1.3'
 
       pooling:
+
+        # -- Enables the connection pooling functionality.
         enable: false
+
+        # -- The number of open connections to be available in the pool at any given time.
         count: 5
+
+        # -- The number of attempts to obtain a free connecting that are made within the timeout period. This
+        # effectively splits the timeout into chunks.
         retries: 2
+
+        # -- The amount of time that we wait for a connection to become free in the pool before giving up and failing
+        # with an error.
         timeout: '10 seconds'
 
-      ## The base dn for every LDAP query.
+      # -- The base dn for every LDAP query.
       base_dn: 'DC=example,DC=com'
 
-      ## An additional dn to define the scope to all users.
+      # -- An additional dn to define the scope to all users.
       additional_users_dn: 'OU=Users'
 
-      ## The users filter used in search queries to find the user profile based on input filled in login form.
-      ## Various placeholders are available in the user filter:
-      ## - {input} is a placeholder replaced by what the user inputs in the login form.
-      ## - {username_attribute} is a mandatory placeholder replaced by what is configured in `username_attribute`.
-      ## - {mail_attribute} is a placeholder replaced by what is configured in `mail_attribute`.
-      ## - DON'T USE - {0} is an alias for {input} supported for backward compatibility but it will be deprecated in later
-      ##   versions, so please don't use it.
-      ##
-      ## Recommended settings are as follows:
-      ## - Microsoft Active Directory: (&({username_attribute}={input})(objectCategory=person)(objectClass=user))
-      ## - OpenLDAP:
-      ##   - (&({username_attribute}={input})(objectClass=person))
-      ##   - (&({username_attribute}={input})(objectClass=inetOrgPerson))
-      ##
-      ## To allow sign in both with username and email, one can use a filter like
-      ## (&(|({username_attribute}={input})({mail_attribute}={input}))(objectClass=person))
+      # -- The users filter used in search queries to find the user profile based on input filled in login form.
       users_filter: ''
 
-      ## An additional dn to define the scope of groups.
+      # -- An additional dn to define the scope of groups.
       additional_groups_dn: 'OU=Groups'
 
-      ## The groups filter used in search queries to find the groups of the user.
-      ## - {input} is a placeholder replaced by what the user inputs in the login form.
-      ## - {username} is a placeholder replace by the username stored in LDAP (based on `username_attribute`).
-      ## - {dn} is a matcher replaced by the user distinguished name, aka, user DN.
-      ## - {username_attribute} is a placeholder replaced by what is configured in `username_attribute`.
-      ## - {mail_attribute} is a placeholder replaced by what is configured in `mail_attribute`.
-      ## - DON'T USE - {0} is an alias for {input} supported for backward compatibility but it will be deprecated in later
-      ##   versions, so please don't use it.
-      ## - DON'T USE - {1} is an alias for {username} supported for backward compatibility but it will be deprecated in
-      ##   later version, so please don't use it.
-      ##
-      ## If your groups use the `groupOfUniqueNames` structure use this instead:
-      ##    (&(uniquemember={dn})(objectclass=groupOfUniqueNames))
+      # -- The groups filter used in search queries to find the groups of the user.
       groups_filter: ''
 
-      ## Follow referrals returned by the server.
-      ## This is especially useful for environments where read-only servers exist. Only implemented for write operations.
+      # -- Follow referrals returned by the server.
+      # This is especially useful for environments where read-only servers exist. Only implemented for write operations.
       permit_referrals: false
 
-      ## WARNING: This option is strongly discouraged. Please consider disabling unauthenticated binding to your LDAP
-      ## server and utilizing a service account.
+      # -- Permits use of an unauthenticated bind. WARNING: This option is strongly discouraged. Please consider
+      # disabling unauthenticated binding to your LDAP server and utilizing a service account.
       permit_unauthenticated_bind: false
 
-      ## This option is strongly discouraged. If enabled it will ignore errors looking up the RootDSE for supported
-      ## controls/extensions.
+      # -- This option is strongly discouraged. If enabled it will ignore errors looking up the RootDSE for supported
+      # controls/extensions.
       permit_feature_detection_failure: false
 
-      ## The username of the admin user.
+      # -- The username of the admin user.
       user: 'CN=Authelia,DC=example,DC=com'
 
       password:
-        ## Disables this secret and leaves configuring it entirely up to you.
+
+        # -- Disables this secret and leaves configuring it entirely up to you.
         disabled: false
 
-        ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
-        ## secret_value option below.
+        # -- The secret name. The ~ name is special as it is the secret we generate either automatically or via the
+        # secret_value option below.
         secret_name: ~
 
-        ## The value of a generated secret when using the ~ secret_name.
+        # -- The value of a generated secret when using the ~ secret_name.
         value: ''
 
-        ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
-        ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
-        ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+        # -- The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+        # it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+        # value, '{secret_name}' is the secret_name above, and '{path}' is this value.
         path: 'authentication.ldap.password.txt'
 
       attributes:
+
+        # -- The attribute holding the distinguished name of the user.
         distinguished_name: ''
 
-        ## The attribute holding the username of the user. This attribute is used to populate the username in the session
-        ## information. It was introduced due to #561 to handle case insensitive search queries. For you information,
-        ## Microsoft Active Directory usually uses 'sAMAccountName' and OpenLDAP usually uses 'uid'. Beware that this
-        ## attribute holds the unique identifiers for the users binding the user and the configuration stored in database.
-        ## Therefore only single value attributes are allowed and the value must never be changed once attributed to a user
-        ## otherwise it would break the configuration for that user. Technically, non-unique attributes like 'mail' can also
-        ## be used but we don't recommend using them, we instead advise to use the attributes mentioned above
-        ## (sAMAccountName and uid) to follow https://www.ietf.org/rfc/rfc2307.txt.
+        # -- The attribute holding the username of the user. This attribute is used to populate the username in the session
+        # information.
         username: ''
 
-        ## The attribute holding the display name of the user. This will be used to greet an authenticated user.
+        # -- The attribute holding the display name of the user. This will be used to greet an authenticated user.
         display_name: ''
 
+        # -- The attribute holding the family name of the user.
         family_name: ''
+
+        # -- The attribute holding the given name of the user.
         given_name: ''
+
+        # -- The attribute holding the middle name of the user.
         middle_name: ''
+
+        # -- The attribute holding the nickname of the user.
         nickname: ''
+
+        # -- The attribute holding the gender of the user.
         gender: ''
+
+        # -- The attribute holding the birthdate of the user.
         birthdate: ''
+
+        # -- The attribute holding the website of the user.
         website: ''
+
+        # -- The attribute holding the profile of the user.
         profile: ''
+
+        # -- The attribute holding the picture URL of the user.
         picture: ''
+
+        # -- The attribute holding the zoneinfo of the user.
         zoneinfo: ''
+
+        # -- The attribute holding the locale of the user.
         locale: ''
+
+        # -- The attribute holding the phone number of the user.
         phone_number: ''
+
+        # -- The attribute holding the phone extension of the user.
         phone_extension: ''
+
+        # -- The attribute holding the street address of the user.
         street_address: ''
+
+        # -- The attribute holding the locality of the user.
         locality: ''
+
+        # -- The attribute holding the region of the user.
         region: ''
+
+        # -- The attribute holding the postal code of the user.
         postal_code: ''
+
+        # -- The attribute holding the country of the user.
         country: ''
 
-        ## The attribute holding the mail address of the user. If multiple email addresses are defined for a user, only the
-        ## first one returned by the LDAP server is used.
+        # -- The attribute holding the mail address of the user. If multiple email addresses are defined for a user, only the
+        # first one returned by the LDAP server is used.
         mail: ''
 
+        # -- The attribute which represents the objects this user is a member of.
         member_of: ''
 
-        ## The attribute holding the name of the group
+        # -- The attribute holding the name of the group.
         group_name: ''
 
+        # -- The extra attributes for users.
         extra: {}
         # extra:
           # extra_example:
@@ -1127,39 +1443,109 @@ configMap:
     ## Important: Kubernetes (or HA) users must read https://www.authelia.com/overview/authorization/statelessness/
     ##
     file:
+
+      # -- Enable File Backend (Authentication).
       enabled: false
+
+      # -- The path to the file with the user details list.
       path: '/config/users_database.yml'
+
+      # -- Enables reloading the database by watching it for changes.
       watch: false
+
       search:
+
+        # -- Allows users to login using their email address. If enabled two users must not have the same emails and
+        # their usernames must not be an email.
         email: false
+
+        # -- Enabling this search option allows users to login with their username regardless of case. If enabled users
+        # must only have lowercase usernames.
         case_insensitive: false
+
+      # -- The extra attributes to load from the directory server. These extra attributes can be used in other areas of
+      # Authelia such as OpenID Connect 1.0. It’s also recommended to check out the Attributes Reference Guide for more
+      # information.
       extra_attributes: {}
+
       password:
+
+        # -- Controls the hashing algorithm used for hashing new passwords.
         algorithm: 'argon2'
+
         argon2:
+
+          # -- Controls the variant when hashing passwords using Argon2. Recommended argon2id. Permitted values
+          # argon2id, argon2i, argon2d.
           variant: 'argon2id'
+
+          # -- Controls the number of iterations when hashing passwords using Argon2.
           iterations: 3
+
+          # -- Controls the amount of memory in kibibytes when hashing passwords using Argon2.
           memory: 65536
+
+          # -- Controls the parallelism factor when hashing passwords using Argon2.
           parallelism: 4
+
+          # -- Controls the output key length when hashing passwords using Argon2.
           key_length: 32
+
+          # -- Controls the output salt length when hashing passwords using Argon2
           salt_length: 16
+
         scrypt:
+
+          # -- Controls the variant when hashing passwords using Scrypt. Permitted values scrypt, yescrypt.
           variant: 'scrypt'
+
+          # -- Controls the number of iterations when hashing passwords using Scrypt.
           iterations: 16
+
+          # -- Controls the block size when hashing passwords using Scrypt.
           block_size: 8
+
+          # -- Controls the parallelism factor when hashing passwords using Scrypt.
           parallelism: 1
+
+          # -- Controls the output key length when hashing passwords using Scrypt.
           key_length: 32
+
+          # -- Controls the output salt length when hashing passwords using Scrypt.
           salt_length: 16
+
         pbkdf2:
+
+          # -- Controls the variant when hashing passwords using PBKDF2. Recommended sha512. Permitted values sha1,
+          # sha224, sha256, sha384, sha512.
           variant: 'sha512'
+
+          # -- Controls the number of iterations when hashing passwords using PBKDF2.
           iterations: 310000
+
+          # -- Controls the output salt length when hashing passwords using PBKDF2.
           salt_length: 16
+
         sha2crypt:
+
+          # -- Controls the variant when hashing passwords using SHA2 Crypt. Recommended sha512. Permitted values
+          # sha256, sha512.
           variant: 'sha512'
+
+          # -- Controls the number of iterations when hashing passwords using SHA2 Crypt.
           iterations: 50000
+
+          # -- Controls the output salt length when hashing passwords using SHA2 Crypt.
           salt_length: 16
+
+
         bcrypt:
+
+          # -- Controls the variant when hashing passwords using Bcrypt. Recommended standard. Permitted values
+          # standard, sha256.
           variant: 'standard'
+
+          # -- Controls the hashing cost when hashing passwords using Bcrypt.
           cost: 12
 
   ##
@@ -1169,31 +1555,35 @@ configMap:
 
     ## The standard policy allows you to tune individual settings manually.
     standard:
+
+      # -- Enables standard password policy.
       enabled: false
 
-      ## Require a minimum length for passwords.
+      # -- Require a minimum length for passwords.
       min_length: 8
 
-      ## Require a maximum length for passwords.
+      # -- Require a maximum length for passwords.
       max_length: 0
 
-      ## Require uppercase characters.
+      # -- Require uppercase characters.
       require_uppercase: false
 
-      ## Require lowercase characters.
+      # -- Require lowercase characters.
       require_lowercase: false
 
-      ## Require numeric characters.
+      # -- Require numeric characters.
       require_number: false
 
-      ## Require special characters.
+      # -- Require special characters.
       require_special: false
 
     ## zxcvbn is a well known and used password strength algorithm. It does not have tunable settings.
     zxcvbn:
+
+      # -- Enables zxcvbn password policy.
       enabled: false
 
-      ## Configures the minimum score allowed.
+      # -- Configures the minimum score allowed.
       min_score: 0
 
   ##
@@ -1228,19 +1618,21 @@ configMap:
     ## Configure the ACL as a Secret instead of part of the ConfigMap.
     secret:
 
-      ## Enables the ACL section being generated as a secret.
+      # -- Enables the ACL section being generated as a secret.
       enabled: false
 
-      ## The key in the secret which contains the file to mount.
+      # -- The key in the secret which contains the file to mount.
       key: 'configuration.acl.yaml'
 
-      ## An existingSecret name, if configured this will force the secret to be mounted using the key above.
+      # -- An existingSecret name, if configured this will force the secret to be mounted using the key above.
       existingSecret: ''
 
-    ## Default policy can either be 'bypass', 'one_factor', 'two_factor' or 'deny'. It is the policy applied to any
-    ## resource if there is no policy to be applied to the user.
+    # -- Default policy can either be 'bypass', 'one_factor', 'two_factor' or 'deny'. It is the policy applied to any
+    # resource if there is no policy to be applied to the user.
     default_policy: 'deny'
 
+
+    # -- Access Control Rule list.
     rules: []
     # rules:
     # - domain_regex: '^.*\.example.com$'
@@ -1293,42 +1685,41 @@ configMap:
   ## The session cookies identify the user once logged in.
   ## The available providers are: `memory`, `redis`. Memory is the provider unless redis is defined.
   session:
-    ## The name of the session cookie. (default: authelia_session).
+
+    # -- The name of the session cookie. (default: authelia_session).
     name: 'authelia_session'
 
-    ## Sets the Cookie SameSite value. Possible options are none, lax, or strict.
-    ## Please read https://www.authelia.com/configuration/session/introduction/#same_site
+    # -- Sets the Cookie SameSite value. Possible options are none, lax, or strict.
+    # Please read https://www.authelia.com/configuration/session/introduction/#same_site
     same_site: 'lax'
 
-    ## The time in seconds before the cookie expires and session is reset.
+    # -- The time in seconds before the cookie expires and session is reset.
     expiration: '1 hour'
 
-    ## The inactivity time in seconds before the session is reset.
+    # -- The inactivity time in seconds before the session is reset.
     inactivity: '5 minutes'
 
-    ## The remember me duration.
-    ## Value is in seconds, or duration notation. Value of 0 disables remember me.
-    ## See: https://www.authelia.com/configuration/prologue/common/#duration-notation-format
-    ## Longer periods are considered less secure because a stolen cookie will last longer giving attackers more time to
-    ## spy or attack. Currently the default is 1M or 1 month.
+    # -- The remember me duration.
     remember_me: '1 month'
 
     encryption_key:
-      ## Disables this secret and leaves configuring it entirely up to you.
+
+      # -- Disables this secret and leaves configuring it entirely up to you.
       disabled: false
 
-      ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
-      ## secret_value option below.
+      # -- The secret name. The ~ name is special as it is the secret we generate either automatically or via the
+      # secret_value option below.
       secret_name: ~
 
-      ## The value of a generated secret when using the ~ secret_name.
+      # -- The value of a generated secret when using the ~ secret_name.
       value: ''
 
-      ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
-      ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
-      ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+      # -- The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+      # it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+      # value, '{secret_name}' is the secret_name above, and '{path}' is this value.
       path: 'session.encryption.key'
 
+    # -- Session Cookies list.
     cookies: []
     # cookies:
       # -
@@ -1374,94 +1765,102 @@ configMap:
     ##
     ## The redis connection details
     redis:
+
+      # -- Enable the use of redis.
       enabled: false
+
+      # -- Deploy the redis bitnami chart.
       deploy: false
-      enabledSecret: false
+
+      # -- The redis host or unix socket path. If utilising an IPv6 literal address it must be enclosed by square
+      # brackets and quoted.
       host: 'redis.databases.svc.cluster.local'
+
+      # -- The port redis is listening on.
       port: 6379
 
-      ## Optional username to be used with authentication.
-      # username: authelia
+      # -- Optional username to be used with authentication.
       username: ''
 
       password:
-        ## Disables this secret and leaves configuring it entirely up to you.
+
+        # -- Disables this secret and leaves configuring it entirely up to you.
         disabled: false
 
-        ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
-        ## secret_value option below.
+        # -- The secret name. The ~ name is special as it is the secret we generate either automatically or via the
+        # secret_value option below.
         secret_name: ~
 
-        ## The value of a generated secret when using the ~ secret_name.
+        # -- The value of a generated secret when using the ~ secret_name.
         value: ''
 
-        ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
-        ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
-        ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+        # -- The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+        # it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+        # value, '{secret_name}' is the secret_name above, and '{path}' is this value.
         path: 'session.redis.password.txt'
 
-      ## This is the Redis DB Index https://redis.io/commands/select (sometimes referred to as database number, DB, etc).
+      # -- This is the Redis DB Index https://redis.io/commands/select (sometimes referred to as database number, DB, etc).
       database_index: 0
 
-      ## The maximum number of concurrent active connections to Redis.
+      # -- The maximum number of concurrent active connections to Redis.
       maximum_active_connections: 8
 
-      ## The target number of idle connections to have open ready for work. Useful when opening connections is slow.
+      # -- The target number of idle connections to have open ready for work. Useful when opening connections is slow.
       minimum_idle_connections: 0
 
       ## The Redis TLS configuration. If defined will require a TLS connection to the Redis instance(s).
       tls:
+
+        # -- Enables rendering this TLS config.
         enabled: false
 
-        ## The server subject name to check the servers certificate against during the validation process.
-        ## This option is not required if the certificate has a SAN which matches the host option.
+        # -- The server subject name to check the servers certificate against during the validation process.
+        # This option is not required if the certificate has a SAN which matches the host option.
         server_name: ''
 
-        ## Skip verifying the server certificate entirely. In preference to setting this we strongly recommend you add the
-        ## certificate or the certificate of the authority signing the certificate to the certificates directory which is
-        ## defined by the `certificates_directory` option at the top of the configuration.
-        ## It's important to note the public key should be added to the directory, not the private key.
-        ## This option is strongly discouraged but may be useful in some self-signed situations where validation is not
-        ## important to the administrator.
+        # -- Skip verifying the server certificate entirely.
         skip_verify: false
 
-        ## Minimum TLS version for the connection.
+        # -- Minimum TLS version for the connection.
         minimum_version: 'TLS1.2'
 
-        ## Maximum TLS version for the connection.
+        # -- Maximum TLS version for the connection.
         maximum_version: 'TLS1.3'
 
       ## The Redis HA configuration options.
       ## This provides specific options to Redis Sentinel, sentinel_name must be defined (Master Name).
       high_availability:
+
+        # -- Enable the use of redis sentinel.
         enabled: false
-        enabledSecret: false
-        ## Sentinel Name / Master Name
+
+        # -- Sentinel Name / Master Name
         sentinel_name: 'mysentinel'
 
-        ## The Redis Sentinel-specific username. If supplied, authentication will be done via Redis 6+ ACL-based
-        ## authentication. If left blank, authentication to sentinels will be done via `requirepass`.
+        # -- The Redis Sentinel-specific username. If supplied, authentication will be done via Redis 6+ ACL-based
+        # authentication. If left blank, authentication to sentinels will be done via `requirepass`.
         username: ''
 
         password:
-          ## Disables this secret and leaves configuring it entirely up to you.
+
+          # -- Disables this secret and leaves configuring it entirely up to you.
           disabled: false
 
-          ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
-          ## secret_value option below.
+          # -- The secret name. The ~ name is special as it is the secret we generate either automatically or via the
+          # secret_value option below.
           secret_name: ~
 
-          ## The value of a generated secret when using the ~ secret_name.
+          # -- The value of a generated secret when using the ~ secret_name.
           value: ''
 
-          ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
-          ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
-          ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+          # -- The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+          # it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+          # value, '{secret_name}' is the secret_name above, and '{path}' is this value.
           path: 'session.redis.sentinel.password.txt'
 
-        ## The additional nodes to pre-seed the redis provider with (for sentinel).
-        ## If the host in the above section is defined, it will be combined with this list to connect to sentinel.
-        ## For high availability to be used you must have either defined; the host above or at least one node below.
+        # -- The additional nodes to pre-seed the redis provider with (for sentinel).
+        # If the host in the above section is defined, it will be combined with this list to connect to sentinel.
+        # For high availability to be used you must have either defined; the host above or at least one node below.
         nodes: []
         # nodes:
         #   - host: 'sentinel-0.databases.svc.cluster.local'
@@ -1469,10 +1868,10 @@ configMap:
         #   - host: 'sentinel-1.databases.svc.cluster.local'
         #     port: 26379
 
-        ## Choose the host with the lowest latency.
+        # -- Choose the host with the lowest latency.
         route_by_latency: false
 
-        ## Choose the host randomly.
+        # -- Choose the host randomly.
         route_randomly: false
 
   ##
@@ -1481,19 +1880,23 @@ configMap:
   ## This mechanism prevents attackers from brute forcing the first factor. It bans the user if too many attempts are done
   ## in a short period of time.
   regulation:
+
+    # -- The regulation modes to use. The active modes determines what is banned in the event of a regulation ban being
+    # triggered as well as what logs to inspect to determine if a ban is needed. Default is just user, but ip is also
+    # available.
     modes:
       - 'user'
 
-    ## The number of failed login attempts before user is banned. Set it to 0 to disable regulation.
+    # -- The number of failed login attempts before user is banned. Set it to 0 to disable regulation.
     max_retries: 3
 
-    ## The time range during which the user can attempt login before being banned. The user is banned if the
-    ## authentication failed 'max_retries' times in a 'find_time' seconds window. Find Time accepts duration notation.
-    ## See: https://www.authelia.com/configuration/prologue/common/#duration-notation-format
+    # -- The time range during which the user can attempt login before being banned. The user is banned if the
+    # authentication failed 'max_retries' times in a 'find_time' seconds window. Find Time accepts duration notation.
+    # See: https://www.authelia.com/configuration/prologue/common/#duration-notation-format
     find_time: '2 minutes'
 
-    ## The length of time before a banned user can login again. Ban Time accepts duration notation.
-    ## See: https://www.authelia.com/configuration/prologue/common/#duration-notation-format
+    # -- The length of time before a banned user can login again. Ban Time accepts duration notation.
+    # See: https://www.authelia.com/configuration/prologue/common/#duration-notation-format
     ban_time: '5 minutes'
 
 
@@ -1504,19 +1907,20 @@ configMap:
   storage:
 
     encryption_key:
-      ## Disables this secret and leaves configuring it entirely up to you.
+
+      # -- Disables this secret and leaves configuring it entirely up to you.
       disabled: false
 
-      ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
-      ## secret_value option below.
+      # -- The secret name. The ~ name is special as it is the secret we generate either automatically or via the
+      # secret_value option below.
       secret_name: ~
 
-      ## The value of a generated secret when using the ~ secret_name.
+      # -- The value of a generated secret when using the ~ secret_name.
       value: ''
 
-      ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
-      ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
-      ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+      # -- The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+      # it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+      # value, '{secret_name}' is the secret_name above, and '{path}' is this value.
       path: 'storage.encryption.key'
 
     ##
@@ -1528,8 +1932,12 @@ configMap:
     ## Important: Kubernetes (or HA) users must read https://www.authelia.com/overview/authorization/statelessness/
     ##
     local:
+
+      # -- Enable the Local Provider (Storage / SQL)
       enabled: false
-      path: /config/db.sqlite3
+
+      # -- Path to the SQLite3 database.
+      path: '/config/db.sqlite3'
 
     ##
     ## MySQL (Storage Provider)
@@ -1537,55 +1945,78 @@ configMap:
     ## Also supports MariaDB
     ##
     mysql:
+
+      # -- Enable the MySQL Provider (Storage / SQL).
       enabled: false
+
+      # -- Deploy the MySQL Chart.
       deploy: false
+
+      # -- Configures the address for the MySQL/MariaDB Server. The address itself is a connector and the scheme must
+      # either be the unix scheme or one of the tcp schemes.
       address: 'tcp://mysql.databases.svc.cluster.local:3306'
+
+      # -- The SQL connection timeout.
       timeout: '5 seconds'
+
+      # -- The database name on the database server that the assigned user has access to for the purpose of Authelia.
       database: 'authelia'
+
+      # -- The username paired with the password used to connect to the database.
       username: 'authelia'
+
       password:
-        ## Disables this secret and leaves configuring it entirely up to you.
+
+        # -- Disables this secret and leaves configuring it entirely up to you.
         disabled: false
 
-        ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
-        ## secret_value option below.
+        # -- The secret name. The ~ name is special as it is the secret we generate either automatically or via the
+        # secret_value option below.
         secret_name: ~
 
-        ## The value of a generated secret when using the ~ secret_name.
+        # -- The value of a generated secret when using the ~ secret_name.
         value: ''
 
-        ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
-        ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
-        ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+        # -- The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+        # it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+        # value, '{secret_name}' is the secret_name above, and '{path}' is this value.
         path: 'storage.mysql.password.txt'
+
       tls:
+
+        # -- Enables rendering this TLS config.
         enabled: false
 
-        ## The server subject name to check the servers certificate against during the validation process.
-        ## This option is not required if the certificate has a SAN which matches the host option.
+        # -- The server subject name to check the servers certificate against during the validation process.
+        # This option is not required if the certificate has a SAN which matches the host option.
         server_name: ''
 
-        ## Skip verifying the server certificate entirely. In preference to setting this we strongly recommend you add the
-        ## certificate or the certificate of the authority signing the certificate to the certificates directory which is
-        ## defined by the `certificates_directory` option at the top of the configuration.
-        ## It's important to note the public key should be added to the directory, not the private key.
-        ## This option is strongly discouraged but may be useful in some self-signed situations where validation is not
-        ## important to the administrator.
+        # -- Skip verifying the server certificate entirely.
         skip_verify: false
 
-        ## Minimum TLS version for the connection.
+        # -- Minimum TLS version for the connection.
         minimum_version: 'TLS1.2'
 
-        ## Maximum TLS version for the connection.
+        # -- Maximum TLS version for the connection.
         maximum_version: 'TLS1.3'
 
     ##
     ## PostgreSQL (Storage Provider)
     ##
     postgres:
+
+      # -- Enable the PostgreSQL Provider (Storage / SQL).
       enabled: false
+
+      # -- Deploy the PostgreSQL Chart.
       deploy: false
+
+      # -- Configures the address for the PostgreSQL Server. The address itself is a connector and the scheme must
+      # either be the unix scheme or one of the tcp schemes.
       address: 'tcp://postgres.databases.svc.cluster.local:5432'
+
+      # -- This specifies a list of additional fallback PostgreSQL instances to use should issues occur with the primary
+      # instance which is configured with the address and tls options.
       servers: []
       # servers:
         # - address: 'tcp://postgres2:5432'
@@ -1594,44 +2025,53 @@ configMap:
         # - address: 'tcp://postgres3:5432'
         #   tls:
         #     server_name: 'postgres3.local'
+
+      # -- The SQL connection timeout.
       timeout: '5 seconds'
+
+      # -- The database name on the database server that the assigned user has access to for the purpose of Authelia.
       database: 'authelia'
+
+      # -- The database schema name to use on the database server that the assigned user has access to for the purpose
+      # of Authelia. By default this is the public schema.
       schema: 'public'
+
+      # -- The username paired with the password used to connect to the database.
       username: 'authelia'
+
       password:
-        ## Disables this secret and leaves configuring it entirely up to you.
+
+        # -- Disables this secret and leaves configuring it entirely up to you.
         disabled: false
 
-        ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
-        ## secret_value option below.
+        # -- The secret name. The ~ name is special as it is the secret we generate either automatically or via the
+        # secret_value option below.
         secret_name: ~
 
-        ## The value of a generated secret when using the ~ secret_name.
+        # -- The value of a generated secret when using the ~ secret_name.
         value: ''
 
-        ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
-        ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
-        ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+        # -- The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+        # it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+        # value, '{secret_name}' is the secret_name above, and '{path}' is this value.
         path: 'storage.postgres.password.txt'
+
       tls:
+
+        # -- Enables rendering this TLS config.
         enabled: false
 
-        ## The server subject name to check the servers certificate against during the validation process.
-        ## This option is not required if the certificate has a SAN which matches the host option.
+        # -- The server subject name to check the servers certificate against during the validation process.
+        # This option is not required if the certificate has a SAN which matches the host option.
         server_name: ''
 
-        ## Skip verifying the server certificate entirely. In preference to setting this we strongly recommend you add the
-        ## certificate or the certificate of the authority signing the certificate to the certificates directory which is
-        ## defined by the `certificates_directory` option at the top of the configuration.
-        ## It's important to note the public key should be added to the directory, not the private key.
-        ## This option is strongly discouraged but may be useful in some self-signed situations where validation is not
-        ## important to the administrator.
+        # -- Skip verifying the server certificate entirely.
         skip_verify: false
 
-        ## Minimum TLS version for the connection.
+        # -- Minimum TLS version for the connection.
         minimum_version: 'TLS1.2'
 
-        ## Maximum TLS version for the connection.
+        # -- Maximum TLS version for the connection.
         maximum_version: 'TLS1.3'
 
   ##
@@ -1641,7 +2081,8 @@ configMap:
   ## Notifications are sent to users when they require a password reset, a u2f registration or a TOTP registration.
   ## The available providers are: filesystem, smtp. You must use one and only one of these providers.
   notifier:
-    ## You can disable the notifier startup check by setting this to true.
+
+    # -- You can disable the notifier startup check by setting this to true.
     disable_startup_check: false
 
     ##
@@ -1650,7 +2091,11 @@ configMap:
     ## Important: Kubernetes (or HA) users must read https://www.authelia.com/overview/authorization/statelessness/
     ##
     filesystem:
+
+      # -- Enables the File System Provider (Notifier).
       enabled: false
+
+      # -- The file to add email text to. If it doesn’t exist it will be created.
       filename: '/config/notification.txt'
 
     ##
@@ -1664,101 +2109,122 @@ configMap:
     ##   - validate the SMTP server x509 certificate during the TLS handshake against the hosts trusted certificates
     ##     (configure in tls section)
     smtp:
+
+      # -- Enables the SMTP Provider (Notifier).
       enabled: false
-      enabledSecret: false
+
+      # -- Configures the address for the SMTP Server. The address itself is a connector and the scheme must be smtp,
+      # submission, or submissions. The only difference between these schemes are the default ports and submissions
+      # requires a TLS transport per SMTP Ports Security Measures, whereas submission and smtp use a standard TCP
+      # transport and typically enforce StartTLS.
       address: 'submission://smtp.mail.svc.cluster.local:587'
+
+      # -- The SMTP connection timeout.
       timeout: '5 seconds'
+
+      # -- The sender is used to construct both the SMTP command MAIL FROM and to add the FROM header. This address must
+      # be in RFC5322 format.
       sender: 'Authelia <admin@example.com>'
 
-      ## HELO/EHLO Identifier. Some SMTP Servers may reject the default of localhost.
+      # -- HELO/EHLO Identifier. Some SMTP Servers may reject the default of localhost.
       identifier: 'localhost'
 
-      ## Subject configuration of the emails sent.
-      ## {title} is replaced by the text from the notifier
+      # -- Subject configuration of the emails sent.
+      # {title} is replaced by the text from the notifier
       subject: '[Authelia] {title}'
 
-      ## This address is used during the startup check to verify the email configuration is correct.
-      ## It's not important what it is except if your email server only allows local delivery.
+      # -- This address is used during the startup check to verify the email configuration is correct.
+      # It's not important what it is except if your email server only allows local delivery.
       startup_check_address: 'test@authelia.com'
 
-      ## Disables sending HTML formatted emails.
+      # -- Disables sending HTML formatted emails.
       disable_html_emails: false
 
-      ## By default we require some form of TLS. This disables this check though is not advised.
+      # -- By default we require some form of TLS. This disables this check though is not advised.
       disable_require_tls: false
 
-      ## Some SMTP servers ignore SMTP specifications and claim to support STARTTLS when they in fact do not. For
-      ## security reasons Authelia refuses to send messages to these servers. This option disables this measure and is
-      ## enabled AT YOUR OWN RISK. It’s strongly recommended that instead of enabling this option you either fix the
-      ## issue with the SMTP server’s configuration or have the administrators of the server fix it. If the issue can’t
-      ## be fixed by configuration we recommend lodging an issue with the authors of the SMTP server. See [security] for
-      ## more information.
+      # -- Some SMTP servers ignore SMTP specifications and claim to support STARTTLS when they in fact do not. For
+      # security reasons Authelia refuses to send messages to these servers. This option disables this measure and is
+      # enabled AT YOUR OWN RISK.
       disable_starttls: false
 
+      # -- The username sent for authentication with the SMTP server. Paired with the password.
       username: ''
       password:
-        ## Disables this secret and leaves configuring it entirely up to you.
+
+        # -- Disables this secret and leaves configuring it entirely up to you.
         disabled: false
 
-        ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
-        ## secret_value option below.
+        # -- The secret name. The ~ name is special as it is the secret we generate either automatically or via the
+        # secret_value option below.
         secret_name: ~
 
-        ## The value of a generated secret when using the ~ secret_name.
+        # -- The value of a generated secret when using the ~ secret_name.
         value: ''
 
-        ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
-        ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
-        ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+        # -- The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+        # it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+        # value, '{secret_name}' is the secret_name above, and '{path}' is this value.
         path: 'notifier.smtp.password.txt'
 
       tls:
-        ## The server subject name to check the servers certificate against during the validation process.
-        ## This option is not required if the certificate has a SAN which matches the host option.
+        # -- The server subject name to check the servers certificate against during the validation process.
+        # This option is not required if the certificate has a SAN which matches the host option.
         server_name: ''
 
-        ## Skip verifying the server certificate entirely. In preference to setting this we strongly recommend you add the
-        ## certificate or the certificate of the authority signing the certificate to the certificates directory which is
-        ## defined by the `certificates_directory` option at the top of the configuration.
-        ## It's important to note the public key should be added to the directory, not the private key.
-        ## This option is strongly discouraged but may be useful in some self-signed situations where validation is not
-        ## important to the administrator.
+        # -- Skip verifying the server certificate entirely.
         skip_verify: false
 
-        ## Minimum TLS version for the connection.
+        # -- Minimum TLS version for the connection.
         minimum_version: 'TLS1.2'
 
-        ## Maximum TLS version for the connection.
+        # -- Maximum TLS version for the connection.
         maximum_version: 'TLS1.3'
 
   identity_providers:
     oidc:
-      ## Enables this in the config map. Currently in beta stage.
-      ## See https://www.authelia.com/r/openid-connect/
+
+      # -- Enables this in the config map. Currently in beta stage.
+      # See https://www.authelia.com/r/openid-connect/
       enabled: false
 
       hmac_secret:
-        ## Disables this secret and leaves configuring it entirely up to you.
+        # -- Disables this secret and leaves configuring it entirely up to you.
         disabled: false
 
-        ## The secret name. The ~ name is special as it is the secret we generate either automatically or via the
-        ## secret_value option below.
+        # -- The secret name. The ~ name is special as it is the secret we generate either automatically or via the
+        # secret_value option below.
         secret_name: ~
 
-        ## The value of a generated secret when using the ~ secret_name.
+        # -- The value of a generated secret when using the ~ secret_name.
         value: ''
 
-        ## The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
-        ## it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
-        ## value, '{secret_name}' is the secret_name above, and '{path}' is this value.
+        # -- The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
+        # it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
+        # value, '{secret_name}' is the secret_name above, and '{path}' is this value.
         path: 'identity_providers.oidc.hmac.key'
 
       lifespans:
+
+        # -- Default lifespan for Access Tokens.
         access_token: '1 hour'
+
+        # -- Default lifespan for Refresh Tokens.
         refresh_token: '1 hour and 30 minutes'
+
+        # -- Default lifespan for ID Tokens.
         id_token: '1 hour'
+
+        # -- Default lifespan for Authorize Codes.
         authorize_code: '1 minute'
+
+        # -- Default lifespan for Device Codes.
         device_code: '10 minutes'
+
+        # -- The custom lifespan configuration allows customizing the lifespans per-client. The custom lifespans must be
+        # utilized with the client lifespan option which applies those settings to that client. Custom lifespans can be
+        # configured in a very granular way, either solely by the token type, or by the token type for each grant type.
+        custom: {}
         # custom:
         #   lifespan_name:
         #     access_token: '1 hour'
@@ -1792,6 +2258,8 @@ configMap:
         #         refresh_token: '1 hour and 30 minutes'
         #         id_token: '1 hour'
 
+      # -- The claims policies are policies which allow customizing the behaviour of claims and the available claims for
+      # a particular client.
       claims_policies: {}
       # claims_policies:
         # policy_name:
@@ -1802,30 +2270,37 @@ configMap:
             # claim_name:
               # attribute: 'attribute_name'
 
+      # -- A list of scope definitions available in addition to the standard ones.
       scopes: {}
       # scopes:
         # scope_name:
           # claims: []
 
-      ## Adjusts the PKCE enforcement. Options are always, public_clients_only, never.
-      ## For security reasons it's recommended this option is public_clients_only or always, however always is not
-      ## compatible with all clients.
+      # -- Adjusts the PKCE enforcement. Options are always, public_clients_only, never.
+      # For security reasons it's recommended this option is public_clients_only or always, however always is not
+      # compatible with all clients.
       enforce_pkce: 'public_clients_only'
 
-      ## Enables the plain PKCE challenge which is not recommended for security reasons but may be necessary for some clients.
+      # -- Enables the plain PKCE challenge which is not recommended for security reasons but may be necessary for some clients.
       enable_pkce_plain_challenge: false
 
-      ## SECURITY NOTICE: It's not recommended changing this option, and highly discouraged to have it below 8 for
-      ## security reasons.
+      # -- Adjusts the parameter entropy requirements for nonce/state etc. SECURITY NOTICE: It's not recommended changing
+      # this option, and highly discouraged to have it less than 8.
       minimum_parameter_entropy: 8
 
-      ## Enables additional debug messages.
+      # -- Enables additional debug messages. SECURITY NOTICE: It's not recommended to use this in production as it
+      # may leak configuration information to clients.
       enable_client_debug_messages: false
 
       pushed_authorizations:
+
+        # -- Requires Pushed Authorization Requests for all Authorization Flows.
         enforce: false
+
+        # -- Adjusts the lifespan for a Pushed Authorization session / context.
         context_lifespan: '5 minutes'
 
+      # -- Authorization Policies configuration.
       authorization_policies: {}
 
       # authorization_policies:
@@ -1835,8 +2310,8 @@ configMap:
       #       - policy: 'two_factor'
       #         subject: 'user:abc'
 
-      ## The JWK's issuer option configures multiple JSON Web Keys. It's required that at least one of the JWK's
-      ## configured has the RS256 algorithm. For RSA keys (RS or PS) the minimum is a 2048 bit key.
+      # -- The JWK's issuer option configures multiple JSON Web Keys. It's required that at least one of the JWK's
+      # configured has the RS256 algorithm. For RSA keys (RS or PS) the minimum is a 2048 bit key.
       jwks: []
 
       # jwks:
@@ -1853,27 +2328,19 @@ configMap:
 
       ## Cross-Origin Resource Sharing (CORS) settings.
       cors:
-        ## List of endpoints in addition to the metadata endpoints to permit cross-origin requests on.
-        # endpoints:
-        #    - 'authorization'
-        #    - 'pushed-authorization-request'
-        #    - 'token'
-        #    - 'revocation'
-        #    - 'introspection'
-        #    - 'userinfo'
+        # -- List of endpoints in addition to the metadata endpoints to permit cross-origin requests on.
         endpoints: []
 
-        ## List of allowed origins.
-        ## Any origin with https is permitted unless this option is configured or the
-        ## allowed_origins_from_client_redirect_uris option is enabled.
-        # allowed_origins:
-        #   - 'https://example.com'
+        # -- List of allowed origins.
+        # Any origin with https is permitted unless this option is configured or the
+        # allowed_origins_from_client_redirect_uris option is enabled.
         allowed_origins: []
 
-        ## Automatically adds the origin portion of all redirect URI's on all clients to the list of allowed_origins,
-        ## provided they have the scheme http or https and do not have the hostname of localhost.
+        # -- Automatically adds the origin portion of all redirect URI's on all clients to the list of allowed_origins,
+        # provided they have the scheme http or https and do not have the hostname of localhost.
         allowed_origins_from_client_redirect_uris: false
 
+      # -- List of registered clients for this provider.
       clients: []
       # clients:
         # -
@@ -2004,19 +2471,19 @@ configMap:
 ##
 secret:
 
+  # -- Disable the Secret manifest functionality.
   disabled: false
 
+  # -- Name of an existing Secret manifest to mount instead of generating one.
   existingSecret: ''
-  # existingSecret: authelia
 
+  # -- Extra annotations for the Secret manifest.
   annotations: {}
-  # annotations:
-  #   myAnnotation: 'myValue'
 
+  # -- Extra labels for the Secret manifest.
   labels: {}
-  # labels:
-  #   myLabel: 'myValue'
 
+  # -- Pod path to mount the values of the Secret manifest.
   mountPath: '/secrets'
 
   ## additionalSecrets contains a list of additional secrets to mount.
@@ -2025,6 +2492,8 @@ secret:
   ## then those options will be rendered in the volumes spec. See 'example-without-items' for an example that doesn't
   ## specify this.
   ##
+
+  # -- Additional secrets to mount to the Pod.
   additionalSecrets: {}
   # additionalSecrets:
   #   example:
@@ -2034,17 +2503,17 @@ secret:
   #   example-without-items: {}
 
 certificates:
+
+  # -- Name of an existing Secret manifest to mount which contains trusted certificates.
   existingSecret: ''
-  # existingSecret: 'authelia'
 
+  # -- Extra annotations for the Certificates Secret manifest.
   annotations: {}
-  # annotations:
-  #   myAnnotation: 'myValue'
 
+  # -- Extra labels for the Certificates Secret manifest.
   labels: {}
-  # labels:
-  #   myLabel: 'myValue'
 
+  # -- List of secret name value pairs to include in this Secret manifest.
   values: []
   # values:
   # - name: 'Example_Com_Root_Certificate_Authority_B64.pem'
@@ -2082,41 +2551,47 @@ certificates:
 ## Configuration Use Case: when you want to manually configure the configuration entirely (set configMap.enabled = false).
 ##
 persistence:
+
+  # -- Enable the PersistentVolumeClaim features for Authelia.
   enabled: false
 
+  # -- Extra annotations for the PersistentVolumeClaim related manifests.
   annotations: {}
-  # annotations:
-  #   myAnnotation: 'myValue'
 
+  # -- Extra annotations for the PersistentVolumeClaim related manifests.
   labels: {}
-  # labels:
-  #   myLabel: 'myValue'
 
+  # -- Mounts the PersistentVolumeClaim in read-only mode.
   readOnly: false
+
+  # -- Mounts specifically a subpath of the PersistentVolumeClaim.
   subPath: ''
 
+  # -- Mounts an existing PersistentVolumeClaim.
   existingClaim: ''
   # existingClaim: 'my-claim-name'
 
+  # -- Uses the specified storageClass for the PersistentVolumeClaim.
   storageClass: ''
-  # storageClass: 'my-storage-class'
 
-  ## Persistent Volume Name
-  ## Useful if Persistent Volumes have been provisioned in advance and you want to use a specific one
-  ##
+  # -- Persistent Volume Name. Useful if Persistent Volumes have been provisioned in advance and you want to use a
+  # specific one.
   volumeName: ''
 
+  # -- PersistentVolumeClaim access modes.
   accessModes:
-  - 'ReadWriteOnce'
+    - 'ReadWriteOnce'
 
+  # -- PersistentVolumeClaim volume size.
   size: '100Mi'
 
   selector: {}
 
 # -- Configure mariadb database subchart under this key.
-#    This will be deployed when storage.mysql.deploy is set to true
-#    Currently settings need to be manually copied from here to the storage.mysql section
-#    For more options see [mariadb chart documentation](https://github.com/bitnami/charts/tree/master/bitnami/mariadb)
+# This will be deployed when storage.mysql.deploy is set to true
+# Currently settings need to be manually copied from here to the storage.mysql section
+# For more options and to see the @default please see [mariadb chart documentation](https://github.com/bitnami/charts/tree/main/bitnami/mariadb)
+# @default -- `{}`
 mariadb:
   architecture: standalone
   auth:
@@ -2132,9 +2607,10 @@ mariadb:
       # storageClass: ""
 
 # -- Configure postgresql database subchart under this key.
-#    This will be deployed when storage.postgres.deploy is set to true
-#    Currently settings need to be manually copied from here to the storage.postgres section
-#    For more options see [postgresql chart documentation](https://github.com/bitnami/charts/tree/master/bitnami/postgresql)
+# This will be deployed when storage.postgres.deploy is set to true
+# Currently settings need to be manually copied from here to the storage.postgres section
+# For more options and to see the @default please see [postgresql chart documentation](https://github.com/bitnami/charts/tree/main/bitnami/postgresql)
+# @default -- `{}`
 postgresql:
   auth:
     postgresPassword: authelia
@@ -2149,9 +2625,10 @@ postgresql:
     resources: {}
 
 # -- Configure redis database subchart under this key.
-#    This will be deployed when session.redis.deploy is set to true
-#    Currently settings need to be manually copied from here to the session.redis section
-#    For more options see [redis chart documentation](https://github.com/bitnami/charts/tree/main/bitnami/redis)
+# This will be deployed when session.redis.deploy is set to true
+# Currently settings need to be manually copied from here to the session.redis section
+# For more options and to see the @default please see [redis chart documentation](https://github.com/bitnami/charts/tree/main/bitnami/redis)
+# @default -- `{}`
 redis:
   architecture: standalone
   auth:

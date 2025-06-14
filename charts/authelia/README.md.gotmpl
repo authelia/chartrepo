@@ -1,0 +1,42 @@
+{{ template "chart.header" . }}
+{{ template "chart.deprecationWarning" . }}
+
+{{ template "chart.badgesSection" . }}
+
+{{ template "chart.description" . }}
+
+{{ template "chart.homepageLine" . }}
+
+## Breaking Changes
+
+Breaking changes with this chart should be expected during the v0.x.x versions at any time however we aim to keep the
+breaking changes within minor releases i.e. from v0.1.0 to v0.2.0. The following versions have notable breaking changes
+which users should be aware of:
+
+- [v0.10.0](https://github.com/authelia/chartrepo/blob/master/charts/authelia/BREAKING.md#0100)
+- [v0.9.0](https://github.com/authelia/chartrepo/blob/master/charts/authelia/BREAKING.md#090)
+- [v0.5.0](https://github.com/authelia/chartrepo/blob/master/charts/authelia/BREAKING.md#050)
+
+## Getting Started
+
+1. Visit https://charts.authelia.com and follow the instructions to install the chart repo.
+2. Configure the chart by setting the various [parameters](#parameters), either in a locally downloaded values.yaml or
+   in the next step.
+3. Install the chart with `helm install authelia authelia/authelia` and optionally set your values with `--values values.yaml` or
+   via `--set [parameter]=[value]`.
+
+{{ template "chart.maintainersSection" . }}
+
+{{ template "chart.sourcesSection" . }}
+
+{{ template "chart.requirementsSection" . }}
+
+## Values Files
+
+- **values.yaml:** basic template with no specific feature states enabled.
+- **values.local.yaml:** environments with file (auth), SQLite3 (storage), filesystem (notification), and memory (
+  session).
+
+{{ template "chart.valuesSectionHtml" . }}
+
+{{ template "helm-docs.versionFooter" . }}

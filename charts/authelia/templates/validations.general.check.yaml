@@ -15,3 +15,7 @@
 {{- if and .Values.ingress.enabled (eq (len .Values.configMap.session.cookies) 0) }}
 {{ fail "An Ingress can't be configured without configured session cookies" }}
 {{- end }}
+
+{{- if and .Values.versionOverride (semverCompare "<4.38.0" .Values.versionOverride) }}
+{{ fail "The versionOverride value must be at least 4.38.0 if defined" }}
+{{- end }}
