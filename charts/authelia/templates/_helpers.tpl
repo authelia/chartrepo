@@ -287,7 +287,8 @@ Returns the rollingUpdate spec
         {{ $result = dict "maxSurge" "25%" "maxUnavailable" "25%" }}
         {{- if .Values.pod.strategy -}}
             {{- if .Values.pod.strategy.rollingUpdate -}}
-                {{- $_ := set $result "maxSurge" (.Values.pod.strategy.rollingUpdate.maxSurge | default "25%") "maxUnavailable" (default "25%" .Values.pod.strategy.rollingUpdate.maxUnavailable) -}}
+                {{- $_ := set $result "maxSurge" (.Values.pod.strategy.rollingUpdate.maxSurge | default "25%") -}}
+                {{- $_ := set $result "maxUnavailable" (.Values.pod.strategy.rollingUpdate.maxUnavailable | default "25%") -}}
             {{- end -}}
         {{- end -}}
     {{- end -}}
