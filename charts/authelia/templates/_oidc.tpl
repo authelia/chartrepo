@@ -1,14 +1,13 @@
 {{/*
-Returns the OpenID Connect 1.0 clients token endpoint authentication method.
+Returns the OpenID Connect 1.0 clients endpoint authentication method.
 */}}
-{{- define "authelia.config.oidc.client.token_endpoint_auth_method" -}}
-    {{- if .public }}
-        {{- .token_endpoint_auth_method | default "none" }}
+{{- define "authelia.config.oidc.client.endpoint_auth_method" -}}
+    {{- if .Public }}
+        {{- .Method | default "none" }}
     {{- else }}
-        {{- .token_endpoint_auth_method | default "client_secret_basic" }}
+        {{- .Method | default "client_secret_basic" }}
     {{- end }}
 {{- end }}
-
 
 {{/*
 Returns the OpenID Connect 1.0 clients secret.
