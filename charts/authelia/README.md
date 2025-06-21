@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.10.18](https://img.shields.io/badge/Version-0.10.18-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.4](https://img.shields.io/badge/AppVersion-4.39.4-informational?style=flat-square)
+![Version: 0.10.19](https://img.shields.io/badge/Version-0.10.19-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.4](https://img.shields.io/badge/AppVersion-4.39.4-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -3510,6 +3510,125 @@ false
 			<td>Mounts an existing PersistentVolumeClaim.</td>
 		</tr>
 		<tr>
+			<td>persistence.extraPersistentVolumeClaims.example.accessModes</td>
+			<td>list</td>
+			<td><pre lang="json">
+[
+  "ReadWriteOnce"
+]
+</pre>
+</td>
+			<td>PersistentVolumeClaim access modes.</td>
+		</tr>
+		<tr>
+			<td>persistence.extraPersistentVolumeClaims.example.annotations</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td>Extra annotations for this PersistentVolumeClaim manifest.</td>
+		</tr>
+		<tr>
+			<td>persistence.extraPersistentVolumeClaims.example.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>Enable this extra PersistentVolumeClaim.</td>
+		</tr>
+		<tr>
+			<td>persistence.extraPersistentVolumeClaims.example.existingClaim</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>Mounts an existing PersistentVolumeClaim.</td>
+		</tr>
+		<tr>
+			<td>persistence.extraPersistentVolumeClaims.example.labels</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td>Extra annotations for this PersistentVolumeClaim manifest.</td>
+		</tr>
+		<tr>
+			<td>persistence.extraPersistentVolumeClaims.example.mountPropagation</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>Sets the mount propagation value for the PersistentVolumeClaim.</td>
+		</tr>
+		<tr>
+			<td>persistence.extraPersistentVolumeClaims.example.readOnly</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>Mounts the PersistentVolumeClaim in read-only mode.</td>
+		</tr>
+		<tr>
+			<td>persistence.extraPersistentVolumeClaims.example.selector</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>persistence.extraPersistentVolumeClaims.example.size</td>
+			<td>string</td>
+			<td><pre lang="json">
+"100Mi"
+</pre>
+</td>
+			<td>PersistentVolumeClaim volume size.</td>
+		</tr>
+		<tr>
+			<td>persistence.extraPersistentVolumeClaims.example.storageClass</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>Uses the specified storageClass for the PersistentVolumeClaim.</td>
+		</tr>
+		<tr>
+			<td>persistence.extraPersistentVolumeClaims.example.subPath</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>Mounts specifically a subpath of the PersistentVolumeClaim.</td>
+		</tr>
+		<tr>
+			<td>persistence.extraPersistentVolumeClaims.example.subPathExpr</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>Uses an expression to mount a subpath of the PersistentVolumeClaim.</td>
+		</tr>
+		<tr>
+			<td>persistence.extraPersistentVolumeClaims.example.volumeName</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>Persistent Volume Name. Useful if Persistent Volumes have been provisioned in advance and you want to use a specific one.</td>
+		</tr>
+		<tr>
 			<td>persistence.labels</td>
 			<td>object</td>
 			<td><pre lang="json">
@@ -3517,6 +3636,15 @@ false
 </pre>
 </td>
 			<td>Extra annotations for the PersistentVolumeClaim related manifests.</td>
+		</tr>
+		<tr>
+			<td>persistence.mountPropagation</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>Sets the mount propagation value for the PersistentVolumeClaim.</td>
 		</tr>
 		<tr>
 			<td>persistence.readOnly</td>
@@ -3562,6 +3690,15 @@ false
 </pre>
 </td>
 			<td>Mounts specifically a subpath of the PersistentVolumeClaim.</td>
+		</tr>
+		<tr>
+			<td>persistence.subPathExpr</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>Uses an expression to mount a subpath of the PersistentVolumeClaim.</td>
 		</tr>
 		<tr>
 			<td>persistence.volumeName</td>

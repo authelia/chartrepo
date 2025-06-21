@@ -2575,6 +2575,12 @@ persistence:
   # -- Mounts specifically a subpath of the PersistentVolumeClaim.
   subPath: ''
 
+  # -- Uses an expression to mount a subpath of the PersistentVolumeClaim.
+  subPathExpr: ''
+
+  # -- Sets the mount propagation value for the PersistentVolumeClaim.
+  mountPropagation: ''
+
   # -- Mounts an existing PersistentVolumeClaim.
   existingClaim: ''
   # existingClaim: 'my-claim-name'
@@ -2595,24 +2601,67 @@ persistence:
 
   selector: {}
 
+  extraPersistentVolumeClaims:
+    example:
+      # -- Enable this extra PersistentVolumeClaim.
+      enabled: false
+
+      # -- Extra annotations for this PersistentVolumeClaim manifest.
+      annotations: {}
+
+      # -- Extra annotations for this PersistentVolumeClaim manifest.
+      labels: {}
+
+      # -- Mounts the PersistentVolumeClaim in read-only mode.
+      readOnly: false
+
+      # -- Mounts specifically a subpath of the PersistentVolumeClaim.
+      subPath: ''
+
+      # -- Uses an expression to mount a subpath of the PersistentVolumeClaim.
+      subPathExpr: ''
+
+      # -- Sets the mount propagation value for the PersistentVolumeClaim.
+      mountPropagation: ''
+
+      # -- Mounts an existing PersistentVolumeClaim.
+      existingClaim: ''
+      # existingClaim: 'my-claim-name'
+
+      # -- Uses the specified storageClass for the PersistentVolumeClaim.
+      storageClass: ''
+
+      # -- Persistent Volume Name. Useful if Persistent Volumes have been provisioned in advance and you want to use a
+      # specific one.
+      volumeName: ''
+
+      # -- PersistentVolumeClaim access modes.
+      accessModes:
+        - 'ReadWriteOnce'
+
+      # -- PersistentVolumeClaim volume size.
+      size: '100Mi'
+
+      selector: {}
+
 # -- Configure mariadb database subchart under this key.
 # This will be deployed when storage.mysql.deploy is set to true
 # Currently settings need to be manually copied from here to the storage.mysql section
 # For more options and to see the @default please see [mariadb chart documentation](https://github.com/bitnami/charts/tree/main/bitnami/mariadb)
 # @default -- `{}`
 mariadb:
-  architecture: standalone
+  architecture: 'standalone'
   auth:
-    database: authelia
-    username: authelia
-    password: authelia
-    rootPassword: authelia
+    database: 'authelia'
+    username: 'authelia'
+    password: 'authelia'
+    rootPassword: 'authelia'
   primary:
     resources: {}
     persistence:
       enabled: false
-      size: 1Gi
-      # storageClass: ""
+      size: '1Gi'
+      # storageClass: ''
 
 # -- Configure postgresql database subchart under this key.
 # This will be deployed when storage.postgres.deploy is set to true
@@ -2621,15 +2670,15 @@ mariadb:
 # @default -- `{}`
 postgresql:
   auth:
-    postgresPassword: authelia
-    username: authelia
-    password: authelia
-    database: authelia
+    postgresPassword: 'authelia'
+    username: 'authelia'
+    password: 'authelia'
+    database: 'authelia'
   primary:
     persistence:
       enabled: false
-      # storageClass: ""
-      size: 1Gi
+      # storageClass: ''
+      size: '1Gi'
     resources: {}
 
 # -- Configure redis database subchart under this key.
@@ -2638,30 +2687,30 @@ postgresql:
 # For more options and to see the @default please see [redis chart documentation](https://github.com/bitnami/charts/tree/main/bitnami/redis)
 # @default -- `{}`
 redis:
-  architecture: standalone
+  architecture: 'standalone'
   auth:
     enabled: false
     sentinel: true
-    password: "redis"
-    existingSecret: ""
-    existingSecretPasswordKey: ""
+    password: 'redis'
+    existingSecret: ''
+    existingSecretPasswordKey: ''
     usePasswordFiles: false
   master:
     resources: {}
-    priorityClassName: ""
+    priorityClassName: ''
     persistence:
       enabled: false
-      # storageClass: ""
+      # storageClass: ''
       accessModes:
-        - ReadWriteOnce
-      size: 1Gi
+        - 'ReadWriteOnce'
+      size: '1Gi'
   replica:
     replicaCount: 3
     resources: {}
-    priorityClassName: ""
+    priorityClassName: ''
     persistence:
       enabled: false
-      # storageClass: ""
+      # storageClass: ''
       accessModes:
-        - ReadWriteOnce
-      size: 1Gi
+        - 'ReadWriteOnce'
+      size: '1Gi'

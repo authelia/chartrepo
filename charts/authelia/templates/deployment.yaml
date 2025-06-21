@@ -231,20 +231,36 @@ spec:
         {{- if (include "authelia.enabled.persistentVolumeClaim" .) }}
         - name: authelia
           mountPath: /config
-          {{- with $subPath := .Values.persistence.subPath }}
-          subPath: {{ $subPath }}
+          {{- if .Values.persistence.subPath }}
+          subPath: {{ .Values.persistence.subPath }}
           {{- end }}
-          {{- with $subPathExpr := .Values.persistence.subPathExpr }}
-          subPathExpr: {{ $subPathExpr }}
+          {{- if .Values.persistence.subPathExpr }}
+          subPathExpr: {{ .Values.persistence.subPathExpr }}
           {{- end }}
-          {{- with $mountPropagation := .Values.persistence.mountPropagation }}
-          mountPropagation: {{ $mountPropagation }}
+          {{- if .Values.persistence.mountPropagation }}
+          mountPropagation: {{ .Values.persistence.mountPropagation }}
           {{- end }}
           readOnly: {{ .Values.persistence.readOnly }}
         {{- else if and (eq (len .Values.pod.extraVolumes) 0) (eq (len .Values.pod.extraVolumeMounts) 0) }}
         - name: authelia
           mountPath: /config
           readOnly: false
+        {{- end }}
+        {{- range $name, $pvc := .Values.persistence.extraPersistentVolumeClaims }}
+        {{- if $pvc.enabled }}
+        - name: {{ printf "authelia-pvc-%s" $name }}
+          mountPath: {{ printf "/pvc/%s" $name }}
+          {{- if $pvc.subPath }}
+          subPath: {{ $pvc.subPath }}
+          {{- end }}
+          {{- if $pvc.subPathExpr }}
+          subPathExpr: {{ $pvc.subPathExpr }}
+          {{- end }}
+          {{- if $pvc.mountPropagation }}
+          mountPropagation: {{ $pvc.mountPropagation }}
+          {{- end }}
+          readOnly: {{ $pvc.readOnly }}
+        {{- end }}
         {{- end }}
         {{- if (include "authelia.enabled.configMap" .) }}
         - name: config
@@ -293,6 +309,13 @@ spec:
       - name: authelia
         emptyDir:
           sizeLimit: 100Mi
+      {{- end }}
+      {{- range $name, $pvc := .Values.persistence.extraPersistentVolumeClaims }}
+      {{- if $pvc.enabled }}
+      - name: {{ printf "authelia-pvc-%s" $name }}
+        persistentVolumeClaim:
+          claimName: {{ $pvc.existingClaim | default $name }}
+      {{- end }}
       {{- end }}
       {{- if (include "authelia.enabled.configMap" .) }}
       - name: config

@@ -14,8 +14,8 @@ spec:
   {{- range (.Values.persistence.accessModes | default (list "ReadWriteOnce")) }}
   - {{ . }}
   {{- end }}
-  {{- with $storageClass := .Values.persistence.storageClass }}
-  storageClassName: {{ $storageClass }}
+  {{- if .Values.persistence.storageClass }}
+  storageClassName: {{ .Values.persistence.storageClass }}
   {{- end }}
   resources:
     requests:
@@ -24,25 +24,75 @@ spec:
   selector:
   {{- if .Values.persistence.selector.matchLabels }}
     matchLabels:
-  {{- range $key, $value := .Values.persistence.selector.matchLabels }}
+    {{- range $key, $value := .Values.persistence.selector.matchLabels }}
       {{ $key}}: {{ $value | squote }}
-  {{- end }}
+    {{- end }}
   {{- end }}
   {{- if .Values.persistence.selector.matchExpressions }}
-  matchExpressions:
-  {{- range $expression := .Values.persistence.selector.matchExpressions }}
-  - key: {{ $expression.key }}
-    operator: {{ $expression.operator }}
-    {{- if $expression.values }}
-    values:
-    {{- range $expression.values }}
-    - {{ . }}
+    matchExpressions:
+    {{- range $expression := .Values.persistence.selector.matchExpressions }}
+    - key: {{ $expression.key }}
+      operator: {{ $expression.operator }}
+      {{- if $expression.values }}
+      values:
+      {{- range $expression.values }}
+      - {{ . }}
+      {{- end }}
+      {{- end }}
     {{- end }}
-    {{- end }}
-  {{- end }}
   {{- end }}
   {{- end }}
   {{- if .Values.persistence.volumeName }}
   volumeName: "{{ .Values.persistence.volumeName }}"
-  {{- end -}}
   {{- end }}
+  {{- end }}
+{{- range $name, $pvc := .Values.persistence.extraPersistentVolumeClaims }}
+{{- if and $pvc.enabled (not $pvc.existingClaim) }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ printf "%s-%s" (include "authelia.name" $) $name }}
+  namespace: {{ template "authelia.namespace" $ }}
+  labels: {{ include "authelia.labels" (merge (dict "Labels" (mergeOverwrite $.Values.persistence.labels $pvc.labels)) $) | nindent 4 }}
+  {{- with $annotations := include "authelia.annotations" (merge (dict "Annotations" (mergeOverwrite $.Values.persistence.annotations $pvc.annotations)) $) }}
+  annotations: {{ $annotations | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+  {{- range ($pvc.accessModes | default (list "ReadWriteOnce")) }}
+    - {{ . }}
+  {{- end }}
+  {{- if $pvc.storageClass }}
+  storageClassName: {{ $pvc.storageClass }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ $pvc.size | default "100Mi" }}
+  {{- if $pvc.selector }}
+  selector:
+  {{- if $pvc.selector.matchLabels }}
+    matchLabels:
+  {{- range $key, $value := $pvc.selector.matchLabels }}
+      {{ $key}}: {{ $value | squote }}
+  {{- end }}
+  {{- end }}
+  {{- if $pvc.selector.matchExpressions }}
+    matchExpressions:
+  {{- range $expression := $pvc.selector.matchExpressions }}
+    - key: {{ $expression.key }}
+      operator: {{ $expression.operator }}
+    {{- if $expression.values }}
+      values:
+    {{- range $expression.values }}
+        - {{ . }}
+    {{- end }}
+    {{- end }}
+  {{- end }}
+  {{- end }}
+  {{- end }}
+  {{- if $pvc.volumeName }}
+  volumeName: "{{ $pvc.volumeName }}"
+  {{- end }}
+{{- end }}
+{{- end }}
