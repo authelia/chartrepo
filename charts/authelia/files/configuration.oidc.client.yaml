@@ -97,7 +97,7 @@
   introspection_encrypted_response_key_id: {{ .Client.introspection_encrypted_response_key_id | default "" | squote }}
   introspection_encrypted_response_alg: {{ .Client.introspection_encrypted_response_alg | default "" | squote }}
   introspection_encrypted_response_enc: {{ .Client.introspection_encrypted_response_enc | default "" | squote }}
-  introspection_endpoint_auth_method: {{ .Client.introspection_endpoint_auth_method | default "client_secret_basic" | squote }}
+  introspection_endpoint_auth_method: {{ (include "authelia.config.oidc.client.endpoint_auth_method" (dict "Public" .Client.public "Method" .Client.introspection_endpoint_auth_method)) | squote }}
   introspection_endpoint_auth_signing_alg: {{ .Client.introspection_endpoint_auth_signing_alg | default "RS256" | squote }}
   {{- end }}
   request_object_signing_alg: {{ .Client.request_object_signing_alg | default "" | squote }}
@@ -105,12 +105,12 @@
   request_object_encryption_alg: {{ .Client.request_object_encryption_alg | default "none" | squote }}
   request_object_encryption_enc: {{ .Client.request_object_encryption_enc | default "" | squote }}
   {{- end }}
-  token_endpoint_auth_method: {{ (include "authelia.config.oidc.client.token_endpoint_auth_method" .Client) | squote }}
+  token_endpoint_auth_method: {{ (include "authelia.config.oidc.client.endpoint_auth_method" (dict "Public" .Client.public "Method" .Client.token_endpoint_auth_method)) | squote }}
   token_endpoint_auth_signing_alg: {{ .Client.token_endpoint_auth_signing_alg | default "" | squote }}
   {{- if semverCompare ">=4.39.0" (include "authelia.version" $) }}
-  revocation_endpoint_auth_method: {{ .Client.revocation_endpoint_auth_method | default "client_secret_basic" | squote }}
+  revocation_endpoint_auth_method: {{ (include "authelia.config.oidc.client.endpoint_auth_method" (dict "Public" .Client.public "Method" .Client.revocation_endpoint_auth_method)) | squote }}
   revocation_endpoint_auth_signing_alg: {{ .Client.revocation_endpoint_auth_signing_alg | default "RS256" | squote }}
-  pushed_authorization_request_endpoint_auth_method: {{ .Client.pushed_authorization_request_endpoint_auth_method | default "client_secret_basic" | squote }}
+  pushed_authorization_request_endpoint_auth_method: {{ (include "authelia.config.oidc.client.endpoint_auth_method" (dict "Public" .Client.public "Method" .Client.pushed_authorization_request_endpoint_auth_method)) | squote }}
   pushed_authorization_request_endpoint_auth_signing_alg: {{ .Client.pushed_authorization_request_endpoint_auth_signing_alg | default "RS256" | squote }}
   {{- end }}
   {{- if .Client.jwks_uri }}
