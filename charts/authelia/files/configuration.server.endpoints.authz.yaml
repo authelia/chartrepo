@@ -10,7 +10,7 @@
       - {{ . | squote }}
       {{- end }}
       {{- end }}
-      {{- if semverCompare ">=4.39.0" (include "authelia.version" $) }}
+      {{- if and (semverCompare ">=4.39.0" (include "authelia.version" $)) (not (eq "CookieSession" $strategy.name)) (or (eq (len $strategy.schemes) 0) (has "Basic" $strategy.schemes) (has "basic" $strategy.schemes) (has "BASIC" $strategy.schemes)) }}
       scheme_basic_cache_lifespan: {{ $strategy.scheme_basic_cache_lifespan | default 0 }}
       {{- end }}
   {{- end }}
