@@ -2155,6 +2155,7 @@ configMap:
 
       # -- The username sent for authentication with the SMTP server. Paired with the password.
       username: ''
+
       password:
 
         # -- Disables this secret and leaves configuring it entirely up to you.
@@ -2502,6 +2503,8 @@ secret:
   additionalSecrets: {}
   # additionalSecrets:
   #   example:
+  #     ## Defines the path within the container, i.e. /secrets/<path>
+  #     path: ''
   #     items:
   #       - key: 'key-example'
   #         path: 'path-example'

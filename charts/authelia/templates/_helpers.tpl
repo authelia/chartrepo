@@ -168,7 +168,7 @@ Returns the value of .SecretValue or a randomly generated one
 Returns the mountPath of the secrets.
 */}}
 {{- define "authelia.secret.mountPath" -}}
-    {{- .Values.secret.mountPath | trimSuffix "/" | default "/secrets" -}}
+        {{- .MountPath | default .Values.secret.mountPath | default "/secrets"  | trimSuffix "/" -}}
 {{- end -}}
 
 {{- define "authelia.secret.path" -}}

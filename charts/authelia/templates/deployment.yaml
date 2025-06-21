@@ -229,9 +229,8 @@ spec:
         {{- end }}
         volumeMounts:
         {{- if (include "authelia.enabled.persistentVolumeClaim" .) }}
-        - mountPath: /config
-          name: authelia
-          readOnly: {{ .Values.persistence.readOnly }}
+        - name: authelia
+          mountPath: /config
           {{- with $subPath := .Values.persistence.subPath }}
           subPath: {{ $subPath }}
           {{- end }}
@@ -241,36 +240,37 @@ spec:
           {{- with $mountPropagation := .Values.persistence.mountPropagation }}
           mountPropagation: {{ $mountPropagation }}
           {{- end }}
+          readOnly: {{ .Values.persistence.readOnly }}
         {{- else if and (eq (len .Values.pod.extraVolumes) 0) (eq (len .Values.pod.extraVolumeMounts) 0) }}
-        - mountPath: /config
-          name: authelia
+        - name: authelia
+          mountPath: /config
           readOnly: false
         {{- end }}
         {{- if (include "authelia.enabled.configMap" .) }}
-        - mountPath: /configuration.yaml
-          name: config
-          readOnly: true
+        - name: config
+          mountPath: /configuration.yaml
           subPath: configuration.yaml
+          readOnly: true
         {{- end }}
         {{- if (include "authelia.mount.acl.secret" .) }}
-        - mountPath: /configuration.acl.yaml
-          name: config-acl
-          readOnly: true
+        - name: config-acl
+          mountPath: /configuration.acl.yaml
           subPath: configuration.acl.yaml
+          readOnly: true
         {{- end }}
         {{- if (not .Values.secret.disabled) }}
-        - mountPath: {{ printf "%s/internal" (include "authelia.secret.mountPath" .) }}
-          name: secrets
+        - name: secrets
+          mountPath: {{ printf "%s/internal" (include "authelia.secret.mountPath" .) }}
           readOnly: true
         {{- end }}
         {{- range $key, $secret := .Values.secret.additionalSecrets }}
-        - mountPath: {{ printf "%s/%s" (include "authelia.secret.mountPath" $) $key }}
-          name: {{ printf "secret-%s" $key }}
+        - name: {{ printf "secret-%s" $key }}
+          mountPath: {{ printf "%s/%s" (include "authelia.secret.mountPath" $) ($secret.path | default $key) }}
           readOnly: true
         {{- end }}
         {{- if (include "authelia.enabled.certificatesSecret" .) }}
-        - mountPath: /certificates
-          name: certificates
+        - name: certificates
+          mountPath: /certificates
           readOnly: true
         {{- end }}
         {{- with $mounts := .Values.pod.extraVolumeMounts }}
