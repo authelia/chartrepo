@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.10.21](https://img.shields.io/badge/Version-0.10.21-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.4](https://img.shields.io/badge/AppVersion-4.39.4-informational?style=flat-square)
+![Version: 0.10.22](https://img.shields.io/badge/Version-0.10.22-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.4](https://img.shields.io/badge/AppVersion-4.39.4-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -445,7 +445,7 @@ false
 			<td>configMap.authentication_backend.ldap.additional_groups_dn</td>
 			<td>string</td>
 			<td><pre lang="json">
-"OU=Groups"
+""
 </pre>
 </td>
 			<td>An additional dn to define the scope of groups.</td>
@@ -454,7 +454,7 @@ false
 			<td>configMap.authentication_backend.ldap.additional_users_dn</td>
 			<td>string</td>
 			<td><pre lang="json">
-"OU=Users"
+""
 </pre>
 </td>
 			<td>An additional dn to define the scope to all users.</td>
@@ -463,7 +463,7 @@ false
 			<td>configMap.authentication_backend.ldap.address</td>
 			<td>string</td>
 			<td><pre lang="json">
-"ldap://openldap.default.svc.cluster.local"
+""
 </pre>
 </td>
 			<td>The address for the ldap server. Format: <scheme>://<address>[:<port>]. Scheme can be ldap or ldaps in the format (port optional).</td>
@@ -697,7 +697,7 @@ false
 			<td>configMap.authentication_backend.ldap.base_dn</td>
 			<td>string</td>
 			<td><pre lang="json">
-"DC=example,DC=com"
+""
 </pre>
 </td>
 			<td>The base dn for every LDAP query.</td>
@@ -886,7 +886,7 @@ false
 			<td>configMap.authentication_backend.ldap.user</td>
 			<td>string</td>
 			<td><pre lang="json">
-"CN=Authelia,DC=example,DC=com"
+""
 </pre>
 </td>
 			<td>The username of the admin user.</td>

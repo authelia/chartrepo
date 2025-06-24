@@ -1261,7 +1261,7 @@ configMap:
 
       # -- The address for the ldap server. Format: <scheme>://<address>[:<port>].
       # Scheme can be ldap or ldaps in the format (port optional).
-      address: 'ldap://openldap.default.svc.cluster.local'
+      address: ''
 
       # -- Connection Timeout.
       timeout: '5 seconds'
@@ -1301,16 +1301,16 @@ configMap:
         timeout: '10 seconds'
 
       # -- The base dn for every LDAP query.
-      base_dn: 'DC=example,DC=com'
+      base_dn: ''
 
       # -- An additional dn to define the scope to all users.
-      additional_users_dn: 'OU=Users'
+      additional_users_dn: ''
 
       # -- The users filter used in search queries to find the user profile based on input filled in login form.
       users_filter: ''
 
       # -- An additional dn to define the scope of groups.
-      additional_groups_dn: 'OU=Groups'
+      additional_groups_dn: ''
 
       # -- The groups filter used in search queries to find the groups of the user.
       groups_filter: ''
@@ -1328,7 +1328,7 @@ configMap:
       permit_feature_detection_failure: false
 
       # -- The username of the admin user.
-      user: 'CN=Authelia,DC=example,DC=com'
+      user: ''
 
       password:
 
@@ -1425,11 +1425,11 @@ configMap:
 
         # -- The extra attributes for users.
         extra: {}
-        # extra:
+          # extra:
           # extra_example:
-            # name: ''
-            # multi_valued: false
-            # value_type: 'string'
+          # name: ''
+          # multi_valued: false
+        # value_type: 'string'
 
     ##
     ## File (Authentication Provider)
