@@ -3,6 +3,53 @@ entries:
   authelia:
   - apiVersion: v2
     appVersion: 4.39.4
+    created: "2025-06-27T09:11:17.265461547+10:00"
+    dependencies:
+    - condition: configMap.storage.postgres.deploy
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: ~15.5.11
+    - condition: configMap.storage.mysql.deploy
+      name: mariadb
+      repository: https://charts.bitnami.com/bitnami
+      version: ~18.2.4
+    - condition: configMap.session.redis.deploy
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: ~19.6.0
+    description: Authelia is a Single Sign-On Multi-Factor portal for web apps
+    digest: bc514cbd2250c53c16aa91a9b598181cb7cb0fe83cfa079364ea30794f640efe
+    home: https://www.authelia.com
+    icon: https://avatars2.githubusercontent.com/u/59122411?s=200&v=4
+    keywords:
+    - SSO
+    - Authentication
+    - Security
+    - Two-Factor
+    - YubiKey
+    - Webauthn
+    - Duo
+    - TOTP
+    - Time-based One Time Password
+    - Push Notifications
+    - LDAP
+    kubeVersion: '>= 1.13.0-0'
+    maintainers:
+    - email: james-d-elliott@users.noreply.github.com
+      name: james-d-elliott
+      url: https://github.com/james-d-elliott
+    - email: autheliabot@gmail.com
+      name: autheliabot
+    name: authelia
+    sources:
+    - https://github.com/authelia/chartrepo/tree/master/charts/authelia
+    - https://www.github.com/authelia/authelia
+    type: application
+    urls:
+    - https://github.com/authelia/chartrepo/releases/download/authelia-0.10.23/authelia-0.10.23.tgz
+    version: 0.10.23
+  - apiVersion: v2
+    appVersion: 4.39.4
     created: "2025-06-24T22:35:34.930078245+10:00"
     dependencies:
     - condition: configMap.storage.postgres.deploy
@@ -6794,4 +6841,4 @@ entries:
     urls:
     - https://github.com/authelia/chartrepo/releases/download/authelia-0.1.0/authelia-0.1.0.tgz
     version: 0.1.0
-generated: "2025-06-24T22:35:34.930468224+10:00"
+generated: "2025-06-27T09:11:17.266391506+10:00"
