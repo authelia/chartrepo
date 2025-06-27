@@ -9,6 +9,16 @@
 [![Discord](https://img.shields.io/discord/707844280412012608?label=discord&style=for-the-badge)](https://discord.authelia.com)
 [![Matrix](https://img.shields.io/matrix/authelia-support:matrix.org?label=matrix&style=for-the-badge)](https://matrix.to/#/#authelia-support:matrix.org)
 
+## ⚠️ Development Status
+
+**This chart repository is in extremely early development (pre-1.0).** We use 0.major.minor semantic versioning, which means:
+- **No stability guarantees** - Breaking changes may occur in any release
+- **API may change without notice** - Chart structure and values can change significantly
+- **Not recommended for production use** - Use at your own risk
+- **Always pin to specific versions** - Avoid version ranges to prevent unexpected breaking changes during updates
+
+---
+
 This repository is for hosting Authelia specific helm charts. Currently we only host a single chart which is still in
 development.
 
