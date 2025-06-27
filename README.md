@@ -11,10 +11,11 @@
 
 ## ⚠️ Development Status
 
-**This chart repository is in extremely early development (pre-1.0).** We use 0.major.minor semantic versioning, which means:
-- **No stability guarantees** - Breaking changes may occur in any release
+**This chart repository contains charts in early development (pre-1.0).** For these charts we use 0.major.minor semantic
+versioning, which means:
+- **No stability guarantees** - Anything may change at any time including a breaking change in any release
 - **API may change without notice** - Chart structure and values can change significantly
-- **Not recommended for production use** - Use at your own risk
+- **They may not be suitable for production use** - Use at your own risk, and additional caution is recommended
 - **Always pin to specific versions** - Avoid version ranges to prevent unexpected breaking changes during updates
 
 ---

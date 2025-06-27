@@ -1,10 +1,18 @@
 # authelia
 
-![Version: 0.10.26](https://img.shields.io/badge/Version-0.10.26-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.4](https://img.shields.io/badge/AppVersion-4.39.4-informational?style=flat-square)
+![Version: 0.10.27](https://img.shields.io/badge/Version-0.10.27-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.4](https://img.shields.io/badge/AppVersion-4.39.4-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
 **Homepage:** <https://www.authelia.com>
+
+## ⚠️ Development Status
+
+**This chart is in early development (pre-1.0).** For this chart we use 0.major.minor semantic versioning, which means:
+- **No stability guarantees** - Anything may change in any release including a breaking change
+- **API may change without notice** - Chart structure and values can change significantly
+- **It may not be suitable for production use** - Use at your own risk, and additional caution is recommended
+- **Always pin to specific versions** - Avoid version ranges to prevent unexpected breaking changes during updates
 
 ## Breaking Changes
 
@@ -3737,19 +3745,6 @@ false
 			<td>Extra annotations for the HorizontalPodAutoscaler manifest.</td>
 		</tr>
 		<tr>
-			<td>pod.autoscaling.behaviour.scaleDown.policies[0]</td>
-			<td>string</td>
-			<td><pre lang="json">
-{
-  "periodSeconds": 60,
-  "type": null,
-  "value": null
-}
-</pre>
-</td>
-			<td>The scale down policy type.</td>
-		</tr>
-		<tr>
 			<td>pod.autoscaling.behaviour.scaleDown.policies[0].periodSeconds</td>
 			<td>int</td>
 			<td><pre lang="json">
@@ -3757,6 +3752,15 @@ false
 </pre>
 </td>
 			<td>The scale down policy period seconds.</td>
+		</tr>
+		<tr>
+			<td>pod.autoscaling.behaviour.scaleDown.policies[0].type</td>
+			<td>string</td>
+			<td><pre lang="json">
+null
+</pre>
+</td>
+			<td>The scale down policy type.</td>
 		</tr>
 		<tr>
 			<td>pod.autoscaling.behaviour.scaleDown.policies[0].value</td>
@@ -3795,19 +3799,6 @@ null
 			<td>The amount of tolerance percentage.</td>
 		</tr>
 		<tr>
-			<td>pod.autoscaling.behaviour.scaleUp.policies[0]</td>
-			<td>string</td>
-			<td><pre lang="json">
-{
-  "periodSeconds": 60,
-  "type": null,
-  "value": null
-}
-</pre>
-</td>
-			<td>The scale up policy type.</td>
-		</tr>
-		<tr>
 			<td>pod.autoscaling.behaviour.scaleUp.policies[0].periodSeconds</td>
 			<td>int</td>
 			<td><pre lang="json">
@@ -3815,6 +3806,15 @@ null
 </pre>
 </td>
 			<td>The scale down policy period seconds.</td>
+		</tr>
+		<tr>
+			<td>pod.autoscaling.behaviour.scaleUp.policies[0].type</td>
+			<td>string</td>
+			<td><pre lang="json">
+null
+</pre>
+</td>
+			<td>The scale up policy type.</td>
 		</tr>
 		<tr>
 			<td>pod.autoscaling.behaviour.scaleUp.policies[0].value</td>
@@ -3878,86 +3878,6 @@ null
 </pre>
 </td>
 			<td>The maximum replicas for this policy.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0]</td>
-			<td>string</td>
-			<td><pre lang="json">
-{
-  "containerResource": {
-    "container": null,
-    "name": null,
-    "target": {
-      "averageUtilization": null,
-      "averageValue": null,
-      "type": null,
-      "value": null
-    }
-  },
-  "external": {
-    "metric": {
-      "name": null,
-      "selector": {
-        "matchExpressions": [],
-        "matchLabels": {}
-      }
-    },
-    "target": {
-      "averageUtilization": null,
-      "averageValue": null,
-      "type": null,
-      "value": null
-    }
-  },
-  "object": {
-    "describedObject": {
-      "apiVersion": null,
-      "kind": null,
-      "name": null
-    },
-    "metric": {
-      "name": null,
-      "selector": {
-        "matchExpressions": [],
-        "matchLabels": {}
-      }
-    },
-    "target": {
-      "averageUtilization": null,
-      "averageValue": null,
-      "type": null,
-      "value": null
-    }
-  },
-  "pods": {
-    "metric": {
-      "name": null,
-      "selector": {
-        "matchExpressions": [],
-        "matchLabels": {}
-      }
-    },
-    "target": {
-      "averageUtilization": null,
-      "averageValue": null,
-      "type": null,
-      "value": null
-    }
-  },
-  "resource": {
-    "name": null,
-    "target": {
-      "averageUtilization": null,
-      "averageValue": null,
-      "type": null,
-      "value": null
-    }
-  },
-  "type": null
-}
-</pre>
-</td>
-			<td>The type of metric to use for this rule. ContainerResource, External, Object, Pods, or Resource.</td>
 		</tr>
 		<tr>
 			<td>pod.autoscaling.metrics[0].containerResource.container</td>
@@ -4273,6 +4193,15 @@ null
 </pre>
 </td>
 			<td>Value.</td>
+		</tr>
+		<tr>
+			<td>pod.autoscaling.metrics[0].type</td>
+			<td>string</td>
+			<td><pre lang="json">
+null
+</pre>
+</td>
+			<td>The type of metric to use for this rule. ContainerResource, External, Object, Pods, or Resource.</td>
 		</tr>
 		<tr>
 			<td>pod.autoscaling.minReplicas</td>
