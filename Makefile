@@ -21,6 +21,8 @@ lint-docs:
 	@(git diff-index --quiet HEAD charts/**/README.md) || (echo "Documentation is outdated, run make docs") && (git diff --color-words charts/**/README.md) && false
 	@echo "Documentation up to date"
 
+install: install-helm-docs install-helm-schema
+
 install-helm-docs:
 	${GO} install github.com/norwoodj/helm-docs/cmd/helm-docs@latest
 
