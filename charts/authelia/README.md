@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.10.25](https://img.shields.io/badge/Version-0.10.25-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.4](https://img.shields.io/badge/AppVersion-4.39.4-informational?style=flat-square)
+![Version: 0.10.26](https://img.shields.io/badge/Version-0.10.26-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.4](https://img.shields.io/badge/AppVersion-4.39.4-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -1780,7 +1780,7 @@ false
 "2 minutes"
 </pre>
 </td>
-			<td>The time range during which the user can attempt login before being banned. The user is banned if the authentication failed 'max_retries' times in a 'find_time' seconds window. Find Time accepts duration notation. See: https://www.authelia.com/configuration/prologue/common/#duration-notation-format</td>
+			<td>The time range during which the user can attempt login before being banned. The user is banned if the authentication failed 'max_retries' times in a 'find_time' window. Find Time accepts duration notation. See: https://www.authelia.com/configuration/prologue/common/#duration-notation-format</td>
 		</tr>
 		<tr>
 			<td>configMap.regulation.max_retries</td>
@@ -1971,7 +1971,7 @@ null
 "1 hour"
 </pre>
 </td>
-			<td>The time in seconds before the cookie expires and session is reset.</td>
+			<td>The time before the cookie expires and session is reset.</td>
 		</tr>
 		<tr>
 			<td>configMap.session.inactivity</td>
@@ -1980,7 +1980,7 @@ null
 "5 minutes"
 </pre>
 </td>
-			<td>The inactivity time in seconds before the session is reset.</td>
+			<td>The inactivity time before the session is reset.</td>
 		</tr>
 		<tr>
 			<td>configMap.session.name</td>

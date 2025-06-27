@@ -3,6 +3,9 @@ GO=go
 docs: install-helm-docs
 	helm-docs
 
+schema: install-helm-schema
+	helm-schema
+
 lint: lint-chart lint-chart-package lint-chart-version lint-docs
 
 lint-chart:
@@ -20,6 +23,9 @@ lint-docs:
 
 install-helm-docs:
 	${GO} install github.com/norwoodj/helm-docs/cmd/helm-docs@latest
+
+install-helm-schema:
+	${GO} install github.com/dadav/helm-schema/cmd/helm-schema@latest
 
 release: release-package release-upload release-index
 
