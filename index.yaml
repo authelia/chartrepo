@@ -1,6 +1,82 @@
 apiVersion: v1
 entries:
   authelia:
+  - annotations:
+      artifacthub.io/category: security
+      artifacthub.io/changes: |
+        - kind: added
+          description: Signed Charts
+          links: []
+        - kind: added
+          description: Change Log
+          links: []
+        - kind: added
+          description: ArtifactHub Annotations
+          links: []
+      artifacthub.io/images: |
+        - title: User Interface
+          url: https://www.authelia.com/images/dark.png
+        - title: Second Factor Methods
+          url: https://www.authelia.com/images/2fa-methods-dark.png
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Chart Repository
+          url: https://charts.authelia.com/
+        - name: Website
+          url: https://www.authelia.com/
+        - name: GitHub Repository
+          url: https://github.com/authelia
+      artifacthub.io/maintainers: |
+        - name: James Elliott
+          email: james-d-elliott@users.noreply.github.com
+      artifacthub.io/signKey: |-
+        fingerprint: 192085915BD608A458AC58DCE461FA1531286EEA
+        url: https://keybase.io/authelia/pgp_keys.asc
+    apiVersion: v2
+    appVersion: 4.39.4
+    created: "2025-06-28T10:31:52.70389274+10:00"
+    dependencies:
+    - condition: configMap.storage.postgres.deploy
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: ~15.5.11
+    - condition: configMap.storage.mysql.deploy
+      name: mariadb
+      repository: https://charts.bitnami.com/bitnami
+      version: ~18.2.4
+    - condition: configMap.session.redis.deploy
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: ~19.6.0
+    description: Authelia is a Single Sign-On Multi-Factor portal for web apps
+    digest: 70acea5eb741ff04746208c504e590fc63cfbe5d153c8d357e640559dc3ff01d
+    home: https://www.authelia.com
+    icon: https://avatars2.githubusercontent.com/u/59122411?s=200&v=4
+    keywords:
+    - SSO
+    - Authentication
+    - Security
+    - Two-Factor
+    - YubiKey
+    - Webauthn
+    - Duo
+    - TOTP
+    - Time-based One Time Password
+    - Push Notifications
+    - LDAP
+    kubeVersion: '>= 1.13.0-0'
+    maintainers:
+    - email: james-d-elliott@users.noreply.github.com
+      name: james-d-elliott
+      url: https://github.com/james-d-elliott
+    name: authelia
+    sources:
+    - https://github.com/authelia/chartrepo/tree/master/charts/authelia
+    - https://www.github.com/authelia/authelia
+    type: application
+    urls:
+    - https://github.com/authelia/chartrepo/releases/download/authelia-0.10.30/authelia-0.10.30.tgz
+    version: 0.10.30
   - apiVersion: v2
     appVersion: 4.39.4
     created: "2025-06-28T00:24:47.293490957+10:00"
@@ -7113,4 +7189,4 @@ entries:
     urls:
     - https://github.com/authelia/chartrepo/releases/download/authelia-0.1.0/authelia-0.1.0.tgz
     version: 0.1.0
-generated: "2025-06-28T00:24:47.294330878+10:00"
+generated: "2025-06-28T10:31:52.704487345+10:00"
