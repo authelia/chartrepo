@@ -14,7 +14,7 @@ entries:
           description: ArtifactHub Annotations
           links: []
       artifacthub.io/images: |
-        - name: authelia
+        - name: authelia/authelia
           image: ghcr.io/authelia/authelia:4.39.4
           whitelisted: false
           platforms:
@@ -98,7 +98,7 @@ entries:
           description: ArtifactHub Annotations
           links: []
       artifacthub.io/images: |
-        - name: authelia
+        - name: authelia/authelia
           image: ghcr.io/authelia/authelia:4.39.4
           whitelisted: false
           platforms:
