@@ -181,7 +181,7 @@ entries:
         - kind: added
           description: ArtifactHub Annotations
           links: []
-      artifacthub.io/images: |
+      artifacthub.io/screenshots: |
         - title: User Interface
           url: https://www.authelia.com/images/dark.png
         - title: Second Factor Methods
