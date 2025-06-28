@@ -1,6 +1,6 @@
 apiVersion: v2
 name: authelia
-version: 0.10.29
+version: 0.10.30
 kubeVersion: ">= 1.13.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
@@ -40,4 +40,42 @@ maintainers:
 icon: https://avatars2.githubusercontent.com/u/59122411?s=200&v=4
 appVersion: 4.39.4
 deprecated: false
-annotations: {}
+annotations:
+  artifacthub.io/category: security
+  artifacthub.io/changes: |
+    - kind: added
+      description: Signed Charts
+      links: []
+    - kind: added
+      description: Change Log
+      links: []
+    - kind: added
+      description: ArtifactHub Annotations
+      links: []
+  artifacthub.io/images: |
+    - name: authelia
+      image: ghcr.io/authelia/authelia:4.39.4
+      whitelisted: false
+      platforms:
+        - linux/amd64
+        - linux/arm64
+        - linux/arm/v7
+  artifacthub.io/license: Apache-2.0
+  artifacthub.io/links: |
+    - name: Chart Repository
+      url: https://charts.authelia.com/
+    - name: Website
+      url: https://www.authelia.com/
+    - name: GitHub Repository
+      url: https://github.com/authelia
+  artifacthub.io/maintainers: |
+    - name: James Elliott
+      email: james-d-elliott@users.noreply.github.com
+  artifacthub.io/images: |
+    - title: User Interface
+      url: https://www.authelia.com/images/dark.png
+    - title: Second Factor Methods
+      url: https://www.authelia.com/images/2fa-methods-dark.png
+  artifacthub.io/signKey: |
+    fingerprint: 192085915BD608A458AC58DCE461FA1531286EEA
+    url: https://keybase.io/authelia/pgp_keys.asc
