@@ -3,7 +3,7 @@
   "additionalProperties": false,
   "properties": {
     "annotations": {
-      "additionalProperties": false,
+      "additionalProperties": true,
       "description": "Extra annotations for all generated resources. Most manifest types have a more specific annotations value\nassociated with them.",
       "required": [],
       "title": "annotations"
@@ -22,7 +22,7 @@
       "additionalProperties": false,
       "properties": {
         "annotations": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Extra annotations for the Certificates Secret manifest.",
           "required": [],
           "title": "annotations"
@@ -34,7 +34,7 @@
           "title": "existingSecret"
         },
         "labels": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Extra labels for the Certificates Secret manifest.",
           "required": [],
           "title": "labels"
@@ -102,7 +102,7 @@
           "title": "access_control"
         },
         "annotations": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Extra annotations for the ConfigMap manifest.",
           "required": [],
           "title": "annotations"
@@ -122,6 +122,27 @@
                 "extra_attributes": {
                   "additionalProperties": false,
                   "description": "The extra attributes to load from the directory server. These extra attributes can be used in other areas of\nAuthelia such as OpenID Connect 1.0. It’s also recommended to check out the Attributes Reference Guide for more\ninformation.",
+                  "patternProperties": {
+                    ".*": {
+                      "properties": {
+                        "multi_valued": {
+                          "required": [],
+                          "type": "boolean"
+                        },
+                        "value_type": {
+                          "enum": [
+                            "string",
+                            "integer",
+                            "boolean"
+                          ],
+                          "required": [],
+                          "type": "string"
+                        }
+                      },
+                      "required": [],
+                      "type": "object"
+                    }
+                  },
                   "required": [],
                   "title": "extra_attributes"
                 },
@@ -382,6 +403,31 @@
                     "extra": {
                       "additionalProperties": false,
                       "description": "The extra attributes for users.",
+                      "patternProperties": {
+                        ".*": {
+                          "properties": {
+                            "multi_valued": {
+                              "required": [],
+                              "type": "boolean"
+                            },
+                            "name": {
+                              "required": [],
+                              "type": "string"
+                            },
+                            "value_type": {
+                              "enum": [
+                                "string",
+                                "integer",
+                                "boolean"
+                              ],
+                              "required": [],
+                              "type": "string"
+                            }
+                          },
+                          "required": [],
+                          "type": "object"
+                        }
+                      },
                       "required": [],
                       "title": "extra"
                     },
@@ -738,12 +784,43 @@
             "network": {
               "additionalProperties": false,
               "description": "The network section configures named network lists.",
+              "patternProperties": {
+                ".*": {
+                  "anyOf": [
+                    {
+                      "required": [],
+                      "type": "string"
+                    },
+                    {
+                      "items": {
+                        "required": [],
+                        "type": "string"
+                      },
+                      "required": [],
+                      "type": "array"
+                    }
+                  ],
+                  "required": []
+                }
+              },
               "required": [],
               "title": "network"
             },
             "user_attributes": {
               "additionalProperties": false,
               "description": "The user attributes section allows you to define custom attributes for your users using Common Expression\nLanguage (CEL).",
+              "patternProperties": {
+                ".*": {
+                  "properties": {
+                    "expression": {
+                      "required": [],
+                      "type": "string"
+                    }
+                  },
+                  "required": [],
+                  "type": "object"
+                }
+              },
               "required": [],
               "title": "user_attributes"
             }
@@ -855,12 +932,116 @@
                 "authorization_policies": {
                   "additionalProperties": false,
                   "description": "Authorization Policies configuration.",
+                  "patternProperties": {
+                    ".*": {
+                      "properties": {
+                        "default_policy": {
+                          "enum": [
+                            "deny",
+                            "two_factor",
+                            "one_factor",
+                            ""
+                          ],
+                          "required": [],
+                          "type": "string"
+                        },
+                        "rules": {
+                          "items": {
+                            "properties": {
+                              "networks": {
+                                "anyOf": [
+                                  {
+                                    "required": [],
+                                    "type": "string"
+                                  },
+                                  {
+                                    "required": [],
+                                    "type": "array"
+                                  }
+                                ],
+                                "required": []
+                              },
+                              "policy": {
+                                "enum": [
+                                  "deny",
+                                  "two_factor",
+                                  "one_factor",
+                                  ""
+                                ],
+                                "required": [],
+                                "type": "string"
+                              },
+                              "subject": {
+                                "anyOf": [
+                                  {
+                                    "required": [],
+                                    "type": "string"
+                                  },
+                                  {
+                                    "required": [],
+                                    "type": "array"
+                                  }
+                                ],
+                                "required": []
+                              }
+                            },
+                            "required": [],
+                            "type": "object"
+                          },
+                          "required": [],
+                          "type": "array"
+                        }
+                      },
+                      "required": [],
+                      "type": "object"
+                    }
+                  },
                   "required": [],
                   "title": "authorization_policies"
                 },
                 "claims_policies": {
                   "additionalProperties": false,
-                  "description": "The claims policies are policies which allow customizing the behaviour of claims and the available claims for\na particular client.",
+                  "description": "The claims policies are policies which allow customizing the behavior of claims and the available claims for\na particular client.",
+                  "patternProperties": {
+                    ".*": {
+                      "properties": {
+                        "access_token": {
+                          "items": {
+                            "required": [],
+                            "type": "string"
+                          },
+                          "required": [],
+                          "type": "array"
+                        },
+                        "custom_claims": {
+                          "patternProperties": {
+                            ".*": {
+                              "properties": {
+                                "attribute": {
+                                  "required": [],
+                                  "type": "string"
+                                }
+                              },
+                              "required": [],
+                              "type": "object"
+                            }
+                          },
+                          "required": [],
+                          "type": "object"
+                        },
+                        "id_token": {
+                          "items": {
+                            "required": [],
+                            "type": "string"
+                          },
+                          "required": [],
+                          "type": "array"
+                        }
+                      },
+                      "required": [],
+                      "type": "object"
+                    }
+                  },
                   "required": [],
                   "title": "claims_policies"
                 },
@@ -893,10 +1074,20 @@
                     "endpoints": {
                       "description": "List of endpoints in addition to the metadata endpoints to permit cross-origin requests on.",
                       "items": {
+                        "enum": [
+                          "authorization",
+                          "device-authorization",
+                          "pushed-authorization-request",
+                          "token",
+                          "revocation",
+                          "introspection",
+                          "userinfo"
+                        ],
                         "required": []
                       },
                       "required": [],
-                      "title": "endpoints"
+                      "title": "endpoints",
+                      "type": "array"
                     }
                   },
                   "required": [],
@@ -923,6 +1114,12 @@
                 "enforce_pkce": {
                   "default": "public_clients_only",
                   "description": "Adjusts the PKCE enforcement. Options are always, public_clients_only, never.\nFor security reasons it's recommended this option is public_clients_only or always, however always is not\ncompatible with all clients.",
+                  "enum": [
+                    "public_clients_only",
+                    "always",
+                    "never",
+                    ""
+                  ],
                   "required": [],
                   "title": "enforce_pkce"
                 },
@@ -960,7 +1157,73 @@
                 "jwks": {
                   "description": "The JWK's issuer option configures multiple JSON Web Keys. It's required that at least one of the JWK's\nconfigured has the RS256 algorithm. For RSA keys (RS or PS) the minimum is a 2048 bit key.",
                   "items": {
-                    "required": []
+                    "properties": {
+                      "algorithm": {
+                        "required": [],
+                        "type": "string"
+                      },
+                      "certificate_chain": {
+                        "anyOf": [
+                          {
+                            "required": [],
+                            "type": "string"
+                          },
+                          {
+                            "properties": {
+                              "path": {
+                                "required": [],
+                                "type": "string"
+                              },
+                              "value": {
+                                "required": [],
+                                "type": "string"
+                              }
+                            },
+                            "required": [],
+                            "type": "object"
+                          }
+                        ],
+                        "required": []
+                      },
+                      "key": {
+                        "anyOf": [
+                          {
+                            "required": [],
+                            "type": "string"
+                          },
+                          {
+                            "properties": {
+                              "path": {
+                                "required": [],
+                                "type": "string"
+                              },
+                              "value": {
+                                "required": [],
+                                "type": "string"
+                              }
+                            },
+                            "required": [],
+                            "type": "object"
+                          }
+                        ],
+                        "required": []
+                      },
+                      "key_id": {
+                        "required": [],
+                        "type": "string"
+                      },
+                      "use": {
+                        "enum": [
+                          "sig",
+                          "enc",
+                          ""
+                        ],
+                        "required": [],
+                        "type": "string"
+                      }
+                    },
+                    "required": [],
+                    "type": "object"
                   },
                   "required": [],
                   "title": "jwks"
@@ -991,6 +1254,210 @@
                     "custom": {
                       "additionalProperties": false,
                       "description": "The custom lifespan configuration allows customizing the lifespans per-client. The custom lifespans must be\nutilized with the client lifespan option which applies those settings to that client. Custom lifespans can be\nconfigured in a very granular way, either solely by the token type, or by the token type for each grant type.",
+                      "patternProperties": {
+                        ".*": {
+                          "properties": {
+                            "access_token": {
+                              "required": [],
+                              "type": [
+                                "string",
+                                "integer"
+                              ]
+                            },
+                            "authorize_code": {
+                              "required": [],
+                              "type": [
+                                "string",
+                                "integer"
+                              ]
+                            },
+                            "device_code": {
+                              "required": [],
+                              "type": [
+                                "string",
+                                "integer"
+                              ]
+                            },
+                            "grants": {
+                              "properties": {
+                                "authorize_code": {
+                                  "properties": {
+                                    "access_token": {
+                                      "required": [],
+                                      "type": [
+                                        "string",
+                                        "integer"
+                                      ]
+                                    },
+                                    "id_token": {
+                                      "required": [],
+                                      "type": [
+                                        "string",
+                                        "integer"
+                                      ]
+                                    },
+                                    "refresh_token": {
+                                      "required": [],
+                                      "type": [
+                                        "string",
+                                        "integer"
+                                      ]
+                                    }
+                                  },
+                                  "required": [],
+                                  "type": "object"
+                                },
+                                "client_credentials": {
+                                  "properties": {
+                                    "access_token": {
+                                      "required": [],
+                                      "type": [
+                                        "string",
+                                        "integer"
+                                      ]
+                                    },
+                                    "refresh_token": {
+                                      "required": [],
+                                      "type": [
+                                        "string",
+                                        "integer"
+                                      ]
+                                    }
+                                  },
+                                  "required": [],
+                                  "type": "object"
+                                },
+                                "device_code": {
+                                  "properties": {
+                                    "access_token": {
+                                      "required": [],
+                                      "type": [
+                                        "string",
+                                        "integer"
+                                      ]
+                                    },
+                                    "id_token": {
+                                      "required": [],
+                                      "type": [
+                                        "string",
+                                        "integer"
+                                      ]
+                                    },
+                                    "refresh_token": {
+                                      "required": [],
+                                      "type": [
+                                        "string",
+                                        "integer"
+                                      ]
+                                    }
+                                  },
+                                  "required": [],
+                                  "type": "object"
+                                },
+                                "implicit": {
+                                  "properties": {
+                                    "access_token": {
+                                      "required": [],
+                                      "type": [
+                                        "string",
+                                        "integer"
+                                      ]
+                                    },
+                                    "id_token": {
+                                      "required": [],
+                                      "type": [
+                                        "string",
+                                        "integer"
+                                      ]
+                                    },
+                                    "refresh_token": {
+                                      "required": [],
+                                      "type": [
+                                        "string",
+                                        "integer"
+                                      ]
+                                    }
+                                  },
+                                  "required": [],
+                                  "type": "object"
+                                },
+                                "jwt_bearer": {
+                                  "properties": {
+                                    "access_token": {
+                                      "required": [],
+                                      "type": [
+                                        "string",
+                                        "integer"
+                                      ]
+                                    },
+                                    "id_token": {
+                                      "required": [],
+                                      "type": [
+                                        "string",
+                                        "integer"
+                                      ]
+                                    },
+                                    "refresh_token": {
+                                      "required": [],
+                                      "type": [
+                                        "string",
+                                        "integer"
+                                      ]
+                                    }
+                                  },
+                                  "required": [],
+                                  "type": "object"
+                                },
+                                "refresh_token": {
+                                  "properties": {
+                                    "access_token": {
+                                      "required": [],
+                                      "type": [
+                                        "string",
+                                        "integer"
+                                      ]
+                                    },
+                                    "id_token": {
+                                      "required": [],
+                                      "type": [
+                                        "string",
+                                        "integer"
+                                      ]
+                                    },
+                                    "refresh_token": {
+                                      "required": [],
+                                      "type": [
+                                        "string",
+                                        "integer"
+                                      ]
+                                    }
+                                  },
+                                  "required": [],
+                                  "type": "object"
+                                }
+                              },
+                              "required": [],
+                              "type": "object"
+                            },
+                            "id_token": {
+                              "required": [],
+                              "type": [
+                                "string",
+                                "integer"
+                              ]
+                            },
+                            "refresh_token": {
+                              "required": [],
+                              "type": [
+                                "string",
+                                "integer"
+                              ]
+                            }
+                          },
+                          "required": [],
+                          "type": "object"
+                        }
+                      },
                       "required": [],
                       "title": "custom"
                     },
@@ -1060,6 +1527,22 @@
                 "scopes": {
                   "additionalProperties": false,
                   "description": "A list of scope definitions available in addition to the standard ones.",
+                  "patternProperties": {
+                    ".*": {
+                      "properties": {
+                        "claims": {
+                          "items": {
+                            "required": [],
+                            "type": "string"
+                          },
+                          "required": [],
+                          "type": "array"
+                        }
+                      },
+                      "required": [],
+                      "type": "object"
+                    }
+                  },
                   "required": [],
                   "title": "scopes"
                 }
@@ -1189,7 +1672,7 @@
           "title": "key"
         },
         "labels": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Extra labels for the ConfigMap manifest.",
           "required": [],
           "title": "labels"
@@ -1206,12 +1689,23 @@
             "format": {
               "default": "text",
               "description": "Format the logs are written as: json, text.",
+              "enum": [
+                "text",
+                "json"
+              ],
               "required": [],
               "title": "format"
             },
             "level": {
               "default": "info",
               "description": "Level of verbosity for logs: info, debug, trace.",
+              "enum": [
+                "error",
+                "warn",
+                "info",
+                "debug",
+                "trace"
+              ],
               "required": [],
               "title": "level"
             }
@@ -1588,12 +2082,77 @@
                 "authz": {
                   "additionalProperties": false,
                   "description": "Dictionary of individually configured Authz endpoints.",
+                  "patternProperties": {
+                    ".*": {
+                      "properties": {
+                        "authn_strategies": {
+                          "items": {
+                            "properties": {
+                              "name": {
+                                "enum": [
+                                  "CookieSession",
+                                  "HeaderAuthorization",
+                                  "HeaderProxyAuthorization",
+                                  "HeaderAuthRequestProxyAuthorization",
+                                  "HeaderLegacy"
+                                ],
+                                "required": [],
+                                "type": "string"
+                              },
+                              "scheme_basic_cache_lifespan": {
+                                "required": [],
+                                "type": [
+                                  "integer",
+                                  "string"
+                                ]
+                              },
+                              "schemes": {
+                                "items": {
+                                  "enum": [
+                                    "Basic",
+                                    "Bearer",
+                                    "basic",
+                                    "bearer"
+                                  ],
+                                  "required": []
+                                },
+                                "required": [],
+                                "type": "array"
+                              }
+                            },
+                            "required": [],
+                            "type": "object"
+                          },
+                          "required": [],
+                          "type": "array"
+                        },
+                        "implementation": {
+                          "enum": [
+                            "AuthRequest",
+                            "ExtAuthz",
+                            "ForwardAuth",
+                            "Legacy"
+                          ],
+                          "required": [],
+                          "type": "string"
+                        }
+                      },
+                      "required": [],
+                      "type": "object"
+                    }
+                  },
                   "required": [],
                   "title": "authz"
                 },
                 "automatic_authz_implementations": {
                   "description": "A list of automatically configured authz implementations if you don't wish to manually configure each one.\nImportant Note: If you configure the 'authz' section this is completely ignored.",
                   "items": {
+                    "enum": [
+                      "AuthRequest",
+                      "ExtAuthz",
+                      "ForwardAuth",
+                      "Legacy"
+                    ],
                     "required": []
                   },
                   "required": [],
@@ -2306,7 +2865,7 @@
                   "additionalProperties": false,
                   "properties": {
                     "annotations": {
-                      "additionalProperties": false,
+                      "additionalProperties": true,
                       "description": "Extra annotations for the ServiceMonitor manifest.",
                       "required": [],
                       "title": "annotations"
@@ -2318,7 +2877,7 @@
                       "title": "enabled"
                     },
                     "labels": {
-                      "additionalProperties": false,
+                      "additionalProperties": true,
                       "description": "Extra labels for the ServiceMonitor manifest.",
                       "required": [],
                       "title": "labels"
@@ -2655,7 +3214,7 @@
       "additionalProperties": false,
       "properties": {
         "annotations": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Extra annotations for ingress related manifests.",
           "required": [],
           "title": "annotations"
@@ -2708,7 +3267,7 @@
           "title": "gatewayAPI"
         },
         "labels": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Extra labels for ingress related manifests.",
           "required": [],
           "title": "labels"
@@ -3023,13 +3582,13 @@
       "title": "kubeVersionOverride"
     },
     "labels": {
-      "additionalProperties": false,
+      "additionalProperties": true,
       "description": "Extra labels for all generated resources. Most manifest types have a more specific labels value\nassociated with them.",
       "required": [],
       "title": "labels"
     },
     "mariadb": {
-      "additionalProperties": false,
+      "additionalProperties": true,
       "description": "Configure mariadb database subchart under this key.\nThis will be deployed when storage.mysql.deploy is set to true\nCurrently settings need to be manually copied from here to the storage.mysql section\nFor more options and to see the",
       "properties": {
         "architecture": {
@@ -3090,7 +3649,7 @@
               "title": "persistence"
             },
             "resources": {
-              "additionalProperties": false,
+              "additionalProperties": true,
               "required": [],
               "title": "resources"
             }
@@ -3116,7 +3675,7 @@
       "additionalProperties": false,
       "properties": {
         "annotations": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Extra annotations for the NetworkPolicy manifest.",
           "required": [],
           "title": "annotations"
@@ -3143,7 +3702,7 @@
                               "additionalProperties": false,
                               "properties": {
                                 "matchLabels": {
-                                  "additionalProperties": false,
+                                  "additionalProperties": true,
                                   "properties": {
                                     "authelia.com/network-policy": {
                                       "default": "namespace",
@@ -3174,7 +3733,7 @@
                               "additionalProperties": false,
                               "properties": {
                                 "matchLabels": {
-                                  "additionalProperties": false,
+                                  "additionalProperties": true,
                                   "properties": {
                                     "authelia.com/network-policy": {
                                       "default": "pod",
@@ -3241,7 +3800,7 @@
           "title": "ingress"
         },
         "labels": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Extra labels for the NetworkPolicy manifest.",
           "required": [],
           "title": "labels"
@@ -3270,11 +3829,11 @@
         "accessModes": {
           "description": "PersistentVolumeClaim access modes.",
           "items": {
-            "anyOf": [
-              {
-                "required": [],
-                "type": "string"
-              }
+            "enum": [
+              "ReadWriteOnce",
+              "ReadOnlyMany",
+              "ReadWriteMany",
+              "ReadWriteOncePod"
             ],
             "required": []
           },
@@ -3282,7 +3841,7 @@
           "title": "accessModes"
         },
         "annotations": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Extra annotations for the PersistentVolumeClaim related manifests.",
           "required": [],
           "title": "annotations"
@@ -3301,105 +3860,85 @@
         },
         "extraPersistentVolumeClaims": {
           "additionalProperties": false,
-          "properties": {
-            "example": {
-              "additionalProperties": false,
+          "patternProperties": {
+            ".*": {
               "properties": {
                 "accessModes": {
-                  "description": "PersistentVolumeClaim access modes.",
                   "items": {
-                    "anyOf": [
-                      {
-                        "required": [],
-                        "type": "string"
-                      }
+                    "enum": [
+                      "ReadWriteOnce",
+                      "ReadOnlyMany",
+                      "ReadWriteMany",
+                      "ReadWriteOncePod"
                     ],
                     "required": []
                   },
                   "required": [],
-                  "title": "accessModes"
+                  "type": "array"
                 },
                 "annotations": {
-                  "additionalProperties": false,
-                  "description": "Extra annotations for this PersistentVolumeClaim manifest.",
+                  "additionalProperties": true,
                   "required": [],
-                  "title": "annotations"
+                  "type": "object"
                 },
                 "enabled": {
-                  "default": "false",
-                  "description": "Enable this extra PersistentVolumeClaim.",
                   "required": [],
-                  "title": "enabled"
+                  "type": "boolean"
                 },
                 "existingClaim": {
-                  "default": "",
-                  "description": "Mounts an existing PersistentVolumeClaim.",
                   "required": [],
-                  "title": "existingClaim"
+                  "type": "string"
                 },
                 "labels": {
-                  "additionalProperties": false,
-                  "description": "Extra annotations for this PersistentVolumeClaim manifest.",
+                  "additionalProperties": true,
                   "required": [],
-                  "title": "labels"
+                  "type": "object"
                 },
                 "mountPropagation": {
-                  "default": "",
-                  "description": "Sets the mount propagation value for the PersistentVolumeClaim.",
                   "required": [],
-                  "title": "mountPropagation"
+                  "type": "string"
                 },
                 "readOnly": {
-                  "default": "false",
-                  "description": "Mounts the PersistentVolumeClaim in read-only mode.",
                   "required": [],
-                  "title": "readOnly"
+                  "type": "boolean"
                 },
                 "selector": {
-                  "additionalProperties": false,
+                  "additionalProperties": true,
                   "required": [],
-                  "title": "selector"
+                  "type": "object"
                 },
                 "size": {
-                  "default": "100Mi",
-                  "description": "PersistentVolumeClaim volume size.",
                   "required": [],
-                  "title": "size"
+                  "type": "string"
                 },
                 "storageClass": {
-                  "default": "",
-                  "description": "Uses the specified storageClass for the PersistentVolumeClaim.",
                   "required": [],
-                  "title": "storageClass"
+                  "type": "string"
                 },
                 "subPath": {
-                  "default": "",
-                  "description": "Mounts specifically a subpath of the PersistentVolumeClaim.",
                   "required": [],
-                  "title": "subPath"
+                  "type": "string"
                 },
                 "subPathExpr": {
-                  "default": "",
-                  "description": "Uses an expression to mount a subpath of the PersistentVolumeClaim.",
                   "required": [],
-                  "title": "subPathExpr"
+                  "type": "string"
                 },
                 "volumeName": {
-                  "default": "",
-                  "description": "Persistent Volume Name. Useful if Persistent Volumes have been provisioned in advance and you want to use a\nspecific one.",
                   "required": [],
-                  "title": "volumeName"
+                  "type": "string"
                 }
               },
               "required": [],
-              "title": "example"
+              "type": "object"
             }
           },
-          "required": [],
+          "required": [
+            "example"
+          ],
           "title": "extraPersistentVolumeClaims"
         },
         "labels": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Extra annotations for the PersistentVolumeClaim related manifests.",
           "required": [],
           "title": "labels"
@@ -3407,6 +3946,12 @@
         "mountPropagation": {
           "default": "",
           "description": "Sets the mount propagation value for the PersistentVolumeClaim.",
+          "enum": [
+            "None",
+            "HostToContainer",
+            "Bidirectional",
+            ""
+          ],
           "required": [],
           "title": "mountPropagation"
         },
@@ -3417,7 +3962,7 @@
           "title": "readOnly"
         },
         "selector": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "required": [],
           "title": "selector"
         },
@@ -3459,7 +4004,7 @@
       "additionalProperties": false,
       "properties": {
         "annotations": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Extra annotations for the Pod spec.",
           "required": [],
           "title": "annotations"
@@ -3476,7 +4021,7 @@
           "additionalProperties": false,
           "properties": {
             "annotations": {
-              "additionalProperties": false,
+              "additionalProperties": true,
               "description": "Extra annotations for the HorizontalPodAutoscaler manifest.",
               "required": [],
               "title": "annotations"
@@ -3653,7 +4198,7 @@
               "title": "enabled"
             },
             "labels": {
-              "additionalProperties": false,
+              "additionalProperties": true,
               "description": "Extra labels for the HorizontalPodAutoscaler manifest.",
               "required": [],
               "title": "labels"
@@ -3778,7 +4323,7 @@
                                     "title": "matchExpressions"
                                   },
                                   "matchLabels": {
-                                    "additionalProperties": false,
+                                    "additionalProperties": true,
                                     "description": "Dictionary of Match Labels.",
                                     "required": [],
                                     "title": "matchLabels",
@@ -3915,7 +4460,7 @@
                                     "title": "matchExpressions"
                                   },
                                   "matchLabels": {
-                                    "additionalProperties": false,
+                                    "additionalProperties": true,
                                     "description": "Dictionary of Match Labels.",
                                     "required": [],
                                     "title": "matchLabels",
@@ -4012,7 +4557,7 @@
                                     "title": "matchExpressions"
                                   },
                                   "matchLabels": {
-                                    "additionalProperties": false,
+                                    "additionalProperties": true,
                                     "description": "Dictionary of Match Labels.",
                                     "required": [],
                                     "title": "matchLabels",
@@ -4234,7 +4779,7 @@
           "title": "kind"
         },
         "labels": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Extra labels for the Pod spec.",
           "required": [],
           "title": "labels"
@@ -4405,13 +4950,13 @@
           "additionalProperties": false,
           "properties": {
             "limits": {
-              "additionalProperties": false,
+              "additionalProperties": true,
               "description": "Resource Limits.",
               "required": [],
               "title": "limits"
             },
             "requests": {
-              "additionalProperties": false,
+              "additionalProperties": true,
               "description": "Resource Requests.",
               "required": [],
               "title": "requests"
@@ -4432,12 +4977,252 @@
             "container": {
               "additionalProperties": false,
               "description": "Container Security Context.",
+              "properties": {
+                "allowPrivilegeEscalation": {
+                  "required": [],
+                  "type": "boolean"
+                },
+                "appArmorProfile": {
+                  "properties": {
+                    "localHostProfile": {
+                      "required": [],
+                      "type": "string"
+                    },
+                    "type": {
+                      "enum": [
+                        "Localhost",
+                        "RuntimeDefault",
+                        "Unconfined"
+                      ],
+                      "required": [],
+                      "type": "string"
+                    }
+                  },
+                  "required": [],
+                  "type": "object"
+                },
+                "capabilities": {
+                  "properties": {
+                    "add": {
+                      "items": {
+                        "required": [],
+                        "type": "string"
+                      },
+                      "required": [],
+                      "type": "array"
+                    },
+                    "drop": {
+                      "items": {
+                        "required": [],
+                        "type": "string"
+                      },
+                      "required": [],
+                      "type": "array"
+                    }
+                  },
+                  "required": [],
+                  "type": "object"
+                },
+                "privileged": {
+                  "required": [],
+                  "type": "boolean"
+                },
+                "procMount": {
+                  "required": [],
+                  "type": "string"
+                },
+                "readOnlyRootFilesystem": {
+                  "required": [],
+                  "type": "boolean"
+                },
+                "runAsGroup": {
+                  "required": [],
+                  "type": "integer"
+                },
+                "runAsNonRoot": {
+                  "required": [],
+                  "type": "boolean"
+                },
+                "runAsUser": {
+                  "required": [],
+                  "type": "integer"
+                },
+                "seLinuxOptions": {
+                  "properties": {
+                    "level": {
+                      "required": [],
+                      "type": "string"
+                    },
+                    "role": {
+                      "required": [],
+                      "type": "string"
+                    },
+                    "type": {
+                      "required": [],
+                      "type": "string"
+                    },
+                    "user": {
+                      "required": [],
+                      "type": "string"
+                    }
+                  },
+                  "required": [],
+                  "type": "object"
+                },
+                "seccompProfile": {
+                  "properties": {
+                    "localhostProfile": {
+                      "required": [],
+                      "type": "string"
+                    },
+                    "type": {
+                      "enum": [
+                        "Localhost",
+                        "RuntimeDefault",
+                        "Unconfined"
+                      ],
+                      "required": [],
+                      "type": "string"
+                    }
+                  },
+                  "required": [],
+                  "type": "object"
+                }
+              },
               "required": [],
               "title": "container"
             },
             "pod": {
               "additionalProperties": false,
               "description": "Pod Security Context.",
+              "properties": {
+                "appArmorProfile": {
+                  "properties": {
+                    "localHostProfile": {
+                      "required": [],
+                      "type": "string"
+                    },
+                    "type": {
+                      "enum": [
+                        "Localhost",
+                        "RuntimeDefault",
+                        "Unconfined"
+                      ],
+                      "required": [],
+                      "type": "string"
+                    }
+                  },
+                  "required": [],
+                  "type": "object"
+                },
+                "fsGroup": {
+                  "required": [],
+                  "type": "integer"
+                },
+                "fsGroupChangePolicy": {
+                  "enum": [
+                    "Always",
+                    "OnRootMismatch"
+                  ],
+                  "required": [],
+                  "type": "string"
+                },
+                "runAsGroup": {
+                  "required": [],
+                  "type": "integer"
+                },
+                "runAsNonRoot": {
+                  "required": [],
+                  "type": "boolean"
+                },
+                "runAsUser": {
+                  "required": [],
+                  "type": "integer"
+                },
+                "seLinuxChangePolicy": {
+                  "enum": [
+                    "MountOption",
+                    "Recursive"
+                  ],
+                  "required": [],
+                  "type": "string"
+                },
+                "seLinuxOptions": {
+                  "properties": {
+                    "level": {
+                      "required": [],
+                      "type": "string"
+                    },
+                    "role": {
+                      "required": [],
+                      "type": "string"
+                    },
+                    "type": {
+                      "required": [],
+                      "type": "string"
+                    },
+                    "user": {
+                      "required": [],
+                      "type": "string"
+                    }
+                  },
+                  "required": [],
+                  "type": "object"
+                },
+                "seccompProfile": {
+                  "properties": {
+                    "localhostProfile": {
+                      "required": [],
+                      "type": "string"
+                    },
+                    "type": {
+                      "enum": [
+                        "Localhost",
+                        "RuntimeDefault",
+                        "Unconfined"
+                      ],
+                      "required": [],
+                      "type": "string"
+                    }
+                  },
+                  "required": [],
+                  "type": "object"
+                },
+                "supplementalGroups": {
+                  "items": {
+                    "required": [],
+                    "type": "integer"
+                  },
+                  "required": [],
+                  "type": "array"
+                },
+                "supplementalGroupsPolicy": {
+                  "enum": [
+                    "Merge",
+                    "Strict"
+                  ],
+                  "required": [],
+                  "type": "string"
+                },
+                "sysctls": {
+                  "items": {
+                    "properties": {
+                      "name": {
+                        "required": [],
+                        "type": "string"
+                      },
+                      "value": {
+                        "required": [],
+                        "type": "string"
+                      }
+                    },
+                    "required": [],
+                    "type": "object"
+                  },
+                  "required": [],
+                  "type": "array"
+                }
+              },
               "required": [],
               "title": "pod"
             }
@@ -4452,19 +5237,19 @@
               "additionalProperties": false,
               "properties": {
                 "nodeAffinity": {
-                  "additionalProperties": false,
+                  "additionalProperties": true,
                   "description": "Node affinity selector.",
                   "required": [],
                   "title": "nodeAffinity"
                 },
                 "podAffinity": {
-                  "additionalProperties": false,
+                  "additionalProperties": true,
                   "description": "Pod affinity selector.",
                   "required": [],
                   "title": "podAffinity"
                 },
                 "podAntiAffinity": {
-                  "additionalProperties": false,
+                  "additionalProperties": true,
                   "description": "Pod anti-affinity selector.",
                   "required": [],
                   "title": "podAntiAffinity"
@@ -4480,7 +5265,7 @@
               "title": "nodeName"
             },
             "nodeSelector": {
-              "additionalProperties": false,
+              "additionalProperties": true,
               "description": "Node selector.",
               "required": [],
               "title": "nodeSelector"
@@ -4543,7 +5328,7 @@
       "additionalProperties": false,
       "properties": {
         "annotations": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Extra annotations for the PodDisruptionBudget manifest.",
           "required": [],
           "title": "annotations"
@@ -4555,7 +5340,7 @@
           "title": "enabled"
         },
         "labels": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Extra labels for the PodDisruptionBudget manifest.",
           "required": [],
           "title": "labels"
@@ -4577,7 +5362,7 @@
       "title": "podDisruptionBudget"
     },
     "postgresql": {
-      "additionalProperties": false,
+      "additionalProperties": true,
       "description": "Configure postgresql database subchart under this key.\nThis will be deployed when storage.postgres.deploy is set to true\nCurrently settings need to be manually copied from here to the storage.postgres section\nFor more options and to see the",
       "properties": {
         "auth": {
@@ -4633,7 +5418,7 @@
               "title": "persistence"
             },
             "resources": {
-              "additionalProperties": false,
+              "additionalProperties": true,
               "required": [],
               "title": "resources"
             }
@@ -4649,7 +5434,7 @@
       "additionalProperties": false,
       "properties": {
         "annotations": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Extra annotations for RBAC related manifests.",
           "required": [],
           "title": "annotations"
@@ -4661,7 +5446,7 @@
           "title": "enabled"
         },
         "labels": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Extra labels for RBAC related manifests.",
           "required": [],
           "title": "labels"
@@ -4677,7 +5462,7 @@
       "title": "rbac"
     },
     "redis": {
-      "additionalProperties": false,
+      "additionalProperties": true,
       "description": "Configure redis database subchart under this key.\nThis will be deployed when session.redis.deploy is set to true\nCurrently settings need to be manually copied from here to the session.redis section\nFor more options and to see the",
       "properties": {
         "architecture": {
@@ -4766,7 +5551,7 @@
               "title": "priorityClassName"
             },
             "resources": {
-              "additionalProperties": false,
+              "additionalProperties": true,
               "required": [],
               "title": "resources"
             }
@@ -4823,7 +5608,7 @@
               "title": "replicaCount"
             },
             "resources": {
-              "additionalProperties": false,
+              "additionalProperties": true,
               "required": [],
               "title": "resources"
             }
@@ -4841,11 +5626,41 @@
         "additionalSecrets": {
           "additionalProperties": false,
           "description": "Additional secrets to mount to the Pod.",
+          "patternProperties": {
+            ".*": {
+              "properties": {
+                "items": {
+                  "items": {
+                    "properties": {
+                      "key": {
+                        "required": [],
+                        "type": "string"
+                      },
+                      "path": {
+                        "required": [],
+                        "type": "string"
+                      }
+                    },
+                    "required": [],
+                    "type": "object"
+                  },
+                  "required": [],
+                  "type": "array"
+                },
+                "path": {
+                  "required": [],
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "type": "object"
+            }
+          },
           "required": [],
           "title": "additionalSecrets"
         },
         "annotations": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Extra annotations for the Secret manifest.",
           "required": [],
           "title": "annotations"
@@ -4863,7 +5678,7 @@
           "title": "existingSecret"
         },
         "labels": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Extra labels for the Secret manifest.",
           "required": [],
           "title": "labels"
@@ -4882,7 +5697,7 @@
       "additionalProperties": false,
       "properties": {
         "annotations": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Extra annotations for service manifest.",
           "required": [],
           "title": "annotations"
@@ -4898,7 +5713,7 @@
           ]
         },
         "labels": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Extra labels for service manifest.",
           "required": [],
           "title": "labels"

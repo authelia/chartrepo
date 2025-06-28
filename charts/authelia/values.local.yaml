@@ -92,6 +92,7 @@ appNameOverride: ~
 
 # @schema
 # required: false
+# additionalProperties: true
 # @schema
 # -- Extra annotations for all generated resources. Most manifest types have a more specific annotations value
 # associated with them.
@@ -99,6 +100,7 @@ annotations: {}
 
 # @schema
 # required: false
+# additionalProperties: true
 # @schema
 # -- Extra labels for all generated resources. Most manifest types have a more specific labels value
 # associated with them.
@@ -117,12 +119,14 @@ rbac:
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   # -- Extra annotations for RBAC related manifests.
   annotations: {}
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   # -- Extra labels for RBAC related manifests.
   labels: {}
@@ -146,12 +150,14 @@ service:
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   # -- Extra annotations for service manifest.
   annotations: {}
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   # -- Extra labels for service manifest.
   labels: {}
@@ -188,12 +194,14 @@ ingress:
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   # -- Extra annotations for ingress related manifests.
   annotations: {}
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   # -- Extra labels for ingress related manifests.
   labels: {}
@@ -519,12 +527,14 @@ pod:
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   # -- Extra annotations for the Pod spec.
   annotations: {}
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   # -- Extra labels for the Pod spec.
   labels: {}
@@ -582,12 +592,14 @@ pod:
 
     # @schema
     # required: false
+    # additionalProperties: true
     # @schema
     # -- Extra annotations for the HorizontalPodAutoscaler manifest.
     annotations: {}
 
     # @schema
     # required: false
+    # additionalProperties: true
     # @schema
     # -- Extra labels for the HorizontalPodAutoscaler manifest.
     labels: {}
@@ -804,6 +816,7 @@ pod:
 
               # @schema
               # required: false
+              # additionalProperties: true
               # @schema
               # -- Dictionary of Match Labels.
               matchLabels: {}
@@ -897,6 +910,7 @@ pod:
 
               # @schema
               # required: false
+              # additionalProperties: true
               # @schema
               # -- Dictionary of Match Labels.
               matchLabels: {}
@@ -964,6 +978,7 @@ pod:
 
               # @schema
               # required: false
+              # additionalProperties: true
               # @schema
               # -- Dictionary of Match Labels.
               matchLabels: {}
@@ -1087,6 +1102,82 @@ pod:
 
     # @schema
     # required: false
+    # properties:
+    #   allowPrivilegeEscalation:
+    #     type: boolean
+    #     required: false
+    #   appArmorProfile:
+    #     type: object
+    #     required: false
+    #     properties:
+    #       localHostProfile:
+    #         type: string
+    #         required: false
+    #       type:
+    #         type: string
+    #         required: false
+    #         enum: [Localhost,RuntimeDefault,Unconfined]
+    #   capabilities:
+    #     type: object
+    #     required: false
+    #     properties:
+    #       add:
+    #         type: array
+    #         required: false
+    #         items:
+    #           type: string
+    #           required: false
+    #       drop:
+    #         type: array
+    #         required: false
+    #         items:
+    #           type: string
+    #           required: false
+    #   privileged:
+    #     type: boolean
+    #     required: false
+    #   procMount:
+    #     type: string
+    #     required: false
+    #   readOnlyRootFilesystem:
+    #     type: boolean
+    #     required: false
+    #   runAsGroup:
+    #     type: integer
+    #     required: false
+    #   runAsNonRoot:
+    #     type: boolean
+    #     required: false
+    #   runAsUser:
+    #     type: integer
+    #     required: false
+    #   seLinuxOptions:
+    #     type: object
+    #     required: false
+    #     properties:
+    #       level:
+    #         type: string
+    #         required: false
+    #       role:
+    #         type: string
+    #         required: false
+    #       type:
+    #         type: string
+    #         required: false
+    #       user:
+    #         type: string
+    #         required: false
+    #   seccompProfile:
+    #     type: object
+    #     required: false
+    #     properties:
+    #       localhostProfile:
+    #         type: string
+    #         required: false
+    #       type:
+    #         type: string
+    #         required: false
+    #         enum: [Localhost,RuntimeDefault,Unconfined]
     # @schema
     # -- Container Security Context.
     container: {}
@@ -1097,6 +1188,87 @@ pod:
 
     # @schema
     # required: false
+    # properties:
+    #   appArmorProfile:
+    #     type: object
+    #     required: false
+    #     properties:
+    #       localHostProfile:
+    #         type: string
+    #         required: false
+    #       type:
+    #         type: string
+    #         required: false
+    #         enum: [Localhost,RuntimeDefault,Unconfined]
+    #   fsGroup:
+    #     type: integer
+    #     required: false
+    #   fsGroupChangePolicy:
+    #     type: string
+    #     required: false
+    #     enum: [Always,OnRootMismatch]
+    #   runAsGroup:
+    #     type: integer
+    #     required: false
+    #   runAsNonRoot:
+    #     type: boolean
+    #     required: false
+    #   runAsUser:
+    #     type: integer
+    #     required: false
+    #   seLinuxChangePolicy:
+    #     type: string
+    #     required: false
+    #     enum: [MountOption,Recursive]
+    #   seLinuxOptions:
+    #     type: object
+    #     required: false
+    #     properties:
+    #       level:
+    #         type: string
+    #         required: false
+    #       role:
+    #         type: string
+    #         required: false
+    #       type:
+    #         type: string
+    #         required: false
+    #       user:
+    #         type: string
+    #         required: false
+    #   seccompProfile:
+    #     type: object
+    #     required: false
+    #     properties:
+    #       localhostProfile:
+    #         type: string
+    #         required: false
+    #       type:
+    #         type: string
+    #         required: false
+    #         enum: [Localhost,RuntimeDefault,Unconfined]
+    #   supplementalGroups:
+    #     type: array
+    #     items:
+    #       type: integer
+    #       required: false
+    #     required: false
+    #   supplementalGroupsPolicy:
+    #     type: string
+    #     required: false
+    #     enum: [Merge,Strict]
+    #   sysctls:
+    #     type: array
+    #     items:
+    #       type: object
+    #       required: false
+    #       properties:
+    #         name:
+    #           type: string
+    #           required: true
+    #         value:
+    #           type: string
+    #           required: true
     # @schema
     # -- Pod Security Context.
     pod: {}
@@ -1130,6 +1302,7 @@ pod:
 
     # @schema
     # required: false
+    # additionalProperties: true
     # @schema
     # -- Node selector.
     nodeSelector: {}
@@ -1144,6 +1317,7 @@ pod:
 
       # @schema
       # required: false
+      # additionalProperties: true
       # @schema
       # -- Node affinity selector.
       nodeAffinity: {}
@@ -1167,6 +1341,7 @@ pod:
 
       # @schema
       # required: false
+      # additionalProperties: true
       # @schema
       # -- Pod affinity selector.
       podAffinity: {}
@@ -1182,6 +1357,7 @@ pod:
 
       # @schema
       # required: false
+      # additionalProperties: true
       # @schema
       # -- Pod anti-affinity selector.
       podAntiAffinity: {}
@@ -1210,6 +1386,7 @@ pod:
 
     # @schema
     # required: false
+    # additionalProperties: true
     # @schema
     # -- Resource Limits.
     limits: {}
@@ -1219,6 +1396,7 @@ pod:
 
     # @schema
     # required: false
+    # additionalProperties: true
     # @schema
     # -- Resource Requests.
     requests: {}
@@ -1389,12 +1567,14 @@ podDisruptionBudget:
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   # -- Extra annotations for the PodDisruptionBudget manifest.
   annotations: {}
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   # -- Extra labels for the PodDisruptionBudget manifest.
   labels: {}
@@ -1424,12 +1604,14 @@ networkPolicy:
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   # -- Extra annotations for the NetworkPolicy manifest.
   annotations: {}
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   # -- Extra labels for the NetworkPolicy manifest.
   labels: {}
@@ -1458,6 +1640,7 @@ networkPolicy:
 
             # @schema
             # required: false
+            # additionalProperties: true
             # @schema
             matchLabels:
               authelia.com/network-policy: 'namespace'
@@ -1469,6 +1652,7 @@ networkPolicy:
 
             # @schema
             # required: false
+            # additionalProperties: true
             # @schema
             matchLabels:
               authelia.com/network-policy: 'pod'
@@ -1502,12 +1686,14 @@ configMap:
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   # -- Extra annotations for the ConfigMap manifest.
   annotations: {}
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   # -- Extra labels for the ConfigMap manifest.
   labels: {}
@@ -1637,6 +1823,8 @@ configMap:
 
       # @schema
       # required: false
+      # items:
+      #   enum: [AuthRequest,ExtAuthz,ForwardAuth,Legacy]
       # @schema
       # -- A list of automatically configured authz implementations if you don't wish to manually configure each one.
       # Important Note: If you configure the 'authz' section this is completely ignored.
@@ -1648,6 +1836,31 @@ configMap:
 
       # @schema
       # required: false
+      # patternProperties:
+      #   ".*":
+      #     type: object
+      #     properties:
+      #       implementation:
+      #         type: string
+      #         enum: [AuthRequest,ExtAuthz,ForwardAuth,Legacy]
+      #       authn_strategies:
+      #         type: array
+      #         items:
+      #           type: object
+      #           required: false
+      #           properties:
+      #             name:
+      #               type: string
+      #               enum: [CookieSession,HeaderAuthorization,HeaderProxyAuthorization,HeaderAuthRequestProxyAuthorization,HeaderLegacy]
+      #             schemes:
+      #               type: array
+      #               required: false
+      #               items:
+      #                 required: false
+      #                 enum: [Basic,Bearer,basic,bearer]
+      #             scheme_basic_cache_lifespan:
+      #               type: [integer,string]
+      #               required: false
       # @schema
       # -- Dictionary of individually configured Authz endpoints.
       authz: {}
@@ -1681,12 +1894,14 @@ configMap:
 
     # @schema
     # required: false
+    # enum: [error,warn,info,debug,trace]
     # @schema
     # -- Level of verbosity for logs: info, debug, trace.
     level: 'info'
 
     # @schema
     # required: false
+    # enum: [text,json]
     # @schema
     # -- Format the logs are written as: json, text.
     format: 'text'
@@ -1772,12 +1987,14 @@ configMap:
 
         # @schema
         # required: false
+        # additionalProperties: true
         # @schema
         # -- Extra annotations for the ServiceMonitor manifest.
         annotations: {}
 
         # @schema
         # required: false
+        # additionalProperties: true
         # @schema
         # -- Extra labels for the ServiceMonitor manifest.
         labels: {}
@@ -1803,6 +2020,13 @@ configMap:
 
     # @schema
     # required: false
+    # patternProperties:
+    #  ".*":
+    #    anyOf:
+    #      - type: string
+    #      - type: array
+    #        items:
+    #          type: string
     # @schema
     # -- The network section configures named network lists.
     network: {}
@@ -1815,6 +2039,12 @@ configMap:
 
     # @schema
     # required: false
+    # patternProperties:
+    #  ".*":
+    #    type: object
+    #    properties:
+    #      expression:
+    #        type: string
     # @schema
     # -- The user attributes section allows you to define custom attributes for your users using Common Expression
     # Language (CEL).
@@ -2630,6 +2860,20 @@ configMap:
 
         # @schema
         # required: false
+        # patternProperties:
+        #   ".*":
+        #     type: object
+        #     required: true
+        #     properties:
+        #       name:
+        #         type: string
+        #         required: false
+        #       value_type:
+        #         type: string
+        #         enum: [string,integer,boolean]
+        #       multi_valued:
+        #         type: boolean
+        #         required: false
         # @schema
         # -- The extra attributes for users.
         extra: {}
@@ -2683,6 +2927,17 @@ configMap:
 
       # @schema
       # required: false
+      # patternProperties:
+      #   ".*":
+      #     type: object
+      #     required: true
+      #     properties:
+      #       value_type:
+      #         type: string
+      #         enum: [string,integer,boolean]
+      #       multi_valued:
+      #         type: boolean
+      #         required: false
       # @schema
       # -- The extra attributes to load from the directory server. These extra attributes can be used in other areas of
       # Authelia such as OpenID Connect 1.0. It’s also recommended to check out the Attributes Reference Guide for more
@@ -3917,6 +4172,105 @@ configMap:
 
         # @schema
         # required: false
+        # patternProperties:
+        #   ".*":
+        #     type: object
+        #     properties:
+        #       access_token:
+        #         type: [string,integer]
+        #         required: false
+        #       refresh_token:
+        #         type: [string,integer]
+        #         required: false
+        #       id_token:
+        #         type: [string,integer]
+        #         required: false
+        #       authorize_code:
+        #         type: [string,integer]
+        #         required: false
+        #       device_code:
+        #         type: [string,integer]
+        #         required: false
+        #       grants:
+        #         type: object
+        #         required: false
+        #         properties:
+        #           authorize_code:
+        #             type: object
+        #             required: false
+        #             properties:
+        #               access_token:
+        #                 type: [string,integer]
+        #                 required: false
+        #               refresh_token:
+        #                 type: [string,integer]
+        #                 required: false
+        #               id_token:
+        #                 type: [string,integer]
+        #                 required: false
+        #           device_code:
+        #             type: object
+        #             required: false
+        #             properties:
+        #               access_token:
+        #                 type: [string,integer]
+        #                 required: false
+        #               refresh_token:
+        #                 type: [string,integer]
+        #                 required: false
+        #               id_token:
+        #                 type: [string,integer]
+        #                 required: false
+        #           implicit:
+        #             type: object
+        #             required: false
+        #             properties:
+        #               access_token:
+        #                 type: [string,integer]
+        #                 required: false
+        #               refresh_token:
+        #                 type: [string,integer]
+        #                 required: false
+        #               id_token:
+        #                 type: [string,integer]
+        #                 required: false
+        #           client_credentials:
+        #             type: object
+        #             required: false
+        #             properties:
+        #               access_token:
+        #                 type: [string,integer]
+        #                 required: false
+        #               refresh_token:
+        #                 type: [string,integer]
+        #                 required: false
+        #           refresh_token:
+        #             type: object
+        #             required: false
+        #             properties:
+        #               access_token:
+        #                 type: [string,integer]
+        #                 required: false
+        #               refresh_token:
+        #                 type: [string,integer]
+        #                 required: false
+        #               id_token:
+        #                 type: [string,integer]
+        #                 required: false
+        #           jwt_bearer:
+        #             type: object
+        #             required: false
+        #             properties:
+        #               access_token:
+        #                 type: [string,integer]
+        #                 required: false
+        #               refresh_token:
+        #                 type: [string,integer]
+        #                 required: false
+        #               id_token:
+        #                 type: [string,integer]
+        #                 required: false
+        #
         # @schema
         # -- The custom lifespan configuration allows customizing the lifespans per-client. The custom lifespans must be
         # utilized with the client lifespan option which applies those settings to that client. Custom lifespans can be
@@ -3957,8 +4311,36 @@ configMap:
 
       # @schema
       # required: false
+      # patternProperties:
+      #   ".*":
+      #     type: object
+      #     required: false
+      #     properties:
+      #       id_token:
+      #         type: array
+      #         required: false
+      #         items:
+      #           type: string
+      #           required: false
+      #       access_token:
+      #         type: array
+      #         required: false
+      #         items:
+      #           type: string
+      #           required: false
+      #       custom_claims:
+      #         type: object
+      #         required: false
+      #         patternProperties:
+      #           ".*":
+      #             type: object
+      #             required: false
+      #             properties:
+      #               attribute:
+      #                 type: string
+      #                 required: false
       # @schema
-      # -- The claims policies are policies which allow customizing the behaviour of claims and the available claims for
+      # -- The claims policies are policies which allow customizing the behavior of claims and the available claims for
       # a particular client.
       claims_policies: {}
       # claims_policies:
@@ -3972,6 +4354,17 @@ configMap:
 
       # @schema
       # required: false
+      # patternProperties:
+      #   ".*":
+      #     type: object
+      #     required: false
+      #     properties:
+      #       claims:
+      #         type: array
+      #         required: false
+      #         items:
+      #           type: string
+      #           required: false
       # @schema
       # -- A list of scope definitions available in addition to the standard ones.
       scopes: {}
@@ -3981,6 +4374,7 @@ configMap:
 
       # @schema
       # required: false
+      # enum: [public_clients_only,always,never,'']
       # @schema
       # -- Adjusts the PKCE enforcement. Options are always, public_clients_only, never.
       # For security reasons it's recommended this option is public_clients_only or always, however always is not
@@ -4027,6 +4421,33 @@ configMap:
 
       # @schema
       # required: false
+      # patternProperties:
+      #   ".*":
+      #     type: object
+      #     properties:
+      #       default_policy:
+      #         type: string
+      #         enum: [deny,two_factor,one_factor,'']
+      #       rules:
+      #         type: array
+      #         required: false
+      #         items:
+      #           type: object
+      #           properties:
+      #             policy:
+      #               type: string
+      #               required: false
+      #               enum: [deny,two_factor,one_factor,'']
+      #             subject:
+      #               required: false
+      #               anyOf:
+      #                 - type: string
+      #                 - type: array
+      #             networks:
+      #               required: false
+      #               anyOf:
+      #                 - type: string
+      #                 - type: array
       # @schema
       # -- Authorization Policies configuration.
       authorization_policies: {}
@@ -4040,6 +4461,42 @@ configMap:
 
       # @schema
       # required: false
+      # items:
+      #   type: object
+      #   properties:
+      #     key_id:
+      #       type: string
+      #       required: false
+      #     use:
+      #       type: string
+      #       required: false
+      #       enum: [sig,enc,'']
+      #     algorithm:
+      #       type: string
+      #       required: false
+      #     key:
+      #       anyOf:
+      #         - type: string
+      #         - type: object
+      #           properties:
+      #             value:
+      #               type: string
+      #               required: false
+      #             path:
+      #               type: string
+      #               required: false
+      #     certificate_chain:
+      #       required: false
+      #       anyOf:
+      #         - type: string
+      #         - type: object
+      #           properties:
+      #             value:
+      #               type: string
+      #               required: false
+      #             path:
+      #               type: string
+      #               required: false
       # @schema
       # -- The JWK's issuer option configures multiple JSON Web Keys. It's required that at least one of the JWK's
       # configured has the RS256 algorithm. For RSA keys (RS or PS) the minimum is a 2048 bit key.
@@ -4065,6 +4522,9 @@ configMap:
 
         # @schema
         # required: false
+        # type: array
+        # items:
+        #   enum: [authorization,device-authorization,pushed-authorization-request,token,revocation,introspection,userinfo]
         # @schema
         # -- List of endpoints in addition to the metadata endpoints to permit cross-origin requests on.
         endpoints: []
@@ -4232,12 +4692,14 @@ secret:
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   # -- Extra annotations for the Secret manifest.
   annotations: {}
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   # -- Extra labels for the Secret manifest.
   labels: {}
@@ -4257,6 +4719,25 @@ secret:
 
   # @schema
   # required: false
+  # patternProperties:
+  #   ".*":
+  #     type: object
+  #     properties:
+  #       path:
+  #         type: string
+  #         required: false
+  #       items:
+  #         type: array
+  #         required: false
+  #         items:
+  #           type: object
+  #           properties:
+  #             key:
+  #               type: string
+  #               required: false
+  #             path:
+  #               type: string
+  #               required: false
   # @schema
   # -- Additional secrets to mount to the Pod.
   additionalSecrets: {}
@@ -4282,12 +4763,14 @@ certificates:
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   # -- Extra annotations for the Certificates Secret manifest.
   annotations: {}
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   # -- Extra labels for the Certificates Secret manifest.
   labels: {}
@@ -4337,12 +4820,14 @@ persistence:
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   # -- Extra annotations for the PersistentVolumeClaim related manifests.
   annotations: {}
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   # -- Extra annotations for the PersistentVolumeClaim related manifests.
   labels: {}
@@ -4367,6 +4852,7 @@ persistence:
 
   # @schema
   # required: false
+  # enum: [None,HostToContainer,Bidirectional,'']
   # @schema
   # -- Sets the mount propagation value for the PersistentVolumeClaim.
   mountPropagation: ''
@@ -4393,6 +4879,8 @@ persistence:
 
   # @schema
   # required: false
+  # items:
+  #   enum: [ReadWriteOnce,ReadOnlyMany,ReadWriteMany,ReadWriteOncePod]
   # @schema
   # -- PersistentVolumeClaim access modes.
   accessModes:
@@ -4406,84 +4894,99 @@ persistence:
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   selector: {}
 
   # @schema
   # required: false
+  # patternProperties:
+  #   ".*":
+  #     type: object
+  #     required: false
+  #     properties:
+  #       enabled:
+  #         type: boolean
+  #         required: false
+  #       annotations:
+  #         type: object
+  #         required: false
+  #         additionalProperties: true
+  #       labels:
+  #         type: object
+  #         required: false
+  #         additionalProperties: true
+  #       readOnly:
+  #         type: boolean
+  #         required: false
+  #       subPath:
+  #         type: string
+  #         required: false
+  #       subPathExpr:
+  #         type: string
+  #         required: false
+  #       mountPropagation:
+  #         type: string
+  #         required: false
+  #       existingClaim:
+  #         type: string
+  #         required: false
+  #       storageClass:
+  #         type: string
+  #         required: false
+  #       volumeName:
+  #         type: string
+  #         required: false
+  #       accessModes:
+  #         type: array
+  #         required: false
+  #         items:
+  #           enum: [ReadWriteOnce,ReadOnlyMany,ReadWriteMany,ReadWriteOncePod]
+  #           required: false
+  #       size:
+  #         type: string
+  #         required: false
+  #       selector:
+  #         type: object
+  #         required: false
+  #         additionalProperties: true
   # @schema
   extraPersistentVolumeClaims:
 
-    # @schema
-    # required: false
-    # @schema
     example:
 
-      # @schema
-      # required: false
-      # @schema
       # -- Enable this extra PersistentVolumeClaim.
       enabled: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- Extra annotations for this PersistentVolumeClaim manifest.
       annotations: {}
 
-      # @schema
-      # required: false
-      # @schema
       # -- Extra annotations for this PersistentVolumeClaim manifest.
       labels: {}
 
-      # @schema
-      # required: false
-      # @schema
       # -- Mounts the PersistentVolumeClaim in read-only mode.
       readOnly: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- Mounts specifically a subpath of the PersistentVolumeClaim.
       subPath: ''
 
-      # @schema
-      # required: false
-      # @schema
       # -- Uses an expression to mount a subpath of the PersistentVolumeClaim.
       subPathExpr: ''
 
-      # @schema
-      # required: false
-      # @schema
       # -- Sets the mount propagation value for the PersistentVolumeClaim.
       mountPropagation: ''
 
-      # @schema
-      # required: false
-      # @schema
       # -- Mounts an existing PersistentVolumeClaim.
       existingClaim: ''
       # existingClaim: 'my-claim-name'
 
-      # @schema
-      # required: false
-      # @schema
       # -- Uses the specified storageClass for the PersistentVolumeClaim.
       storageClass: ''
 
-      # @schema
-      # required: false
-      # @schema
       # -- Persistent Volume Name. Useful if Persistent Volumes have been provisioned in advance and you want to use a
       # specific one.
       volumeName: ''
 
-      # @schema
-      # required: false
-      # @schema
       # -- PersistentVolumeClaim access modes.
       accessModes:
         - 'ReadWriteOnce'
@@ -4501,6 +5004,7 @@ persistence:
 
 # @schema
 # required: false
+# additionalProperties: true
 # @schema
 # -- Configure mariadb database subchart under this key.
 # This will be deployed when storage.mysql.deploy is set to true
@@ -4546,6 +5050,7 @@ mariadb:
 
     # @schema
     # required: false
+    # additionalProperties: true
     # @schema
     resources: {}
 
@@ -4571,6 +5076,7 @@ mariadb:
 
 # @schema
 # required: false
+# additionalProperties: true
 # @schema
 # -- Configure postgresql database subchart under this key.
 # This will be deployed when storage.postgres.deploy is set to true
@@ -4631,11 +5137,13 @@ postgresql:
 
     # @schema
     # required: false
+    # additionalProperties: true
     # @schema
     resources: {}
 
 # @schema
 # required: false
+# additionalProperties: true
 # @schema
 # -- Configure redis database subchart under this key.
 # This will be deployed when session.redis.deploy is set to true
@@ -4691,6 +5199,7 @@ redis:
 
     # @schema
     # required: false
+    # additionalProperties: true
     # @schema
     resources: {}
 
@@ -4737,6 +5246,7 @@ redis:
 
     # @schema
     # required: false
+    # additionalProperties: true
     # @schema
     resources: {}
 

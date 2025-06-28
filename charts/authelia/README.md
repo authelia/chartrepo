@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.10.30](https://img.shields.io/badge/Version-0.10.30-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.4](https://img.shields.io/badge/AppVersion-4.39.4-informational?style=flat-square)
+![Version: 0.10.33](https://img.shields.io/badge/Version-0.10.33-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.4](https://img.shields.io/badge/AppVersion-4.39.4-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -1095,7 +1095,7 @@ false
 {}
 </pre>
 </td>
-			<td>The claims policies are policies which allow customizing the behaviour of claims and the available claims for a particular client.</td>
+			<td>The claims policies are policies which allow customizing the behavior of claims and the available claims for a particular client.</td>
 		</tr>
 		<tr>
 			<td>configMap.identity_providers.oidc.clients</td>
