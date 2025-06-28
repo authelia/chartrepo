@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.10.33](https://img.shields.io/badge/Version-0.10.33-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.4](https://img.shields.io/badge/AppVersion-4.39.4-informational?style=flat-square)
+![Version: 0.10.34](https://img.shields.io/badge/Version-0.10.34-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.4](https://img.shields.io/badge/AppVersion-4.39.4-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -2823,6 +2823,15 @@ false
 </pre>
 </td>
 			<td>The display name the browser should show the user for when using Webauthn to login/register.</td>
+		</tr>
+		<tr>
+			<td>configMap.webauthn.enable_passkey_login</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>Enabled Passkey Logins.</td>
 		</tr>
 		<tr>
 			<td>configMap.webauthn.filtering.permitted_aaguids</td>

@@ -2234,7 +2234,55 @@
             "cookies": {
               "description": "Session Cookies list.",
               "items": {
-                "required": []
+                "properties": {
+                  "default_redirection_url": {
+                    "format": "uri",
+                    "required": [],
+                    "type": "string"
+                  },
+                  "domain": {
+                    "required": [],
+                    "type": "string"
+                  },
+                  "expiration": {
+                    "required": [],
+                    "type": [
+                      "integer",
+                      "string"
+                    ]
+                  },
+                  "inactivity": {
+                    "required": [],
+                    "type": [
+                      "integer",
+                      "string"
+                    ]
+                  },
+                  "name": {
+                    "required": [],
+                    "type": "string"
+                  },
+                  "path": {
+                    "required": [],
+                    "type": "string"
+                  },
+                  "same_site": {
+                    "enum": [
+                      "lax",
+                      "strict",
+                      "none",
+                      ""
+                    ],
+                    "required": [],
+                    "type": "string"
+                  },
+                  "subdomain": {
+                    "required": [],
+                    "type": "string"
+                  }
+                },
+                "required": [],
+                "type": "object"
               },
               "required": [],
               "title": "cookies"
@@ -2514,6 +2562,12 @@
             "same_site": {
               "default": "lax",
               "description": "Sets the Cookie SameSite value. Possible options are none, lax, or strict.\nPlease read https://www.authelia.com/configuration/session/introduction/#same_site",
+              "enum": [
+                "lax",
+                "strict",
+                "none",
+                ""
+              ],
               "required": [],
               "title": "same_site"
             }
@@ -3037,6 +3091,12 @@
               "required": [],
               "title": "display_name"
             },
+            "enable_passkey_login": {
+              "default": "false",
+              "description": "Enabled Passkey Logins.",
+              "required": [],
+              "title": "enable_passkey_login"
+            },
             "filtering": {
               "additionalProperties": false,
               "properties": {
@@ -3329,7 +3389,8 @@
             "entryPoints": {
               "description": "Defines the valid entryPoints to route for the IngressRoute.",
               "items": {
-                "required": []
+                "required": [],
+                "type": "string"
               },
               "required": [],
               "title": "entryPoints"
@@ -3397,7 +3458,18 @@
                         "after": {
                           "description": "List of Middlewares to apply after the forwardAuth Middleware in the authentication chain.",
                           "items": {
-                            "required": []
+                            "properties": {
+                              "name": {
+                                "required": [],
+                                "type": "string"
+                              },
+                              "namespace": {
+                                "required": [],
+                                "type": "string"
+                              }
+                            },
+                            "required": [],
+                            "type": "object"
                           },
                           "required": [],
                           "title": "after"
@@ -3405,7 +3477,18 @@
                         "before": {
                           "description": "List of Middlewares to apply before the forwardAuth Middleware in the authentication chain.",
                           "items": {
-                            "required": []
+                            "properties": {
+                              "name": {
+                                "required": [],
+                                "type": "string"
+                              },
+                              "namespace": {
+                                "required": [],
+                                "type": "string"
+                              }
+                            },
+                            "required": [],
+                            "type": "object"
                           },
                           "required": [],
                           "title": "before"
@@ -3426,7 +3509,18 @@
                         "after": {
                           "description": "List of Middlewares to apply after the middleware in the IngressRoute chain.",
                           "items": {
-                            "required": []
+                            "properties": {
+                              "name": {
+                                "required": [],
+                                "type": "string"
+                              },
+                              "namespace": {
+                                "required": [],
+                                "type": "string"
+                              }
+                            },
+                            "required": [],
+                            "type": "object"
                           },
                           "required": [],
                           "title": "after"
@@ -3434,7 +3528,18 @@
                         "before": {
                           "description": "List of Middlewares to apply before the middleware in the IngressRoute chain.",
                           "items": {
-                            "required": []
+                            "properties": {
+                              "name": {
+                                "required": [],
+                                "type": "string"
+                              },
+                              "namespace": {
+                                "required": [],
+                                "type": "string"
+                              }
+                            },
+                            "required": [],
+                            "type": "object"
                           },
                           "required": [],
                           "title": "before"
@@ -3478,6 +3583,12 @@
             "strategy": {
               "default": "RoundRobin",
               "description": "Defines the IngressRoute service strategy.",
+              "enum": [
+                "wrr",
+                "p2c",
+                "RoundRobin",
+                ""
+              ],
               "required": [],
               "title": "strategy"
             },
@@ -3499,7 +3610,22 @@
                 "domainsOverride": {
                   "description": "Override the domains values for TLS operations.",
                   "items": {
-                    "required": []
+                    "properties": {
+                      "main": {
+                        "required": [],
+                        "type": "string"
+                      },
+                      "sans": {
+                        "items": {
+                          "required": [],
+                          "type": "string"
+                        },
+                        "required": [],
+                        "type": "array"
+                      }
+                    },
+                    "required": [],
+                    "type": "object"
                   },
                   "required": [],
                   "title": "domainsOverride"
@@ -3510,7 +3636,8 @@
                     "cipherSuites": {
                       "description": "Override the default Cipher Suites.",
                       "items": {
-                        "required": []
+                        "required": [],
+                        "type": "string"
                       },
                       "required": [],
                       "title": "cipherSuites"
@@ -3518,7 +3645,8 @@
                     "curvePreferences": {
                       "description": "Override the default Curve Preferences.",
                       "items": {
-                        "required": []
+                        "required": [],
+                        "type": "string"
                       },
                       "required": [],
                       "title": "curvePreferences"
@@ -4012,7 +4140,8 @@
         "args": {
           "description": "Modifies the args for the command. Useful for debugging.",
           "items": {
-            "required": []
+            "required": [],
+            "type": "string"
           },
           "required": [],
           "title": "args"
@@ -4729,7 +4858,8 @@
         "command": {
           "description": "Modifies the command. Useful for debugging.",
           "items": {
-            "required": []
+            "required": [],
+            "type": "string"
           },
           "required": [],
           "title": "command"
@@ -4743,7 +4873,18 @@
         "env": {
           "description": "List of additional environment variables for the Pod.",
           "items": {
-            "required": []
+            "properties": {
+              "name": {
+                "required": [],
+                "type": "string"
+              },
+              "value": {
+                "required": [],
+                "type": "string"
+              }
+            },
+            "required": [],
+            "type": "object"
           },
           "required": [],
           "title": "env"
@@ -4767,7 +4908,9 @@
         "initContainers": {
           "description": "The list of custom initialization containers.",
           "items": {
-            "required": []
+            "additionalProperties": true,
+            "required": [],
+            "type": "object"
           },
           "required": [],
           "title": "initContainers"
@@ -4775,6 +4918,12 @@
         "kind": {
           "default": "DaemonSet",
           "description": "The Pod Kind to use. Must be Deployment, DaemonSet, or StatefulSet.",
+          "enum": [
+            "Deployment",
+            "DaemonSet",
+            "StatefulSet",
+            ""
+          ],
           "required": [],
           "title": "kind"
         },
@@ -5315,7 +5464,31 @@
         "tolerations": {
           "description": "List of tolerations.",
           "items": {
-            "required": []
+            "properties": {
+              "effect": {
+                "enum": [
+                  "NoExecute",
+                  "NoSchedule",
+                  "PreferNoSchedule"
+                ],
+                "required": [],
+                "type": "string"
+              },
+              "key": {
+                "required": [],
+                "type": "string"
+              },
+              "operator": {
+                "required": [],
+                "type": "string"
+              },
+              "value": {
+                "required": [],
+                "type": "string"
+              }
+            },
+            "required": [],
+            "type": "object"
           },
           "required": [],
           "title": "tolerations"

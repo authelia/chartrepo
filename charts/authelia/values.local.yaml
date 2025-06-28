@@ -307,6 +307,8 @@ ingress:
 
     # @schema
     # required: false
+    # items:
+    #   type: string
     # @schema
     # -- Defines the valid entryPoints to route for the IngressRoute.
     entryPoints: []
@@ -337,6 +339,7 @@ ingress:
 
     # @schema
     # required: false
+    # enum: [wrr,p2c,RoundRobin,'']
     # @schema
     # -- Defines the IngressRoute service strategy.
     strategy: 'RoundRobin'
@@ -397,6 +400,14 @@ ingress:
 
           # @schema
           # required: false
+          # items:
+          #   type: object
+          #   properties:
+          #     name:
+          #       type: string
+          #     namespace:
+          #       type: string
+          #       required: false
           # @schema
           # -- List of Middlewares to apply before the forwardAuth Middleware in the authentication chain.
           before: []
@@ -406,6 +417,14 @@ ingress:
 
           # @schema
           # required: false
+          # items:
+          #   type: object
+          #   properties:
+          #     name:
+          #       type: string
+          #     namespace:
+          #       type: string
+          #       required: false
           # @schema
           # -- List of Middlewares to apply after the forwardAuth Middleware in the authentication chain.
           after: []
@@ -420,6 +439,14 @@ ingress:
 
           # @schema
           # required: false
+          # items:
+          #   type: object
+          #   properties:
+          #     name:
+          #       type: string
+          #     namespace:
+          #       type: string
+          #       required: false
           # @schema
           # -- List of Middlewares to apply before the middleware in the IngressRoute chain.
           before: []
@@ -429,6 +456,14 @@ ingress:
 
           # @schema
           # required: false
+          # items:
+          #   type: object
+          #   properties:
+          #     name:
+          #       type: string
+          #     namespace:
+          #       type: string
+          #       required: false
           # @schema
           # -- List of Middlewares to apply after the middleware in the IngressRoute chain.
           after: []
@@ -458,6 +493,16 @@ ingress:
 
       # @schema
       # required: false
+      # items:
+      #   type: object
+      #   properties:
+      #     main:
+      #       type: string
+      #     sans:
+      #       type: array
+      #       required: false
+      #       items:
+      #         type: string
       # @schema
       # -- Override the domains values for TLS operations.
       domainsOverride: []
@@ -497,12 +542,16 @@ ingress:
 
         # @schema
         # required: false
+        # items:
+        #   type: string
         # @schema
         # -- Override the default Cipher Suites.
         cipherSuites: []
 
         # @schema
         # required: false
+        # items:
+        #   type: string
         # @schema
         # -- Override the default Curve Preferences.
         curvePreferences: []
@@ -514,6 +563,7 @@ pod:
 
   # @schema
   # required: false
+  # enum: [Deployment,DaemonSet,StatefulSet,'']
   # @schema
   # -- The Pod Kind to use. Must be Deployment, DaemonSet, or StatefulSet.
   kind: 'DaemonSet'
@@ -541,18 +591,25 @@ pod:
 
   # @schema
   # required: false
+  # items:
+  #   type: string
   # @schema
   # -- Modifies the command. Useful for debugging.
   command: []
 
   # @schema
   # required: false
+  # items:
+  #   type: string
   # @schema
   # -- Modifies the args for the command. Useful for debugging.
   args: []
 
   # @schema
   # required: false
+  # items:
+  #   type: object
+  #   additionalProperties: true
   # @schema
   # -- The list of custom initialization containers.
   initContainers: []
@@ -1279,6 +1336,21 @@ pod:
 
   # @schema
   # required: false
+  # items:
+  #   type: object
+  #   properties:
+  #     key:
+  #       type: string
+  #     operator:
+  #       type: string
+  #       required: false
+  #     value:
+  #       type: string
+  #       required: false
+  #     effect:
+  #       type: string
+  #       required: false
+  #       enum: [NoExecute,NoSchedule,PreferNoSchedule]
   # @schema
   # -- List of tolerations.
   tolerations: []
@@ -1375,6 +1447,13 @@ pod:
 
   # @schema
   # required: false
+  # items:
+  #   type: object
+  #   properties:
+  #     name:
+  #       type: string
+  #     value:
+  #       type: string
   # @schema
   # -- List of additional environment variables for the Pod.
   env: []
@@ -2254,6 +2333,12 @@ configMap:
     # @schema
     # -- Disable Webauthn.
     disable: false
+
+    # @schema
+    # required: false
+    # @schema
+    # -- Enabled Passkey Logins.
+    enable_passkey_login: false
 
     # @schema
     # type: [integer, string]
@@ -3270,6 +3355,7 @@ configMap:
 
     # @schema
     # required: false
+    # enum: [lax,strict,none,'']
     # @schema
     # -- Sets the Cookie SameSite value. Possible options are none, lax, or strict.
     # Please read https://www.authelia.com/configuration/session/introduction/#same_site
@@ -3330,6 +3416,34 @@ configMap:
 
     # @schema
     # required: true
+    # items:
+    #   type: object
+    #   properties:
+    #     subdomain:
+    #       type: string
+    #       required: false
+    #     domain:
+    #       type: string
+    #     path:
+    #       type: string
+    #       required: false
+    #     default_redirection_url:
+    #       type: string
+    #       format: uri
+    #       required: false
+    #     name:
+    #       type: string
+    #       required: false
+    #     same_site:
+    #       type: string
+    #       required: false
+    #       enum: [lax,strict,none,'']
+    #     expiration:
+    #       type: [integer, string]
+    #       required: false
+    #     inactivity:
+    #       type: [integer, string]
+    #       required: false
     # @schema
     # -- Session Cookies list.
     cookies: []
