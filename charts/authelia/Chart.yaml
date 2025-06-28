@@ -1,6 +1,6 @@
 apiVersion: v2
 name: authelia
-version: 0.10.30
+version: 0.10.31
 kubeVersion: ">= 1.13.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
@@ -71,7 +71,7 @@ annotations:
   artifacthub.io/maintainers: |
     - name: James Elliott
       email: james-d-elliott@users.noreply.github.com
-  artifacthub.io/images: |
+  artifacthub.io/screenshots: |
     - title: User Interface
       url: https://www.authelia.com/images/dark.png
     - title: Second Factor Methods
