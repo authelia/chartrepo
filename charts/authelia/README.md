@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.10.34](https://img.shields.io/badge/Version-0.10.34-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.4](https://img.shields.io/badge/AppVersion-4.39.4-informational?style=flat-square)
+![Version: 0.10.34](https://img.shields.io/badge/Version-0.10.34-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.5](https://img.shields.io/badge/AppVersion-4.39.5-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -2859,6 +2859,15 @@ false
 </pre>
 </td>
 			<td>A list of Authenticator Attestation GUID’s that users will not be able to register. Useful if company policy prevents certain authenticators. Mutually exclusive with permitted_aaguids.</td>
+		</tr>
+		<tr>
+			<td>configMap.webauthn.metadata.cache_policy</td>
+			<td>string</td>
+			<td><pre lang="json">
+"strict"
+</pre>
+</td>
+			<td>Allows adjusting the WebAuthn Metadata Cache Policy.</td>
 		</tr>
 		<tr>
 			<td>configMap.webauthn.metadata.enabled</td>

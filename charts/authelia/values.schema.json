@@ -3129,6 +3129,16 @@
             "metadata": {
               "additionalProperties": false,
               "properties": {
+                "cache_policy": {
+                  "default": "strict",
+                  "description": "Allows adjusting the WebAuthn Metadata Cache Policy.",
+                  "enum": [
+                    "strict",
+                    "relaxed"
+                  ],
+                  "required": [],
+                  "title": "cache_policy"
+                },
                 "enabled": {
                   "default": "false",
                   "description": "Enables metadata service validation of authenticators and credentials. This requires the download of the\nmetadata service blob which will utilize about 5MB of data in your configured storage backend.",

@@ -123,6 +123,9 @@ data:
         user_verification: {{ .Values.configMap.webauthn.selection_criteria.user_verification | default "preferred" | squote }}
       metadata:
         enabled: {{ .Values.configMap.webauthn.metadata.enabled | default false }}
+        {{- if semverCompare ">=4.39.5" (include "authelia.version" $) }}
+        cache_policy: {{ .Values.configMap.webauthn.metadata.cache_policy | default "strict" | squote }}
+        {{- end }}
         validate_trust_anchor: {{ .Values.configMap.webauthn.metadata.validate_trust_anchor }}
         validate_entry: {{ .Values.configMap.webauthn.metadata.validate_entry }}
         validate_entry_permit_zero_aaguid: {{ .Values.configMap.webauthn.metadata.validate_entry_permit_zero_aaguid | default false }}
