@@ -12,3 +12,4 @@ scripts/
 
 # Local
 values.personal.yaml
+*.gotmpl
