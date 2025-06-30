@@ -7,3 +7,4 @@ else
 fi
 
 envsubst < .buildkite/pipeline.yaml
+
