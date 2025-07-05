@@ -567,7 +567,7 @@ pod:
   # required: false
   # @schema
   # -- Normally when a change is detected via helm install to something that only indirectly affects the pod, the pod
-  # will restart. This setting allows disabling this behaviour.
+  # will restart. This setting allows disabling this behavior.
   disableRestartOnChanges: false
 
   # @schema
@@ -658,460 +658,9 @@ pod:
 
     # @schema
     # required: false
+    # $ref: https://charts.authelia.com/definitions.json#/definitions/io.k8s.api.autoscaling.v2.HorizontalPodAutoscalerBehavior
     # @schema
-    behaviour:
-
-      # @schema
-      # required: false
-      # @schema
-      scaleDown:
-
-        # @schema
-        # required: false
-        # @schema
-        policies:
-          -
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) The scale down policy type.
-            type: ~
-
-            # @schema
-            # type: [integer, null]
-            # required: false
-            # @schema
-            # -- (int) The scale down policy value.
-            value: ~
-
-            # @schema
-            # required: false
-            # @schema
-            # -- The scale down policy period seconds.
-            periodSeconds: 60
-
-        # @schema
-        # type: [string, null]
-        # required: false
-        # @schema
-        # -- (string) The select policy value.
-        selectPolicy: ~
-
-        # @schema
-        # type: [integer, null]
-        # required: false
-        # @schema
-        # -- (int) The number of seconds to allow stabilization before scaling.
-        stabilizationWindowSeconds: ~
-
-        # @schema
-        # type: [integer, null]
-        # required: false
-        # @schema
-        # -- (int) The amount of tolerance percentage.
-        tolerance: ~
-
-      # @schema
-      # required: false
-      # @schema
-      scaleUp:
-
-        # @schema
-        # required: false
-        # @schema
-        policies:
-          -
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) The scale up policy type.
-            type: ~
-
-            # @schema
-            # type: [integer, null]
-            # required: false
-            # @schema
-            # -- (int) The scale up policy value.
-            value: ~
-
-            # @schema
-            # required: false
-            # @schema
-            # -- The scale down policy period seconds.
-            periodSeconds: 60
-
-        # @schema
-        # type: [string, null]
-        # required: false
-        # @schema
-        # -- (string) The select policy value.
-        selectPolicy: ~
-
-        # @schema
-        # type: [integer, null]
-        # required: false
-        # @schema
-        # -- (int) The number of seconds to allow stabilization before scaling.
-        stabilizationWindowSeconds: ~
-
-        # @schema
-        # type: [integer, null]
-        # required: false
-        # @schema
-        # -- (int) The amount of tolerance percentage.
-        tolerance: ~
-
-    # @schema
-    # type: [integer, null]
-    # required: false
-    # @schema
-    # -- (int) The maximum replicas for this policy.
-    maxReplicas: ~
-
-    # @schema
-    # type: [integer, null]
-    # required: false
-    # @schema
-    # -- (int) The minimum replicas for this policy.
-    minReplicas: ~
-
-    # @schema
-    # required: false
-    # @schema
-    metrics:
-      -
-        # @schema
-        # type: [string, null]
-        # required: false
-        # @schema
-        # -- (string) The type of metric to use for this rule. ContainerResource, External, Object, Pods, or Resource.
-        type: ~
-
-        # @schema
-        # required: false
-        # @schema
-        containerResource:
-
-          # @schema
-          # type: [string, null]
-          # required: false
-          # @schema
-          # -- (string) Name of the container within the Pod.
-          container: ~
-
-          # @schema
-          # type: [string, null]
-          # required: false
-          # @schema
-          # -- (string) Name of resource.
-          name: ~
-
-          # @schema
-          # required: false
-          # @schema
-          target:
-
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) Represents the metric type. Utilization, Value, or AverageValue.
-            type: ~
-
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) Average Utilization value.
-            averageUtilization: ~
-
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) Average value.
-            averageValue: ~
-
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) Value.
-            value: ~
-
-        # @schema
-        # required: false
-        # @schema
-        external:
-
-          # @schema
-          # required: false
-          # @schema
-          metric:
-
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) Name of the given metric.
-            name: ~
-
-            selector:
-
-              # @schema
-              # required: false
-              # @schema
-              # -- List of Match Expressions.
-              matchExpressions: []
-
-              # @schema
-              # required: false
-              # additionalProperties: true
-              # @schema
-              # -- Dictionary of Match Labels.
-              matchLabels: {}
-
-          # @schema
-          # required: false
-          # @schema
-          target:
-
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) Represents the metric type. Utilization, Value, or AverageValue.
-            type: ~
-
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) Average Utilization value.
-            averageUtilization: ~
-
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) Average value.
-            averageValue: ~
-
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) Value.
-            value: ~
-
-        # @schema
-        # required: false
-        # @schema
-        object:
-
-          # @schema
-          # required: false
-          # @schema
-          describedObject:
-
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) API Version of the referent.
-            apiVersion: ~
-
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) Kind of the referent.
-            kind: ~
-
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) Name of the referent.
-            name: ~
-
-          # @schema
-          # required: false
-          # @schema
-          metric:
-
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) Name of the given metric.
-            name: ~
-
-            # @schema
-            # required: false
-            # @schema
-            selector:
-
-              # @schema
-              # required: false
-              # @schema
-              # -- List of Match Expressions.
-              matchExpressions: []
-
-              # @schema
-              # required: false
-              # additionalProperties: true
-              # @schema
-              # -- Dictionary of Match Labels.
-              matchLabels: {}
-
-          # @schema
-          # required: false
-          # @schema
-          target:
-
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) Represents the metric type. Utilization, Value, or AverageValue.
-            type: ~
-
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) Average Utilization value.
-            averageUtilization: ~
-
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) Average value.
-            averageValue: ~
-
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) Value.
-            value: ~
-
-        # @schema
-        # required: false
-        # @schema
-        pods:
-
-          # @schema
-          # required: false
-          # @schema
-          metric:
-
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) Name of the given metric.
-            name: ~
-
-            # @schema
-            # required: false
-            # @schema
-            selector:
-
-              # @schema
-              # required: false
-              # @schema
-              # -- List of Match Expressions.
-              matchExpressions: []
-
-              # @schema
-              # required: false
-              # additionalProperties: true
-              # @schema
-              # -- Dictionary of Match Labels.
-              matchLabels: {}
-
-          # @schema
-          # required: false
-          # @schema
-          target:
-
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) Represents the metric type. Utilization, Value, or AverageValue.
-            type: ~
-
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) Average Utilization value.
-            averageUtilization: ~
-
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) Average value.
-            averageValue: ~
-
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) Value.
-            value: ~
-
-        # @schema
-        # required: false
-        # @schema
-        resource:
-
-          # @schema
-          # type: [string, null]
-          # required: false
-          # @schema
-          # -- (string) Name of the resource.
-          name: ~
-
-          # @schema
-          # required: false
-          # @schema
-          target:
-
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) Represents the metric type. Utilization, Value, or AverageValue.
-            type: ~
-
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) Average Utilization value.
-            averageUtilization: ~
-
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) Average value.
-            averageValue: ~
-
-            # @schema
-            # type: [string, null]
-            # required: false
-            # @schema
-            # -- (string) Value.
-            value: ~
+    behavior: {}
 
   # @schema
   # required: false
@@ -3499,7 +3048,7 @@ configMap:
         # type: [string, null]
         # required: false
         # @schema
-        # -- The secret name. The ~ name is special as it is the secret we generate either automatically or via the
+        # -- (string) The secret name. The ~ name is special as it is the secret we generate either automatically or via the
         # secret_value option below.
         secret_name: ~
 
@@ -5098,6 +4647,7 @@ mariadb:
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   auth:
 
@@ -5123,6 +4673,7 @@ mariadb:
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   primary:
 
@@ -5134,6 +4685,7 @@ mariadb:
 
     # @schema
     # required: false
+    # additionalProperties: true
     # @schema
     persistence:
 
@@ -5165,6 +4717,7 @@ postgresql:
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   auth:
 
@@ -5190,11 +4743,13 @@ postgresql:
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   primary:
 
     # @schema
     # required: false
+    # additionalProperties: true
     # @schema
     persistence:
 
@@ -5237,6 +4792,7 @@ redis:
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   auth:
 
@@ -5272,6 +4828,7 @@ redis:
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   master:
 
@@ -5288,6 +4845,7 @@ redis:
 
     # @schema
     # required: false
+    # additionalProperties: true
     # @schema
     persistence:
 
@@ -5314,6 +4872,7 @@ redis:
 
   # @schema
   # required: false
+  # additionalProperties: true
   # @schema
   replica:
 
@@ -5335,6 +4894,7 @@ redis:
 
     # @schema
     # required: false
+    # additionalProperties: true
     # @schema
     persistence:
 

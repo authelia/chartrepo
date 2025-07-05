@@ -12,7 +12,7 @@ metadata:
   {{- end }}
 spec:
   behavior:
-    {{- with .Values.pod.autoscaling.behaviour.scaleDown }}
+    {{- with .Values.pod.autoscaling.behavior.scaleDown }}
     scaleDown:
       {{- with .policies }}
       policies:
@@ -32,7 +32,7 @@ spec:
       tolerance: {{ .tolerance }}
       {{- end }}
     {{- end }}
-    {{- with .Values.pod.autoscaling.behaviour.scaleUp }}
+    {{- with .Values.pod.autoscaling.behavior.scaleUp }}
     scaleUp:
       {{- with .policies }}
       policies:
