@@ -1,0 +1,157 @@
+{
+  "definitions": {
+    "io.k8s.apimachinery.pkg.util.intstr.IntOrString": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "integer"
+        }
+      ]
+    },
+    "io.k8s.api.networking.v1.IPBlock": {
+      "properties": {
+        "cidr": {
+          "type": "string"
+        },
+        "except": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "x-kubernetes-list-type": "atomic"
+        }
+      },
+      "required": [
+        "cidr"
+      ],
+      "type": "object"
+    },
+    "io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelectorRequirement": {
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "operator": {
+          "type": "string"
+        },
+        "values": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "x-kubernetes-list-type": "atomic"
+        }
+      },
+      "required": [
+        "key",
+        "operator"
+      ],
+      "type": "object"
+    },
+    "io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector": {
+      "properties": {
+        "matchExpressions": {
+          "items": {
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelectorRequirement"
+          },
+          "type": "array",
+          "x-kubernetes-list-type": "atomic"
+        },
+        "matchLabels": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        }
+      },
+      "type": "object",
+      "x-kubernetes-map-type": "atomic"
+    },
+    "io.k8s.api.networking.v1.NetworkPolicyPeer": {
+      "properties": {
+        "ipBlock": {
+          "$ref": "#/definitions/io.k8s.api.networking.v1.IPBlock"
+        },
+        "namespaceSelector": {
+          "$ref": "definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
+        },
+        "podSelector": {
+          "$ref": "#definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
+        }
+      }
+    },
+    "io.k8s.api.networking.v1.NetworkPolicyPort": {
+      "properties": {
+        "endPort": {
+          "format": "int32",
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "port": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.util.intstr.IntOrString"
+        },
+        "protocol": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "io.k8s.api.networking.v1.NetworkPolicyEgressRule": {
+      "properties": {
+        "ports": {
+          "items": {
+            "$ref": "#/definitions/io.k8s.api.networking.v1.NetworkPolicyPort"
+          },
+          "type": [
+            "array",
+            "null"
+          ],
+          "x-kubernetes-list-type": "atomic"
+        },
+        "to": {
+          "items": {
+            "$ref": "#/definitions/io.k8s.api.networking.v1.NetworkPolicyPeer"
+          },
+          "type": [
+            "array",
+            "null"
+          ],
+          "x-kubernetes-list-type": "atomic"
+        }
+      },
+      "type": "object"
+    },
+    "io.k8s.api.networking.v1.NetworkPolicyIngressRule": {
+      "properties": {
+        "ports": {
+          "items": {
+            "$ref": "#/definitions/io.k8s.api.networking.v1.NetworkPolicyPort"
+          },
+          "type": [
+            "array",
+            "null"
+          ],
+          "x-kubernetes-list-type": "atomic"
+        },
+        "from": {
+          "items": {
+            "$ref": "#/definitions/io.k8s.api.networking.v1.NetworkPolicyPeer"
+          },
+          "type": [
+            "array",
+            "null"
+          ],
+          "x-kubernetes-list-type": "atomic"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

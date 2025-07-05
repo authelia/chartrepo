@@ -3808,6 +3808,15 @@
           "required": [],
           "title": "annotations"
         },
+        "egress": {
+          "items": {
+            "$ref": "https://charts.authelia.com/definitions.json#/definitions/io.k8s.api.networking.v1.NetworkPolicyEgressRule",
+            "required": []
+          },
+          "required": [],
+          "title": "egress",
+          "type": "array"
+        },
         "enabled": {
           "default": "false",
           "description": "Enable the NetworkPolicy.",
@@ -3816,116 +3825,12 @@
         },
         "ingress": {
           "items": {
-            "anyOf": [
-              {
-                "additionalProperties": false,
-                "properties": {
-                  "from": {
-                    "items": {
-                      "anyOf": [
-                        {
-                          "additionalProperties": false,
-                          "properties": {
-                            "namespaceSelector": {
-                              "additionalProperties": false,
-                              "properties": {
-                                "matchLabels": {
-                                  "additionalProperties": true,
-                                  "properties": {
-                                    "authelia.com/network-policy": {
-                                      "default": "namespace",
-                                      "required": [],
-                                      "title": "authelia.com/network-policy",
-                                      "type": "string"
-                                    }
-                                  },
-                                  "required": [
-                                    "authelia.com/network-policy"
-                                  ],
-                                  "title": "matchLabels",
-                                  "type": "object"
-                                }
-                              },
-                              "required": [],
-                              "title": "namespaceSelector",
-                              "type": "object"
-                            }
-                          },
-                          "required": [],
-                          "type": "object"
-                        },
-                        {
-                          "additionalProperties": false,
-                          "properties": {
-                            "podSelector": {
-                              "additionalProperties": false,
-                              "properties": {
-                                "matchLabels": {
-                                  "additionalProperties": true,
-                                  "properties": {
-                                    "authelia.com/network-policy": {
-                                      "default": "pod",
-                                      "required": [],
-                                      "title": "authelia.com/network-policy",
-                                      "type": "string"
-                                    }
-                                  },
-                                  "required": [
-                                    "authelia.com/network-policy"
-                                  ],
-                                  "title": "matchLabels",
-                                  "type": "object"
-                                }
-                              },
-                              "required": [],
-                              "title": "podSelector",
-                              "type": "object"
-                            }
-                          },
-                          "required": [],
-                          "type": "object"
-                        }
-                      ],
-                      "required": []
-                    },
-                    "required": [],
-                    "title": "from"
-                  },
-                  "ports": {
-                    "items": {
-                      "anyOf": [
-                        {
-                          "additionalProperties": false,
-                          "properties": {
-                            "port": {
-                              "default": "9091",
-                              "required": [],
-                              "title": "port"
-                            },
-                            "protocol": {
-                              "default": "TCP",
-                              "required": [],
-                              "title": "protocol"
-                            }
-                          },
-                          "required": [],
-                          "type": "object"
-                        }
-                      ],
-                      "required": []
-                    },
-                    "required": [],
-                    "title": "ports"
-                  }
-                },
-                "required": [],
-                "type": "object"
-              }
-            ],
+            "$ref": "https://charts.authelia.com/definitions.json#/definitions/io.k8s.api.networking.v1.NetworkPolicyIngressRule",
             "required": []
           },
           "required": [],
-          "title": "ingress"
+          "title": "ingress",
+          "type": "array"
         },
         "labels": {
           "additionalProperties": true,
@@ -3936,11 +3841,9 @@
         "policyTypes": {
           "description": "The Policy Types such as Ingress or Egress.",
           "items": {
-            "anyOf": [
-              {
-                "required": [],
-                "type": "string"
-              }
+            "enum": [
+              "Ingress",
+              "Egress"
             ],
             "required": []
           },
