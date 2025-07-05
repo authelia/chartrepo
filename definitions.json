@@ -10,24 +10,21 @@
         }
       ]
     },
-    "io.k8s.api.networking.v1.IPBlock": {
-      "properties": {
-        "cidr": {
+    "io.k8s.apimachinery.pkg.apis.meta.v1.Time": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "io.k8s.apimachinery.pkg.api.resource.Quantity": {
+      "oneOf": [
+        {
           "type": "string"
         },
-        "except": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "x-kubernetes-list-type": "atomic"
+        {
+          "type": "number"
         }
-      },
-      "required": [
-        "cidr"
-      ],
-      "type": "object"
+      ]
     },
+    ,
     "io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelectorRequirement": {
       "properties": {
         "key": {
@@ -68,6 +65,24 @@
       },
       "type": "object",
       "x-kubernetes-map-type": "atomic"
+    },
+    "io.k8s.api.networking.v1.IPBlock": {
+      "properties": {
+        "cidr": {
+          "type": "string"
+        },
+        "except": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "x-kubernetes-list-type": "atomic"
+        }
+      },
+      "required": [
+        "cidr"
+      ],
+      "type": "object"
     },
     "io.k8s.api.networking.v1.NetworkPolicyPeer": {
       "properties": {
@@ -151,6 +166,95 @@
           "x-kubernetes-list-type": "atomic"
         }
       },
+      "type": "object"
+    },
+    "io.k8s.api.autoscaling.v2.HorizontalPodAutoscalerBehaviour": {
+      "properties": {
+        "scaleDown": {
+          "$ref": "#/definitions/io.k8s.api.autoscaling.v2.HPAScalingRules"
+        },
+        "scaleUp": {
+          "$ref": "#/definitions/io.k8s.api.autoscaling.v2.HPAScalingRules"
+        }
+      },
+      "type": "object"
+    },
+    "io.k8s.api.autoscaling.v2.HPAScalingRules": {
+      "properties": {
+        "policies": {
+          "items": {
+            "$ref": "#/definitions/io.k8s.api.autoscaling.v2.HPAScalingPolicy"
+          },
+          "type": "array",
+          "x-kubernetes-list-type": "atomic"
+        },
+        "selectPolicy": {
+          "type": "string"
+        },
+        "stabilizationWindowSeconds": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "tolerance": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        }
+      },
+      "type": "object"
+    },
+    "io.k8s.api.autoscaling.v2.HorizontalPodAutoscalerBehavior": {
+      "properties": {
+        "scaleDown": {
+          "$ref": "#/definitions/io.k8s.api.autoscaling.v2.HPAScalingRules"
+        },
+        "scaleUp": {
+          "$ref": "#/definitions/io.k8s.api.autoscaling.v2.HPAScalingRules"
+        }
+      },
+      "type": "object"
+    },
+    "io.k8s.api.autoscaling.v2.HorizontalPodAutoscalerCondition": {
+      "properties": {
+        "lastTransitionTime": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "message": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "status"
+      ],
+      "type": "object"
+    },
+    "io.k8s.api.autoscaling.v2.HPAScalingPolicy": {
+      "properties": {
+        "periodSeconds": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "type": {
+          "type": "string"
+        },
+        "value": {
+          "format": "int32",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "type",
+        "value",
+        "periodSeconds"
+      ],
       "type": "object"
     }
   }
