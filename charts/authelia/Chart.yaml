@@ -1,6 +1,6 @@
 apiVersion: v2
 name: authelia
-version: 0.10.36
+version: 0.10.37
 kubeVersion: ">= 1.13.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
@@ -44,7 +44,7 @@ annotations:
   artifacthub.io/category: security
   artifacthub.io/changes: |
     - kind: fixed
-      description: Additional properties not allowed on subchart keys
+      description: Incorrect GatewayAPI HTTPRoute path type used
       links: []
   artifacthub.io/images: |
     - name: authelia

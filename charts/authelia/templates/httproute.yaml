@@ -35,7 +35,7 @@ spec:
   rules:
     - matches:
         - path:
-            type: 'Prefix'
+            type: 'PathPrefix'
             value: {{ (include "authelia.path" $) | squote }}
       backendRefs:
         - name: {{ include "authelia.name" $ }}
