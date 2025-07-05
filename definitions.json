@@ -75,7 +75,7 @@
           "$ref": "#/definitions/io.k8s.api.networking.v1.IPBlock"
         },
         "namespaceSelector": {
-          "$ref": "definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
+          "$ref": "#definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
         },
         "podSelector": {
           "$ref": "#definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
