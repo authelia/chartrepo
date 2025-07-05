@@ -5,6 +5,87 @@ entries:
       artifacthub.io/category: security
       artifacthub.io/changes: |
         - kind: fixed
+          description: Resolved network policy schema issues
+          links: []
+        - kind: added
+          description: Definitions Schema to declutter the values.yaml
+          links: []
+      artifacthub.io/images: |
+        - name: authelia
+          image: ghcr.io/authelia/authelia:4.39.4
+          whitelisted: false
+          platforms:
+            - linux/amd64
+            - linux/arm64
+            - linux/arm/v7
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Chart Repository
+          url: https://charts.authelia.com/
+        - name: Website
+          url: https://www.authelia.com/
+        - name: GitHub Repository
+          url: https://github.com/authelia
+      artifacthub.io/maintainers: |
+        - name: James Elliott
+          email: james-d-elliott@users.noreply.github.com
+      artifacthub.io/screenshots: |
+        - title: User Interface
+          url: https://www.authelia.com/images/dark.png
+        - title: Second Factor Methods
+          url: https://www.authelia.com/images/2fa-methods-dark.png
+      artifacthub.io/signKey: |
+        fingerprint: 192085915BD608A458AC58DCE461FA1531286EEA
+        url: https://keybase.io/authelia/pgp_keys.asc
+    apiVersion: v2
+    appVersion: 4.39.4
+    created: "2025-07-05T21:51:14.359498288+10:00"
+    dependencies:
+    - condition: configMap.storage.postgres.deploy
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: ~15.5.11
+    - condition: configMap.storage.mysql.deploy
+      name: mariadb
+      repository: https://charts.bitnami.com/bitnami
+      version: ~18.2.4
+    - condition: configMap.session.redis.deploy
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: ~19.6.0
+    description: Authelia is a Single Sign-On Multi-Factor portal for web apps
+    digest: dc1c0261036a1aac315c955d86f34861d673c64a5e2ceeeb7d19bdcb4a51d228
+    home: https://www.authelia.com
+    icon: https://avatars2.githubusercontent.com/u/59122411?s=200&v=4
+    keywords:
+    - SSO
+    - Authentication
+    - Security
+    - Two-Factor
+    - YubiKey
+    - Webauthn
+    - Duo
+    - TOTP
+    - Time-based One Time Password
+    - Push Notifications
+    - LDAP
+    kubeVersion: '>= 1.13.0-0'
+    maintainers:
+    - email: james-d-elliott@users.noreply.github.com
+      name: james-d-elliott
+      url: https://github.com/james-d-elliott
+    name: authelia
+    sources:
+    - https://github.com/authelia/chartrepo/tree/master/charts/authelia
+    - https://www.github.com/authelia/authelia
+    type: application
+    urls:
+    - https://github.com/authelia/chartrepo/releases/download/authelia-0.10.35/authelia-0.10.35.tgz
+    version: 0.10.35
+  - annotations:
+      artifacthub.io/category: security
+      artifacthub.io/changes: |
+        - kind: fixed
           description: Resolved Missing Passkey JSONSchema Value
           links: []
         - kind: fixed
@@ -7518,4 +7599,4 @@ entries:
     urls:
     - https://github.com/authelia/chartrepo/releases/download/authelia-0.1.0/authelia-0.1.0.tgz
     version: 0.1.0
-generated: "2025-06-29T00:45:15.969896769+10:00"
+generated: "2025-07-05T21:51:14.359909985+10:00"
