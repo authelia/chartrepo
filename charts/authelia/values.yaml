@@ -1692,6 +1692,8 @@ networkPolicy:
 
   # @schema
   # required: false
+  # items:
+  #   enum: [Ingress, Egress]
   # @schema
   # -- The Policy Types such as Ingress or Egress.
   policyTypes:
@@ -1699,52 +1701,19 @@ networkPolicy:
 
   # @schema
   # required: false
+  # type: array
+  # items:
+  #   $ref: https://charts.authelia.com/definitions.json#/definitions/io.k8s.api.networking.v1.NetworkPolicyIngressRule
   # @schema
-  ingress:
-    -
-      # @schema
-      # required: false
-      # @schema
-      from:
-        -
-          # @schema
-          # required: false
-          # @schema
-          namespaceSelector:
+  ingress: []
 
-            # @schema
-            # required: false
-            # additionalProperties: true
-            # @schema
-            matchLabels:
-              authelia.com/network-policy: 'namespace'
-        -
-          # @schema
-          # required: false
-          # @schema
-          podSelector:
-
-            # @schema
-            # required: false
-            # additionalProperties: true
-            # @schema
-            matchLabels:
-              authelia.com/network-policy: 'pod'
-
-      # @schema
-      # required: false
-      # @schema
-      ports:
-        -
-          # @schema
-          # required: false
-          # @schema
-          protocol: 'TCP'
-
-          # @schema
-          # required: false
-          # @schema
-          port: 9091
+  # @schema
+  # required: false
+  # type: array
+  # items:
+  #   $ref: https://charts.authelia.com/definitions.json#/definitions/io.k8s.api.networking.v1.NetworkPolicyEgressRule
+  # @schema
+  egress: []
 
 # @schema
 # required: false

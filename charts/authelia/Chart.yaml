@@ -1,6 +1,6 @@
 apiVersion: v2
 name: authelia
-version: 0.10.34
+version: 0.10.35
 kubeVersion: ">= 1.13.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
@@ -44,10 +44,10 @@ annotations:
   artifacthub.io/category: security
   artifacthub.io/changes: |
     - kind: fixed
-      description: Resolved Missing Passkey JSONSchema Value
+      description: Resolved network policy schema issues
       links: []
-    - kind: fixed
-      description: Resolved Additional JSONSchema Value Issues
+    - kind: added
+      description: Definitions Schema to declutter the values.yaml
       links: []
   artifacthub.io/images: |
     - name: authelia

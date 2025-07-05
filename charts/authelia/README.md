@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.10.34](https://img.shields.io/badge/Version-0.10.34-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.4](https://img.shields.io/badge/AppVersion-4.39.4-informational?style=flat-square)
+![Version: 0.10.35](https://img.shields.io/badge/Version-0.10.35-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.4](https://img.shields.io/badge/AppVersion-4.39.4-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -3424,6 +3424,15 @@ null
 			<td>Extra annotations for the NetworkPolicy manifest.</td>
 		</tr>
 		<tr>
+			<td>networkPolicy.egress</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>networkPolicy.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
@@ -3433,37 +3442,10 @@ false
 			<td>Enable the NetworkPolicy.</td>
 		</tr>
 		<tr>
-			<td>networkPolicy.ingress[0].from[0].namespaceSelector.matchLabels."authelia.com/network-policy"</td>
-			<td>string</td>
+			<td>networkPolicy.ingress</td>
+			<td>list</td>
 			<td><pre lang="json">
-"namespace"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>networkPolicy.ingress[0].from[1].podSelector.matchLabels."authelia.com/network-policy"</td>
-			<td>string</td>
-			<td><pre lang="json">
-"pod"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>networkPolicy.ingress[0].ports[0].port</td>
-			<td>int</td>
-			<td><pre lang="json">
-9091
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>networkPolicy.ingress[0].ports[0].protocol</td>
-			<td>string</td>
-			<td><pre lang="json">
-"TCP"
+[]
 </pre>
 </td>
 			<td></td>
