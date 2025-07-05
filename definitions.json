@@ -24,7 +24,6 @@
         }
       ]
     },
-    ,
     "io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelectorRequirement": {
       "properties": {
         "key": {
@@ -168,7 +167,7 @@
       },
       "type": "object"
     },
-    "io.k8s.api.autoscaling.v2.HorizontalPodAutoscalerBehaviour": {
+    "io.k8s.api.autoscaling.v2.HorizontalPodAutoscalerBehavior": {
       "properties": {
         "scaleDown": {
           "$ref": "#/definitions/io.k8s.api.autoscaling.v2.HPAScalingRules"
@@ -197,17 +196,6 @@
         },
         "tolerance": {
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
-        }
-      },
-      "type": "object"
-    },
-    "io.k8s.api.autoscaling.v2.HorizontalPodAutoscalerBehavior": {
-      "properties": {
-        "scaleDown": {
-          "$ref": "#/definitions/io.k8s.api.autoscaling.v2.HPAScalingRules"
-        },
-        "scaleUp": {
-          "$ref": "#/definitions/io.k8s.api.autoscaling.v2.HPAScalingRules"
         }
       },
       "type": "object"
