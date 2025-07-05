@@ -17,8 +17,6 @@ steps:
   label: ":package: Package Chart (Chart Releaser)"
   artifact_paths:
     - ".cr-release-packages/*"
-  agents:
-    charts: "true"
   if: build.branch != "gh-pages" && build.branch != "master" && build.env("CHART_CHANGES") == "true"
 
 - wait: ~
@@ -35,8 +33,6 @@ steps:
 - command: "make release-upload"
   key: "upload"
   label: ":github: Deploy Artifacts (Chart Releaser)"
-  agents:
-    charts: "true"
   depends_on:
   - step: "package"
   if: build.branch == "master" && build.env("CHART_CHANGES") == "true"
@@ -44,8 +40,6 @@ steps:
 - command: "make release-index"
   key: "index"
   label: ":k8s: Publish Chart Index (Chart Releaser)"
-  agents:
-    charts: "true"
   depends_on:
   - step: "upload"
   if: build.branch == "master" && build.env("CHART_CHANGES") == "true"

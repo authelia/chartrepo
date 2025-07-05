@@ -2477,7 +2477,7 @@
                     },
                     "secret_name": {
                       "default": "~",
-                      "description": "The secret name. The ~ name is special as it is the secret we generate either automatically or via the\nsecret_value option below.",
+                      "description": "(string) The secret name. The ~ name is special as it is the secret we generate either automatically or via the\nsecret_value option below.",
                       "required": [],
                       "title": "secret_name",
                       "type": [
@@ -3725,7 +3725,7 @@
           "title": "architecture"
         },
         "auth": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "properties": {
             "database": {
               "default": "authelia",
@@ -3752,10 +3752,10 @@
           "title": "auth"
         },
         "primary": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "properties": {
             "persistence": {
-              "additionalProperties": false,
+              "additionalProperties": true,
               "properties": {
                 "enabled": {
                   "default": "false",
@@ -4058,170 +4058,9 @@
               "required": [],
               "title": "annotations"
             },
-            "behaviour": {
-              "additionalProperties": false,
-              "properties": {
-                "scaleDown": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "policies": {
-                      "items": {
-                        "anyOf": [
-                          {
-                            "additionalProperties": false,
-                            "properties": {
-                              "periodSeconds": {
-                                "default": "60",
-                                "description": "The scale down policy period seconds.",
-                                "required": [],
-                                "title": "periodSeconds"
-                              },
-                              "type": {
-                                "default": "~",
-                                "description": "(string) The scale down policy type.",
-                                "required": [],
-                                "title": "type",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "value": {
-                                "default": "~",
-                                "description": "(int) The scale down policy value.",
-                                "required": [],
-                                "title": "value",
-                                "type": [
-                                  "integer",
-                                  "null"
-                                ]
-                              }
-                            },
-                            "required": [],
-                            "type": "object"
-                          }
-                        ],
-                        "required": []
-                      },
-                      "required": [],
-                      "title": "policies"
-                    },
-                    "selectPolicy": {
-                      "default": "~",
-                      "description": "(string) The select policy value.",
-                      "required": [],
-                      "title": "selectPolicy",
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "stabilizationWindowSeconds": {
-                      "default": "~",
-                      "description": "(int) The number of seconds to allow stabilization before scaling.",
-                      "required": [],
-                      "title": "stabilizationWindowSeconds",
-                      "type": [
-                        "integer",
-                        "null"
-                      ]
-                    },
-                    "tolerance": {
-                      "default": "~",
-                      "description": "(int) The amount of tolerance percentage.",
-                      "required": [],
-                      "title": "tolerance",
-                      "type": [
-                        "integer",
-                        "null"
-                      ]
-                    }
-                  },
-                  "required": [],
-                  "title": "scaleDown"
-                },
-                "scaleUp": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "policies": {
-                      "items": {
-                        "anyOf": [
-                          {
-                            "additionalProperties": false,
-                            "properties": {
-                              "periodSeconds": {
-                                "default": "60",
-                                "description": "The scale down policy period seconds.",
-                                "required": [],
-                                "title": "periodSeconds"
-                              },
-                              "type": {
-                                "default": "~",
-                                "description": "(string) The scale up policy type.",
-                                "required": [],
-                                "title": "type",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "value": {
-                                "default": "~",
-                                "description": "(int) The scale up policy value.",
-                                "required": [],
-                                "title": "value",
-                                "type": [
-                                  "integer",
-                                  "null"
-                                ]
-                              }
-                            },
-                            "required": [],
-                            "type": "object"
-                          }
-                        ],
-                        "required": []
-                      },
-                      "required": [],
-                      "title": "policies"
-                    },
-                    "selectPolicy": {
-                      "default": "~",
-                      "description": "(string) The select policy value.",
-                      "required": [],
-                      "title": "selectPolicy",
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "stabilizationWindowSeconds": {
-                      "default": "~",
-                      "description": "(int) The number of seconds to allow stabilization before scaling.",
-                      "required": [],
-                      "title": "stabilizationWindowSeconds",
-                      "type": [
-                        "integer",
-                        "null"
-                      ]
-                    },
-                    "tolerance": {
-                      "default": "~",
-                      "description": "(int) The amount of tolerance percentage.",
-                      "required": [],
-                      "title": "tolerance",
-                      "type": [
-                        "integer",
-                        "null"
-                      ]
-                    }
-                  },
-                  "required": [],
-                  "title": "scaleUp"
-                }
-              },
-              "required": [],
-              "title": "behaviour"
+            "behavior": {
+              "$ref": "https://charts.authelia.com/definitions.json#/definitions/io.k8s.api.autoscaling.v2.HorizontalPodAutoscalerBehavior",
+              "required": []
             },
             "enabled": {
               "default": "false",
@@ -4234,525 +4073,6 @@
               "description": "Extra labels for the HorizontalPodAutoscaler manifest.",
               "required": [],
               "title": "labels"
-            },
-            "maxReplicas": {
-              "default": "~",
-              "description": "(int) The maximum replicas for this policy.",
-              "required": [],
-              "title": "maxReplicas",
-              "type": [
-                "integer",
-                "null"
-              ]
-            },
-            "metrics": {
-              "items": {
-                "anyOf": [
-                  {
-                    "additionalProperties": false,
-                    "properties": {
-                      "containerResource": {
-                        "additionalProperties": false,
-                        "properties": {
-                          "container": {
-                            "default": "~",
-                            "description": "(string) Name of the container within the Pod.",
-                            "required": [],
-                            "title": "container",
-                            "type": [
-                              "string",
-                              "null"
-                            ]
-                          },
-                          "name": {
-                            "default": "~",
-                            "description": "(string) Name of resource.",
-                            "required": [],
-                            "title": "name",
-                            "type": [
-                              "string",
-                              "null"
-                            ]
-                          },
-                          "target": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "averageUtilization": {
-                                "default": "~",
-                                "description": "(string) Average Utilization value.",
-                                "required": [],
-                                "title": "averageUtilization",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "averageValue": {
-                                "default": "~",
-                                "description": "(string) Average value.",
-                                "required": [],
-                                "title": "averageValue",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "type": {
-                                "default": "~",
-                                "description": "(string) Represents the metric type. Utilization, Value, or AverageValue.",
-                                "required": [],
-                                "title": "type",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "value": {
-                                "default": "~",
-                                "description": "(string) Value.",
-                                "required": [],
-                                "title": "value",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              }
-                            },
-                            "required": [],
-                            "title": "target",
-                            "type": "object"
-                          }
-                        },
-                        "required": [],
-                        "title": "containerResource",
-                        "type": "object"
-                      },
-                      "external": {
-                        "additionalProperties": false,
-                        "properties": {
-                          "metric": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "name": {
-                                "default": "~",
-                                "description": "(string) Name of the given metric.",
-                                "required": [],
-                                "title": "name",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "selector": {
-                                "additionalProperties": false,
-                                "properties": {
-                                  "matchExpressions": {
-                                    "description": "List of Match Expressions.",
-                                    "items": {
-                                      "required": []
-                                    },
-                                    "required": [],
-                                    "title": "matchExpressions"
-                                  },
-                                  "matchLabels": {
-                                    "additionalProperties": true,
-                                    "description": "Dictionary of Match Labels.",
-                                    "required": [],
-                                    "title": "matchLabels",
-                                    "type": "object"
-                                  }
-                                },
-                                "required": [],
-                                "title": "selector",
-                                "type": "object"
-                              }
-                            },
-                            "required": [
-                              "selector"
-                            ],
-                            "title": "metric",
-                            "type": "object"
-                          },
-                          "target": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "averageUtilization": {
-                                "default": "~",
-                                "description": "(string) Average Utilization value.",
-                                "required": [],
-                                "title": "averageUtilization",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "averageValue": {
-                                "default": "~",
-                                "description": "(string) Average value.",
-                                "required": [],
-                                "title": "averageValue",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "type": {
-                                "default": "~",
-                                "description": "(string) Represents the metric type. Utilization, Value, or AverageValue.",
-                                "required": [],
-                                "title": "type",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "value": {
-                                "default": "~",
-                                "description": "(string) Value.",
-                                "required": [],
-                                "title": "value",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              }
-                            },
-                            "required": [],
-                            "title": "target",
-                            "type": "object"
-                          }
-                        },
-                        "required": [],
-                        "title": "external",
-                        "type": "object"
-                      },
-                      "object": {
-                        "additionalProperties": false,
-                        "properties": {
-                          "describedObject": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "apiVersion": {
-                                "default": "~",
-                                "description": "(string) API Version of the referent.",
-                                "required": [],
-                                "title": "apiVersion",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "kind": {
-                                "default": "~",
-                                "description": "(string) Kind of the referent.",
-                                "required": [],
-                                "title": "kind",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "name": {
-                                "default": "~",
-                                "description": "(string) Name of the referent.",
-                                "required": [],
-                                "title": "name",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              }
-                            },
-                            "required": [],
-                            "title": "describedObject",
-                            "type": "object"
-                          },
-                          "metric": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "name": {
-                                "default": "~",
-                                "description": "(string) Name of the given metric.",
-                                "required": [],
-                                "title": "name",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "selector": {
-                                "additionalProperties": false,
-                                "properties": {
-                                  "matchExpressions": {
-                                    "description": "List of Match Expressions.",
-                                    "items": {
-                                      "required": []
-                                    },
-                                    "required": [],
-                                    "title": "matchExpressions"
-                                  },
-                                  "matchLabels": {
-                                    "additionalProperties": true,
-                                    "description": "Dictionary of Match Labels.",
-                                    "required": [],
-                                    "title": "matchLabels",
-                                    "type": "object"
-                                  }
-                                },
-                                "required": [],
-                                "title": "selector",
-                                "type": "object"
-                              }
-                            },
-                            "required": [],
-                            "title": "metric",
-                            "type": "object"
-                          },
-                          "target": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "averageUtilization": {
-                                "default": "~",
-                                "description": "(string) Average Utilization value.",
-                                "required": [],
-                                "title": "averageUtilization",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "averageValue": {
-                                "default": "~",
-                                "description": "(string) Average value.",
-                                "required": [],
-                                "title": "averageValue",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "type": {
-                                "default": "~",
-                                "description": "(string) Represents the metric type. Utilization, Value, or AverageValue.",
-                                "required": [],
-                                "title": "type",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "value": {
-                                "default": "~",
-                                "description": "(string) Value.",
-                                "required": [],
-                                "title": "value",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              }
-                            },
-                            "required": [],
-                            "title": "target",
-                            "type": "object"
-                          }
-                        },
-                        "required": [],
-                        "title": "object",
-                        "type": "object"
-                      },
-                      "pods": {
-                        "additionalProperties": false,
-                        "properties": {
-                          "metric": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "name": {
-                                "default": "~",
-                                "description": "(string) Name of the given metric.",
-                                "required": [],
-                                "title": "name",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "selector": {
-                                "additionalProperties": false,
-                                "properties": {
-                                  "matchExpressions": {
-                                    "description": "List of Match Expressions.",
-                                    "items": {
-                                      "required": []
-                                    },
-                                    "required": [],
-                                    "title": "matchExpressions"
-                                  },
-                                  "matchLabels": {
-                                    "additionalProperties": true,
-                                    "description": "Dictionary of Match Labels.",
-                                    "required": [],
-                                    "title": "matchLabels",
-                                    "type": "object"
-                                  }
-                                },
-                                "required": [],
-                                "title": "selector",
-                                "type": "object"
-                              }
-                            },
-                            "required": [],
-                            "title": "metric",
-                            "type": "object"
-                          },
-                          "target": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "averageUtilization": {
-                                "default": "~",
-                                "description": "(string) Average Utilization value.",
-                                "required": [],
-                                "title": "averageUtilization",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "averageValue": {
-                                "default": "~",
-                                "description": "(string) Average value.",
-                                "required": [],
-                                "title": "averageValue",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "type": {
-                                "default": "~",
-                                "description": "(string) Represents the metric type. Utilization, Value, or AverageValue.",
-                                "required": [],
-                                "title": "type",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "value": {
-                                "default": "~",
-                                "description": "(string) Value.",
-                                "required": [],
-                                "title": "value",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              }
-                            },
-                            "required": [],
-                            "title": "target",
-                            "type": "object"
-                          }
-                        },
-                        "required": [],
-                        "title": "pods",
-                        "type": "object"
-                      },
-                      "resource": {
-                        "additionalProperties": false,
-                        "properties": {
-                          "name": {
-                            "default": "~",
-                            "description": "(string) Name of the resource.",
-                            "required": [],
-                            "title": "name",
-                            "type": [
-                              "string",
-                              "null"
-                            ]
-                          },
-                          "target": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "averageUtilization": {
-                                "default": "~",
-                                "description": "(string) Average Utilization value.",
-                                "required": [],
-                                "title": "averageUtilization",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "averageValue": {
-                                "default": "~",
-                                "description": "(string) Average value.",
-                                "required": [],
-                                "title": "averageValue",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "type": {
-                                "default": "~",
-                                "description": "(string) Represents the metric type. Utilization, Value, or AverageValue.",
-                                "required": [],
-                                "title": "type",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "value": {
-                                "default": "~",
-                                "description": "(string) Value.",
-                                "required": [],
-                                "title": "value",
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              }
-                            },
-                            "required": [],
-                            "title": "target",
-                            "type": "object"
-                          }
-                        },
-                        "required": [],
-                        "title": "resource",
-                        "type": "object"
-                      },
-                      "type": {
-                        "default": "~",
-                        "description": "(string) The type of metric to use for this rule. ContainerResource, External, Object, Pods, or Resource.",
-                        "required": [],
-                        "title": "type",
-                        "type": [
-                          "string",
-                          "null"
-                        ]
-                      }
-                    },
-                    "required": [],
-                    "type": "object"
-                  }
-                ],
-                "required": []
-              },
-              "required": [],
-              "title": "metrics"
-            },
-            "minReplicas": {
-              "default": "~",
-              "description": "(int) The minimum replicas for this policy.",
-              "required": [],
-              "title": "minReplicas",
-              "type": [
-                "integer",
-                "null"
-              ]
             }
           },
           "required": [],
@@ -4769,7 +4089,7 @@
         },
         "disableRestartOnChanges": {
           "default": "false",
-          "description": "Normally when a change is detected via helm install to something that only indirectly affects the pod, the pod\nwill restart. This setting allows disabling this behaviour.",
+          "description": "Normally when a change is detected via helm install to something that only indirectly affects the pod, the pod\nwill restart. This setting allows disabling this behavior.",
           "required": [],
           "title": "disableRestartOnChanges"
         },
@@ -5442,7 +4762,7 @@
       "description": "Configure postgresql database subchart under this key.\nThis will be deployed when storage.postgres.deploy is set to true\nCurrently settings need to be manually copied from here to the storage.postgres section\nFor more options and to see the",
       "properties": {
         "auth": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "properties": {
             "database": {
               "default": "authelia",
@@ -5469,10 +4789,10 @@
           "title": "auth"
         },
         "primary": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "properties": {
             "persistence": {
-              "additionalProperties": false,
+              "additionalProperties": true,
               "properties": {
                 "enabled": {
                   "default": "false",
@@ -5547,7 +4867,7 @@
           "title": "architecture"
         },
         "auth": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "properties": {
             "enabled": {
               "default": "false",
@@ -5584,10 +4904,10 @@
           "title": "auth"
         },
         "master": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "properties": {
             "persistence": {
-              "additionalProperties": false,
+              "additionalProperties": true,
               "properties": {
                 "accessModes": {
                   "items": {
@@ -5636,10 +4956,10 @@
           "title": "master"
         },
         "replica": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "properties": {
             "persistence": {
-              "additionalProperties": false,
+              "additionalProperties": true,
               "properties": {
                 "accessModes": {
                   "items": {
