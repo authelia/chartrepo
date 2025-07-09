@@ -3234,6 +3234,11 @@
       ],
       "title": "configMap"
     },
+    "enabled": {
+      "description": "This field can be used as a condition when authelia is a dependency. This definition is only a placeholder and not used directly by this chart. See https://helm.sh/docs/chart_best_practices/dependencies/#conditions-and-tags for more info",
+      "default": false,
+      "type": "boolean"
+    },
     "global": {
       "description": "Global values are values that can be accessed from any chart or subchart by exactly the same name.",
       "required": [],
