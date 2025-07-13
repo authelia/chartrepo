@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.10.36](https://img.shields.io/badge/Version-0.10.36-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.4](https://img.shields.io/badge/AppVersion-4.39.4-informational?style=flat-square)
+![Version: 0.10.38](https://img.shields.io/badge/Version-0.10.38-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.5](https://img.shields.io/badge/AppVersion-4.39.5-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -2861,6 +2861,15 @@ false
 			<td>A list of Authenticator Attestation GUID’s that users will not be able to register. Useful if company policy prevents certain authenticators. Mutually exclusive with permitted_aaguids.</td>
 		</tr>
 		<tr>
+			<td>configMap.webauthn.metadata.cache_policy</td>
+			<td>string</td>
+			<td><pre lang="json">
+"strict"
+</pre>
+</td>
+			<td>Allows adjusting the WebAuthn Metadata Cache Policy.</td>
+		</tr>
+		<tr>
 			<td>configMap.webauthn.metadata.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
@@ -3736,112 +3745,13 @@ false
 			<td>Extra annotations for the HorizontalPodAutoscaler manifest.</td>
 		</tr>
 		<tr>
-			<td>pod.autoscaling.behaviour.scaleDown.policies[0].periodSeconds</td>
-			<td>int</td>
+			<td>pod.autoscaling.behavior</td>
+			<td>object</td>
 			<td><pre lang="json">
-60
+{}
 </pre>
 </td>
-			<td>The scale down policy period seconds.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.behaviour.scaleDown.policies[0].type</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>The scale down policy type.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.behaviour.scaleDown.policies[0].value</td>
-			<td>int</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>The scale down policy value.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.behaviour.scaleDown.selectPolicy</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>The select policy value.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.behaviour.scaleDown.stabilizationWindowSeconds</td>
-			<td>int</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>The number of seconds to allow stabilization before scaling.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.behaviour.scaleDown.tolerance</td>
-			<td>int</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>The amount of tolerance percentage.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.behaviour.scaleUp.policies[0].periodSeconds</td>
-			<td>int</td>
-			<td><pre lang="json">
-60
-</pre>
-</td>
-			<td>The scale down policy period seconds.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.behaviour.scaleUp.policies[0].type</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>The scale up policy type.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.behaviour.scaleUp.policies[0].value</td>
-			<td>int</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>The scale up policy value.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.behaviour.scaleUp.selectPolicy</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>The select policy value.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.behaviour.scaleUp.stabilizationWindowSeconds</td>
-			<td>int</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>The number of seconds to allow stabilization before scaling.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.behaviour.scaleUp.tolerance</td>
-			<td>int</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>The amount of tolerance percentage.</td>
+			<td></td>
 		</tr>
 		<tr>
 			<td>pod.autoscaling.enabled</td>
@@ -3862,348 +3772,6 @@ false
 			<td>Extra labels for the HorizontalPodAutoscaler manifest.</td>
 		</tr>
 		<tr>
-			<td>pod.autoscaling.maxReplicas</td>
-			<td>int</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>The maximum replicas for this policy.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].containerResource.container</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Name of the container within the Pod.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].containerResource.name</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Name of resource.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].containerResource.target.averageUtilization</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Average Utilization value.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].containerResource.target.averageValue</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Average value.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].containerResource.target.type</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Represents the metric type. Utilization, Value, or AverageValue.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].containerResource.target.value</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Value.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].external.metric.name</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Name of the given metric.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].external.metric.selector.matchExpressions</td>
-			<td>list</td>
-			<td><pre lang="json">
-[]
-</pre>
-</td>
-			<td>List of Match Expressions.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].external.metric.selector.matchLabels</td>
-			<td>object</td>
-			<td><pre lang="json">
-{}
-</pre>
-</td>
-			<td>Dictionary of Match Labels.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].external.target.averageUtilization</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Average Utilization value.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].external.target.averageValue</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Average value.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].external.target.type</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Represents the metric type. Utilization, Value, or AverageValue.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].external.target.value</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Value.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].object.describedObject.apiVersion</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>API Version of the referent.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].object.describedObject.kind</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Kind of the referent.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].object.describedObject.name</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Name of the referent.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].object.metric.name</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Name of the given metric.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].object.metric.selector.matchExpressions</td>
-			<td>list</td>
-			<td><pre lang="json">
-[]
-</pre>
-</td>
-			<td>List of Match Expressions.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].object.metric.selector.matchLabels</td>
-			<td>object</td>
-			<td><pre lang="json">
-{}
-</pre>
-</td>
-			<td>Dictionary of Match Labels.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].object.target.averageUtilization</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Average Utilization value.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].object.target.averageValue</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Average value.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].object.target.type</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Represents the metric type. Utilization, Value, or AverageValue.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].object.target.value</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Value.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].pods.metric.name</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Name of the given metric.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].pods.metric.selector.matchExpressions</td>
-			<td>list</td>
-			<td><pre lang="json">
-[]
-</pre>
-</td>
-			<td>List of Match Expressions.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].pods.metric.selector.matchLabels</td>
-			<td>object</td>
-			<td><pre lang="json">
-{}
-</pre>
-</td>
-			<td>Dictionary of Match Labels.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].pods.target.averageUtilization</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Average Utilization value.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].pods.target.averageValue</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Average value.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].pods.target.type</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Represents the metric type. Utilization, Value, or AverageValue.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].pods.target.value</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Value.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].resource.name</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Name of the resource.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].resource.target.averageUtilization</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Average Utilization value.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].resource.target.averageValue</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Average value.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].resource.target.type</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Represents the metric type. Utilization, Value, or AverageValue.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].resource.target.value</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Value.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.metrics[0].type</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>The type of metric to use for this rule. ContainerResource, External, Object, Pods, or Resource.</td>
-		</tr>
-		<tr>
-			<td>pod.autoscaling.minReplicas</td>
-			<td>int</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>The minimum replicas for this policy.</td>
-		</tr>
-		<tr>
 			<td>pod.command</td>
 			<td>list</td>
 			<td><pre lang="json">
@@ -4219,7 +3787,7 @@ null
 false
 </pre>
 </td>
-			<td>Normally when a change is detected via helm install to something that only indirectly affects the pod, the pod will restart. This setting allows disabling this behaviour.</td>
+			<td>Normally when a change is detected via helm install to something that only indirectly affects the pod, the pod will restart. This setting allows disabling this behavior.</td>
 		</tr>
 		<tr>
 			<td>pod.env</td>

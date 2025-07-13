@@ -1941,6 +1941,13 @@ configMap:
 
       # @schema
       # required: false
+      # enum: [strict,relaxed]
+      # @schema
+      # -- Allows adjusting the WebAuthn Metadata Cache Policy.
+      cache_policy: 'strict'
+
+      # @schema
+      # required: false
       # @schema
       # -- Enables validation of the attestation certificate against the Certificate Authority certificate in the
       # validated MDS3 blob. It’s recommended this value is always the default value.
