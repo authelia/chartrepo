@@ -37,6 +37,12 @@ kubeDNSDomainOverride: ''
 # @schema
 # required: false
 # @schema
+# -- This field can be used as a condition when authelia is a dependency. This definition is only a placeholder and not used directly by this chart. See https://helm.sh/docs/chart_best_practices/dependencies/#conditions-and-tags for more info
+enabled: false
+
+# @schema
+# required: false
+# @schema
 image:
 
   # @schema
