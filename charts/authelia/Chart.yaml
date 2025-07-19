@@ -1,21 +1,34 @@
 apiVersion: v2
 name: authelia
-version: 0.10.39
+version: 0.10.40
 kubeVersion: ">= 1.13.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
 keywords:
+  - FOSS
+  - Free and Open-Source Software
+  - golang
+  - Modern
+  - Declarative
   - SSO
+  - Single Sign-On
   - Authentication
   - Security
+  - Identity
+  - IDP
   - Two-Factor
+  - Multi-Factor
   - YubiKey
-  - Webauthn
+  - WebAuthn
+  - Passkeys
   - Duo
   - TOTP
   - Time-based One Time Password
   - Push Notifications
   - LDAP
+  - OAuth 2.0
+  - OpenID Connect 1.0
+  - OpenID Certified™
 home: https://www.authelia.com
 sources:
   - https://github.com/authelia/chartrepo/tree/master/charts/authelia
@@ -44,7 +57,7 @@ annotations:
   artifacthub.io/category: security
   artifacthub.io/changes: |
     - kind: added
-      description: Added `enabled` field for charts using this as a dependency
+      description: Added Keywords
       links: []
   artifacthub.io/images: |
     - name: authelia/authelia
