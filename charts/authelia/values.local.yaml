@@ -1188,6 +1188,12 @@ pod:
   # -- Extra Volumes.
   extraVolumes: []
 
+  # @schema
+  # required: false
+  # @schema
+  # -- Extra containers to add to the Pod spec.
+  extraContainers: []
+
 # @schema
 # required: false
 # @schema

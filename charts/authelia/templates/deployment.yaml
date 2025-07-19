@@ -295,6 +295,9 @@ spec:
       {{- with $context := .Values.pod.securityContext.container }}
         securityContext: {{ toYaml $context | nindent 10 }}
       {{- end }}
+      {{- with $containers := .Values.pod.extraContainers }}
+        {{- toYaml $containers | nindent 6 }}
+      {{- end }}
       {{- with $pullSecrets := .Values.image.pullSecrets }}
       imagePullSecrets: {{- range $k, $secretName := $pullSecrets }}
       - name: {{ $secretName }}
