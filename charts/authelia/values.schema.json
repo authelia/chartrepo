@@ -4128,6 +4128,14 @@
           "required": [],
           "title": "env"
         },
+        "extraContainers": {
+          "description": "Extra containers to add to the Pod spec.",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "extraContainers"
+        },
         "extraVolumeMounts": {
           "description": "Extra Volume Mounts.",
           "items": {
@@ -4143,16 +4151,6 @@
           },
           "required": [],
           "title": "extraVolumes"
-        },
-        "extraContainers": {
-          "description": "Extra containers to add to the Pod spec.",
-          "items": {
-            "additionalProperties": true,
-            "required": [],
-            "type": "object"
-          },
-          "required": [],
-          "title": "extraContainers"
         },
         "initContainers": {
           "description": "The list of custom initialization containers.",

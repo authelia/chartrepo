@@ -4279,7 +4279,7 @@ configMap:
           # pkce_challenge_method: 'S256'
 
           # authorization_signed_response_key_id: ''
-          # authorization_signed_response_alg: 'none'
+          # authorization_signed_response_alg: 'RS256'
           # authorization_encrypted_response_key_id: ''
           # authorization_encrypted_response_alg: 'none'
           # authorization_encrypted_response_enc: 'A128CBC-HS256'
