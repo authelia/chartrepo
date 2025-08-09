@@ -63,7 +63,7 @@
   {{- end }}
   require_pkce: {{ .Client.require_pkce | default false  }}
   pkce_challenge_method: {{ (include "authelia.config.oidc.client.pkce_challenge_method" .Client) | squote }}
-  authorization_signed_response_alg: {{ .Client.authorization_signed_response_alg | default "none" | squote }}
+  authorization_signed_response_alg: {{ .Client.authorization_signed_response_alg | default "RS256" | squote }}
   authorization_signed_response_key_id: {{ .Client.authorization_signed_response_key_id | default "" | squote }}
   {{- if semverCompare ">=4.39.0" (include "authelia.version" $) }}
   authorization_encrypted_response_key_id: {{ .Client.authorization_encrypted_response_key_id | default "" | squote }}

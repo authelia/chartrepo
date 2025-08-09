@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.10.38](https://img.shields.io/badge/Version-0.10.38-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.5](https://img.shields.io/badge/AppVersion-4.39.5-informational?style=flat-square)
+![Version: 0.10.41](https://img.shields.io/badge/Version-0.10.41-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.6](https://img.shields.io/badge/AppVersion-4.39.6-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -2969,6 +2969,15 @@ true
 			<td>Adjust the interaction timeout for Webauthn dialogues.</td>
 		</tr>
 		<tr>
+			<td>enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>This field can be used as a condition when authelia is a dependency. This definition is only a placeholder and not used directly by this chart. See https://helm.sh/docs/chart_best_practices/dependencies/#conditions-and-tags for more info</td>
+		</tr>
+		<tr>
 			<td>image.pullPolicy</td>
 			<td>string</td>
 			<td><pre lang="json">
@@ -3797,6 +3806,15 @@ false
 </pre>
 </td>
 			<td>List of additional environment variables for the Pod.</td>
+		</tr>
+		<tr>
+			<td>pod.extraContainers</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>Extra containers to add to the Pod spec.</td>
 		</tr>
 		<tr>
 			<td>pod.extraVolumeMounts</td>
