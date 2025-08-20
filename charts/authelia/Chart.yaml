@@ -1,6 +1,6 @@
 apiVersion: v2
 name: authelia
-version: 0.10.42
+version: 0.10.43
 kubeVersion: ">= 1.13.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
@@ -57,7 +57,7 @@ annotations:
   artifacthub.io/category: security
   artifacthub.io/changes: |
     - kind: added
-      description: Added support for running extra containers in the Authelia pod
+      description: Added support for additional configuration options.
       links: []
   artifacthub.io/images: |
     - name: authelia/authelia

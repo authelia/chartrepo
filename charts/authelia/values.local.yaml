@@ -4041,6 +4041,30 @@ configMap:
       # @schema
       # required: false
       # @schema
+      # -- Enables introspecting JWT Profile Access Tokens using stateless checks. This is strongly discouraged.
+      enable_jwt_access_token_stateless_introspection: false
+
+      # @schema
+      # required: false
+      # @schema
+      # -- The JSON Web Algorithm used for signing the discovery metadata.
+      discovery_signed_response_alg: ''
+
+      # @schema
+      # required: false
+      # @schema
+      # -- The JSON Web Key ID used for signing the discovery metadata.
+      discovery_signed_response_key_id: ''
+
+      # @schema
+      # required: false
+      # @schema
+      # -- Enables requiring all Authorization Requests to be initiated using a Pushed Authorization Request.
+      require_pushed_authorization_requests: false
+
+      # @schema
+      # required: false
+      # @schema
       # -- Adjusts the parameter entropy requirements for nonce/state etc. SECURITY NOTICE: It's not recommended changing
       # this option, and highly discouraged to have it less than 8.
       minimum_parameter_entropy: 8
