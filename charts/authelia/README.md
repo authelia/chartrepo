@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.10.41](https://img.shields.io/badge/Version-0.10.41-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.6](https://img.shields.io/badge/AppVersion-4.39.6-informational?style=flat-square)
+![Version: 0.10.43](https://img.shields.io/badge/Version-0.10.43-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.6](https://img.shields.io/badge/AppVersion-4.39.6-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -31,6 +31,18 @@ which users should be aware of:
    in the next step.
 3. Install the chart with `helm install authelia authelia/authelia` and optionally set your values with `--values values.yaml` or
    via `--set [parameter]=[value]`.
+
+### Configuration Compatibility
+
+While we often make the Authelia configuration and the values in the `configMap` portion of the chart identical, it's
+important to note there are several differences between them and we only support values in the chart that are explicitly
+documented. The reason for the differences is to ensure interoperability from the configuration resources to the native
+Kubernetes manifests. If you are not worried about this interoperability and want all options available to you then
+we allow specifying an existingConfigMap.
+
+For this reason we recommend paying attention to the documentation for the chart as to what options are available.
+
+To assist with this we've deployed a JSON Schema with the chart.
 
 ### Expected Minimum Configuration
 
@@ -1134,6 +1146,24 @@ false
 			<td>List of endpoints in addition to the metadata endpoints to permit cross-origin requests on.</td>
 		</tr>
 		<tr>
+			<td>configMap.identity_providers.oidc.discovery_signed_response_alg</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>The JSON Web Algorithm used for signing the discovery metadata.</td>
+		</tr>
+		<tr>
+			<td>configMap.identity_providers.oidc.discovery_signed_response_key_id</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>The JSON Web Key ID used for signing the discovery metadata.</td>
+		</tr>
+		<tr>
 			<td>configMap.identity_providers.oidc.enable_client_debug_messages</td>
 			<td>bool</td>
 			<td><pre lang="json">
@@ -1141,6 +1171,15 @@ false
 </pre>
 </td>
 			<td>Enables additional debug messages. SECURITY NOTICE: It's not recommended to use this in production as it may leak configuration information to clients.</td>
+		</tr>
+		<tr>
+			<td>configMap.identity_providers.oidc.enable_jwt_access_token_stateless_introspection</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>Enables introspecting JWT Profile Access Tokens using stateless checks. This is strongly discouraged.</td>
 		</tr>
 		<tr>
 			<td>configMap.identity_providers.oidc.enable_pkce_plain_challenge</td>
@@ -1294,6 +1333,15 @@ false
 </pre>
 </td>
 			<td>Requires Pushed Authorization Requests for all Authorization Flows.</td>
+		</tr>
+		<tr>
+			<td>configMap.identity_providers.oidc.require_pushed_authorization_requests</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>Enables requiring all Authorization Requests to be initiated using a Pushed Authorization Request.</td>
 		</tr>
 		<tr>
 			<td>configMap.identity_providers.oidc.scopes</td>

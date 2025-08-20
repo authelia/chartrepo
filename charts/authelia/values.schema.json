@@ -1093,11 +1093,29 @@
                   "required": [],
                   "title": "cors"
                 },
+                "discovery_signed_response_alg": {
+                  "default": "",
+                  "description": "The JSON Web Algorithm used for signing the discovery metadata.",
+                  "required": [],
+                  "title": "discovery_signed_response_alg"
+                },
+                "discovery_signed_response_key_id": {
+                  "default": "",
+                  "description": "The JSON Web Key ID used for signing the discovery metadata.",
+                  "required": [],
+                  "title": "discovery_signed_response_key_id"
+                },
                 "enable_client_debug_messages": {
                   "default": "false",
                   "description": "Enables additional debug messages. SECURITY NOTICE: It's not recommended to use this in production as it\nmay leak configuration information to clients.",
                   "required": [],
                   "title": "enable_client_debug_messages"
+                },
+                "enable_jwt_access_token_stateless_introspection": {
+                  "default": "false",
+                  "description": "Enables introspecting JWT Profile Access Tokens using stateless checks. This is strongly discouraged.",
+                  "required": [],
+                  "title": "enable_jwt_access_token_stateless_introspection"
                 },
                 "enable_pkce_plain_challenge": {
                   "default": "false",
@@ -1523,6 +1541,12 @@
                   },
                   "required": [],
                   "title": "pushed_authorizations"
+                },
+                "require_pushed_authorization_requests": {
+                  "default": "false",
+                  "description": "Enables requiring all Authorization Requests to be initiated using a Pushed Authorization Request.",
+                  "required": [],
+                  "title": "require_pushed_authorization_requests"
                 },
                 "scopes": {
                   "additionalProperties": false,
