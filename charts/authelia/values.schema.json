@@ -5156,6 +5156,16 @@
             "null"
           ]
         },
+        "externalTrafficPolicy": {
+          "default": "Cluster",
+          "description": "(string) Use value Local to get external IP addresses.",
+          "required": [],
+          "title": "externalTrafficPolicy",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "labels": {
           "additionalProperties": true,
           "description": "Extra labels for service manifest.",

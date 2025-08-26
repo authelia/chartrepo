@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.10.43](https://img.shields.io/badge/Version-0.10.43-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.6](https://img.shields.io/badge/AppVersion-4.39.6-informational?style=flat-square)
+![Version: 0.10.44](https://img.shields.io/badge/Version-0.10.44-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.6](https://img.shields.io/badge/AppVersion-4.39.6-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -4394,6 +4394,15 @@ null
 </pre>
 </td>
 			<td>Cluster IP for the Authelia service manifest.</td>
+		</tr>
+		<tr>
+			<td>service.externalTrafficPolicy</td>
+			<td>string</td>
+			<td><pre lang="json">
+"Cluster"
+</pre>
+</td>
+			<td>Use value Local to get external IP addresses.</td>
 		</tr>
 		<tr>
 			<td>service.labels</td>

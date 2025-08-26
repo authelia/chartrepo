@@ -182,6 +182,13 @@ service:
   # -- (string) Cluster IP for the Authelia service manifest.
   clusterIP: ~
 
+  # @schema
+  # type: [string, null]
+  # required: false
+  # @schema
+  # -- (string) Use value Local to get external IP addresses.
+  externalTrafficPolicy: Cluster
+
 # @schema
 # required: false
 # @schema
