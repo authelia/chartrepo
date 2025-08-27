@@ -35,3 +35,4 @@ spec:
       port: {{ .Values.configMap.telemetry.metrics.port | default 9959 }}
       targetPort: metrics
     {{- end }}
+  externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy | default "Cluster" }}
