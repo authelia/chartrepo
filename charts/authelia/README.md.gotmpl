@@ -33,6 +33,18 @@ which users should be aware of:
 3. Install the chart with `helm install authelia authelia/authelia` and optionally set your values with `--values values.yaml` or
    via `--set [parameter]=[value]`.
 
+### Configuration Compatibility
+
+While we often make the Authelia configuration and the values in the `configMap` portion of the chart identical, it's
+important to note there are several differences between them and we only support values in the chart that are explicitly
+documented. The reason for the differences is to ensure interoperability from the configuration resources to the native
+Kubernetes manifests. If you are not worried about this interoperability and want all options available to you then
+we allow specifying an existingConfigMap.
+
+For this reason we recommend paying attention to the documentation for the chart as to what options are available.
+
+To assist with this we've deployed a JSON Schema with the chart.
+
 ### Expected Minimum Configuration
 
 It is expected you will configure at least the following sections/values:
