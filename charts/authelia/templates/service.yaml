@@ -36,6 +36,6 @@ spec:
       targetPort: metrics
     {{- end }}
   {{- with .Values.service.externalTrafficPolicy }}
-  externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ . }}
   {{- end }}
   
