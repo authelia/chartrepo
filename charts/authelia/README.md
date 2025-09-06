@@ -4399,7 +4399,7 @@ null
 			<td>service.externalTrafficPolicy</td>
 			<td>string</td>
 			<td><pre lang="json">
-"Cluster"
+null
 </pre>
 </td>
 			<td>Use value Local to get external IP addresses.</td>
@@ -4451,4 +4451,3 @@ null
 		</tr>
 	</tbody>
 </table>
-
