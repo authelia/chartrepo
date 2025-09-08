@@ -187,7 +187,7 @@ service:
   # required: false
   # @schema
   # -- (string) Use value Local to get external IP addresses.
-  externalTrafficPolicy: Cluster
+  externalTrafficPolicy: ~
 
 # @schema
 # required: false
