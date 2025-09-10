@@ -169,6 +169,7 @@ data:
       {{- if semverCompare ">=4.39.0" (include "authelia.version" $) }}
       password_change:
         disable: {{ $auth.password_change.disable | default false }}
+      refresh_interval: {{ include "authelia.func.dquote" ( $auth.refresh_interval | default "5 minutes") }}
       {{- end }}
       {{- if $auth.file.enabled }}
       file:
