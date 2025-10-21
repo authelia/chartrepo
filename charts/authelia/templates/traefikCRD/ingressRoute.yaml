@@ -42,7 +42,7 @@ spec:
             httpOnly: true
             name: {{ $.Values.ingress.traefikCRD.stickyCookieNameOverride | default (printf "%s_traefik_lb" (include "authelia.name" $)) }}
             secure: true
-            sameSite: None
+            sameSite: none
         {{- end }}
   {{- end }}
   {{- else }}
@@ -70,7 +70,7 @@ spec:
             httpOnly: true
             name: {{ $.Values.ingress.traefikCRD.stickyCookieNameOverride | default (printf "%s_traefik_lb" (include "authelia.name" $)) }}
             secure: true
-            sameSite: None
+            sameSite: none
         {{- end }}
   {{- end }}
   {{- end }}
