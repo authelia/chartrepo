@@ -1,6 +1,6 @@
 apiVersion: v2
 name: authelia
-version: 0.10.46
+version: 0.10.47
 kubeVersion: ">= 1.13.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
@@ -51,7 +51,7 @@ maintainers:
     email: james-d-elliott@users.noreply.github.com
     url: https://github.com/james-d-elliott
 icon: https://avatars2.githubusercontent.com/u/59122411?s=200&v=4
-appVersion: 4.39.6
+appVersion: 4.39.13
 deprecated: false
 annotations:
   artifacthub.io/category: security
@@ -59,9 +59,11 @@ annotations:
     - kind: fixed
       description: Refresh interval of auth backend is now rendered in configMap
       links: []
+    - kind: changed
+      description: Update chart appVersion to latest release of Authelia app
   artifacthub.io/images: |
     - name: authelia/authelia
-      image: ghcr.io/authelia/authelia:4.39.5
+      image: ghcr.io/authelia/authelia:4.39.13
       whitelisted: false
       platforms:
         - linux/amd64
