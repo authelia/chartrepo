@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.10.46](https://img.shields.io/badge/Version-0.10.46-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.6](https://img.shields.io/badge/AppVersion-4.39.6-informational?style=flat-square)
+![Version: 0.10.47](https://img.shields.io/badge/Version-0.10.47-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.13](https://img.shields.io/badge/AppVersion-4.39.13-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
