@@ -2995,6 +2995,9 @@ configMap:
         ## The domain for cookie and to build the Authelia URL.
         # domain: ''
 
+        ## The port for cookie and to build the Authelia URL.
+        # port: 443
+
         ## The path to suffix the domain with. For example using `domain` value `example.com` and `subdomain` value
         ## `auth` and `path` value `auth` should yield the URL `https://auth.example.com/auth`.
         ## This option does not affect the cookie domain.
