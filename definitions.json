@@ -244,6 +244,43 @@
         "periodSeconds"
       ],
       "type": "object"
+    },
+    "io.k8s.networking.gateway.v1.ParentReference": {
+      "properties": {
+        "group": {
+          "maxLength": 253,
+          "pattern": "^$\\|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$",
+          "type": "string"
+        },
+        "kind": {
+          "maxLength": 63,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 253,
+          "type": "string"
+        },
+        "namespace": {
+          "maxLength": 63,
+          "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$",
+          "required": [],
+          "type": "string"
+        },
+        "port": {
+          "maximum": 65535,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "sectionName": {
+          "maxLength": 253,
+          "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$",
+          "type": "string"
+        }
+      },
+      "required": [],
+      "type": "object"
     }
   }
 }
