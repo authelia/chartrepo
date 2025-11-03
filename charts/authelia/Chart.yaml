@@ -58,9 +58,6 @@ annotations:
   artifacthub.io/changes: |
     - kind: fixed
       description: Update sameSite policy to legal value 'none'
-      links: []
-    - kind: changed
-      description: Update chart appVersion to latest release of Authelia app
   artifacthub.io/images: |
     - name: authelia/authelia
       image: ghcr.io/authelia/authelia:4.39.13
