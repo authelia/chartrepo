@@ -1,6 +1,6 @@
 apiVersion: v2
 name: authelia
-version: 0.10.49
+version: 0.10.50
 kubeVersion: ">= 1.13.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
@@ -35,7 +35,7 @@ sources:
   - https://www.github.com/authelia/authelia
 dependencies:
   - name: postgresql
-    version: ~15.5.11
+    version: ~18.1.0
     repository: https://charts.bitnami.com/bitnami
     condition: configMap.storage.postgres.deploy
   - name: mariadb
