@@ -29,6 +29,9 @@ spec:
       {{- if $ref.port }}
       port: {{ $ref.port }}
       {{- end }}
+      {{- if $ref.namespace }}
+      namespace: {{ $ref.namespace }}
+      {{- end }}
     {{- end }}
   {{- end }}
   hostnames:
