@@ -23,6 +23,16 @@
 {{ fail "The option 'configMap.storage' must have one of the providers enabled such as 'postgres', 'mysql', or 'local'." }}
 {{ end }}
 
+{{- if and
+  (not .Values.configMap.storage.encryption_key.disabled)
+  (or
+    (and (ne .Values.configMap.storage.encryption_key.value "") (eq .Values.configMap.storage.encryption_key.secret_name "~"))
+    (and (eq .Values.configMap.storage.encryption_key.value "") (ne .Values.configMap.storage.encryption_key.secret_name ""))
+  )
+}}
+{{- fail "Invalid encryption_key configuration: if encryption_key is not disabled, either provide a valid secret_name (not '~') or a value, but not both/invalid combination." }}
+{{- end }}
+
 {{/*
     Validate the Notifier config.
 */}}
