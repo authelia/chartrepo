@@ -14,8 +14,17 @@ spec:
   parentRefs:
     {{- range $ref := $refs }}
     - name: {{ $ref.name | squote }}
+      {{- if $ref.namespace }}
+      namespace: {{ $ref.namespace }}
+      {{- end }}
       {{- if $ref.sectionName }}
       sectionName: {{ $ref.sectionName }}
+      {{- end }}
+      {{- if $ref.group }}
+      group: {{ $ref.group }}
+      {{- end }}
+      {{- if $ref.kind }}
+      kind: {{ $ref.kind }}
       {{- end }}
       {{- if $ref.port }}
       port: {{ $ref.port }}

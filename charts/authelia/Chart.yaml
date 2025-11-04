@@ -1,6 +1,6 @@
 apiVersion: v2
 name: authelia
-version: 0.10.48
+version: 0.10.49
 kubeVersion: ">= 1.13.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
@@ -56,8 +56,12 @@ deprecated: false
 annotations:
   artifacthub.io/category: security
   artifacthub.io/changes: |
-    - kind: fixed
-      description: Update sameSite policy to legal value 'none'
+    - kind: added
+      description: Support for 'group' attribute for Gateway API HTTPRoute ParentReference.
+    - kind: added
+      description: Support for 'kind' attribute for Gateway API HTTPRoute ParentReference.
+    - kind: added
+      description: Support for 'namespace' attribute for Gateway API HTTPRoute ParentReference.
   artifacthub.io/images: |
     - name: authelia/authelia
       image: ghcr.io/authelia/authelia:4.39.13

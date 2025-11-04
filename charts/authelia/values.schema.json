@@ -3357,6 +3357,7 @@
             "parentRefs": {
               "description": "Configure the parent references for the HTTPRoute manifest.",
               "items": {
+                "$ref": "https://charts.authelia.com/definitions.json#/definitions/io.k8s.networking.gateway.v1.ParentReference",
                 "required": []
               },
               "required": [],
