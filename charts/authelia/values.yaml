@@ -4970,3 +4970,8 @@ redis:
       # required: false
       # @schema
       size: '1Gi'
+
+# @schema
+# required: false
+# @schema
+extraObjects: []

@@ -3264,6 +3264,15 @@
       "required": [],
       "title": "enabled"
     },
+    "extraObjects": {
+      "description": "List of extra objects to include in the rendered chart. Objects will be templated with the same values as the rest of the chart.",
+      "items": {
+        "required": []
+      },
+      "required": [],
+      "title": "extraObjects",
+      "type": "array"
+    },
     "global": {
       "description": "Global values are values that can be accessed from any chart or subchart by exactly the same name.",
       "required": [],
