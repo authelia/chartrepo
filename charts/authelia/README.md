@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.11.4](https://img.shields.io/badge/Version-0.11.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.19](https://img.shields.io/badge/AppVersion-4.39.19-informational?style=flat-square)
+![Version: 0.11.5](https://img.shields.io/badge/Version-0.11.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.19](https://img.shields.io/badge/AppVersion-4.39.19-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -438,6 +438,7 @@ Kubernetes: `>= 1.30.0-0`
 | configMap.webauthn.selection_criteria.user_verification | string | `"preferred"` | Sets the user verification preference. |
 | configMap.webauthn.timeout | string | `"60 seconds"` | Adjust the interaction timeout for Webauthn dialogues. |
 | enabled | bool | `false` | This field can be used as a condition when authelia is a dependency. This definition is only a placeholder and not used directly by this chart. See https://helm.sh/docs/chart_best_practices/dependencies/#conditions-and-tags for more info |
+| extraObjects | list | `[]` | This field can include any extra objects to include in the rendered manifest. The allowed contents can be either string or yaml objects. String objects will be templated with tpl. |
 | image.pullPolicy | string | `"IfNotPresent"` | The pull policy for the standard image. |
 | image.pullSecrets | list | `[]` | The pull secrets to use. |
 | image.registry | string | `"ghcr.io"` | The registry to use. |

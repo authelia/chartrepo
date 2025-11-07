@@ -4878,3 +4878,302 @@ persistence:
       # required: false
       # @schema
       selector: {}
+<<<<<<< HEAD
+=======
+
+# @schema
+# required: false
+# additionalProperties: true
+# @schema
+# -- Configure mariadb database subchart under this key.
+# This will be deployed when storage.mysql.deploy is set to true
+# Currently settings need to be manually copied from here to the storage.mysql section
+# For more options and to see the @default please see [mariadb chart documentation](https://github.com/bitnami/charts/tree/main/bitnami/mariadb)
+# @default -- `{}`
+mariadb:
+
+  # @schema
+  # required: false
+  # @schema
+  architecture: 'standalone'
+
+  # @schema
+  # required: false
+  # additionalProperties: true
+  # @schema
+  auth:
+
+    # @schema
+    # required: false
+    # @schema
+    database: 'authelia'
+
+    # @schema
+    # required: false
+    # @schema
+    username: 'authelia'
+
+    # @schema
+    # required: false
+    # @schema
+    password: 'authelia'
+
+    # @schema
+    # required: false
+    # @schema
+    rootPassword: 'authelia'
+
+  # @schema
+  # required: false
+  # additionalProperties: true
+  # @schema
+  primary:
+
+    # @schema
+    # required: false
+    # additionalProperties: true
+    # @schema
+    resources: {}
+
+    # @schema
+    # required: false
+    # additionalProperties: true
+    # @schema
+    persistence:
+
+      # @schema
+      # required: false
+      # @schema
+      enabled: false
+
+      # @schema
+      # required: false
+      # @schema
+      size: '1Gi'
+
+      # @schema
+      # required: false
+      # @schema
+      storageClass: ''
+
+# @schema
+# required: false
+# additionalProperties: true
+# @schema
+# -- Configure postgresql database subchart under this key.
+# This will be deployed when storage.postgres.deploy is set to true
+# Currently settings need to be manually copied from here to the storage.postgres section
+# For more options and to see the @default please see [postgresql chart documentation](https://github.com/bitnami/charts/tree/main/bitnami/postgresql)
+# @default -- `{}`
+postgresql:
+
+  # @schema
+  # required: false
+  # additionalProperties: true
+  # @schema
+  auth:
+
+    # @schema
+    # required: false
+    # @schema
+    postgresPassword: 'authelia'
+
+    # @schema
+    # required: false
+    # @schema
+    username: 'authelia'
+
+    # @schema
+    # required: false
+    # @schema
+    password: 'authelia'
+
+    # @schema
+    # required: false
+    # @schema
+    database: 'authelia'
+
+  # @schema
+  # required: false
+  # additionalProperties: true
+  # @schema
+  primary:
+
+    # @schema
+    # required: false
+    # additionalProperties: true
+    # @schema
+    persistence:
+
+      # @schema
+      # required: false
+      # @schema
+      enabled: false
+
+      # @schema
+      # required: false
+      # @schema
+      storageClass: ''
+
+      # @schema
+      # required: false
+      # @schema
+      size: '1Gi'
+
+    # @schema
+    # required: false
+    # additionalProperties: true
+    # @schema
+    resources: {}
+
+# @schema
+# required: false
+# additionalProperties: true
+# @schema
+# -- Configure redis database subchart under this key.
+# This will be deployed when session.redis.deploy is set to true
+# Currently settings need to be manually copied from here to the session.redis section
+# For more options and to see the @default please see [redis chart documentation](https://github.com/bitnami/charts/tree/main/bitnami/redis)
+# @default -- `{}`
+redis:
+
+  # @schema
+  # required: false
+  # @schema
+  architecture: 'standalone'
+
+  # @schema
+  # required: false
+  # additionalProperties: true
+  # @schema
+  auth:
+
+    # @schema
+    # required: false
+    # @schema
+    enabled: false
+
+    # @schema
+    # required: false
+    # @schema
+    sentinel: true
+
+    # @schema
+    # required: false
+    # @schema
+    password: 'redis'
+
+    # @schema
+    # required: false
+    # @schema
+    existingSecret: ''
+
+    # @schema
+    # required: false
+    # @schema
+    existingSecretPasswordKey: ''
+
+    # @schema
+    # required: false
+    # @schema
+    usePasswordFiles: false
+
+  # @schema
+  # required: false
+  # additionalProperties: true
+  # @schema
+  master:
+
+    # @schema
+    # required: false
+    # additionalProperties: true
+    # @schema
+    resources: {}
+
+    # @schema
+    # required: false
+    # @schema
+    priorityClassName: ''
+
+    # @schema
+    # required: false
+    # additionalProperties: true
+    # @schema
+    persistence:
+
+      # @schema
+      # required: false
+      # @schema
+      enabled: false
+
+      # @schema
+      # required: false
+      # @schema
+      storageClass: ''
+
+      # @schema
+      # required: false
+      # @schema
+      accessModes:
+        - 'ReadWriteOnce'
+
+      # @schema
+      # required: false
+      # @schema
+      size: '1Gi'
+
+  # @schema
+  # required: false
+  # additionalProperties: true
+  # @schema
+  replica:
+
+    # @schema
+    # required: false
+    # @schema
+    replicaCount: 3
+
+    # @schema
+    # required: false
+    # additionalProperties: true
+    # @schema
+    resources: {}
+
+    # @schema
+    # required: false
+    # @schema
+    priorityClassName: ''
+
+    # @schema
+    # required: false
+    # additionalProperties: true
+    # @schema
+    persistence:
+
+      # @schema
+      # required: false
+      # @schema
+      enabled: false
+
+      # @schema
+      # required: false
+      # @schema
+      storageClass: ''
+
+      # @schema
+      # required: false
+      # @schema
+      accessModes:
+        - 'ReadWriteOnce'
+
+      # @schema
+      # required: false
+      # @schema
+      size: '1Gi'
+
+# @schema
+# required: false
+# additionalProperties: true
+# @schema
+extraObjects: []
+>>>>>>> bc2e6f3 (feat(authelia): Additional objects)
