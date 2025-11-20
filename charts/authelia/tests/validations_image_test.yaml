@@ -1,0 +1,52 @@
+suite: Image minimum version validation
+templates:
+  - templates/validations.image.check.yaml
+tests:
+  - it: renders successfully when tag meets the minimum version
+    set:
+      image.tag: 4.39.6
+      image.minimumVersion: 4.39.5
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders successfully when using semantic versioning with minimum version
+    set:
+      image.tag: v4.39.6
+      image.minimumVersion: v4.39.5
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders successfully when the minimum version check is disabled
+    set:
+      image.tag: 4.39.3
+      image.minimumVersion: ''
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: fails when the tag is a digest but a minimum version is set
+    set:
+      image.tag: sha256:9c644a7a7b3ddf3bddad78df8fd357e1a527c99ad4a3ec3c7f1e4b2c1bbedbab
+      image.minimumVersion: 4.39.5
+    asserts:
+      - failedTemplate:
+          errorMessage: "image.minimumVersion can't be used when the image tag is specified as a digest"
+
+  - it: fails when the tag is older than the minimum version
+    set:
+      image.tag: 4.39.3
+      image.minimumVersion: 4.39.5
+    asserts:
+      - failedTemplate:
+          errorMessageRegex: "older than the minimum supported version"
+  
+  - it: fails when the semantic version tag is older than the minimum version
+    set:
+      image.tag: v4.39.3
+      image.minimumVersion: v4.39.5
+    asserts:
+      - failedTemplate:
+          errorMessageRegex: "older than the minimum supported version"
+

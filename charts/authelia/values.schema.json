@@ -3305,6 +3305,12 @@
           "description": "The tag to use from the registry.",
           "required": [],
           "title": "tag"
+        },
+        "minimumVersion": {
+          "default": "4.39.5",
+          "description": "The minimum Authelia version that must be satisfied by the resolved image tag. Set to '' to disable the validation.",
+          "required": [],
+          "title": "minimumVersion"
         }
       },
       "required": [],

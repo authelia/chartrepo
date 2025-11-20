@@ -1,0 +1,24 @@
+{{/*
+    Validate minimum Authelia image version requirements.
+*/}}
+{{- $minimumVersion := .Values.image.minimumVersion | default "" -}}
+{{- if $minimumVersion }}
+    {{- $imageTag := include "authelia.image.tag" . -}}
+    {{- $semverPattern := "^[vV]?[0-9]+\\.[0-9]+\\.[0-9]+.*$" -}}
+
+    {{- if hasPrefix "sha256:" $imageTag }}
+        {{- fail "image.minimumVersion can't be used when the image tag is specified as a digest" -}}
+    {{- else if not (regexMatch $semverPattern $minimumVersion) }}
+        {{- fail (printf "The configured image.minimumVersion value '%s' is not a semantic version" $minimumVersion) -}}
+    {{- else if not (regexMatch $semverPattern $imageTag) }}
+        {{- fail (printf "The resolved Authelia image tag '%s' is not a semantic version while image.minimumVersion is configured; please use a semantic version tag or unset image.minimumVersion" $imageTag) -}}
+    {{- else -}}
+        {{- $normalizedMinimum := regexReplaceAll "(?i)^v" $minimumVersion "" -}}
+        {{- $normalizedTag := regexReplaceAll "(?i)^v" $imageTag "" -}}
+        {{- $constraint := printf ">=%s" $normalizedMinimum -}}
+        {{- if not (semverCompare $constraint $normalizedTag) }}
+            {{- fail (printf "The resolved Authelia image tag '%s' is older than the minimum supported version '%s'. Please select a compatible image tag or adjust image.minimumVersion." $imageTag $minimumVersion) -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+

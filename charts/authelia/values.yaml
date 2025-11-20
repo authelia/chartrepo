@@ -67,6 +67,12 @@ image:
   # @schema
   # required: false
   # @schema
+  # -- The minimum Authelia version that must be satisfied by the resolved image tag. Set to '' to disable the validation.
+  minimumVersion: '4.39.5'
+
+  # @schema
+  # required: false
+  # @schema
   # -- The pull policy for the standard image.
   pullPolicy: 'IfNotPresent'
 

@@ -3026,6 +3026,15 @@ false
 			<td>This field can be used as a condition when authelia is a dependency. This definition is only a placeholder and not used directly by this chart. See https://helm.sh/docs/chart_best_practices/dependencies/#conditions-and-tags for more info</td>
 		</tr>
 		<tr>
+			<td>image.minimumVersion</td>
+			<td>string</td>
+			<td><pre lang="json">
+"4.39.5"
+</pre>
+</td>
+			<td>The minimum Authelia version that must be satisfied by the resolved image tag. Set to '' to disable the validation.</td>
+		</tr>
+		<tr>
 			<td>image.pullPolicy</td>
 			<td>string</td>
 			<td><pre lang="json">

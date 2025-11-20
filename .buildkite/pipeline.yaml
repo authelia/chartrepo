@@ -12,6 +12,11 @@ steps:
   label: ":helm: Linting (Chart Testing)"
   if: build.branch != "gh-pages" && build.env("CHART_CHANGES") == "true"
 
+- command: "make test-chart"
+  key: "unit-tests"
+  label: ":test_tube: Helm Unit Tests"
+  if: build.branch != "gh-pages" && build.env("CHART_CHANGES") == "true"
+
 - command: "make lint-chart-package"
   key: "lint-package"
   label: ":package: Package Chart (Chart Releaser)"

@@ -1,4 +1,6 @@
 GO=go
+HELM_UNITTEST_VERSION ?= v1.0.3
+HELM_UNITTEST_REPO ?= https://github.com/helm-unittest/helm-unittest
 
 docs: install-helm-docs
 	helm-docs
@@ -20,6 +22,17 @@ lint-chart-package:
 lint-docs:
 	@(git diff-index --quiet HEAD charts/**/README.md) || (echo "Documentation is outdated, run make docs") && (git diff --color-words charts/**/README.md) && false
 	@echo "Documentation up to date"
+
+helm-unittest-install:
+	@if ! helm plugin list | tail -n +2 | awk '{print $$1}' | grep -q "^unittest$$"; then \
+		echo "Installing helm-unittest plugin $(HELM_UNITTEST_VERSION)"; \
+		helm plugin install $(HELM_UNITTEST_REPO) --version $(HELM_UNITTEST_VERSION) --verify=false; \
+	else \
+		echo "helm-unittest plugin already installed"; \
+	fi
+
+test-chart: helm-unittest-install
+	@helm unittest charts/authelia
 
 install: install-helm-docs install-helm-schema
 

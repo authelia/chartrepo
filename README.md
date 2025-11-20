@@ -26,3 +26,13 @@ development.
 ## Getting Started
 
 Visit the [Helm Repository](https://charts.authelia.com) for instructions.
+
+## Testing
+
+To run the tests locally you can use the following command:
+
+```bash
+make test-chart
+```
+
+This will run the unit tests for the chart.

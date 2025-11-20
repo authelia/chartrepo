@@ -1,10 +1,17 @@
 {{/*
+Return the resolved image tag.
+*/}}
+{{- define "authelia.image.tag" -}}
+    {{- default .Chart.AppVersion .Values.image.tag | toString -}}
+{{- end -}}
+
+{{/*
 Return the proper image name
 */}}
 {{- define "authelia.image" -}}
     {{- $registryName := default "docker.io" .Values.image.registry -}}
     {{- $repositoryName := default "authelia/authelia" .Values.image.repository -}}
-    {{- $tag := .Values.image.tag | default .Chart.AppVersion  | toString -}}
+    {{- $tag := include "authelia.image.tag" . -}}
     {{- if hasPrefix "sha256:" $tag }}
     {{- printf "%s/%s@%s" $registryName $repositoryName $tag -}}
     {{- else -}}
