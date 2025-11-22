@@ -1,6 +1,6 @@
 apiVersion: v2
 name: authelia
-version: 0.10.49
+version: 0.10.50
 kubeVersion: ">= 1.13.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
@@ -43,7 +43,7 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
     condition: configMap.storage.mysql.deploy
   - name: redis
-    version: ~19.6.0
+    version: ~24.0.0
     repository: https://charts.bitnami.com/bitnami
     condition: configMap.session.redis.deploy
 maintainers:
