@@ -252,7 +252,9 @@ data:
         group_search_mode: {{ $auth.ldap.group_search_mode | default "filter" | squote }}
         permit_referrals: {{ $auth.ldap.permit_referrals }}
         permit_unauthenticated_bind: {{ $auth.ldap.permit_unauthenticated_bind }}
+        {{- if semverCompare "<4.39.16" (include "authelia.version" $) }}
         permit_feature_detection_failure: {{ $auth.ldap.permit_feature_detection_failure }}
+        {{- end }}
         user: {{ $auth.ldap.user | squote }}
         attributes:
           distinguished_name: {{ $auth.ldap.attributes.distinguished_name | default "" | squote }}

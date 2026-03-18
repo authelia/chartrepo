@@ -126,7 +126,6 @@
                     ".*": {
                       "properties": {
                         "multi_valued": {
-                          "required": [],
                           "type": "boolean"
                         },
                         "value_type": {
@@ -135,7 +134,6 @@
                             "integer",
                             "boolean"
                           ],
-                          "required": [],
                           "type": "string"
                         }
                       },
@@ -407,11 +405,9 @@
                         ".*": {
                           "properties": {
                             "multi_valued": {
-                              "required": [],
                               "type": "boolean"
                             },
                             "name": {
-                              "required": [],
                               "type": "string"
                             },
                             "value_type": {
@@ -420,7 +416,6 @@
                                 "integer",
                                 "boolean"
                               ],
-                              "required": [],
                               "type": "string"
                             }
                           },
@@ -788,15 +783,12 @@
                 ".*": {
                   "anyOf": [
                     {
-                      "required": [],
                       "type": "string"
                     },
                     {
                       "items": {
-                        "required": [],
                         "type": "string"
                       },
-                      "required": [],
                       "type": "array"
                     }
                   ],
@@ -813,7 +805,6 @@
                 ".*": {
                   "properties": {
                     "expression": {
-                      "required": [],
                       "type": "string"
                     }
                   },
@@ -942,7 +933,6 @@
                             "one_factor",
                             ""
                           ],
-                          "required": [],
                           "type": "string"
                         },
                         "rules": {
@@ -951,11 +941,9 @@
                               "networks": {
                                 "anyOf": [
                                   {
-                                    "required": [],
                                     "type": "string"
                                   },
                                   {
-                                    "required": [],
                                     "type": "array"
                                   }
                                 ],
@@ -968,17 +956,14 @@
                                   "one_factor",
                                   ""
                                 ],
-                                "required": [],
                                 "type": "string"
                               },
                               "subject": {
                                 "anyOf": [
                                   {
-                                    "required": [],
                                     "type": "string"
                                   },
                                   {
-                                    "required": [],
                                     "type": "array"
                                   }
                                 ],
@@ -988,7 +973,6 @@
                             "required": [],
                             "type": "object"
                           },
-                          "required": [],
                           "type": "array"
                         }
                       },
@@ -1007,10 +991,8 @@
                       "properties": {
                         "access_token": {
                           "items": {
-                            "required": [],
                             "type": "string"
                           },
-                          "required": [],
                           "type": "array"
                         },
                         "custom_claims": {
@@ -1018,7 +1000,6 @@
                             ".*": {
                               "properties": {
                                 "attribute": {
-                                  "required": [],
                                   "type": "string"
                                 }
                               },
@@ -1031,10 +1012,8 @@
                         },
                         "id_token": {
                           "items": {
-                            "required": [],
                             "type": "string"
                           },
-                          "required": [],
                           "type": "array"
                         }
                       },
@@ -1085,7 +1064,6 @@
                         ],
                         "required": []
                       },
-                      "required": [],
                       "title": "endpoints",
                       "type": "array"
                     }
@@ -1177,23 +1155,19 @@
                   "items": {
                     "properties": {
                       "algorithm": {
-                        "required": [],
                         "type": "string"
                       },
                       "certificate_chain": {
                         "anyOf": [
                           {
-                            "required": [],
                             "type": "string"
                           },
                           {
                             "properties": {
                               "path": {
-                                "required": [],
                                 "type": "string"
                               },
                               "value": {
-                                "required": [],
                                 "type": "string"
                               }
                             },
@@ -1206,17 +1180,14 @@
                       "key": {
                         "anyOf": [
                           {
-                            "required": [],
                             "type": "string"
                           },
                           {
                             "properties": {
                               "path": {
-                                "required": [],
                                 "type": "string"
                               },
                               "value": {
-                                "required": [],
                                 "type": "string"
                               }
                             },
@@ -1227,7 +1198,6 @@
                         "required": []
                       },
                       "key_id": {
-                        "required": [],
                         "type": "string"
                       },
                       "use": {
@@ -1236,7 +1206,6 @@
                           "enc",
                           ""
                         ],
-                        "required": [],
                         "type": "string"
                       }
                     },
@@ -1556,10 +1525,8 @@
                       "properties": {
                         "claims": {
                           "items": {
-                            "required": [],
                             "type": "string"
                           },
-                          "required": [],
                           "type": "array"
                         }
                       },
@@ -2059,7 +2026,6 @@
               "items": {
                 "anyOf": [
                   {
-                    "required": [],
                     "type": "string"
                   }
                 ],
@@ -2120,7 +2086,6 @@
                                   "HeaderAuthRequestProxyAuthorization",
                                   "HeaderLegacy"
                                 ],
-                                "required": [],
                                 "type": "string"
                               },
                               "scheme_basic_cache_lifespan": {
@@ -2140,14 +2105,12 @@
                                   ],
                                   "required": []
                                 },
-                                "required": [],
                                 "type": "array"
                               }
                             },
                             "required": [],
                             "type": "object"
                           },
-                          "required": [],
                           "type": "array"
                         },
                         "implementation": {
@@ -2157,7 +2120,6 @@
                             "ForwardAuth",
                             "Legacy"
                           ],
-                          "required": [],
                           "type": "string"
                         }
                       },
@@ -2261,11 +2223,9 @@
                 "properties": {
                   "default_redirection_url": {
                     "format": "uri",
-                    "required": [],
                     "type": "string"
                   },
                   "domain": {
-                    "required": [],
                     "type": "string"
                   },
                   "expiration": {
@@ -2283,11 +2243,9 @@
                     ]
                   },
                   "name": {
-                    "required": [],
                     "type": "string"
                   },
                   "path": {
-                    "required": [],
                     "type": "string"
                   },
                   "same_site": {
@@ -2297,11 +2255,9 @@
                       "none",
                       ""
                     ],
-                    "required": [],
                     "type": "string"
                   },
                   "subdomain": {
-                    "required": [],
                     "type": "string"
                   }
                 },
@@ -3017,7 +2973,6 @@
               "items": {
                 "anyOf": [
                   {
-                    "required": [],
                     "type": "string"
                   }
                 ],
@@ -3031,7 +2986,6 @@
               "items": {
                 "anyOf": [
                   {
-                    "required": [],
                     "type": "integer"
                   }
                 ],
@@ -3045,7 +2999,6 @@
               "items": {
                 "anyOf": [
                   {
-                    "required": [],
                     "type": "integer"
                   }
                 ],
@@ -3284,7 +3237,6 @@
           "items": {
             "required": []
           },
-          "required": [],
           "title": "pullSecrets",
           "type": "array"
         },
@@ -3430,7 +3382,6 @@
             "entryPoints": {
               "description": "Defines the valid entryPoints to route for the IngressRoute.",
               "items": {
-                "required": [],
                 "type": "string"
               },
               "required": [],
@@ -3453,19 +3404,15 @@
                       "items": {
                         "anyOf": [
                           {
-                            "required": [],
                             "type": "string"
                           },
                           {
-                            "required": [],
                             "type": "string"
                           },
                           {
-                            "required": [],
                             "type": "string"
                           },
                           {
-                            "required": [],
                             "type": "string"
                           }
                         ],
@@ -3501,11 +3448,9 @@
                           "items": {
                             "properties": {
                               "name": {
-                                "required": [],
                                 "type": "string"
                               },
                               "namespace": {
-                                "required": [],
                                 "type": "string"
                               }
                             },
@@ -3520,11 +3465,9 @@
                           "items": {
                             "properties": {
                               "name": {
-                                "required": [],
                                 "type": "string"
                               },
                               "namespace": {
-                                "required": [],
                                 "type": "string"
                               }
                             },
@@ -3552,11 +3495,9 @@
                           "items": {
                             "properties": {
                               "name": {
-                                "required": [],
                                 "type": "string"
                               },
                               "namespace": {
-                                "required": [],
                                 "type": "string"
                               }
                             },
@@ -3571,11 +3512,9 @@
                           "items": {
                             "properties": {
                               "name": {
-                                "required": [],
                                 "type": "string"
                               },
                               "namespace": {
-                                "required": [],
                                 "type": "string"
                               }
                             },
@@ -3653,15 +3592,12 @@
                   "items": {
                     "properties": {
                       "main": {
-                        "required": [],
                         "type": "string"
                       },
                       "sans": {
                         "items": {
-                          "required": [],
                           "type": "string"
                         },
-                        "required": [],
                         "type": "array"
                       }
                     },
@@ -3677,7 +3613,6 @@
                     "cipherSuites": {
                       "description": "Override the default Cipher Suites.",
                       "items": {
-                        "required": [],
                         "type": "string"
                       },
                       "required": [],
@@ -3686,7 +3621,6 @@
                     "curvePreferences": {
                       "description": "Override the default Curve Preferences.",
                       "items": {
-                        "required": [],
                         "type": "string"
                       },
                       "required": [],
@@ -3854,7 +3788,6 @@
             "$ref": "https://charts.authelia.com/definitions.json#/definitions/io.k8s.api.networking.v1.NetworkPolicyEgressRule",
             "required": []
           },
-          "required": [],
           "title": "egress",
           "type": "array"
         },
@@ -3869,7 +3802,6 @@
             "$ref": "https://charts.authelia.com/definitions.json#/definitions/io.k8s.api.networking.v1.NetworkPolicyIngressRule",
             "required": []
           },
-          "required": [],
           "title": "ingress",
           "type": "array"
         },
@@ -3945,7 +3877,6 @@
                     ],
                     "required": []
                   },
-                  "required": [],
                   "type": "array"
                 },
                 "annotations": {
@@ -3954,11 +3885,9 @@
                   "type": "object"
                 },
                 "enabled": {
-                  "required": [],
                   "type": "boolean"
                 },
                 "existingClaim": {
-                  "required": [],
                   "type": "string"
                 },
                 "labels": {
@@ -3967,11 +3896,9 @@
                   "type": "object"
                 },
                 "mountPropagation": {
-                  "required": [],
                   "type": "string"
                 },
                 "readOnly": {
-                  "required": [],
                   "type": "boolean"
                 },
                 "selector": {
@@ -3980,23 +3907,18 @@
                   "type": "object"
                 },
                 "size": {
-                  "required": [],
                   "type": "string"
                 },
                 "storageClass": {
-                  "required": [],
                   "type": "string"
                 },
                 "subPath": {
-                  "required": [],
                   "type": "string"
                 },
                 "subPathExpr": {
-                  "required": [],
                   "type": "string"
                 },
                 "volumeName": {
-                  "required": [],
                   "type": "string"
                 }
               },
@@ -4084,7 +4006,6 @@
         "args": {
           "description": "Modifies the args for the command. Useful for debugging.",
           "items": {
-            "required": [],
             "type": "string"
           },
           "required": [],
@@ -4122,7 +4043,6 @@
         "command": {
           "description": "Modifies the command. Useful for debugging.",
           "items": {
-            "required": [],
             "type": "string"
           },
           "required": [],
@@ -4139,11 +4059,9 @@
           "items": {
             "properties": {
               "name": {
-                "required": [],
                 "type": "string"
               },
               "value": {
-                "required": [],
                 "type": "string"
               }
             },
@@ -4400,13 +4318,11 @@
               "description": "Container Security Context.",
               "properties": {
                 "allowPrivilegeEscalation": {
-                  "required": [],
                   "type": "boolean"
                 },
                 "appArmorProfile": {
                   "properties": {
                     "localHostProfile": {
-                      "required": [],
                       "type": "string"
                     },
                     "type": {
@@ -4415,7 +4331,6 @@
                         "RuntimeDefault",
                         "Unconfined"
                       ],
-                      "required": [],
                       "type": "string"
                     }
                   },
@@ -4426,18 +4341,14 @@
                   "properties": {
                     "add": {
                       "items": {
-                        "required": [],
                         "type": "string"
                       },
-                      "required": [],
                       "type": "array"
                     },
                     "drop": {
                       "items": {
-                        "required": [],
                         "type": "string"
                       },
-                      "required": [],
                       "type": "array"
                     }
                   },
@@ -4445,45 +4356,35 @@
                   "type": "object"
                 },
                 "privileged": {
-                  "required": [],
                   "type": "boolean"
                 },
                 "procMount": {
-                  "required": [],
                   "type": "string"
                 },
                 "readOnlyRootFilesystem": {
-                  "required": [],
                   "type": "boolean"
                 },
                 "runAsGroup": {
-                  "required": [],
                   "type": "integer"
                 },
                 "runAsNonRoot": {
-                  "required": [],
                   "type": "boolean"
                 },
                 "runAsUser": {
-                  "required": [],
                   "type": "integer"
                 },
                 "seLinuxOptions": {
                   "properties": {
                     "level": {
-                      "required": [],
                       "type": "string"
                     },
                     "role": {
-                      "required": [],
                       "type": "string"
                     },
                     "type": {
-                      "required": [],
                       "type": "string"
                     },
                     "user": {
-                      "required": [],
                       "type": "string"
                     }
                   },
@@ -4493,7 +4394,6 @@
                 "seccompProfile": {
                   "properties": {
                     "localhostProfile": {
-                      "required": [],
                       "type": "string"
                     },
                     "type": {
@@ -4502,7 +4402,6 @@
                         "RuntimeDefault",
                         "Unconfined"
                       ],
-                      "required": [],
                       "type": "string"
                     }
                   },
@@ -4520,7 +4419,6 @@
                 "appArmorProfile": {
                   "properties": {
                     "localHostProfile": {
-                      "required": [],
                       "type": "string"
                     },
                     "type": {
@@ -4529,7 +4427,6 @@
                         "RuntimeDefault",
                         "Unconfined"
                       ],
-                      "required": [],
                       "type": "string"
                     }
                   },
@@ -4537,7 +4434,6 @@
                   "type": "object"
                 },
                 "fsGroup": {
-                  "required": [],
                   "type": "integer"
                 },
                 "fsGroupChangePolicy": {
@@ -4545,19 +4441,15 @@
                     "Always",
                     "OnRootMismatch"
                   ],
-                  "required": [],
                   "type": "string"
                 },
                 "runAsGroup": {
-                  "required": [],
                   "type": "integer"
                 },
                 "runAsNonRoot": {
-                  "required": [],
                   "type": "boolean"
                 },
                 "runAsUser": {
-                  "required": [],
                   "type": "integer"
                 },
                 "seLinuxChangePolicy": {
@@ -4565,25 +4457,20 @@
                     "MountOption",
                     "Recursive"
                   ],
-                  "required": [],
                   "type": "string"
                 },
                 "seLinuxOptions": {
                   "properties": {
                     "level": {
-                      "required": [],
                       "type": "string"
                     },
                     "role": {
-                      "required": [],
                       "type": "string"
                     },
                     "type": {
-                      "required": [],
                       "type": "string"
                     },
                     "user": {
-                      "required": [],
                       "type": "string"
                     }
                   },
@@ -4593,7 +4480,6 @@
                 "seccompProfile": {
                   "properties": {
                     "localhostProfile": {
-                      "required": [],
                       "type": "string"
                     },
                     "type": {
@@ -4602,7 +4488,6 @@
                         "RuntimeDefault",
                         "Unconfined"
                       ],
-                      "required": [],
                       "type": "string"
                     }
                   },
@@ -4611,10 +4496,8 @@
                 },
                 "supplementalGroups": {
                   "items": {
-                    "required": [],
                     "type": "integer"
                   },
-                  "required": [],
                   "type": "array"
                 },
                 "supplementalGroupsPolicy": {
@@ -4622,25 +4505,21 @@
                     "Merge",
                     "Strict"
                   ],
-                  "required": [],
                   "type": "string"
                 },
                 "sysctls": {
                   "items": {
                     "properties": {
                       "name": {
-                        "required": [],
                         "type": "string"
                       },
                       "value": {
-                        "required": [],
                         "type": "string"
                       }
                     },
                     "required": [],
                     "type": "object"
                   },
-                  "required": [],
                   "type": "array"
                 }
               },
@@ -4743,19 +4622,15 @@
                   "NoSchedule",
                   "PreferNoSchedule"
                 ],
-                "required": [],
                 "type": "string"
               },
               "key": {
-                "required": [],
                 "type": "string"
               },
               "operator": {
-                "required": [],
                 "type": "string"
               },
               "value": {
-                "required": [],
                 "type": "string"
               }
             },
@@ -4962,7 +4837,6 @@
                   "items": {
                     "anyOf": [
                       {
-                        "required": [],
                         "type": "string"
                       }
                     ],
@@ -5014,7 +4888,6 @@
                   "items": {
                     "anyOf": [
                       {
-                        "required": [],
                         "type": "string"
                       }
                     ],
@@ -5078,22 +4951,18 @@
                   "items": {
                     "properties": {
                       "key": {
-                        "required": [],
                         "type": "string"
                       },
                       "path": {
-                        "required": [],
                         "type": "string"
                       }
                     },
                     "required": [],
                     "type": "object"
                   },
-                  "required": [],
                   "type": "array"
                 },
                 "path": {
-                  "required": [],
                   "type": "string"
                 }
               },
