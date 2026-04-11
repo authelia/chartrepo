@@ -1,6 +1,6 @@
 apiVersion: v2
 name: authelia
-version: 0.10.53
+version: 0.10.54
 kubeVersion: ">= 1.30.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
@@ -51,16 +51,16 @@ maintainers:
     email: james-d-elliott@users.noreply.github.com
     url: https://github.com/james-d-elliott
 icon: https://avatars2.githubusercontent.com/u/59122411?s=200&v=4
-appVersion: 4.39.17
+appVersion: 4.39.18
 deprecated: false
 annotations:
   artifacthub.io/category: security
   artifacthub.io/changes: |
     - kind: added
-      description: Support for customizing the server endpoint rate limits.
+      description: Authelia 4.39.18.
   artifacthub.io/images: |
     - name: authelia/authelia
-      image: ghcr.io/authelia/authelia:4.39.17
+      image: ghcr.io/authelia/authelia:4.39.18
       whitelisted: false
       platforms:
         - linux/amd64
