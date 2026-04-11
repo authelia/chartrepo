@@ -37,6 +37,84 @@ data:
         {{- range $name, $endpoint := (include "authelia.authz" .) | fromJson }}
         {{- tpl ($.Files.Get "files/configuration.server.endpoints.authz.yaml") (merge (dict "Name" $name "Endpoint" $endpoint) $) | trim | nindent 10 }}
         {{- end }}
+
+        {{- if (semverCompare ">=4.39.0" (include "authelia.version" $)) }}
+        rate_limits:
+          reset_password_start:
+            enable: {{ .Values.configMap.server.endpoints.rate_limits.reset_password_start.enable }}
+            {{- if gt (len .Values.configMap.server.endpoints.rate_limits.reset_password_start.buckets) 0 }}
+            buckets:
+            {{- range .Values.configMap.server.endpoints.rate_limits.reset_password_start.buckets }}
+              - period: {{ include "authelia.func.dquote" .period }}
+                requests: {{ .requests }}
+            {{- end }}
+            {{- end }}
+          reset_password_finish:
+            enable: {{ .Values.configMap.server.endpoints.rate_limits.reset_password_finish.enable }}
+            {{- if gt (len .Values.configMap.server.endpoints.rate_limits.reset_password_finish.buckets) 0 }}
+            buckets:
+            {{- range .Values.configMap.server.endpoints.rate_limits.reset_password_finish.buckets }}
+              - period: {{ include "authelia.func.dquote" .period }}
+                requests: {{ .requests }}
+            {{- end }}
+            {{- end }}
+          second_factor_totp:
+            enable: {{ .Values.configMap.server.endpoints.rate_limits.second_factor_totp.enable }}
+            {{- if gt (len .Values.configMap.server.endpoints.rate_limits.second_factor_totp.buckets) 0 }}
+            buckets:
+            {{- range .Values.configMap.server.endpoints.rate_limits.second_factor_totp.buckets }}
+              - period: {{ include "authelia.func.dquote" .period }}
+                requests: {{ .requests }}
+            {{- end }}
+            {{- end }}
+          second_factor_duo:
+            enable: {{ .Values.configMap.server.endpoints.rate_limits.second_factor_duo.enable }}
+            {{- if gt (len .Values.configMap.server.endpoints.rate_limits.second_factor_duo.buckets) 0 }}
+            buckets:
+            {{- range .Values.configMap.server.endpoints.rate_limits.second_factor_duo.buckets }}
+              - period: {{ include "authelia.func.dquote" .period }}
+                requests: {{ .requests }}
+            {{- end }}
+            {{- end }}
+          session_elevation_start:
+            enable: {{ .Values.configMap.server.endpoints.rate_limits.session_elevation_start.enable }}
+            {{- if gt (len .Values.configMap.server.endpoints.rate_limits.session_elevation_start.buckets) 0 }}
+            buckets:
+            {{- range .Values.configMap.server.endpoints.rate_limits.session_elevation_start.buckets }}
+              - period: {{ include "authelia.func.dquote" .period }}
+                requests: {{ .requests }}
+            {{- end }}
+            {{- end }}
+          session_elevation_finish:
+            enable: {{ .Values.configMap.server.endpoints.rate_limits.session_elevation_finish.enable }}
+            {{- if gt (len .Values.configMap.server.endpoints.rate_limits.session_elevation_finish.buckets) 0 }}
+            buckets:
+            {{- range .Values.configMap.server.endpoints.rate_limits.session_elevation_finish.buckets }}
+              - period: {{ include "authelia.func.dquote" .period }}
+                requests: {{ .requests }}
+            {{- end }}
+            {{- end }}
+          {{- if (semverCompare ">=4.39.17" (include "authelia.version" $)) }}
+          openid_connect_token:
+            enable: {{ .Values.configMap.server.endpoints.rate_limits.openid_connect_token.enable }}
+            {{- if gt (len .Values.configMap.server.endpoints.rate_limits.openid_connect_token.buckets) 0 }}
+            buckets:
+            {{- range .Values.configMap.server.endpoints.rate_limits.openid_connect_token.buckets }}
+              - period: {{ include "authelia.func.dquote" .period }}
+                requests: {{ .requests }}
+            {{- end }}
+            {{- end }}
+          openid_connect_pushed_authorization_request:
+            enable: {{ .Values.configMap.server.endpoints.rate_limits.openid_connect_pushed_authorization_request.enable }}
+            {{- if gt (len .Values.configMap.server.endpoints.rate_limits.openid_connect_pushed_authorization_request.buckets) 0 }}
+            buckets:
+            {{- range .Values.configMap.server.endpoints.rate_limits.openid_connect_pushed_authorization_request.buckets }}
+              - period: {{ include "authelia.func.dquote" .period }}
+                requests: {{ .requests }}
+            {{- end }}
+            {{- end }}
+          {{- end }}
+        {{- end }}
     log:
       level: {{ .Values.configMap.log.level | default "info" | squote }}
       format: {{ .Values.configMap.log.format | default "text" | squote }}
