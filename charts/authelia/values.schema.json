@@ -2155,9 +2155,333 @@
                   "description": "Enable the developer pprof handlers.",
                   "required": [],
                   "title": "enable_pprof"
+                },
+                "rate_limits": {
+                  "additionalProperties": false,
+                  "description": "Configure the rate limits for various endpoints.",
+                  "properties": {
+                    "openid_connect_pushed_authorization_request": {
+                      "additionalProperties": false,
+                      "description": "Configure the rate limits for the OpenID Connect 1.0 Pushed Authorization Request endpoint.",
+                      "properties": {
+                        "buckets": {
+                          "description": "List of rate limit buckets.",
+                          "items": {
+                            "properties": {
+                              "limit": {
+                                "type": "integer"
+                              },
+                              "period": {
+                                "required": [],
+                                "type": [
+                                  "integer",
+                                  "string"
+                                ]
+                              }
+                            },
+                            "required": [],
+                            "type": "object"
+                          },
+                          "title": "buckets",
+                          "type": "array"
+                        },
+                        "enable": {
+                          "default": true,
+                          "description": "Enables this rate limit.",
+                          "title": "enable",
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "enable"
+                      ],
+                      "title": "openid_connect_pushed_authorization_request",
+                      "type": "object"
+                    },
+                    "openid_connect_token": {
+                      "additionalProperties": false,
+                      "description": "Configure the rate limits for the OpenID Connect 1.0 Token endpoint.",
+                      "properties": {
+                        "buckets": {
+                          "description": "List of rate limit buckets.",
+                          "items": {
+                            "properties": {
+                              "limit": {
+                                "type": "integer"
+                              },
+                              "period": {
+                                "required": [],
+                                "type": [
+                                  "integer",
+                                  "string"
+                                ]
+                              }
+                            },
+                            "required": [],
+                            "type": "object"
+                          },
+                          "title": "buckets",
+                          "type": "array"
+                        },
+                        "enable": {
+                          "default": true,
+                          "description": "Enables this rate limit.",
+                          "title": "enable",
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "enable"
+                      ],
+                      "title": "openid_connect_token",
+                      "type": "object"
+                    },
+                    "reset_password_finish": {
+                      "additionalProperties": false,
+                      "description": "Configure the rate limits for the reset password finish endpoint.",
+                      "properties": {
+                        "buckets": {
+                          "description": "List of rate limit buckets.",
+                          "items": {
+                            "properties": {
+                              "limit": {
+                                "type": "integer"
+                              },
+                              "period": {
+                                "required": [],
+                                "type": [
+                                  "integer",
+                                  "string"
+                                ]
+                              }
+                            },
+                            "required": [],
+                            "type": "object"
+                          },
+                          "title": "buckets",
+                          "type": "array"
+                        },
+                        "enable": {
+                          "default": true,
+                          "description": "Enables this rate limit.",
+                          "title": "enable",
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "enable"
+                      ],
+                      "title": "reset_password_finish",
+                      "type": "object"
+                    },
+                    "reset_password_start": {
+                      "additionalProperties": false,
+                      "description": "Configure the rate limits for the reset password start endpoint.",
+                      "properties": {
+                        "buckets": {
+                          "description": "List of rate limit buckets.",
+                          "items": {
+                            "properties": {
+                              "limit": {
+                                "type": "integer"
+                              },
+                              "period": {
+                                "required": [],
+                                "type": [
+                                  "integer",
+                                  "string"
+                                ]
+                              }
+                            },
+                            "required": [],
+                            "type": "object"
+                          },
+                          "title": "buckets",
+                          "type": "array"
+                        },
+                        "enable": {
+                          "default": true,
+                          "description": "Enables this rate limit.",
+                          "title": "enable",
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "enable"
+                      ],
+                      "title": "reset_password_start",
+                      "type": "object"
+                    },
+                    "second_factor_duo": {
+                      "additionalProperties": false,
+                      "description": "Configure the rate limits for the second factor DUO endpoint.",
+                      "properties": {
+                        "buckets": {
+                          "description": "List of rate limit buckets.",
+                          "items": {
+                            "properties": {
+                              "limit": {
+                                "type": "integer"
+                              },
+                              "period": {
+                                "required": [],
+                                "type": [
+                                  "integer",
+                                  "string"
+                                ]
+                              }
+                            },
+                            "required": [],
+                            "type": "object"
+                          },
+                          "title": "buckets",
+                          "type": "array"
+                        },
+                        "enable": {
+                          "default": true,
+                          "description": "Enables this rate limit.",
+                          "title": "enable",
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "enable"
+                      ],
+                      "title": "second_factor_duo",
+                      "type": "object"
+                    },
+                    "second_factor_totp": {
+                      "additionalProperties": false,
+                      "description": "Configure the rate limits for the second factor TOTP endpoint.",
+                      "properties": {
+                        "buckets": {
+                          "description": "List of rate limit buckets.",
+                          "items": {
+                            "properties": {
+                              "limit": {
+                                "type": "integer"
+                              },
+                              "period": {
+                                "required": [],
+                                "type": [
+                                  "integer",
+                                  "string"
+                                ]
+                              }
+                            },
+                            "required": [],
+                            "type": "object"
+                          },
+                          "title": "buckets",
+                          "type": "array"
+                        },
+                        "enable": {
+                          "default": true,
+                          "description": "Enables this rate limit.",
+                          "title": "enable",
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "enable"
+                      ],
+                      "title": "second_factor_totp",
+                      "type": "object"
+                    },
+                    "session_elevation_finish": {
+                      "additionalProperties": false,
+                      "description": "Configure the rate limits for the session elevation finish endpoint.",
+                      "properties": {
+                        "buckets": {
+                          "description": "List of rate limit buckets.",
+                          "items": {
+                            "properties": {
+                              "limit": {
+                                "type": "integer"
+                              },
+                              "period": {
+                                "required": [],
+                                "type": [
+                                  "integer",
+                                  "string"
+                                ]
+                              }
+                            },
+                            "required": [],
+                            "type": "object"
+                          },
+                          "title": "buckets",
+                          "type": "array"
+                        },
+                        "enable": {
+                          "default": true,
+                          "description": "Enables this rate limit.",
+                          "title": "enable",
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "enable"
+                      ],
+                      "title": "session_elevation_finish",
+                      "type": "object"
+                    },
+                    "session_elevation_start": {
+                      "additionalProperties": false,
+                      "description": "Configure the rate limits for the session elevation start endpoint.",
+                      "properties": {
+                        "buckets": {
+                          "description": "List of rate limit buckets.",
+                          "items": {
+                            "properties": {
+                              "limit": {
+                                "type": "integer"
+                              },
+                              "period": {
+                                "required": [],
+                                "type": [
+                                  "integer",
+                                  "string"
+                                ]
+                              }
+                            },
+                            "required": [],
+                            "type": "object"
+                          },
+                          "title": "buckets",
+                          "type": "array"
+                        },
+                        "enable": {
+                          "default": true,
+                          "description": "Enables this rate limit.",
+                          "title": "enable",
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "enable"
+                      ],
+                      "title": "session_elevation_start",
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "reset_password_start",
+                    "reset_password_finish",
+                    "second_factor_totp",
+                    "second_factor_duo",
+                    "session_elevation_start",
+                    "session_elevation_finish",
+                    "openid_connect_token",
+                    "openid_connect_pushed_authorization_request"
+                  ],
+                  "title": "rate_limits",
+                  "type": "object"
                 }
               },
-              "required": [],
+              "required": [
+                "rate_limits"
+              ],
               "title": "endpoints"
             },
             "headers": {
@@ -3697,78 +4021,140 @@
       "title": "labels"
     },
     "mariadb": {
-      "additionalProperties": true,
-      "description": "Configure mariadb database subchart under this key.\nThis will be deployed when storage.mysql.deploy is set to true\nCurrently settings need to be manually copied from here to the storage.mysql section\nFor more options and to see the",
+      "description": "MariaDB is an open source, community-developed SQL database server that is widely in use around the world due to its enterprise features, flexibility, and collaboration with leading tech firms.",
       "properties": {
         "architecture": {
-          "default": "standalone",
-          "required": [],
-          "title": "architecture"
+          "description": "Allowed values: `standalone` or `replication`",
+          "title": "MariaDB architecture",
+          "type": "string"
         },
         "auth": {
-          "additionalProperties": true,
           "properties": {
             "database": {
-              "default": "authelia",
-              "required": [],
-              "title": "database"
+              "description": "Name of the custom database to be created during the 1st initialization of MariaDB",
+              "title": "MariaDB custom database",
+              "type": "string"
             },
             "password": {
-              "default": "authelia",
-              "required": [],
-              "title": "password"
+              "description": "Defaults to a random 10-character alphanumeric string if not set",
+              "title": "Password for MariaDB custom user",
+              "type": "string"
+            },
+            "replicationPassword": {
+              "description": "Defaults to a random 10-character alphanumeric string if not set",
+              "title": "Password for MariaDB replication user",
+              "type": "string"
+            },
+            "replicationUser": {
+              "description": "Name of user used to manage replication.",
+              "title": "MariaDB replication user",
+              "type": "string"
             },
             "rootPassword": {
-              "default": "authelia",
-              "required": [],
-              "title": "rootPassword"
+              "description": "Defaults to a random 10-character alphanumeric string if not set",
+              "title": "MariaDB root password",
+              "type": "string"
             },
             "username": {
-              "default": "authelia",
-              "required": [],
-              "title": "username"
+              "description": "Name of the custom user to be created during the 1st initialization of MariaDB. This user only has permissions on the MariaDB custom database",
+              "title": "MariaDB custom user",
+              "type": "string"
             }
           },
           "required": [],
-          "title": "auth"
+          "title": "Authentication configuration",
+          "type": "object"
         },
-        "primary": {
-          "additionalProperties": true,
+        "exampleValue": {
+          "default": "common-chart",
+          "description": "# bitnami/common\n# It is required by CI/CD tools and processes.\n#\n#",
+          "title": "exampleValue",
+          "type": "string"
+        },
+        "metrics": {
           "properties": {
-            "persistence": {
-              "additionalProperties": true,
+            "enabled": {
+              "description": "Create a side-car container to expose Prometheus metrics",
+              "title": "Create Prometheus metrics exporter",
+              "type": "boolean"
+            },
+            "serviceMonitor": {
               "properties": {
                 "enabled": {
-                  "default": "false",
-                  "required": [],
-                  "title": "enabled"
-                },
-                "size": {
-                  "default": "1Gi",
-                  "required": [],
-                  "title": "size"
-                },
-                "storageClass": {
-                  "default": "",
-                  "required": [],
-                  "title": "storageClass"
+                  "description": "Create a ServiceMonitor to track metrics using Prometheus Operator",
+                  "title": "Create Prometheus Operator ServiceMonitor",
+                  "type": "boolean"
                 }
               },
               "required": [],
-              "title": "persistence"
-            },
-            "resources": {
-              "additionalProperties": true,
-              "required": [],
-              "title": "resources"
+              "type": "object"
             }
           },
           "required": [],
-          "title": "primary"
+          "title": "Prometheus metrics details",
+          "type": "object"
+        },
+        "primary": {
+          "properties": {
+            "persistence": {
+              "properties": {
+                "enabled": {
+                  "description": "Enable persistence using Persistent Volume Claims",
+                  "title": "Enable persistence",
+                  "type": "boolean"
+                },
+                "size": {
+                  "title": "Persistent Volume Size",
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "title": "Persistence for primary replicas",
+              "type": "object"
+            }
+          },
+          "required": [],
+          "title": "Primary replicas settings",
+          "type": "object"
+        },
+        "secondary": {
+          "properties": {
+            "persistence": {
+              "properties": {
+                "enabled": {
+                  "description": "Enable persistence using Persistent Volume Claims",
+                  "title": "Enable persistence",
+                  "type": "boolean"
+                },
+                "size": {
+                  "title": "Persistent Volume Size",
+                  "type": "string"
+                }
+              },
+              "required": [],
+              "title": "Persistence for secondary replicas",
+              "type": "object"
+            }
+          },
+          "required": [],
+          "title": "Secondary replicas settings",
+          "type": "object"
+        },
+        "volumePermissions": {
+          "properties": {
+            "enabled": {
+              "description": "Use an init container to set required folder permissions on the data volume before mounting it in the final destination",
+              "title": "Enable Init Containers",
+              "type": "boolean"
+            }
+          },
+          "required": [],
+          "type": "object"
         }
       },
       "required": [],
-      "title": "mariadb"
+      "title": "mariadb",
+      "type": "object"
     },
     "nameOverride": {
       "default": "~",
@@ -4688,73 +5074,133 @@
       "title": "podDisruptionBudget"
     },
     "postgresql": {
-      "additionalProperties": true,
-      "description": "Configure postgresql database subchart under this key.\nThis will be deployed when storage.postgres.deploy is set to true\nCurrently settings need to be manually copied from here to the storage.postgres section\nFor more options and to see the",
+      "description": "PostgreSQL (Postgres) is an open source object-relational database known for reliability and data integrity. ACID-compliant, it supports foreign keys, joins, views, triggers and stored procedures.",
       "properties": {
+        "architecture": {
+          "description": "Allowed values: `standalone` or `replication`",
+          "title": "PostgreSQL architecture",
+          "type": "string"
+        },
         "auth": {
-          "additionalProperties": true,
           "properties": {
             "database": {
-              "default": "authelia",
-              "required": [],
-              "title": "database"
+              "description": "Name of the custom database to be created during the 1st initialization of PostgreSQL",
+              "title": "PostgreSQL custom database",
+              "type": "string"
+            },
+            "enablePostgresUser": {
+              "description": "Assign a password to the \"postgres\" admin user. Otherwise, remote access will be blocked for this user",
+              "title": "Enable \"postgres\" admin user",
+              "type": "boolean"
             },
             "password": {
-              "default": "authelia",
-              "required": [],
-              "title": "password"
+              "description": "Defaults to a random 10-character alphanumeric string if not set",
+              "title": "Password for the custom user to create",
+              "type": "string"
             },
             "postgresPassword": {
-              "default": "authelia",
-              "required": [],
-              "title": "postgresPassword"
+              "description": "Defaults to a random 10-character alphanumeric string if not set",
+              "title": "Password for the \"postgres\" admin user",
+              "type": "string"
+            },
+            "replicationPassword": {
+              "description": "Defaults to a random 10-character alphanumeric string if not set",
+              "title": "Password for PostgreSQL replication user",
+              "type": "string"
+            },
+            "replicationUsername": {
+              "description": "Name of user used to manage replication.",
+              "title": "PostgreSQL replication user",
+              "type": "string"
             },
             "username": {
-              "default": "authelia",
-              "required": [],
-              "title": "username"
+              "description": "Name of the custom user to be created during the 1st initialization of PostgreSQL. This user only has permissions on the PostgreSQL custom database",
+              "title": "PostgreSQL custom user",
+              "type": "string"
             }
           },
           "required": [],
-          "title": "auth"
+          "title": "Authentication configuration",
+          "type": "object"
         },
-        "primary": {
-          "additionalProperties": true,
+        "exampleValue": {
+          "default": "common-chart",
+          "description": "# bitnami/common\n# It is required by CI/CD tools and processes.\n#\n#",
+          "title": "exampleValue",
+          "type": "string"
+        },
+        "metrics": {
           "properties": {
-            "persistence": {
-              "additionalProperties": true,
+            "enabled": {
+              "title": "Configure metrics exporter",
+              "type": "boolean"
+            }
+          },
+          "required": [],
+          "type": "object"
+        },
+        "persistence": {
+          "properties": {
+            "size": {
+              "title": "Persistent Volume Size",
+              "type": "string"
+            }
+          },
+          "required": [],
+          "type": "object"
+        },
+        "replication": {
+          "properties": {
+            "enabled": {
+              "title": "Enable Replication",
+              "type": "boolean"
+            },
+            "readReplicas": {
+              "title": "read Replicas",
+              "type": "integer"
+            }
+          },
+          "required": [],
+          "title": "Replication Details",
+          "type": "object"
+        },
+        "resources": {
+          "description": "Configure resource requests",
+          "properties": {
+            "requests": {
               "properties": {
-                "enabled": {
-                  "default": "false",
-                  "required": [],
-                  "title": "enabled"
+                "cpu": {
+                  "title": "CPU Request",
+                  "type": "string"
                 },
-                "size": {
-                  "default": "1Gi",
-                  "required": [],
-                  "title": "size"
-                },
-                "storageClass": {
-                  "default": "",
-                  "required": [],
-                  "title": "storageClass"
+                "memory": {
+                  "title": "Memory Request",
+                  "type": "string"
                 }
               },
               "required": [],
-              "title": "persistence"
-            },
-            "resources": {
-              "additionalProperties": true,
-              "required": [],
-              "title": "resources"
+              "type": "object"
             }
           },
           "required": [],
-          "title": "primary"
+          "title": "Required Resources",
+          "type": "object"
+        },
+        "volumePermissions": {
+          "properties": {
+            "enabled": {
+              "description": "Change the owner of the persist volume mountpoint to RunAsUser:fsGroup",
+              "title": "Enable Init Containers",
+              "type": "boolean"
+            }
+          },
+          "required": [],
+          "type": "object"
         }
       },
       "required": [],
-      "title": "postgresql"
+      "title": "postgresql",
+      "type": "object"
     },
     "rbac": {
       "additionalProperties": false,
@@ -4788,161 +5234,146 @@
       "title": "rbac"
     },
     "redis": {
-      "additionalProperties": true,
-      "description": "Configure redis database subchart under this key.\nThis will be deployed when session.redis.deploy is set to true\nCurrently settings need to be manually copied from here to the session.redis section\nFor more options and to see the",
+      "description": "Redis(R) is an open source, advanced key-value store. It is often referred to as a data structure server since keys can contain strings, hashes, lists, sets and sorted sets.",
       "properties": {
         "architecture": {
-          "default": "standalone",
-          "required": [],
-          "title": "architecture"
+          "description": "Allowed values: `standalone` or `replication`",
+          "enum": [
+            "standalone",
+            "replication"
+          ],
+          "title": "Redis architecture",
+          "type": "string"
         },
         "auth": {
-          "additionalProperties": true,
           "properties": {
             "enabled": {
-              "default": "false",
-              "required": [],
-              "title": "enabled"
-            },
-            "existingSecret": {
-              "default": "",
-              "required": [],
-              "title": "existingSecret"
-            },
-            "existingSecretPasswordKey": {
-              "default": "",
-              "required": [],
-              "title": "existingSecretPasswordKey"
+              "title": "Use password authentication",
+              "type": "boolean"
             },
             "password": {
-              "default": "redis",
-              "required": [],
-              "title": "password"
-            },
-            "sentinel": {
-              "default": "true",
-              "required": [],
-              "title": "sentinel"
-            },
-            "usePasswordFiles": {
-              "default": "false",
-              "required": [],
-              "title": "usePasswordFiles"
+              "description": "Defaults to a random 10-character alphanumeric string if not set",
+              "title": "Redis password",
+              "type": "string"
             }
           },
           "required": [],
-          "title": "auth"
+          "title": "Authentication configuration",
+          "type": "object"
+        },
+        "exampleValue": {
+          "default": "common-chart",
+          "description": "# bitnami/common\n# It is required by CI/CD tools and processes.\n#\n#",
+          "title": "exampleValue",
+          "type": "string"
         },
         "master": {
-          "additionalProperties": true,
           "properties": {
+            "kind": {
+              "description": "Allowed values: `Deployment`, `StatefulSet` or `DaemonSet`",
+              "enum": [
+                "Deployment",
+                "StatefulSet",
+                "DaemonSet"
+              ],
+              "title": "Workload Kind",
+              "type": "string"
+            },
             "persistence": {
-              "additionalProperties": true,
               "properties": {
-                "accessModes": {
-                  "items": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      }
-                    ],
-                    "required": []
-                  },
-                  "required": [],
-                  "title": "accessModes"
-                },
                 "enabled": {
-                  "default": "false",
-                  "required": [],
-                  "title": "enabled"
+                  "description": "Enable persistence using Persistent Volume Claims",
+                  "title": "Enable persistence",
+                  "type": "boolean"
                 },
                 "size": {
-                  "default": "1Gi",
-                  "required": [],
-                  "title": "size"
-                },
-                "storageClass": {
-                  "default": "",
-                  "required": [],
-                  "title": "storageClass"
+                  "title": "Persistent Volume Size",
+                  "type": "string"
                 }
               },
               "required": [],
-              "title": "persistence"
-            },
-            "priorityClassName": {
-              "default": "",
-              "required": [],
-              "title": "priorityClassName"
-            },
-            "resources": {
-              "additionalProperties": true,
-              "required": [],
-              "title": "resources"
+              "title": "Persistence for master replicas",
+              "type": "object"
             }
           },
           "required": [],
-          "title": "master"
+          "title": "Master replicas settings",
+          "type": "object"
+        },
+        "metrics": {
+          "properties": {
+            "enabled": {
+              "description": "Create a side-car container to expose Prometheus metrics",
+              "title": "Create Prometheus metrics exporter",
+              "type": "boolean"
+            },
+            "serviceMonitor": {
+              "properties": {
+                "enabled": {
+                  "description": "Create a ServiceMonitor to track metrics using Prometheus Operator",
+                  "title": "Create Prometheus Operator ServiceMonitor",
+                  "type": "boolean"
+                }
+              },
+              "required": [],
+              "type": "object"
+            }
+          },
+          "required": [],
+          "title": "Prometheus metrics details",
+          "type": "object"
         },
         "replica": {
-          "additionalProperties": true,
           "properties": {
+            "kind": {
+              "description": "Allowed values: `DaemonSet` or `StatefulSet`",
+              "enum": [
+                "DaemonSet",
+                "StatefulSet"
+              ],
+              "title": "Workload Kind",
+              "type": "string"
+            },
             "persistence": {
-              "additionalProperties": true,
               "properties": {
-                "accessModes": {
-                  "items": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      }
-                    ],
-                    "required": []
-                  },
-                  "required": [],
-                  "title": "accessModes"
-                },
                 "enabled": {
-                  "default": "false",
-                  "required": [],
-                  "title": "enabled"
+                  "description": "Enable persistence using Persistent Volume Claims",
+                  "title": "Enable persistence",
+                  "type": "boolean"
                 },
                 "size": {
-                  "default": "1Gi",
-                  "required": [],
-                  "title": "size"
-                },
-                "storageClass": {
-                  "default": "",
-                  "required": [],
-                  "title": "storageClass"
+                  "title": "Persistent Volume Size",
+                  "type": "string"
                 }
               },
               "required": [],
-              "title": "persistence"
-            },
-            "priorityClassName": {
-              "default": "",
-              "required": [],
-              "title": "priorityClassName"
+              "title": "Persistence for Redis replicas",
+              "type": "object"
             },
             "replicaCount": {
-              "default": "3",
-              "required": [],
-              "title": "replicaCount"
-            },
-            "resources": {
-              "additionalProperties": true,
-              "required": [],
-              "title": "resources"
+              "title": "Number of Redis replicas",
+              "type": "integer"
             }
           },
           "required": [],
-          "title": "replica"
+          "title": "Redis replicas settings",
+          "type": "object"
+        },
+        "volumePermissions": {
+          "properties": {
+            "enabled": {
+              "description": "Use an init container to set required folder permissions on the data volume before mounting it in the final destination",
+              "title": "Enable Init Containers",
+              "type": "boolean"
+            }
+          },
+          "required": [],
+          "type": "object"
         }
       },
       "required": [],
-      "title": "redis"
+      "title": "redis",
+      "type": "object"
     },
     "secret": {
       "additionalProperties": false,

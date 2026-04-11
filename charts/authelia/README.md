@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.10.51](https://img.shields.io/badge/Version-0.10.51-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.16](https://img.shields.io/badge/AppVersion-4.39.16-informational?style=flat-square)
+![Version: 0.10.53](https://img.shields.io/badge/Version-0.10.53-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.17](https://img.shields.io/badge/AppVersion-4.39.17-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -1920,6 +1920,288 @@ false
 </pre>
 </td>
 			<td>Enable the developer pprof handlers.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "openid_connect_pushed_authorization_request": {
+    "buckets": [],
+    "enable": true
+  },
+  "openid_connect_token": {
+    "buckets": [],
+    "enable": true
+  },
+  "reset_password_finish": {
+    "buckets": [],
+    "enable": true
+  },
+  "reset_password_start": {
+    "buckets": [],
+    "enable": true
+  },
+  "second_factor_duo": {
+    "buckets": [],
+    "enable": true
+  },
+  "second_factor_totp": {
+    "buckets": [],
+    "enable": true
+  },
+  "session_elevation_finish": {
+    "buckets": [],
+    "enable": true
+  },
+  "session_elevation_start": {
+    "buckets": [],
+    "enable": true
+  }
+}
+</pre>
+</td>
+			<td>Configure the rate limits for various endpoints.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.openid_connect_pushed_authorization_request</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "buckets": [],
+  "enable": true
+}
+</pre>
+</td>
+			<td>Configure the rate limits for the OpenID Connect 1.0 Pushed Authorization Request endpoint.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.openid_connect_pushed_authorization_request.buckets</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>List of rate limit buckets.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.openid_connect_pushed_authorization_request.enable</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Enables this rate limit.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.openid_connect_token</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "buckets": [],
+  "enable": true
+}
+</pre>
+</td>
+			<td>Configure the rate limits for the OpenID Connect 1.0 Token endpoint.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.openid_connect_token.buckets</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>List of rate limit buckets.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.openid_connect_token.enable</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Enables this rate limit.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.reset_password_finish</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "buckets": [],
+  "enable": true
+}
+</pre>
+</td>
+			<td>Configure the rate limits for the reset password finish endpoint.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.reset_password_finish.buckets</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>List of rate limit buckets.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.reset_password_finish.enable</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Enables this rate limit.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.reset_password_start</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "buckets": [],
+  "enable": true
+}
+</pre>
+</td>
+			<td>Configure the rate limits for the reset password start endpoint.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.reset_password_start.buckets</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>List of rate limit buckets.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.reset_password_start.enable</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Enables this rate limit.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.second_factor_duo</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "buckets": [],
+  "enable": true
+}
+</pre>
+</td>
+			<td>Configure the rate limits for the second factor DUO endpoint.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.second_factor_duo.buckets</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>List of rate limit buckets.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.second_factor_duo.enable</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Enables this rate limit.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.second_factor_totp</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "buckets": [],
+  "enable": true
+}
+</pre>
+</td>
+			<td>Configure the rate limits for the second factor TOTP endpoint.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.second_factor_totp.buckets</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>List of rate limit buckets.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.second_factor_totp.enable</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Enables this rate limit.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.session_elevation_finish</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "buckets": [],
+  "enable": true
+}
+</pre>
+</td>
+			<td>Configure the rate limits for the session elevation finish endpoint.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.session_elevation_finish.buckets</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>List of rate limit buckets.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.session_elevation_finish.enable</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Enables this rate limit.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.session_elevation_start</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "buckets": [],
+  "enable": true
+}
+</pre>
+</td>
+			<td>Configure the rate limits for the session elevation start endpoint.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.session_elevation_start.buckets</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>List of rate limit buckets.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.session_elevation_start.enable</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Enables this rate limit.</td>
 		</tr>
 		<tr>
 			<td>configMap.server.headers.csp_template</td>

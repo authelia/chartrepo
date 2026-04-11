@@ -1511,6 +1511,193 @@ configMap:
       #       - 'Basic'
       #     - name: 'CookieSession'
 
+      # -- Configure the rate limits for various endpoints.
+      rate_limits:
+
+        # -- Configure the rate limits for the reset password start endpoint.
+        reset_password_start:
+
+          # -- Enables this rate limit.
+          enable: true
+
+          # @schema
+          # type: array
+          # required: false
+          # items:
+          #   type: object
+          #   required: false
+          #   properties:
+          #     period:
+          #       type: [integer, string]
+          #       required: true
+          #     limit:
+          #       type: integer
+          #       required: true
+          # @schema
+          # -- List of rate limit buckets.
+          buckets: []
+
+        # -- Configure the rate limits for the reset password finish endpoint.
+        reset_password_finish:
+
+          # -- Enables this rate limit.
+          enable: true
+
+          # @schema
+          # type: array
+          # required: false
+          # items:
+          #   type: object
+          #   required: false
+          #   properties:
+          #     period:
+          #       type: [integer, string]
+          #       required: true
+          #     limit:
+          #       type: integer
+          #       required: true
+          # @schema
+          # -- List of rate limit buckets.
+          buckets: []
+
+        # -- Configure the rate limits for the second factor TOTP endpoint.
+        second_factor_totp:
+
+          # -- Enables this rate limit.
+          enable: true
+
+          # @schema
+          # type: array
+          # required: false
+          # items:
+          #   type: object
+          #   required: false
+          #   properties:
+          #     period:
+          #       type: [integer, string]
+          #       required: true
+          #     limit:
+          #       type: integer
+          #       required: true
+          # @schema
+          # -- List of rate limit buckets.
+          buckets: []
+
+        # -- Configure the rate limits for the second factor DUO endpoint.
+        second_factor_duo:
+
+          # -- Enables this rate limit.
+          enable: true
+
+          # @schema
+          # type: array
+          # required: false
+          # items:
+          #   type: object
+          #   required: false
+          #   properties:
+          #     period:
+          #       type: [integer, string]
+          #       required: true
+          #     limit:
+          #       type: integer
+          #       required: true
+          # @schema
+          # -- List of rate limit buckets.
+          buckets: []
+
+        # -- Configure the rate limits for the session elevation start endpoint.
+        session_elevation_start:
+
+          # -- Enables this rate limit.
+          enable: true
+
+          # @schema
+          # type: array
+          # required: false
+          # items:
+          #   type: object
+          #   required: false
+          #   properties:
+          #     period:
+          #       type: [integer, string]
+          #       required: true
+          #     limit:
+          #       type: integer
+          #       required: true
+          # @schema
+          # -- List of rate limit buckets.
+          buckets: []
+
+        # -- Configure the rate limits for the session elevation finish endpoint.
+        session_elevation_finish:
+
+          # -- Enables this rate limit.
+          enable: true
+
+          # @schema
+          # type: array
+          # required: false
+          # items:
+          #   type: object
+          #   required: false
+          #   properties:
+          #     period:
+          #       type: [integer, string]
+          #       required: true
+          #     limit:
+          #       type: integer
+          #       required: true
+          # @schema
+          # -- List of rate limit buckets.
+          buckets: []
+
+        # -- Configure the rate limits for the OpenID Connect 1.0 Token endpoint.
+        openid_connect_token:
+
+          # -- Enables this rate limit.
+          enable: true
+
+          # @schema
+          # type: array
+          # required: false
+          # items:
+          #   type: object
+          #   required: false
+          #   properties:
+          #     period:
+          #       type: [integer, string]
+          #       required: true
+          #     limit:
+          #       type: integer
+          #       required: true
+          # @schema
+          # -- List of rate limit buckets.
+          buckets: []
+
+        # -- Configure the rate limits for the OpenID Connect 1.0 Pushed Authorization Request endpoint.
+        openid_connect_pushed_authorization_request:
+
+          # -- Enables this rate limit.
+          enable: true
+
+          # @schema
+          # type: array
+          # required: false
+          # items:
+          #   type: object
+          #   required: false
+          #   properties:
+          #     period:
+          #       type: [integer, string]
+          #       required: true
+          #     limit:
+          #       type: integer
+          #       required: true
+          # @schema
+          # -- List of rate limit buckets.
+          buckets: []
+
   # @schema
   # required: false
   # @schema
