@@ -385,6 +385,12 @@ ingress:
         # @schema
         # required: false
         # @schema
+        # -- Sets the value for maxResponseBodySize.
+        maxResponseBodySize: 0
+
+        # @schema
+        # required: false
+        # @schema
         # -- Defines the ForwardAuth Middleware Auth Response Headers.
         authResponseHeaders:
           - 'Remote-User'

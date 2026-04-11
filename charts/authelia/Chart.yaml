@@ -1,6 +1,6 @@
 apiVersion: v2
 name: authelia
-version: 0.10.50
+version: 0.10.51
 kubeVersion: ">= 1.30.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
@@ -57,8 +57,7 @@ annotations:
   artifacthub.io/category: security
   artifacthub.io/changes: |
     - kind: added
-      description: Updated to Authelia 4.39.16.
-    - kind: added
+      description: Support for Traefik maxResponseBodySize.
   artifacthub.io/images: |
     - name: authelia/authelia
       image: ghcr.io/authelia/authelia:4.39.16

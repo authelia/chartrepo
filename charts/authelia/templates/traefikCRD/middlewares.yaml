@@ -15,6 +15,9 @@ spec:
   forwardAuth:
     address: {{ (include "authelia.ingress.traefikCRD.middleware.forwardAuth.address" (merge (dict "Name" $name) $)) | squote }}
     trustForwardHeader: true
+    {{- if gt  $.Values.ingress.traefikCRD.middlewares.auth.maxResponseBodySize 0 }}
+    maxResponseBodySize: $.Values.ingress.traefikCRD.middlewares.auth.maxResponseBodySize 0)
+    {{- end }}
     {{- with $.Values.ingress.traefikCRD.middlewares.auth.authResponseHeaders }}
     authResponseHeaders:
     {{- range . }}

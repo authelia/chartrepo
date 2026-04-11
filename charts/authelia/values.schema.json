@@ -3427,6 +3427,12 @@
                       "required": [],
                       "title": "endpointOverride"
                     },
+                    "maxResponseBodySize": {
+                      "default": "0",
+                      "description": "Sets the value for maxResponseBodySize.",
+                      "required": [],
+                      "title": "maxResponseBodySize"
+                    },
                     "nameOverride": {
                       "default": "",
                       "description": "Overrides the ForwardAuth Middleware (auth) name.",
