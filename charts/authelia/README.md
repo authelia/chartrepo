@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.10.50](https://img.shields.io/badge/Version-0.10.50-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.16](https://img.shields.io/badge/AppVersion-4.39.16-informational?style=flat-square)
+![Version: 0.10.51](https://img.shields.io/badge/Version-0.10.51-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.16](https://img.shields.io/badge/AppVersion-4.39.16-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -86,7 +86,7 @@ It is expected you will configure at least the following sections/values:
 
 ## Requirements
 
-Kubernetes: `>= 1.13.0-0`
+Kubernetes: `>= 1.30.0-0`
 
 | Repository | Name | Version |
 |------------|------|---------|
@@ -3245,6 +3245,15 @@ false
 </pre>
 </td>
 			<td>Overrides the endpoint used for the middleware. This is the portion of the endpoint after '/api/authz/'.</td>
+		</tr>
+		<tr>
+			<td>ingress.traefikCRD.middlewares.auth.maxResponseBodySize</td>
+			<td>int</td>
+			<td><pre lang="json">
+0
+</pre>
+</td>
+			<td>Sets the value for maxResponseBodySize.</td>
 		</tr>
 		<tr>
 			<td>ingress.traefikCRD.middlewares.auth.nameOverride</td>
