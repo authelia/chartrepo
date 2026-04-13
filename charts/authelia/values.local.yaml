@@ -390,8 +390,8 @@ ingress:
         # @schema
         # required: false
         # @schema
-        # -- Sets the value for maxResponseBodySize.
-        maxResponseBodySize: 0
+        # -- Sets an appropriate value for maxResponseBodySize.
+        enableMMaxResponseBodySize: false
 
         # @schema
         # required: false

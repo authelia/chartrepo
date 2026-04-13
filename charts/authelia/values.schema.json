@@ -3745,17 +3745,17 @@
                       "required": [],
                       "title": "authResponseHeaders"
                     },
+                    "enableMMaxResponseBodySize": {
+                      "default": "false",
+                      "description": "Sets an appropriate value for maxResponseBodySize.",
+                      "required": [],
+                      "title": "enableMMaxResponseBodySize"
+                    },
                     "endpointOverride": {
                       "default": "",
                       "description": "Overrides the endpoint used for the middleware. This is the portion of the endpoint after '/api/authz/'.",
                       "required": [],
                       "title": "endpointOverride"
-                    },
-                    "maxResponseBodySize": {
-                      "default": "0",
-                      "description": "Sets the value for maxResponseBodySize.",
-                      "required": [],
-                      "title": "maxResponseBodySize"
                     },
                     "nameOverride": {
                       "default": "",
