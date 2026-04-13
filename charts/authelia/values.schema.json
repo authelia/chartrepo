@@ -3745,11 +3745,11 @@
                       "required": [],
                       "title": "authResponseHeaders"
                     },
-                    "enableMMaxResponseBodySize": {
+                    "enableMaxResponseBodySize": {
                       "default": "false",
                       "description": "Sets an appropriate value for maxResponseBodySize.",
                       "required": [],
-                      "title": "enableMMaxResponseBodySize"
+                      "title": "enableMaxResponseBodySize"
                     },
                     "endpointOverride": {
                       "default": "",
