@@ -3150,8 +3150,10 @@ configMap:
 
     # @schema
     # required: true
+    # type: array
     # items:
     #   type: object
+    #   additionalProperties: false
     #   properties:
     #     subdomain:
     #       type: string
