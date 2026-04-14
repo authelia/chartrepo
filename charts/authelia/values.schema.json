@@ -2544,6 +2544,7 @@
             "cookies": {
               "description": "Session Cookies list.",
               "items": {
+                "additionalProperties": false,
                 "properties": {
                   "default_redirection_url": {
                     "format": "uri",
@@ -2588,8 +2589,8 @@
                 "required": [],
                 "type": "object"
               },
-              "required": [],
-              "title": "cookies"
+              "title": "cookies",
+              "type": "array"
             },
             "encryption_key": {
               "additionalProperties": false,
