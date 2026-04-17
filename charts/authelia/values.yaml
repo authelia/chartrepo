@@ -5165,3 +5165,11 @@ redis:
       # required: false
       # @schema
       size: '1Gi'
+
+# @schema
+# required: false
+# @schema
+# -- This field can include any extra objects to include in the rendered
+# manifest. The allowed contents can be either string or yaml objects. String
+      # objects will be templated with tpl.
+extraObjects: []
