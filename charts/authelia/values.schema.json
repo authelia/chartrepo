@@ -687,7 +687,7 @@
                       "default": "~",
                       "description": "The secret name. The ~ name is special as it is the secret we generate either automatically or via the\nsecret_value option below.",
                       "title": "secret_name",
-                      "type": "null"
+                      "type": ["string", "null"]
                     },
                     "value": {
                       "default": "",
@@ -1015,7 +1015,7 @@
                   "default": "~",
                   "description": "The secret name. The ~ name is special as it is the secret we generate either automatically or via the\nsecret_value option below.",
                   "title": "secret_name",
-                  "type": "null"
+                  "type": ["string", "null"]
                 },
                 "value": {
                   "default": "",
@@ -2036,7 +2036,7 @@
                       "default": "~",
                       "description": "The secret name. The ~ name is special as it is the secret we generate either automatically or via the\nsecret_value option below.",
                       "title": "secret_name",
-                      "type": "null"
+                      "type": ["string", "null"]
                     },
                     "value": {
                       "default": "",
@@ -2584,7 +2584,7 @@
                       "default": "~",
                       "description": "The secret name. The ~ name is special as it is the secret we generate either automatically or via the\nsecret_value option below.",
                       "title": "secret_name",
-                      "type": "null"
+                      "type": ["string", "null"]
                     },
                     "value": {
                       "default": "",
@@ -2759,7 +2759,7 @@
                       "default": "~",
                       "description": "The secret name. The ~ name is special as it is the secret we generate either automatically or via the\nsecret_value option below.",
                       "title": "secret_name",
-                      "type": "null"
+                      "type": ["string", "null"]
                     },
                     "value": {
                       "default": "",
@@ -3679,7 +3679,7 @@
                   "default": "~",
                   "description": "The secret name. The ~ name is special as it is the secret we generate either automatically or via the\nsecret_value option below.",
                   "title": "secret_name",
-                  "type": "null"
+                  "type": ["string", "null"]
                 },
                 "value": {
                   "default": "",
@@ -3782,7 +3782,7 @@
                           "default": "~",
                           "description": "The secret name. The ~ name is special as it is the secret we generate either automatically or via the\nsecret_value option below.",
                           "title": "secret_name",
-                          "type": "null"
+                          "type": ["string", "null"]
                         },
                         "value": {
                           "default": "",
@@ -4023,7 +4023,7 @@
                   "default": "~",
                   "description": "The secret name. The ~ name is special as it is the secret we generate either automatically or via the\nsecret_value option below.",
                   "title": "secret_name",
-                  "type": "null"
+                  "type": ["string", "null"]
                 },
                 "value": {
                   "default": "",
@@ -4110,7 +4110,7 @@
                       "default": "~",
                       "description": "The secret name. The ~ name is special as it is the secret we generate either automatically or via the\nsecret_value option below.",
                       "title": "secret_name",
-                      "type": "null"
+                      "type": ["string", "null"]
                     },
                     "value": {
                       "default": "",
@@ -4247,7 +4247,7 @@
                       "default": "~",
                       "description": "The secret name. The ~ name is special as it is the secret we generate either automatically or via the\nsecret_value option below.",
                       "title": "secret_name",
-                      "type": "null"
+                      "type": ["string", "null"]
                     },
                     "value": {
                       "default": "",
