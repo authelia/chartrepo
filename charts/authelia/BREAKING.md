@@ -3,6 +3,26 @@
 During the beta we will generally not be documenting breaking chart changes but there are exceptions and they are noted
 below.
 
+## 0.11.0
+
+The subcharts for redis, PostgreSQL, and MariaDB have been removed. Should someone wish to add support for 
+[CloudNativePG](https://cloudnative-pg.io/) and [Opstree Solutions Redis Operator](https://redis-operator.opstree.dev/)
+without deploying them then we'll accept these changes.
+
+We will not be adding support for MariaDB/MySQL back to the chart.
+
+We are likely to make the future following changes:
+
+1. Removal of all stateful settings from the chart:
+   1. Authentication Backend: File
+   2. Storage Backend: SQLite3
+   3. Notification Backend: File
+2. Removal of the Storage Backend MySQL
+
+This will mean the supported configuration for this chart will only be with PostgreSQL, LDAP, and Redis or Redis 
+Equivalent. This will likely occur after we support sessions and authentication details being stored in the Storage
+Backend where those will also be supported by the chart.
+
 ## 0.10.0
 
 This chart will be the required version for 4.39.0 and it will have a couple minor changes to the configuration.
