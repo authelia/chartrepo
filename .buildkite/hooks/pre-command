@@ -9,7 +9,7 @@ if [[ "${BUILDKITE_STEP_KEY}" == "index" ]]; then
   git config user.email "autheliabot@users.noreply.github.com"
 fi
 
-if [[ "${BUILDKITE_STEP_KEY}" == "upload" ]] || [[ "${BUILDKITE_STEP_KEY}" == "index" ]]; then
+if [[ "${BUILDKITE_STEP_KEY}" == "upload" ]] || [[ "${BUILDKITE_STEP_KEY}" == "index" ]] || [[ "${BUILDKITE_STEP_KEY}" == "release-oci" ]]; then
   echo "--- :arrow_down: Downloading artifacts"
 
   rm -rf .cr-release-packages .cr-index
