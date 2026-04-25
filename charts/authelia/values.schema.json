@@ -1,6 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "additionalProperties": false,
+  "description": "Configuration values for the Authelia Helm Chart",
   "properties": {
     "annotations": {
       "additionalProperties": true,
@@ -686,8 +687,12 @@
                     "secret_name": {
                       "default": "~",
                       "description": "The secret name. The ~ name is special as it is the secret we generate either automatically or via the\nsecret_value option below.",
+                      "required": [],
                       "title": "secret_name",
-                      "type": "null"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "value": {
                       "default": "",
@@ -698,7 +703,6 @@
                   },
                   "required": [
                     "disabled",
-                    "secret_name",
                     "value",
                     "path"
                   ],
@@ -1014,8 +1018,12 @@
                 "secret_name": {
                   "default": "~",
                   "description": "The secret name. The ~ name is special as it is the secret we generate either automatically or via the\nsecret_value option below.",
+                  "required": [],
                   "title": "secret_name",
-                  "type": "null"
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 },
                 "value": {
                   "default": "",
@@ -1026,7 +1034,6 @@
               },
               "required": [
                 "disabled",
-                "secret_name",
                 "value",
                 "path"
               ],
@@ -1370,7 +1377,7 @@
                         ],
                         "type": "string"
                       },
-                      "grant_types:": {
+                      "grant_types": {
                         "items": {
                           "enum": [
                             "authorization_code",
@@ -1674,6 +1681,7 @@
                       },
                       "redirect_uris": {
                         "items": {
+                          "format": "uri",
                           "type": "string"
                         },
                         "type": "array"
@@ -1742,6 +1750,7 @@
                       },
                       "request_uris": {
                         "items": {
+                          "format": "uri",
                           "type": "string"
                         },
                         "type": "array"
@@ -1826,6 +1835,7 @@
                         "type": "array"
                       },
                       "sector_identifier_uri": {
+                        "format": "uri",
                         "type": "string"
                       },
                       "token_endpoint_auth_method": {
@@ -2035,8 +2045,12 @@
                     "secret_name": {
                       "default": "~",
                       "description": "The secret name. The ~ name is special as it is the secret we generate either automatically or via the\nsecret_value option below.",
+                      "required": [],
                       "title": "secret_name",
-                      "type": "null"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "value": {
                       "default": "",
@@ -2047,7 +2061,6 @@
                   },
                   "required": [
                     "disabled",
-                    "secret_name",
                     "value",
                     "path"
                   ],
@@ -2583,8 +2596,12 @@
                     "secret_name": {
                       "default": "~",
                       "description": "The secret name. The ~ name is special as it is the secret we generate either automatically or via the\nsecret_value option below.",
+                      "required": [],
                       "title": "secret_name",
-                      "type": "null"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "value": {
                       "default": "",
@@ -2595,7 +2612,6 @@
                   },
                   "required": [
                     "disabled",
-                    "secret_name",
                     "value",
                     "path"
                   ],
@@ -2758,8 +2774,12 @@
                     "secret_name": {
                       "default": "~",
                       "description": "The secret name. The ~ name is special as it is the secret we generate either automatically or via the\nsecret_value option below.",
+                      "required": [],
                       "title": "secret_name",
-                      "type": "null"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "value": {
                       "default": "",
@@ -2770,7 +2790,6 @@
                   },
                   "required": [
                     "disabled",
-                    "secret_name",
                     "value",
                     "path"
                   ],
@@ -3678,8 +3697,12 @@
                 "secret_name": {
                   "default": "~",
                   "description": "The secret name. The ~ name is special as it is the secret we generate either automatically or via the\nsecret_value option below.",
+                  "required": [],
                   "title": "secret_name",
-                  "type": "null"
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 },
                 "value": {
                   "default": "",
@@ -3690,7 +3713,6 @@
               },
               "required": [
                 "disabled",
-                "secret_name",
                 "value",
                 "path"
               ],
@@ -3781,8 +3803,12 @@
                         "secret_name": {
                           "default": "~",
                           "description": "The secret name. The ~ name is special as it is the secret we generate either automatically or via the\nsecret_value option below.",
+                          "required": [],
                           "title": "secret_name",
-                          "type": "null"
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "value": {
                           "default": "",
@@ -3793,7 +3819,6 @@
                       },
                       "required": [
                         "disabled",
-                        "secret_name",
                         "value",
                         "path"
                       ],
@@ -4022,8 +4047,12 @@
                 "secret_name": {
                   "default": "~",
                   "description": "The secret name. The ~ name is special as it is the secret we generate either automatically or via the\nsecret_value option below.",
+                  "required": [],
                   "title": "secret_name",
-                  "type": "null"
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 },
                 "value": {
                   "default": "",
@@ -4034,7 +4063,6 @@
               },
               "required": [
                 "disabled",
-                "secret_name",
                 "value",
                 "path"
               ],
@@ -4109,8 +4137,12 @@
                     "secret_name": {
                       "default": "~",
                       "description": "The secret name. The ~ name is special as it is the secret we generate either automatically or via the\nsecret_value option below.",
+                      "required": [],
                       "title": "secret_name",
-                      "type": "null"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "value": {
                       "default": "",
@@ -4121,7 +4153,6 @@
                   },
                   "required": [
                     "disabled",
-                    "secret_name",
                     "value",
                     "path"
                   ],
@@ -4246,8 +4277,12 @@
                     "secret_name": {
                       "default": "~",
                       "description": "The secret name. The ~ name is special as it is the secret we generate either automatically or via the\nsecret_value option below.",
+                      "required": [],
                       "title": "secret_name",
-                      "type": "null"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "value": {
                       "default": "",
@@ -4258,7 +4293,6 @@
                   },
                   "required": [
                     "disabled",
-                    "secret_name",
                     "value",
                     "path"
                   ],
@@ -5366,6 +5400,7 @@
           "title": "annotations"
         },
         "egress": {
+          "description": "The allowed egress rules.",
           "items": {
             "$ref": "https://charts.authelia.com/definitions.json#/definitions/io.k8s.api.networking.v1.NetworkPolicyEgressRule",
             "required": []
@@ -5380,6 +5415,7 @@
           "type": "boolean"
         },
         "ingress": {
+          "description": "The allowed ingress rules.",
           "items": {
             "$ref": "https://charts.authelia.com/definitions.json#/definitions/io.k8s.api.networking.v1.NetworkPolicyIngressRule",
             "required": []
@@ -5518,7 +5554,7 @@
         },
         "labels": {
           "additionalProperties": true,
-          "description": "Extra annotations for the PersistentVolumeClaim related manifests.",
+          "description": "Extra labels for the PersistentVolumeClaim related manifests.",
           "required": [],
           "title": "labels"
         },
@@ -5542,6 +5578,7 @@
         },
         "selector": {
           "additionalProperties": true,
+          "description": "PersistentVolumeClaim selector.",
           "required": [],
           "title": "selector"
         },
@@ -5956,7 +5993,7 @@
                 },
                 "appArmorProfile": {
                   "properties": {
-                    "localHostProfile": {
+                    "localhostProfile": {
                       "type": "string"
                     },
                     "type": {
@@ -6053,7 +6090,7 @@
               "properties": {
                 "appArmorProfile": {
                   "properties": {
-                    "localHostProfile": {
+                    "localhostProfile": {
                       "type": "string"
                     },
                     "type": {
@@ -6547,5 +6584,6 @@
     "certificates",
     "persistence"
   ],
+  "title": "Authelia Helm Chart Values",
   "type": "object"
 }

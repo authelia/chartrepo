@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.11.3](https://img.shields.io/badge/Version-0.11.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.19](https://img.shields.io/badge/AppVersion-4.39.19-informational?style=flat-square)
+![Version: 0.11.4](https://img.shields.io/badge/Version-0.11.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.19](https://img.shields.io/badge/AppVersion-4.39.19-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -28,7 +28,7 @@ which users should be aware of:
 ## Getting Started
 
 1. Visit https://charts.authelia.com and follow the instructions to install the chart repo.
-2. Configure the chart by setting the various [parameters](#parameters), either in a locally downloaded values.yaml or
+2. Configure the chart by setting the various [values](#values), either in a locally downloaded values.yaml or
    in the next step.
 3. Install the chart with `helm install authelia authelia/authelia` and optionally set your values with `--values values.yaml` or
    via `--set [parameter]=[value]`.
@@ -489,9 +489,9 @@ Kubernetes: `>= 1.30.0-0`
 | labels | object | `{}` | Extra labels for all generated resources. Most manifest types have a more specific labels value associated with them. |
 | nameOverride | string | `nil` | The name override for this deployment. |
 | networkPolicy.annotations | object | `{}` | Extra annotations for the NetworkPolicy manifest. |
-| networkPolicy.egress | list | `[]` |  |
+| networkPolicy.egress | list | `[]` | The allowed egress rules. |
 | networkPolicy.enabled | bool | `false` | Enable the NetworkPolicy. |
-| networkPolicy.ingress | list | `[]` |  |
+| networkPolicy.ingress | list | `[]` | The allowed ingress rules. |
 | networkPolicy.labels | object | `{}` | Extra labels for the NetworkPolicy manifest. |
 | networkPolicy.policyTypes | list | `["Ingress"]` | The Policy Types such as Ingress or Egress. |
 | persistence.accessModes | list | `["ReadWriteOnce"]` | PersistentVolumeClaim access modes. |
@@ -502,7 +502,7 @@ Kubernetes: `>= 1.30.0-0`
 | persistence.extraPersistentVolumeClaims.example.annotations | object | `{}` | Extra annotations for this PersistentVolumeClaim manifest. |
 | persistence.extraPersistentVolumeClaims.example.enabled | bool | `false` | Enable this extra PersistentVolumeClaim. |
 | persistence.extraPersistentVolumeClaims.example.existingClaim | string | `""` | Mounts an existing PersistentVolumeClaim. |
-| persistence.extraPersistentVolumeClaims.example.labels | object | `{}` | Extra annotations for this PersistentVolumeClaim manifest. |
+| persistence.extraPersistentVolumeClaims.example.labels | object | `{}` | Extra labels for this PersistentVolumeClaim manifest. |
 | persistence.extraPersistentVolumeClaims.example.mountPropagation | string | `""` | Sets the mount propagation value for the PersistentVolumeClaim. |
 | persistence.extraPersistentVolumeClaims.example.readOnly | bool | `false` | Mounts the PersistentVolumeClaim in read-only mode. |
 | persistence.extraPersistentVolumeClaims.example.selector | object | `{}` | Extra PersistentVolumeClaim selector. |
@@ -511,10 +511,10 @@ Kubernetes: `>= 1.30.0-0`
 | persistence.extraPersistentVolumeClaims.example.subPath | string | `""` | Mounts specifically a subpath of the PersistentVolumeClaim. |
 | persistence.extraPersistentVolumeClaims.example.subPathExpr | string | `""` | Uses an expression to mount a subpath of the PersistentVolumeClaim. |
 | persistence.extraPersistentVolumeClaims.example.volumeName | string | `""` | Persistent Volume Name. Useful if Persistent Volumes have been provisioned in advance and you want to use a specific one. |
-| persistence.labels | object | `{}` | Extra annotations for the PersistentVolumeClaim related manifests. |
+| persistence.labels | object | `{}` | Extra labels for the PersistentVolumeClaim related manifests. |
 | persistence.mountPropagation | string | `""` | Sets the mount propagation value for the PersistentVolumeClaim. |
 | persistence.readOnly | bool | `false` | Mounts the PersistentVolumeClaim in read-only mode. |
-| persistence.selector | object | `{}` |  |
+| persistence.selector | object | `{}` | PersistentVolumeClaim selector. |
 | persistence.size | string | `"100Mi"` | PersistentVolumeClaim volume size. |
 | persistence.storageClass | string | `""` | Uses the specified storageClass for the PersistentVolumeClaim. |
 | persistence.subPath | string | `""` | Mounts specifically a subpath of the PersistentVolumeClaim. |
@@ -523,7 +523,7 @@ Kubernetes: `>= 1.30.0-0`
 | pod.annotations | object | `{}` | Extra annotations for the Pod spec. |
 | pod.args | list | `[]` | Modifies the args for the command. Useful for debugging. |
 | pod.autoscaling.annotations | object | `{}` | Extra annotations for the HorizontalPodAutoscaler manifest. |
-| pod.autoscaling.behavior | object | `{}` |  |
+| pod.autoscaling.behavior | object | `{}` | Configuration of the autoscaling behavior. |
 | pod.autoscaling.enabled | bool | `false` | Enable the HorizontalPodAutoscaler which requires the in cluster metrics server. |
 | pod.autoscaling.labels | object | `{}` | Extra labels for the HorizontalPodAutoscaler manifest. |
 | pod.command | list | `[]` | Modifies the command. Useful for debugging. |
