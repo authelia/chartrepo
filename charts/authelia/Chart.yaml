@@ -1,7 +1,7 @@
 apiVersion: v2
 name: authelia
-version: 0.10.42
-kubeVersion: ">= 1.13.0-0"
+version: 0.11.0
+kubeVersion: ">= 1.30.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
 keywords:
@@ -33,35 +33,22 @@ home: https://www.authelia.com
 sources:
   - https://github.com/authelia/chartrepo/tree/master/charts/authelia
   - https://www.github.com/authelia/authelia
-dependencies:
-  - name: postgresql
-    version: ~15.5.11
-    repository: https://charts.bitnami.com/bitnami
-    condition: configMap.storage.postgres.deploy
-  - name: mariadb
-    version: ~18.2.4
-    repository: https://charts.bitnami.com/bitnami
-    condition: configMap.storage.mysql.deploy
-  - name: redis
-    version: ~19.6.0
-    repository: https://charts.bitnami.com/bitnami
-    condition: configMap.session.redis.deploy
+dependencies: []
 maintainers:
   - name: james-d-elliott
     email: james-d-elliott@users.noreply.github.com
     url: https://github.com/james-d-elliott
 icon: https://avatars2.githubusercontent.com/u/59122411?s=200&v=4
-appVersion: 4.39.6
+appVersion: 4.39.19
 deprecated: false
 annotations:
   artifacthub.io/category: security
   artifacthub.io/changes: |
-    - kind: added
-      description: Added support for running extra containers in the Authelia pod
-      links: []
+    - kind: removed
+      description: Removed subcharts.
   artifacthub.io/images: |
     - name: authelia/authelia
-      image: ghcr.io/authelia/authelia:4.39.5
+      image: ghcr.io/authelia/authelia:4.39.19
       whitelisted: false
       platforms:
         - linux/amd64
@@ -71,6 +58,8 @@ annotations:
   artifacthub.io/links: |
     - name: Chart Repository
       url: https://charts.authelia.com/
+    - name: OCI registry
+      url: oci://ghcr.io/authelia/chartrepo
     - name: Website
       url: https://www.authelia.com/
     - name: GitHub Repository

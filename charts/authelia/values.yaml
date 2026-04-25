@@ -182,6 +182,13 @@ service:
   # -- (string) Cluster IP for the Authelia service manifest.
   clusterIP: ~
 
+  # @schema
+  # type: [string, null]
+  # required: false
+  # @schema
+  # -- (string) Use value Local to get external IP addresses.
+  externalTrafficPolicy: ~
+
 # @schema
 # required: false
 # @schema
@@ -264,6 +271,8 @@ ingress:
 
     # @schema
     # required: false
+    # items:
+    #   $ref: https://charts.authelia.com/definitions.json#/definitions/io.k8s.networking.gateway.v1.ParentReference
     # @schema
     # -- Configure the parent references for the HTTPRoute manifest.
     parentRefs: []
@@ -372,6 +381,12 @@ ingress:
         # @schema
         # -- Overrides the endpoint used for the middleware. This is the portion of the endpoint after '/api/authz/'.
         endpointOverride: ''
+
+        # @schema
+        # required: false
+        # @schema
+        # -- Sets an appropriate value for maxResponseBodySize.
+        enableMaxResponseBodySize: false
 
         # @schema
         # required: false
@@ -1490,6 +1505,193 @@ configMap:
       #       schemes:
       #       - 'Basic'
       #     - name: 'CookieSession'
+
+      # -- Configure the rate limits for various endpoints.
+      rate_limits:
+
+        # -- Configure the rate limits for the reset password start endpoint.
+        reset_password_start:
+
+          # -- Enables this rate limit.
+          enable: true
+
+          # @schema
+          # type: array
+          # required: false
+          # items:
+          #   type: object
+          #   required: false
+          #   properties:
+          #     period:
+          #       type: [integer, string]
+          #       required: true
+          #     limit:
+          #       type: integer
+          #       required: true
+          # @schema
+          # -- List of rate limit buckets.
+          buckets: []
+
+        # -- Configure the rate limits for the reset password finish endpoint.
+        reset_password_finish:
+
+          # -- Enables this rate limit.
+          enable: true
+
+          # @schema
+          # type: array
+          # required: false
+          # items:
+          #   type: object
+          #   required: false
+          #   properties:
+          #     period:
+          #       type: [integer, string]
+          #       required: true
+          #     limit:
+          #       type: integer
+          #       required: true
+          # @schema
+          # -- List of rate limit buckets.
+          buckets: []
+
+        # -- Configure the rate limits for the second factor TOTP endpoint.
+        second_factor_totp:
+
+          # -- Enables this rate limit.
+          enable: true
+
+          # @schema
+          # type: array
+          # required: false
+          # items:
+          #   type: object
+          #   required: false
+          #   properties:
+          #     period:
+          #       type: [integer, string]
+          #       required: true
+          #     limit:
+          #       type: integer
+          #       required: true
+          # @schema
+          # -- List of rate limit buckets.
+          buckets: []
+
+        # -- Configure the rate limits for the second factor DUO endpoint.
+        second_factor_duo:
+
+          # -- Enables this rate limit.
+          enable: true
+
+          # @schema
+          # type: array
+          # required: false
+          # items:
+          #   type: object
+          #   required: false
+          #   properties:
+          #     period:
+          #       type: [integer, string]
+          #       required: true
+          #     limit:
+          #       type: integer
+          #       required: true
+          # @schema
+          # -- List of rate limit buckets.
+          buckets: []
+
+        # -- Configure the rate limits for the session elevation start endpoint.
+        session_elevation_start:
+
+          # -- Enables this rate limit.
+          enable: true
+
+          # @schema
+          # type: array
+          # required: false
+          # items:
+          #   type: object
+          #   required: false
+          #   properties:
+          #     period:
+          #       type: [integer, string]
+          #       required: true
+          #     limit:
+          #       type: integer
+          #       required: true
+          # @schema
+          # -- List of rate limit buckets.
+          buckets: []
+
+        # -- Configure the rate limits for the session elevation finish endpoint.
+        session_elevation_finish:
+
+          # -- Enables this rate limit.
+          enable: true
+
+          # @schema
+          # type: array
+          # required: false
+          # items:
+          #   type: object
+          #   required: false
+          #   properties:
+          #     period:
+          #       type: [integer, string]
+          #       required: true
+          #     limit:
+          #       type: integer
+          #       required: true
+          # @schema
+          # -- List of rate limit buckets.
+          buckets: []
+
+        # -- Configure the rate limits for the OpenID Connect 1.0 Token endpoint.
+        openid_connect_token:
+
+          # -- Enables this rate limit.
+          enable: true
+
+          # @schema
+          # type: array
+          # required: false
+          # items:
+          #   type: object
+          #   required: false
+          #   properties:
+          #     period:
+          #       type: [integer, string]
+          #       required: true
+          #     limit:
+          #       type: integer
+          #       required: true
+          # @schema
+          # -- List of rate limit buckets.
+          buckets: []
+
+        # -- Configure the rate limits for the OpenID Connect 1.0 Pushed Authorization Request endpoint.
+        openid_connect_pushed_authorization_request:
+
+          # -- Enables this rate limit.
+          enable: true
+
+          # @schema
+          # type: array
+          # required: false
+          # items:
+          #   type: object
+          #   required: false
+          #   properties:
+          #     period:
+          #       type: [integer, string]
+          #       required: true
+          #     limit:
+          #       type: integer
+          #       required: true
+          # @schema
+          # -- List of rate limit buckets.
+          buckets: []
 
   # @schema
   # required: false
@@ -2948,8 +3150,10 @@ configMap:
 
     # @schema
     # required: true
+    # type: array
     # items:
     #   type: object
+    #   additionalProperties: false
     #   properties:
     #     subdomain:
     #       type: string
@@ -4036,6 +4240,30 @@ configMap:
       # @schema
       # required: false
       # @schema
+      # -- Enables introspecting JWT Profile Access Tokens using stateless checks. This is strongly discouraged.
+      enable_jwt_access_token_stateless_introspection: false
+
+      # @schema
+      # required: false
+      # @schema
+      # -- The JSON Web Algorithm used for signing the discovery metadata.
+      discovery_signed_response_alg: ''
+
+      # @schema
+      # required: false
+      # @schema
+      # -- The JSON Web Key ID used for signing the discovery metadata.
+      discovery_signed_response_key_id: ''
+
+      # @schema
+      # required: false
+      # @schema
+      # -- Enables requiring all Authorization Requests to be initiated using a Pushed Authorization Request.
+      require_pushed_authorization_requests: false
+
+      # @schema
+      # required: false
+      # @schema
       # -- Adjusts the parameter entropy requirements for nonce/state etc. SECURITY NOTICE: It's not recommended changing
       # this option, and highly discouraged to have it less than 8.
       minimum_parameter_entropy: 8
@@ -4647,293 +4875,3 @@ persistence:
       # required: false
       # @schema
       selector: {}
-
-# @schema
-# required: false
-# additionalProperties: true
-# @schema
-# -- Configure mariadb database subchart under this key.
-# This will be deployed when storage.mysql.deploy is set to true
-# Currently settings need to be manually copied from here to the storage.mysql section
-# For more options and to see the @default please see [mariadb chart documentation](https://github.com/bitnami/charts/tree/main/bitnami/mariadb)
-# @default -- `{}`
-mariadb:
-
-  # @schema
-  # required: false
-  # @schema
-  architecture: 'standalone'
-
-  # @schema
-  # required: false
-  # additionalProperties: true
-  # @schema
-  auth:
-
-    # @schema
-    # required: false
-    # @schema
-    database: 'authelia'
-
-    # @schema
-    # required: false
-    # @schema
-    username: 'authelia'
-
-    # @schema
-    # required: false
-    # @schema
-    password: 'authelia'
-
-    # @schema
-    # required: false
-    # @schema
-    rootPassword: 'authelia'
-
-  # @schema
-  # required: false
-  # additionalProperties: true
-  # @schema
-  primary:
-
-    # @schema
-    # required: false
-    # additionalProperties: true
-    # @schema
-    resources: {}
-
-    # @schema
-    # required: false
-    # additionalProperties: true
-    # @schema
-    persistence:
-
-      # @schema
-      # required: false
-      # @schema
-      enabled: false
-
-      # @schema
-      # required: false
-      # @schema
-      size: '1Gi'
-
-      # @schema
-      # required: false
-      # @schema
-      storageClass: ''
-
-# @schema
-# required: false
-# additionalProperties: true
-# @schema
-# -- Configure postgresql database subchart under this key.
-# This will be deployed when storage.postgres.deploy is set to true
-# Currently settings need to be manually copied from here to the storage.postgres section
-# For more options and to see the @default please see [postgresql chart documentation](https://github.com/bitnami/charts/tree/main/bitnami/postgresql)
-# @default -- `{}`
-postgresql:
-
-  # @schema
-  # required: false
-  # additionalProperties: true
-  # @schema
-  auth:
-
-    # @schema
-    # required: false
-    # @schema
-    postgresPassword: 'authelia'
-
-    # @schema
-    # required: false
-    # @schema
-    username: 'authelia'
-
-    # @schema
-    # required: false
-    # @schema
-    password: 'authelia'
-
-    # @schema
-    # required: false
-    # @schema
-    database: 'authelia'
-
-  # @schema
-  # required: false
-  # additionalProperties: true
-  # @schema
-  primary:
-
-    # @schema
-    # required: false
-    # additionalProperties: true
-    # @schema
-    persistence:
-
-      # @schema
-      # required: false
-      # @schema
-      enabled: false
-
-      # @schema
-      # required: false
-      # @schema
-      storageClass: ''
-
-      # @schema
-      # required: false
-      # @schema
-      size: '1Gi'
-
-    # @schema
-    # required: false
-    # additionalProperties: true
-    # @schema
-    resources: {}
-
-# @schema
-# required: false
-# additionalProperties: true
-# @schema
-# -- Configure redis database subchart under this key.
-# This will be deployed when session.redis.deploy is set to true
-# Currently settings need to be manually copied from here to the session.redis section
-# For more options and to see the @default please see [redis chart documentation](https://github.com/bitnami/charts/tree/main/bitnami/redis)
-# @default -- `{}`
-redis:
-
-  # @schema
-  # required: false
-  # @schema
-  architecture: 'standalone'
-
-  # @schema
-  # required: false
-  # additionalProperties: true
-  # @schema
-  auth:
-
-    # @schema
-    # required: false
-    # @schema
-    enabled: false
-
-    # @schema
-    # required: false
-    # @schema
-    sentinel: true
-
-    # @schema
-    # required: false
-    # @schema
-    password: 'redis'
-
-    # @schema
-    # required: false
-    # @schema
-    existingSecret: ''
-
-    # @schema
-    # required: false
-    # @schema
-    existingSecretPasswordKey: ''
-
-    # @schema
-    # required: false
-    # @schema
-    usePasswordFiles: false
-
-  # @schema
-  # required: false
-  # additionalProperties: true
-  # @schema
-  master:
-
-    # @schema
-    # required: false
-    # additionalProperties: true
-    # @schema
-    resources: {}
-
-    # @schema
-    # required: false
-    # @schema
-    priorityClassName: ''
-
-    # @schema
-    # required: false
-    # additionalProperties: true
-    # @schema
-    persistence:
-
-      # @schema
-      # required: false
-      # @schema
-      enabled: false
-
-      # @schema
-      # required: false
-      # @schema
-      storageClass: ''
-
-      # @schema
-      # required: false
-      # @schema
-      accessModes:
-        - 'ReadWriteOnce'
-
-      # @schema
-      # required: false
-      # @schema
-      size: '1Gi'
-
-  # @schema
-  # required: false
-  # additionalProperties: true
-  # @schema
-  replica:
-
-    # @schema
-    # required: false
-    # @schema
-    replicaCount: 3
-
-    # @schema
-    # required: false
-    # additionalProperties: true
-    # @schema
-    resources: {}
-
-    # @schema
-    # required: false
-    # @schema
-    priorityClassName: ''
-
-    # @schema
-    # required: false
-    # additionalProperties: true
-    # @schema
-    persistence:
-
-      # @schema
-      # required: false
-      # @schema
-      enabled: false
-
-      # @schema
-      # required: false
-      # @schema
-      storageClass: ''
-
-      # @schema
-      # required: false
-      # @schema
-      accessModes:
-        - 'ReadWriteOnce'
-
-      # @schema
-      # required: false
-      # @schema
-      size: '1Gi'

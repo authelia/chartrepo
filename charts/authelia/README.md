@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.10.41](https://img.shields.io/badge/Version-0.10.41-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.6](https://img.shields.io/badge/AppVersion-4.39.6-informational?style=flat-square)
+![Version: 0.11.0](https://img.shields.io/badge/Version-0.11.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.19](https://img.shields.io/badge/AppVersion-4.39.19-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -20,6 +20,7 @@ Breaking changes with this chart should be expected during the v0.x.x versions a
 breaking changes within minor releases i.e. from v0.1.0 to v0.2.0. The following versions have notable breaking changes
 which users should be aware of:
 
+- [v0.11.0](https://github.com/authelia/chartrepo/blob/master/charts/authelia/BREAKING.md#0110)
 - [v0.10.0](https://github.com/authelia/chartrepo/blob/master/charts/authelia/BREAKING.md#0100)
 - [v0.9.0](https://github.com/authelia/chartrepo/blob/master/charts/authelia/BREAKING.md#090)
 - [v0.5.0](https://github.com/authelia/chartrepo/blob/master/charts/authelia/BREAKING.md#050)
@@ -31,6 +32,18 @@ which users should be aware of:
    in the next step.
 3. Install the chart with `helm install authelia authelia/authelia` and optionally set your values with `--values values.yaml` or
    via `--set [parameter]=[value]`.
+
+### Configuration Compatibility
+
+While we often make the Authelia configuration and the values in the `configMap` portion of the chart identical, it's
+important to note there are several differences between them and we only support values in the chart that are explicitly
+documented. The reason for the differences is to ensure interoperability from the configuration resources to the native
+Kubernetes manifests. If you are not worried about this interoperability and want all options available to you then
+we allow specifying an existingConfigMap.
+
+For this reason we recommend paying attention to the documentation for the chart as to what options are available.
+
+To assist with this we've deployed a JSON Schema with the chart.
 
 ### Expected Minimum Configuration
 
@@ -74,13 +87,7 @@ It is expected you will configure at least the following sections/values:
 
 ## Requirements
 
-Kubernetes: `>= 1.13.0-0`
-
-| Repository | Name | Version |
-|------------|------|---------|
-| https://charts.bitnami.com/bitnami | mariadb | ~18.2.4 |
-| https://charts.bitnami.com/bitnami | postgresql | ~15.5.11 |
-| https://charts.bitnami.com/bitnami | redis | ~19.6.0 |
+Kubernetes: `>= 1.30.0-0`
 
 ## Values Files
 
@@ -1134,6 +1141,24 @@ false
 			<td>List of endpoints in addition to the metadata endpoints to permit cross-origin requests on.</td>
 		</tr>
 		<tr>
+			<td>configMap.identity_providers.oidc.discovery_signed_response_alg</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>The JSON Web Algorithm used for signing the discovery metadata.</td>
+		</tr>
+		<tr>
+			<td>configMap.identity_providers.oidc.discovery_signed_response_key_id</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>The JSON Web Key ID used for signing the discovery metadata.</td>
+		</tr>
+		<tr>
 			<td>configMap.identity_providers.oidc.enable_client_debug_messages</td>
 			<td>bool</td>
 			<td><pre lang="json">
@@ -1141,6 +1166,15 @@ false
 </pre>
 </td>
 			<td>Enables additional debug messages. SECURITY NOTICE: It's not recommended to use this in production as it may leak configuration information to clients.</td>
+		</tr>
+		<tr>
+			<td>configMap.identity_providers.oidc.enable_jwt_access_token_stateless_introspection</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>Enables introspecting JWT Profile Access Tokens using stateless checks. This is strongly discouraged.</td>
 		</tr>
 		<tr>
 			<td>configMap.identity_providers.oidc.enable_pkce_plain_challenge</td>
@@ -1294,6 +1328,15 @@ false
 </pre>
 </td>
 			<td>Requires Pushed Authorization Requests for all Authorization Flows.</td>
+		</tr>
+		<tr>
+			<td>configMap.identity_providers.oidc.require_pushed_authorization_requests</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>Enables requiring all Authorization Requests to be initiated using a Pushed Authorization Request.</td>
 		</tr>
 		<tr>
 			<td>configMap.identity_providers.oidc.scopes</td>
@@ -1872,6 +1915,288 @@ false
 </pre>
 </td>
 			<td>Enable the developer pprof handlers.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "openid_connect_pushed_authorization_request": {
+    "buckets": [],
+    "enable": true
+  },
+  "openid_connect_token": {
+    "buckets": [],
+    "enable": true
+  },
+  "reset_password_finish": {
+    "buckets": [],
+    "enable": true
+  },
+  "reset_password_start": {
+    "buckets": [],
+    "enable": true
+  },
+  "second_factor_duo": {
+    "buckets": [],
+    "enable": true
+  },
+  "second_factor_totp": {
+    "buckets": [],
+    "enable": true
+  },
+  "session_elevation_finish": {
+    "buckets": [],
+    "enable": true
+  },
+  "session_elevation_start": {
+    "buckets": [],
+    "enable": true
+  }
+}
+</pre>
+</td>
+			<td>Configure the rate limits for various endpoints.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.openid_connect_pushed_authorization_request</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "buckets": [],
+  "enable": true
+}
+</pre>
+</td>
+			<td>Configure the rate limits for the OpenID Connect 1.0 Pushed Authorization Request endpoint.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.openid_connect_pushed_authorization_request.buckets</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>List of rate limit buckets.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.openid_connect_pushed_authorization_request.enable</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Enables this rate limit.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.openid_connect_token</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "buckets": [],
+  "enable": true
+}
+</pre>
+</td>
+			<td>Configure the rate limits for the OpenID Connect 1.0 Token endpoint.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.openid_connect_token.buckets</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>List of rate limit buckets.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.openid_connect_token.enable</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Enables this rate limit.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.reset_password_finish</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "buckets": [],
+  "enable": true
+}
+</pre>
+</td>
+			<td>Configure the rate limits for the reset password finish endpoint.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.reset_password_finish.buckets</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>List of rate limit buckets.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.reset_password_finish.enable</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Enables this rate limit.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.reset_password_start</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "buckets": [],
+  "enable": true
+}
+</pre>
+</td>
+			<td>Configure the rate limits for the reset password start endpoint.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.reset_password_start.buckets</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>List of rate limit buckets.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.reset_password_start.enable</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Enables this rate limit.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.second_factor_duo</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "buckets": [],
+  "enable": true
+}
+</pre>
+</td>
+			<td>Configure the rate limits for the second factor DUO endpoint.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.second_factor_duo.buckets</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>List of rate limit buckets.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.second_factor_duo.enable</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Enables this rate limit.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.second_factor_totp</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "buckets": [],
+  "enable": true
+}
+</pre>
+</td>
+			<td>Configure the rate limits for the second factor TOTP endpoint.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.second_factor_totp.buckets</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>List of rate limit buckets.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.second_factor_totp.enable</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Enables this rate limit.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.session_elevation_finish</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "buckets": [],
+  "enable": true
+}
+</pre>
+</td>
+			<td>Configure the rate limits for the session elevation finish endpoint.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.session_elevation_finish.buckets</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>List of rate limit buckets.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.session_elevation_finish.enable</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Enables this rate limit.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.session_elevation_start</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "buckets": [],
+  "enable": true
+}
+</pre>
+</td>
+			<td>Configure the rate limits for the session elevation start endpoint.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.session_elevation_start.buckets</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>List of rate limit buckets.</td>
+		</tr>
+		<tr>
+			<td>configMap.server.endpoints.rate_limits.session_elevation_start.enable</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Enables this rate limit.</td>
 		</tr>
 		<tr>
 			<td>configMap.server.headers.csp_template</td>
@@ -3190,6 +3515,15 @@ false
 			<td>Defines the ForwardAuth Middleware Auth Response Headers.</td>
 		</tr>
 		<tr>
+			<td>ingress.traefikCRD.middlewares.auth.enableMaxResponseBodySize</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>Sets an appropriate value for maxResponseBodySize.</td>
+		</tr>
+		<tr>
 			<td>ingress.traefikCRD.middlewares.auth.endpointOverride</td>
 			<td>string</td>
 			<td><pre lang="json">
@@ -3413,15 +3747,6 @@ false
 </pre>
 </td>
 			<td>Extra labels for all generated resources. Most manifest types have a more specific labels value associated with them.</td>
-		</tr>
-		<tr>
-			<td>mariadb</td>
-			<td>object</td>
-			<td><pre lang="json">
-{}
-</pre>
-</td>
-			<td>Configure mariadb database subchart under this key. This will be deployed when storage.mysql.deploy is set to true Currently settings need to be manually copied from here to the storage.mysql section For more options and to see the @default please see [mariadb chart documentation](https://github.com/bitnami/charts/tree/main/bitnami/mariadb)</td>
 		</tr>
 		<tr>
 			<td>nameOverride</td>
@@ -4222,15 +4547,6 @@ false
 			<td>Minimum available value for the PodDisruptionBudget manifest.</td>
 		</tr>
 		<tr>
-			<td>postgresql</td>
-			<td>object</td>
-			<td><pre lang="json">
-{}
-</pre>
-</td>
-			<td>Configure postgresql database subchart under this key. This will be deployed when storage.postgres.deploy is set to true Currently settings need to be manually copied from here to the storage.postgres section For more options and to see the @default please see [postgresql chart documentation](https://github.com/bitnami/charts/tree/main/bitnami/postgresql)</td>
-		</tr>
-		<tr>
 			<td>rbac.annotations</td>
 			<td>object</td>
 			<td><pre lang="json">
@@ -4265,15 +4581,6 @@ false
 </pre>
 </td>
 			<td>Kubernetes service account name to generate.</td>
-		</tr>
-		<tr>
-			<td>redis</td>
-			<td>object</td>
-			<td><pre lang="json">
-{}
-</pre>
-</td>
-			<td>Configure redis database subchart under this key. This will be deployed when session.redis.deploy is set to true Currently settings need to be manually copied from here to the session.redis section For more options and to see the @default please see [redis chart documentation](https://github.com/bitnami/charts/tree/main/bitnami/redis)</td>
 		</tr>
 		<tr>
 			<td>secret.additionalSecrets</td>
@@ -4346,6 +4653,15 @@ null
 </pre>
 </td>
 			<td>Cluster IP for the Authelia service manifest.</td>
+		</tr>
+		<tr>
+			<td>service.externalTrafficPolicy</td>
+			<td>string</td>
+			<td><pre lang="json">
+null
+</pre>
+</td>
+			<td>Use value Local to get external IP addresses.</td>
 		</tr>
 		<tr>
 			<td>service.labels</td>
