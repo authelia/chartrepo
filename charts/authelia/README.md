@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.10.59](https://img.shields.io/badge/Version-0.10.59-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.19](https://img.shields.io/badge/AppVersion-4.39.19-informational?style=flat-square)
+![Version: 0.11.0](https://img.shields.io/badge/Version-0.11.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.19](https://img.shields.io/badge/AppVersion-4.39.19-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -20,6 +20,7 @@ Breaking changes with this chart should be expected during the v0.x.x versions a
 breaking changes within minor releases i.e. from v0.1.0 to v0.2.0. The following versions have notable breaking changes
 which users should be aware of:
 
+- [v0.10.60](https://github.com/authelia/chartrepo/blob/master/charts/authelia/BREAKING.md#01060)
 - [v0.10.0](https://github.com/authelia/chartrepo/blob/master/charts/authelia/BREAKING.md#0100)
 - [v0.9.0](https://github.com/authelia/chartrepo/blob/master/charts/authelia/BREAKING.md#090)
 - [v0.5.0](https://github.com/authelia/chartrepo/blob/master/charts/authelia/BREAKING.md#050)
@@ -87,12 +88,6 @@ It is expected you will configure at least the following sections/values:
 ## Requirements
 
 Kubernetes: `>= 1.30.0-0`
-
-| Repository | Name | Version |
-|------------|------|---------|
-| https://charts.bitnami.com/bitnami | mariadb | ~18.2.4 |
-| https://charts.bitnami.com/bitnami | postgresql | ~15.5.11 |
-| https://charts.bitnami.com/bitnami | redis | ~19.6.0 |
 
 ## Values Files
 
@@ -3754,15 +3749,6 @@ false
 			<td>Extra labels for all generated resources. Most manifest types have a more specific labels value associated with them.</td>
 		</tr>
 		<tr>
-			<td>mariadb</td>
-			<td>object</td>
-			<td><pre lang="json">
-{}
-</pre>
-</td>
-			<td>Configure mariadb database subchart under this key. This will be deployed when storage.mysql.deploy is set to true Currently settings need to be manually copied from here to the storage.mysql section For more options and to see the @default please see [mariadb chart documentation](https://github.com/bitnami/charts/tree/main/bitnami/mariadb)</td>
-		</tr>
-		<tr>
 			<td>nameOverride</td>
 			<td>string</td>
 			<td><pre lang="json">
@@ -4561,15 +4547,6 @@ false
 			<td>Minimum available value for the PodDisruptionBudget manifest.</td>
 		</tr>
 		<tr>
-			<td>postgresql</td>
-			<td>object</td>
-			<td><pre lang="json">
-{}
-</pre>
-</td>
-			<td>Configure postgresql database subchart under this key. This will be deployed when storage.postgres.deploy is set to true Currently settings need to be manually copied from here to the storage.postgres section For more options and to see the @default please see [postgresql chart documentation](https://github.com/bitnami/charts/tree/main/bitnami/postgresql)</td>
-		</tr>
-		<tr>
 			<td>rbac.annotations</td>
 			<td>object</td>
 			<td><pre lang="json">
@@ -4604,15 +4581,6 @@ false
 </pre>
 </td>
 			<td>Kubernetes service account name to generate.</td>
-		</tr>
-		<tr>
-			<td>redis</td>
-			<td>object</td>
-			<td><pre lang="json">
-{}
-</pre>
-</td>
-			<td>Configure redis database subchart under this key. This will be deployed when session.redis.deploy is set to true Currently settings need to be manually copied from here to the session.redis section For more options and to see the @default please see [redis chart documentation](https://github.com/bitnami/charts/tree/main/bitnami/redis)</td>
 		</tr>
 		<tr>
 			<td>secret.additionalSecrets</td>
