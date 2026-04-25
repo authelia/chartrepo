@@ -157,7 +157,7 @@ spec:
         {{- end }}
         {{- if $.Values.configMap.notifier.smtp }}
         {{- with $secret := .Values.configMap.notifier.smtp.password }}
-        {{- if and (not $secret.disabled) $.Values.configMap.notifier.smtp.enabled  }}
+        {{- if and (not $secret.disabled) $.Values.configMap.notifier.smtp.enabled $.Values.configMap.notifier.smtp.username }}
         - name: AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE
           value: {{ include "authelia.secret.env.path" (merge (dict "MountPath" (include "authelia.secret.mountPath" $) "SecretName" $secret.secret_name "SecretPath" (include "authelia.secret.path.smtp.password" $)) $) }}
         {{- end }}
@@ -372,7 +372,7 @@ spec:
           {{- end }}
           {{- end }}
           {{- with $secret := .Values.configMap.notifier.smtp.password }}
-          {{- if and (not $secret.disabled) (not $secret.secret_name) $.Values.configMap.notifier.smtp.enabled }}
+          {{- if and (not $secret.disabled) (not $secret.secret_name) $.Values.configMap.notifier.smtp.enabled $.Values.configMap.notifier.smtp.username }}
           - key: {{ include "authelia.secret.path.smtp.password" $ }}
             path: {{ include "authelia.secret.path.smtp.password" $ }}
           {{- end }}
