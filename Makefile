@@ -6,6 +6,10 @@ OCI_REGISTRY_REPO  ?= chartrepo
 
 OCI_TARGET = oci://$(OCI_REGISTRY)/$(OCI_REGISTRY_OWNER)/$(OCI_REGISTRY_REPO)
 
+.PHONY: clean
+clean:
+	@git reset --hard HEAD
+
 .PHONY: docs
 
 docs: install-helm-docs
@@ -29,22 +33,20 @@ lint-chart-version:
 lint-chart-package: release-package
 
 lint-docs: docs
-	@files=$$(git ls-files 'charts/*/README.md'); \
-	if [ -n "$$files" ] && ! git diff-index --quiet HEAD -- $$files; then \
-		echo "Documentation is outdated, run 'make docs'"; \
-		git diff --color-words -- $$files; \
-		exit 1; \
+	@trap '$(MAKE) clean' EXIT; \
+	if ! git diff --exit-code --quiet; then \
+	    echo ":bk-status-failed: docs are not in sync: run 'make docs' and commit the changes."; \
+	    exit 1; \
 	fi
-	@echo "Documentation is up to date"
+	@echo ":bk-status-passed: docs are in sync ✓"
 
 lint-schema: schema
-	@files=$$(git ls-files 'charts/*/values.schema.json'); \
-	if [ -n "$$files" ] && ! git diff-index --quiet HEAD -- $$files; then \
-		echo "Values JSON schema is outdated, run 'make schema'"; \
-		git diff --color-words -- $$files; \
-		exit 1; \
+	@trap '$(MAKE) clean' EXIT; \
+	if ! git diff --exit-code --quiet; then \
+	    echo ":bk-status-failed: schemas are not in sync: run 'make schema' and commit the changes."; \
+	    exit 1; \
 	fi
-	@echo "Values JSON schema is up to date"
+	@echo ":bk-status-passed: schemas are in sync ✓"
 
 .PHONY: install install-helm-docs install-helm-schema
 
