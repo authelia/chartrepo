@@ -35,18 +35,18 @@ lint-chart-package: release-package
 lint-docs: docs
 	@trap '$(MAKE) clean' EXIT; \
 	if ! git diff --exit-code --quiet; then \
-	    echo ":bk-status-failed: docs are not in sync: run 'make docs' and commit the changes."; \
+	    echo "docs are not in sync: make sure you don't edit 'README.md' directly and run 'make docs' and commit the changes."; \
 	    exit 1; \
 	fi
-	@echo ":bk-status-passed: docs are in sync ✓"
+	@echo "docs are in sync ✓"
 
 lint-schema: schema
 	@trap '$(MAKE) clean' EXIT; \
 	if ! git diff --exit-code --quiet; then \
-	    echo ":bk-status-failed: schemas are not in sync: run 'make schema' and commit the changes."; \
+	    echo "schemas are not in sync: make sure you do not edit 'values.schema.json' directly and run 'make schema' and commit the changes"; \
 	    exit 1; \
 	fi
-	@echo ":bk-status-passed: schemas are in sync ✓"
+	@echo "schemas are in sync ✓"
 
 .PHONY: install install-helm-docs install-helm-schema
 
