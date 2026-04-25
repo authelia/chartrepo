@@ -2,61 +2,61 @@ env:
   CHART_CHANGES: '${CHART_CHANGES}'
 
 steps:
-- key: 'lint-version'
-  label: ':helm: Chart Version (Chart Testing)'
-  if: 'build.branch != "gh-pages" && build.env("CHART_CHANGES") == "true"'
-  command: 'make lint-chart-version'
+  - key: 'lint-version'
+    label: ':helm: Chart Version (Chart Testing)'
+    if: 'build.branch != "gh-pages" && build.env("CHART_CHANGES") == "true"'
+    command: 'make lint-chart-version'
 
-- key: 'lint'
-  label: ':helm: Linting (Chart Testing)'
-  if: 'build.branch != "gh-pages" && build.env("CHART_CHANGES") == "true"'
-  command: 'make lint-chart'
+  - key: 'lint'
+    label: ':helm: Linting (Chart Testing)'
+    if: 'build.branch != "gh-pages" && build.env("CHART_CHANGES") == "true"'
+    command: 'make lint-chart'
 
-- key: 'lint-docs'
-  label: ':markdown: Linting (Documentation)'
-  if: 'build.branch != "gh-pages" && build.env("CHART_CHANGES") == "true"'
-  command: 'make lint-docs'
+  - key: 'lint-docs'
+    label: ':markdown: Linting (Documentation)'
+    if: 'build.branch != "gh-pages" && build.env("CHART_CHANGES") == "true"'
+    command: 'make lint-docs'
 
-- key: 'lint-schema'
-  label: ':json: Linting (Values JSON Schema)'
-  if: 'build.branch != "gh-pages" && build.env("CHART_CHANGES") == "true"'
-  command: 'make lint-schema'
+  - key: 'lint-schema'
+    label: ':json: Linting (Values JSON Schema)'
+    if: 'build.branch != "gh-pages" && build.env("CHART_CHANGES") == "true"'
+    command: 'make lint-schema'
 
-- key: 'lint-package'
-  label: ':package: Package Chart (Chart Releaser)'
-  artifact_paths:
-    - '.cr-release-packages/*'
-  if: 'build.branch != "gh-pages" && build.branch != "master" && build.env("CHART_CHANGES") == "true"'
-  command: 'make lint-chart-package'
+  - key: 'lint-package'
+    label: ':package: Package Chart (Chart Releaser)'
+    artifact_paths:
+      - '.cr-release-packages/*'
+    if: 'build.branch != "gh-pages" && build.branch != "master" && build.env("CHART_CHANGES") == "true"'
+    command: 'make lint-chart-package'
 
-- wait: ~
-  continue_on_failure: true
-  if: 'build.branch == "master" && build.env("CHART_CHANGES") == "true"'
+  - wait: ~
+    continue_on_failure: true
+    if: 'build.branch == "master" && build.env("CHART_CHANGES") == "true"'
 
-- key: 'package'
-  label: ':package: Package Chart (Chart Releaser)'
-  artifact_paths:
-    - '.cr-release-packages/*'
-  if: 'build.branch == "master" && build.env("CHART_CHANGES") == "true"'
-  command: 'make release-package'
+  - key: 'package'
+    label: ':package: Package Chart (Chart Releaser)'
+    artifact_paths:
+      - '.cr-release-packages/*'
+    if: 'build.branch == "master" && build.env("CHART_CHANGES") == "true"'
+    command: 'make release-package'
 
-- key: 'upload'
-  label: ':github: Deploy Artifacts (Chart Releaser)'
-  depends_on:
-    - step: 'package'
-  if: 'build.branch == "master" && build.env("CHART_CHANGES") == "true"'
-  command: 'make release-upload'
+  - key: 'upload'
+    label: ':github: Deploy Artifacts (Chart Releaser)'
+    depends_on:
+      - step: 'package'
+    if: 'build.branch == "master" && build.env("CHART_CHANGES") == "true"'
+    command: 'make release-upload'
 
-- key: 'index'
-  label: ':k8s: Publish Chart Index (Chart Releaser)'
-  depends_on:
-    - step: 'upload'
-  if: 'build.branch == "master" && build.env("CHART_CHANGES") == "true"'
-  command: 'make release-index'
+  - key: 'index'
+    label: ':k8s: Publish Chart Index (Chart Releaser)'
+    depends_on:
+      - step: 'upload'
+    if: 'build.branch == "master" && build.env("CHART_CHANGES") == "true"'
+    command: 'make release-index'
 
-- key: 'release-oci'
-  label: ':docker: Deploy OCI Artifacts (Chart Releaser)'
-  depends_on:
-    - step: 'package'
-  if: 'build.branch == "master" && build.env("CHART_CHANGES") == "true"'
-  command: 'make release-oci'
+  - key: 'release-oci'
+    label: ':docker: Deploy OCI Artifacts (Chart Releaser)'
+    depends_on:
+      - step: 'package'
+    if: 'build.branch == "master" && build.env("CHART_CHANGES") == "true"'
+    command: 'make release-oci'
