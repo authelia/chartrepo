@@ -10,89 +10,60 @@
 ##
 # -- This values file is a baseline for other values files.
 
-# @schema
-# required: false
-# @schema
 # -- Version Override allows changing some chart characteristics that render only on specific versions.
 # This does NOT affect the image used, please see the below image section instead for this.
 # If this value is not specified, it's assumed the appVersion of the chart is the version.
 # The format of this value  is x.x.x, for example 4.100.0. Minimum value is 4.38.0, and support is not guaranteed.
 versionOverride: ''
 
-# @schema
-# required: false
-# @schema
 # -- Kubernetes Version Override allows forcibly overriding the detected KubeVersion for fallback capabilities
 # assessment. The fallback capabilities assessment only occurs if the APIVersions Capabilities list does not include a
 # known # APIVersion for a manifest which occurs with some CI/CD tooling. This value will completely override the value
 # detected by helm.
 kubeVersionOverride: ''
 
-# @schema
-# required: false
-# @schema
 # -- Kubernetes DNS Domain Override allows forcibly overriding the default DNS Domain for Kubernetes 'cluster.local'.
 kubeDNSDomainOverride: ''
 
-# @schema
-# required: false
-# @schema
 # -- This field can be used as a condition when authelia is a dependency. This definition is only a placeholder and not used directly by this chart. See https://helm.sh/docs/chart_best_practices/dependencies/#conditions-and-tags for more info
 enabled: false
 
-# @schema
-# required: false
-# @schema
+# -- Image configuration for the Authelia container.
 image:
-
-  # @schema
-  # required: false
-  # @schema
   # -- The registry to use.
   registry: 'ghcr.io'
 
-  # @schema
-  # required: false
-  # @schema
   # -- The repository location on the registry.
   repository: 'authelia/authelia'
 
-  # @schema
-  # required: false
-  # @schema
   # -- The tag to use from the registry.
   # @default -- appVersion
   tag: ''
 
-  # @schema
-  # required: false
-  # @schema
   # -- The pull policy for the standard image.
   pullPolicy: 'IfNotPresent'
 
   # @schema
   # type: array
-  # required: false
+  # items:
+  #   type: string
   # @schema
   # -- The pull secrets to use.
   pullSecrets: []
 
 # @schema
 # type: [string, null]
-# required: false
 # @schema
 # -- (string) The name override for this deployment.
 nameOverride: ~
 
 # @schema
 # type: [string, null]
-# required: false
 # @schema
 # -- (string) The app name override for this deployment.
 appNameOverride: ~
 
 # @schema
-# required: false
 # additionalProperties: true
 # @schema
 # -- Extra annotations for all generated resources. Most manifest types have a more specific annotations value
@@ -100,115 +71,79 @@ appNameOverride: ~
 annotations: {}
 
 # @schema
-# required: false
 # additionalProperties: true
 # @schema
 # -- Extra labels for all generated resources. Most manifest types have a more specific labels value
 # associated with them.
 labels: {}
 
-# @schema
-# required: false
-# @schema
+# -- RBAC configuration for the Authelia deployment.
 rbac:
-
-  # @schema
-  # required: false
-  # @schema
   # -- Enable RBAC. Turning this on associates Authelia with a service account.
   enabled: false
 
   # @schema
-  # required: false
   # additionalProperties: true
   # @schema
   # -- Extra annotations for RBAC related manifests.
   annotations: {}
 
   # @schema
-  # required: false
   # additionalProperties: true
   # @schema
   # -- Extra labels for RBAC related manifests.
   labels: {}
 
-  # @schema
-  # required: false
-  # @schema
   # -- Kubernetes service account name to generate.
   serviceAccountName: 'authelia'
 
-# @schema
-# required: false
-# @schema
+# -- Service configuration for the Authelia deployment.
 service:
-
-  # @schema
-  # required: false
-  # @schema
   # -- The service type to generate for the Authelia pods.
   type: 'ClusterIP'
 
   # @schema
-  # required: false
   # additionalProperties: true
   # @schema
   # -- Extra annotations for service manifest.
   annotations: {}
 
   # @schema
-  # required: false
   # additionalProperties: true
   # @schema
   # -- Extra labels for service manifest.
   labels: {}
 
-  # @schema
-  # required: false
-  # @schema
   # -- Port for the Authelia service manifest.
   port: 80
 
-  # @schema
-  # required: false
-  # @schema
   # -- Node Port for the Authelia service manifest.
   nodePort: 30091
 
   # @schema
   # type: [string, null]
-  # required: false
   # @schema
   # -- (string) Cluster IP for the Authelia service manifest.
   clusterIP: ~
 
   # @schema
   # type: [string, null]
-  # required: false
   # @schema
   # -- (string) Use value Local to get external IP addresses.
   externalTrafficPolicy: ~
 
-# @schema
-# required: false
-# @schema
+# -- Ingress configuration for the Authelia deployment.
 ingress:
-
-  # @schema
-  # required: false
-  # @schema
   # -- Enable generating ingress related resources.
   enabled: false
 
   # @schema
-  # required: false
   # additionalProperties: true
   # @schema
   # -- Extra annotations for ingress related manifests.
   annotations: {}
 
   # @schema
-  # required: false
   # additionalProperties: true
   # @schema
   # -- Extra labels for ingress related manifests.
@@ -217,60 +152,37 @@ ingress:
   ## A discouraged override list of hosts to create the ingress for. If this is not specified the auto-generation
   ## characteristics of the 'configMap.session.cookies' value are not used. Should be a list of host/path pairs.
 
-  # @schema
-  # required: false
-  # @schema
   # -- Override to the rules values for the Ingress type manifest.
   rulesOverride: []
 
-  # @schema
-  # required: false
-  # @schema
   # -- Enable Cert Manager annotations.
   certManager: false
 
-  # @schema
-  # required: false
-  # @schema
   # -- Ingress Class Name for the Ingress manifests.
   className: ''
 
-  # @schema
-  # required: false
-  # @schema
+  # -- TLS configuration for the Ingress manifests.
   tls:
-
-    # @schema
-    # required: false
-    # @schema
     # -- Enable TLS for the Ingress.
     enabled: false
 
-    # @schema
-    # required: false
-    # @schema
     ## -- TLS Secret for Authelia.
     secret: 'authelia-tls'
 
-  # @schema
-  # required: false
-  # @schema
+  # -- Configuration of the Gateway API.
   gatewayAPI:
-
-    # @schema
-    # required: false
-    # @schema
     # -- Enable Gateway API HTTP Route generation.
     enabled: false
 
     # @schema
-    # required: false
+    # type: array
+    # items:
+    #   type: string
     # @schema
     # -- Override the hostnames for the HTTPRoute manifest.
     hostnamesOverride: []
 
     # @schema
-    # required: false
     # items:
     #   $ref: https://charts.authelia.com/definitions.json#/definitions/io.k8s.networking.gateway.v1.ParentReference
     # @schema
@@ -280,116 +192,68 @@ ingress:
     #    sectionName: example-lb-sn
     #    port: 80
 
-  # @schema
-  # required: false
-  # @schema
+  # -- Configuration of the Traefik IngressRoute.
   traefikCRD:
-
-    # @schema
-    # required: false
-    # @schema
     # -- Enable generating the Traefik 3.x CRD Middleware etc manifests.
     enabled: false
 
-    # @schema
-    # required: false
-    # @schema
     # -- Use a standard Ingress object, not an IngressRoute.
     disableIngressRoute: false
 
-    # @schema
-    # required: false
-    # @schema
     # -- IngressRoute match rule override.
     matchOverride: ''
 
-    # @schema
-    # required: false
-    # @schema
     # -- The apiGroupOverride overrides the first part of the apiVersion for TraefikCRD manifests.
     apiGroupOverride: ''
 
-    # @schema
-    # required: false
-    # @schema
     # -- The apiVersionOverride overrides the second part of the apiVersion for TraefikCRD manifests.
     apiVersionOverride: ''
 
     # @schema
-    # required: false
+    # type: array
     # items:
     #   type: string
     # @schema
     # -- Defines the valid entryPoints to route for the IngressRoute.
     entryPoints: []
 
-    # @schema
-    # required: false
-    # @schema
     # -- Defines the rule priority for the IngressRoute.
     priority: 500
 
-    # @schema
-    # required: false
-    # @schema
     # -- Defines the service weight for the IngressRoute.
     weight: 10
 
-    # @schema
-    # required: false
-    # @schema
     # -- Defines the sticky value for the IngressRoute.
     sticky: false
 
-    # @schema
-    # required: false
-    # @schema
     # -- Overrides the default sticky cookie name for the IngressRoute.
     stickyCookieNameOverride: ''
 
     # @schema
-    # required: false
-    # enum: [wrr,p2c,RoundRobin,'']
+    # type: string
+    # enum: ['wrr','p2c','RoundRobin','']
     # @schema
     # -- Defines the IngressRoute service strategy.
     strategy: 'RoundRobin'
 
-    # @schema
-    # required: false
-    # @schema
     # -- Defines the Response Forwarding Flush Interval for the IngressRoute.
     responseForwardingFlushInterval: '100ms'
 
-    # @schema
-    # required: false
-    # @schema
     middlewares:
-
-      # @schema
-      # required: false
-      # @schema
       auth:
-
-        # @schema
-        # required: false
-        # @schema
         # -- Overrides the ForwardAuth Middleware (auth) name.
         nameOverride: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- Overrides the endpoint used for the middleware. This is the portion of the endpoint after '/api/authz/'.
         endpointOverride: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- Sets an appropriate value for maxResponseBodySize.
         enableMaxResponseBodySize: false
 
         # @schema
-        # required: false
+        # type: array
+        # items:
+        #   type: string
         # @schema
         # -- Defines the ForwardAuth Middleware Auth Response Headers.
         authResponseHeaders:
@@ -398,24 +262,13 @@ ingress:
           - 'Remote-Email'
           - 'Remote-Groups'
 
-      # @schema
-      # required: false
-      # @schema
       chains:
-
-        # @schema
-        # required: false
-        # @schema
         auth:
-
-          # @schema
-          # required: false
-          # @schema
           # -- Overrides the Chain Middleware (auth) name.
           nameOverride: ''
 
           # @schema
-          # required: false
+          # type: array
           # items:
           #   type: object
           #   properties:
@@ -423,7 +276,6 @@ ingress:
           #       type: string
           #     namespace:
           #       type: string
-          #       required: false
           # @schema
           # -- List of Middlewares to apply before the forwardAuth Middleware in the authentication chain.
           before: []
@@ -432,7 +284,7 @@ ingress:
           #   namespace: 'default'
 
           # @schema
-          # required: false
+          # type: array
           # items:
           #   type: object
           #   properties:
@@ -440,7 +292,6 @@ ingress:
           #       type: string
           #     namespace:
           #       type: string
-          #       required: false
           # @schema
           # -- List of Middlewares to apply after the forwardAuth Middleware in the authentication chain.
           after: []
@@ -448,13 +299,10 @@ ingress:
           # - name: 'extra-middleware-name'
           #   namespace: 'default'
 
-        # @schema
-        # required: false
-        # @schema
         ingressRoute:
 
           # @schema
-          # required: false
+          # type: array
           # items:
           #   type: object
           #   properties:
@@ -462,7 +310,6 @@ ingress:
           #       type: string
           #     namespace:
           #       type: string
-          #       required: false
           # @schema
           # -- List of Middlewares to apply before the middleware in the IngressRoute chain.
           before: []
@@ -471,7 +318,7 @@ ingress:
           #   namespace: 'default'
 
           # @schema
-          # required: false
+          # type: array
           # items:
           #   type: object
           #   properties:
@@ -479,7 +326,6 @@ ingress:
           #       type: string
           #     namespace:
           #       type: string
-          #       required: false
           # @schema
           # -- List of Middlewares to apply after the middleware in the IngressRoute chain.
           after: []
@@ -487,28 +333,18 @@ ingress:
           # - name: 'extra-middleware-name'
           #   namespace: 'default'
 
-    # @schema
-    # required: false
-    # @schema
     tls:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Disables inclusion of the IngressRoute TLSOptions.
       disableTLSOptions: false
       #   existingOptions:
       #     name: 'default-traefik-options'
       #     namespace: 'default'
 
-      # @schema
-      # required: false
-      # @schema
       # -- Name of the Certificate Resolver to use.
       certResolver: ''
 
       # @schema
-      # required: false
+      # type: array
       # items:
       #   type: object
       #   properties:
@@ -516,7 +352,6 @@ ingress:
       #       type: string
       #     sans:
       #       type: array
-      #       required: false
       #       items:
       #         type: string
       # @schema
@@ -527,37 +362,29 @@ ingress:
       #     sans:
       #       - 'a.example.com'
 
-      # @schema
-      # required: false
-      # @schema
       options:
-
-        # @schema
-        # required: false
-        # @schema
         # -- Override the TLSOptions name.
         nameOverride: ''
 
         # @schema
-        # required: false
+        # type: string
+        # enum: ['VersionTLS10','VersionTLS11','VersionTLS12','VersionTLS13']
         # @schema
         # -- Minimum TLS Version.
         minVersion: 'VersionTLS12'
 
         # @schema
-        # required: false
+        # type: string
+        # enum: ['VersionTLS10','VersionTLS11','VersionTLS12','VersionTLS13']
         # @schema
         # -- Maximum TLS Version.
         maxVersion: 'VersionTLS13'
 
-        # @schema
-        # required: false
-        # @schema
         # -- Require Strict SNI requirement.
         sniStrict: false
 
         # @schema
-        # required: false
+        # type: array
         # items:
         #   type: string
         # @schema
@@ -565,48 +392,39 @@ ingress:
         cipherSuites: []
 
         # @schema
-        # required: false
+        # type: array
         # items:
         #   type: string
         # @schema
         # -- Override the default Curve Preferences.
         curvePreferences: []
 
-# @schema
-# required: false
-# @schema
 pod:
-
   # @schema
-  # required: false
-  # enum: [Deployment,DaemonSet,StatefulSet,'']
+  # type: string
+  # enum: ['Deployment','DaemonSet','StatefulSet','']
   # @schema
   # -- The Pod Kind to use. Must be Deployment, DaemonSet, or StatefulSet.
   kind: 'DaemonSet'
 
-  # @schema
-  # required: false
-  # @schema
   # -- Normally when a change is detected via helm install to something that only indirectly affects the pod, the pod
   # will restart. This setting allows disabling this behavior.
   disableRestartOnChanges: false
 
   # @schema
-  # required: false
   # additionalProperties: true
   # @schema
   # -- Extra annotations for the Pod spec.
   annotations: {}
 
   # @schema
-  # required: false
   # additionalProperties: true
   # @schema
   # -- Extra labels for the Pod spec.
   labels: {}
 
   # @schema
-  # required: false
+  # type: array
   # items:
   #   type: string
   # @schema
@@ -614,7 +432,7 @@ pod:
   command: []
 
   # @schema
-  # required: false
+  # type: array
   # items:
   #   type: string
   # @schema
@@ -622,7 +440,7 @@ pod:
   args: []
 
   # @schema
-  # required: false
+  # type: array
   # items:
   #   type: object
   #   additionalProperties: true
@@ -634,172 +452,106 @@ pod:
   #   image: busybox:1.36
   #   command: ['sh', '-c', 'echo The app is starting! && sleep 5']
 
-  # @schema
-  # required: false
-  # @schema
   # -- The number of replicas if relevant.
   replicas: 1
 
-  # @schema
-  # required: false
-  # @schema
   # -- The revision history limit.
   revisionHistoryLimit: 5
 
-  # @schema
-  # required: false
-  # @schema
   # -- The priority class name for the Pod spec.
   priorityClassName: ''
 
-  # @schema
-  # required: false
-  # @schema
   autoscaling:
-
-    # @schema
-    # required: false
-    # @schema
     # -- Enable the HorizontalPodAutoscaler which requires the in cluster metrics server.
     enabled: false
 
     # @schema
-    # required: false
     # additionalProperties: true
     # @schema
     # -- Extra annotations for the HorizontalPodAutoscaler manifest.
     annotations: {}
 
     # @schema
-    # required: false
     # additionalProperties: true
     # @schema
     # -- Extra labels for the HorizontalPodAutoscaler manifest.
     labels: {}
 
     # @schema
-    # required: false
     # $ref: https://charts.authelia.com/definitions.json#/definitions/io.k8s.api.autoscaling.v2.HorizontalPodAutoscalerBehavior
     # @schema
     behavior: {}
 
-  # @schema
-  # required: false
-  # @schema
   strategy:
-
-    # @schema
-    # required: false
-    # @schema
     # -- Deployment Strategy Type.
     type: 'RollingUpdate'
 
-    # @schema
-    # required: false
-    # @schema
     rollingUpdate:
-
-      # @schema
-      # required: false
-      # @schema
       # -- RollingUpdate partition value.
       partition: 0
 
-      # @schema
-      # required: false
-      # @schema
       # -- RollingUpdate max surge value.
       maxSurge: '25%'
 
-      # @schema
-      # required: false
-      # @schema
       # -- RollingUpdate max unavailable value.
       maxUnavailable: '25%'
 
-  # @schema
-  # required: false
-  # @schema
   securityContext:
-
     # @schema
-    # required: false
+    # type: object
     # properties:
     #   allowPrivilegeEscalation:
     #     type: boolean
-    #     required: false
     #   appArmorProfile:
     #     type: object
-    #     required: false
     #     properties:
     #       localHostProfile:
     #         type: string
-    #         required: false
     #       type:
     #         type: string
-    #         required: false
-    #         enum: [Localhost,RuntimeDefault,Unconfined]
+    #         enum: ['Localhost', 'RuntimeDefault', 'Unconfined']
     #   capabilities:
     #     type: object
-    #     required: false
     #     properties:
     #       add:
     #         type: array
-    #         required: false
     #         items:
     #           type: string
-    #           required: false
     #       drop:
     #         type: array
-    #         required: false
     #         items:
     #           type: string
-    #           required: false
     #   privileged:
     #     type: boolean
-    #     required: false
     #   procMount:
     #     type: string
-    #     required: false
     #   readOnlyRootFilesystem:
     #     type: boolean
-    #     required: false
     #   runAsGroup:
     #     type: integer
-    #     required: false
     #   runAsNonRoot:
     #     type: boolean
-    #     required: false
     #   runAsUser:
     #     type: integer
-    #     required: false
     #   seLinuxOptions:
     #     type: object
-    #     required: false
     #     properties:
     #       level:
     #         type: string
-    #         required: false
     #       role:
     #         type: string
-    #         required: false
     #       type:
     #         type: string
-    #         required: false
     #       user:
     #         type: string
-    #         required: false
     #   seccompProfile:
     #     type: object
-    #     required: false
     #     properties:
     #       localhostProfile:
     #         type: string
-    #         required: false
     #       type:
     #         type: string
-    #         required: false
-    #         enum: [Localhost,RuntimeDefault,Unconfined]
+    #         enum: ['Localhost','RuntimeDefault','Unconfined']
     # @schema
     # -- Container Security Context.
     container: {}
@@ -809,88 +561,65 @@ pod:
     #   fsGroup: 2000
 
     # @schema
-    # required: false
+    # type: object
     # properties:
     #   appArmorProfile:
     #     type: object
-    #     required: false
     #     properties:
     #       localHostProfile:
     #         type: string
-    #         required: false
     #       type:
     #         type: string
-    #         required: false
-    #         enum: [Localhost,RuntimeDefault,Unconfined]
+    #         enum: ['Localhost','RuntimeDefault','Unconfined']
     #   fsGroup:
     #     type: integer
-    #     required: false
     #   fsGroupChangePolicy:
     #     type: string
-    #     required: false
-    #     enum: [Always,OnRootMismatch]
+    #     enum: ['Always','OnRootMismatch']
     #   runAsGroup:
     #     type: integer
-    #     required: false
     #   runAsNonRoot:
     #     type: boolean
-    #     required: false
     #   runAsUser:
     #     type: integer
-    #     required: false
     #   seLinuxChangePolicy:
     #     type: string
-    #     required: false
-    #     enum: [MountOption,Recursive]
+    #     enum: ['MountOption','Recursive']
     #   seLinuxOptions:
     #     type: object
-    #     required: false
     #     properties:
     #       level:
     #         type: string
-    #         required: false
     #       role:
     #         type: string
-    #         required: false
     #       type:
     #         type: string
-    #         required: false
     #       user:
     #         type: string
-    #         required: false
     #   seccompProfile:
     #     type: object
-    #     required: false
     #     properties:
     #       localhostProfile:
     #         type: string
-    #         required: false
     #       type:
     #         type: string
-    #         required: false
-    #         enum: [Localhost,RuntimeDefault,Unconfined]
+    #         enum: ['Localhost','RuntimeDefault','Unconfined']
     #   supplementalGroups:
     #     type: array
     #     items:
     #       type: integer
-    #       required: false
-    #     required: false
     #   supplementalGroupsPolicy:
     #     type: string
-    #     required: false
-    #     enum: [Merge,Strict]
+    #     enum: ['Merge','Strict']
     #   sysctls:
     #     type: array
     #     items:
     #       type: object
-    #       required: false
     #       properties:
     #         name:
     #           type: string
-    #           required: true
     #         value:
     #           type: string
-    #           required: true
     # @schema
     # -- Pod Security Context.
     pod: {}
@@ -900,7 +629,7 @@ pod:
     #   privileged: false
 
   # @schema
-  # required: false
+  # type: array
   # items:
   #   type: object
   #   properties:
@@ -908,14 +637,11 @@ pod:
   #       type: string
   #     operator:
   #       type: string
-  #       required: false
   #     value:
   #       type: string
-  #       required: false
   #     effect:
   #       type: string
-  #       required: false
-  #       enum: [NoExecute,NoSchedule,PreferNoSchedule]
+  #       enum: ['NoExecute','NoSchedule','PreferNoSchedule']
   # @schema
   # -- List of tolerations.
   tolerations: []
@@ -926,19 +652,11 @@ pod:
   #   effect: 'NoSchedule'
   #   tolerationSeconds: 3600
 
-  # @schema
-  # required: false
-  # @schema
   selectors:
-
-    # @schema
-    # required: false
-    # @schema
     # -- Specific node name selector.
     nodeName: ''
 
     # @schema
-    # required: false
     # additionalProperties: true
     # @schema
     # -- Node selector.
@@ -947,13 +665,8 @@ pod:
     #   disktype: 'ssd'
     #   kubernetes.io/hostname: 'worker-1'
 
-    # @schema
-    # required: false
-    # @schema
     affinity:
-
       # @schema
-      # required: false
       # additionalProperties: true
       # @schema
       # -- Node affinity selector.
@@ -977,7 +690,6 @@ pod:
       #         - 'not-this'
 
       # @schema
-      # required: false
       # additionalProperties: true
       # @schema
       # -- Pod affinity selector.
@@ -993,7 +705,6 @@ pod:
       #     topologyKey: 'topology.kubernetes.io/zone'
 
       # @schema
-      # required: false
       # additionalProperties: true
       # @schema
       # -- Pod anti-affinity selector.
@@ -1011,7 +722,7 @@ pod:
       #         topologyKey: 'topology.kubernetes.io/zone'
 
   # @schema
-  # required: false
+  # type: array
   # items:
   #   type: object
   #   properties:
@@ -1023,13 +734,8 @@ pod:
   # -- List of additional environment variables for the Pod.
   env: []
 
-  # @schema
-  # required: false
-  # @schema
   resources:
-
     # @schema
-    # required: false
     # additionalProperties: true
     # @schema
     # -- Resource Limits.
@@ -1039,7 +745,6 @@ pod:
     #   memory: '125Mi'
 
     # @schema
-    # required: false
     # additionalProperties: true
     # @schema
     # -- Resource Requests.
@@ -1048,235 +753,123 @@ pod:
     #   cpu: '0.25'
     #   memory: '50Mi'
 
-  # @schema
-  # required: false
-  # @schema
   probes:
-
-    # @schema
-    # required: false
-    # @schema
     method:
-
-      # @schema
-      # required: false
-      # @schema
       httpGet:
-
-        # @schema
-        # required: false
-        # @schema
         # -- Adjusts the probe path.
         path: '/api/health'
 
-        # @schema
-        # required: false
-        # @schema
         # -- Adjusts the probe port.
         port: 'http'
 
-        # @schema
-        # required: false
-        # @schema
         # -- Adjusts the probe scheme.
         scheme: 'HTTP'
 
-    # @schema
-    # required: false
-    # @schema
     liveness:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Liveness Probe initial delay seconds.
       initialDelaySeconds: 0
 
-      # @schema
-      # required: false
-      # @schema
       # -- Liveness Probe period seconds.
       periodSeconds: 30
 
-      # @schema
-      # required: false
-      # @schema
       # -- Liveness Probe timeout seconds.
       timeoutSeconds: 5
 
-      # @schema
-      # required: false
-      # @schema
       # -- Liveness Probe success threshold.
       successThreshold: 1
 
-      # @schema
-      # required: false
-      # @schema
       # -- Liveness Probe failure threshold.
       failureThreshold: 5
 
-    # @schema
-    # required: false
-    # @schema
     readiness:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Readiness Probe initial delay seconds.
       initialDelaySeconds: 0
 
-      # @schema
-      # required: false
-      # @schema
       # -- Readiness Probe period seconds.
       periodSeconds: 5
 
-      # @schema
-      # required: false
-      # @schema
       # -- Readiness Probe timeout seconds.
       timeoutSeconds: 5
 
-      # @schema
-      # required: false
-      # @schema
       # -- Readiness Probe success threshold.
       successThreshold: 1
 
-      # @schema
-      # required: false
-      # @schema
       # -- Readiness Probe failure threshold.
       failureThreshold: 5
 
-    # @schema
-    # required: false
-    # @schema
     startup:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Startup Probe initial delay seconds.
       initialDelaySeconds: 10
 
-      # @schema
-      # required: false
-      # @schema
       # -- Startup Probe period seconds.
       periodSeconds: 5
 
-      # @schema
-      # required: false
-      # @schema
       # -- Startup Probe timeout seconds.
       timeoutSeconds: 5
 
-      # @schema
-      # required: false
-      # @schema
       # -- Startup Probe success threshold.
       successThreshold: 1
 
-      # @schema
-      # required: false
-      # @schema
       # -- Startup Probe failure threshold.
       failureThreshold: 6
 
-  # @schema
-  # required: false
-  # @schema
   # -- Extra Volume Mounts.
   extraVolumeMounts: []
 
-  # @schema
-  # required: false
-  # @schema
   # -- Extra Volumes.
   extraVolumes: []
 
-  # @schema
-  # required: false
-  # @schema
   # -- Extra containers to add to the Pod spec.
   extraContainers: []
 
-# @schema
-# required: false
-# @schema
 podDisruptionBudget:
-
-  # @schema
-  # required: false
-  # @schema
   # -- Enable the PodDisruptionBudget.
   enabled: false
 
   # @schema
-  # required: false
   # additionalProperties: true
   # @schema
   # -- Extra annotations for the PodDisruptionBudget manifest.
   annotations: {}
 
   # @schema
-  # required: false
   # additionalProperties: true
   # @schema
   # -- Extra labels for the PodDisruptionBudget manifest.
   labels: {}
 
-  # @schema
-  # required: false
-  # @schema
   # -- Minimum available value for the PodDisruptionBudget manifest.
   minAvailable: 0
 
-  # @schema
-  # required: false
-  # @schema
   # -- Maximum available value for the PodDisruptionBudget manifest.
   maxUnavailable: 0
 
-# @schema
-# required: false
-# @schema
 networkPolicy:
-
-  # @schema
-  # required: false
-  # @schema
   # -- Enable the NetworkPolicy.
   enabled: false
 
   # @schema
-  # required: false
   # additionalProperties: true
   # @schema
   # -- Extra annotations for the NetworkPolicy manifest.
   annotations: {}
 
   # @schema
-  # required: false
   # additionalProperties: true
   # @schema
   # -- Extra labels for the NetworkPolicy manifest.
   labels: {}
 
   # @schema
-  # required: false
+  # type: array
   # items:
-  #   enum: [Ingress, Egress]
+  #   enum: ['Ingress', 'Egress']
   # @schema
   # -- The Policy Types such as Ingress or Egress.
   policyTypes:
     - 'Ingress'
 
   # @schema
-  # required: false
   # type: array
   # items:
   #   $ref: https://charts.authelia.com/definitions.json#/definitions/io.k8s.api.networking.v1.NetworkPolicyIngressRule
@@ -1284,166 +877,91 @@ networkPolicy:
   ingress: []
 
   # @schema
-  # required: false
   # type: array
   # items:
   #   $ref: https://charts.authelia.com/definitions.json#/definitions/io.k8s.api.networking.v1.NetworkPolicyEgressRule
   # @schema
   egress: []
 
-# @schema
-# required: false
-# @schema
 configMap:
-
-  # @schema
-  # required: false
-  # @schema
   # -- Disable the configMap source for the Authelia config. If this is false you need to provide a volumeMount via
   # PV/PVC or other means that mounts to /config.
   disabled: false
 
   # @schema
-  # required: false
   # additionalProperties: true
   # @schema
   # -- Extra annotations for the ConfigMap manifest.
   annotations: {}
 
   # @schema
-  # required: false
   # additionalProperties: true
   # @schema
   # -- Extra labels for the ConfigMap manifest.
   labels: {}
 
-  # @schema
-  # required: false
-  # @schema
   # -- The key from the ConfigMap manifest to generate and mount the configuration.
   key: 'configuration.yaml'
 
-  # @schema
-  # required: false
-  # @schema
   # -- The name of an existing ConfigMap instead of generating one.
   existingConfigMap: ''
 
   # @schema
-  # required: false
+  # type: array
+  # items:
+  #   type: string
   # @schema
   # -- The paths of extra configs that are mounted into the Pod which should be used.
   extraConfigs: []
 
-
-  # @schema
-  # required: false
-  # @schema
   filters:
-
-    # @schema
-    # required: false
-    # @schema
     # -- Disables the template filters. This is not recommended.
     disabled: false
 
-  # @schema
-  # required: false
-  # @schema
   server:
-
-    # @schema
-    # required: false
-    # @schema
     # -- Port sets the configured port for the daemon, service, and the probes. Default is 9091 and should not need
     # to be changed.
     port: 9091
 
-    # @schema
-    # required: false
-    # @schema
     # -- Set the single level path Authelia listens on.  Must be alphanumeric chars and should not contain any slashes.
     path: ''
 
-    # @schema
-    # required: false
-    # @schema
     # -- Set the path on disk to Authelia assets. Useful to allow overriding of specific static assets.
     asset_path: ''
 
-    # @schema
-    # required: false
-    # @schema
     headers:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Read the Authelia docs before setting this advanced option.
       # https://www.authelia.com/configuration/miscellaneous/server/#csp_template.
       csp_template: ''
 
-    # @schema
-    # required: false
-    # @schema
     buffers:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Read buffer.
       read: 4096
 
-      # @schema
-      # required: false
-      # @schema
       # -- Write buffer.
       write: 4096
 
-    # @schema
-    # required: false
-    # @schema
     timeouts:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Read timeout.
       read: '6 seconds'
 
-      # @schema
-      # required: false
-      # @schema
       # -- Write timeout.
       write: '6 seconds'
 
-      # @schema
-      # required: false
-      # @schema
       # -- Idle timeout.
       idle: '30 seconds'
 
-    # @schema
-    # required: false
-    # @schema
     endpoints:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Enable the developer pprof handlers.
       enable_pprof: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- Enable the developer expvars handlers.
       enable_expvars: false
 
       # @schema
-      # required: false
+      # type: array
       # items:
-      #   enum: [AuthRequest,ExtAuthz,ForwardAuth,Legacy]
+      #   enum: ['AuthRequest','ExtAuthz','ForwardAuth','Legacy']
       # @schema
       # -- A list of automatically configured authz implementations if you don't wish to manually configure each one.
       # Important Note: If you configure the 'authz' section this is completely ignored.
@@ -1454,32 +972,27 @@ configMap:
       # - 'ForwardAuth'
 
       # @schema
-      # required: false
       # patternProperties:
       #   ".*":
       #     type: object
       #     properties:
       #       implementation:
       #         type: string
-      #         enum: [AuthRequest,ExtAuthz,ForwardAuth,Legacy]
+      #         enum: ['AuthRequest','ExtAuthz','ForwardAuth','Legacy']
       #       authn_strategies:
       #         type: array
       #         items:
       #           type: object
-      #           required: false
       #           properties:
       #             name:
       #               type: string
-      #               enum: [CookieSession,HeaderAuthorization,HeaderProxyAuthorization,HeaderAuthRequestProxyAuthorization,HeaderLegacy]
+      #               enum: ['CookieSession','HeaderAuthorization','HeaderProxyAuthorization','HeaderAuthRequestProxyAuthorization','HeaderLegacy']
       #             schemes:
       #               type: array
-      #               required: false
       #               items:
-      #                 required: false
-      #                 enum: [Basic,Bearer,basic,bearer]
+      #                 enum: ['Basic','Bearer','basic','bearer']
       #             scheme_basic_cache_lifespan:
       #               type: [integer,string]
-      #               required: false
       # @schema
       # -- Dictionary of individually configured Authz endpoints.
       authz: {}
@@ -1508,324 +1021,225 @@ configMap:
 
       # -- Configure the rate limits for various endpoints.
       rate_limits:
-
         # -- Configure the rate limits for the reset password start endpoint.
         reset_password_start:
-
           # -- Enables this rate limit.
           enable: true
 
           # @schema
           # type: array
-          # required: false
           # items:
           #   type: object
-          #   required: false
+          #   required: ['period','limit']
           #   properties:
           #     period:
-          #       type: [integer, string]
-          #       required: true
+          #       type: [string, integer]
           #     limit:
-          #       type: integer
-          #       required: true
+          #       type: 'integer'
           # @schema
           # -- List of rate limit buckets.
           buckets: []
 
         # -- Configure the rate limits for the reset password finish endpoint.
         reset_password_finish:
-
           # -- Enables this rate limit.
           enable: true
 
           # @schema
           # type: array
-          # required: false
           # items:
           #   type: object
-          #   required: false
+          #   required: ['period', 'limit']
           #   properties:
           #     period:
-          #       type: [integer, string]
-          #       required: true
+          #       type: [string, integer]
           #     limit:
           #       type: integer
-          #       required: true
           # @schema
           # -- List of rate limit buckets.
           buckets: []
 
         # -- Configure the rate limits for the second factor TOTP endpoint.
         second_factor_totp:
-
           # -- Enables this rate limit.
           enable: true
 
           # @schema
           # type: array
-          # required: false
           # items:
           #   type: object
-          #   required: false
+          #   required: ['period', 'limit']
           #   properties:
           #     period:
-          #       type: [integer, string]
-          #       required: true
+          #       type: [string, integer]
           #     limit:
           #       type: integer
-          #       required: true
           # @schema
           # -- List of rate limit buckets.
           buckets: []
 
         # -- Configure the rate limits for the second factor DUO endpoint.
         second_factor_duo:
-
           # -- Enables this rate limit.
           enable: true
 
           # @schema
           # type: array
-          # required: false
           # items:
           #   type: object
-          #   required: false
+          #   required: ['period', 'limit']
           #   properties:
           #     period:
-          #       type: [integer, string]
-          #       required: true
+          #       type: [string, integer]
           #     limit:
           #       type: integer
-          #       required: true
           # @schema
           # -- List of rate limit buckets.
           buckets: []
 
         # -- Configure the rate limits for the session elevation start endpoint.
         session_elevation_start:
-
           # -- Enables this rate limit.
           enable: true
 
           # @schema
           # type: array
-          # required: false
           # items:
           #   type: object
-          #   required: false
+          #   required: ['period', 'limit']
           #   properties:
           #     period:
-          #       type: [integer, string]
-          #       required: true
+          #       type: [string, integer]
           #     limit:
           #       type: integer
-          #       required: true
           # @schema
           # -- List of rate limit buckets.
           buckets: []
 
         # -- Configure the rate limits for the session elevation finish endpoint.
         session_elevation_finish:
-
           # -- Enables this rate limit.
           enable: true
 
           # @schema
           # type: array
-          # required: false
           # items:
           #   type: object
-          #   required: false
+          #   required: ['period', 'limit']
           #   properties:
           #     period:
-          #       type: [integer, string]
-          #       required: true
+          #       type: [string, integer]
           #     limit:
           #       type: integer
-          #       required: true
           # @schema
           # -- List of rate limit buckets.
           buckets: []
 
         # -- Configure the rate limits for the OpenID Connect 1.0 Token endpoint.
         openid_connect_token:
-
           # -- Enables this rate limit.
           enable: true
 
           # @schema
           # type: array
-          # required: false
           # items:
           #   type: object
-          #   required: false
+          #   required: ['period', 'limit']
           #   properties:
           #     period:
-          #       type: [integer, string]
-          #       required: true
+          #       type: [string, integer]
           #     limit:
           #       type: integer
-          #       required: true
           # @schema
           # -- List of rate limit buckets.
           buckets: []
 
         # -- Configure the rate limits for the OpenID Connect 1.0 Pushed Authorization Request endpoint.
         openid_connect_pushed_authorization_request:
-
           # -- Enables this rate limit.
           enable: true
 
           # @schema
           # type: array
-          # required: false
           # items:
           #   type: object
-          #   required: false
+          #   required: ['period', 'limit']
           #   properties:
           #     period:
-          #       type: [integer, string]
-          #       required: true
+          #       type: [string, integer]
           #     limit:
           #       type: integer
-          #       required: true
           # @schema
           # -- List of rate limit buckets.
           buckets: []
 
-  # @schema
-  # required: false
-  # @schema
   log:
-
     # @schema
-    # required: false
-    # enum: [error,warn,info,debug,trace]
+    # enum: ['error','warn','info','debug','trace']
     # @schema
     # -- Level of verbosity for logs: info, debug, trace.
     level: 'info'
 
     # @schema
-    # required: false
-    # enum: [text,json]
+    # enum: ['text','json']
     # @schema
     # -- Format the logs are written as: json, text.
     format: 'text'
 
-    # @schema
-    # required: false
-    # @schema
     # -- File path where the logs will be written. If not set logs are written to stdout.
     file_path: ''
 
-  # @schema
-  # required: false
-  # @schema
   telemetry:
-
-    # @schema
-    # required: false
-    # @schema
     metrics:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Enable Metrics.
       enabled: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- The port to listen on for metrics. This should be on a different port to the main server.port value.
       port: 9959
 
-      # @schema
-      # required: false
-      # @schema
       buffers:
-
-        # @schema
-        # required: false
-        # @schema
         # -- Read buffer.
         read: 4096
 
-        # @schema
-        # required: false
-        # @schema
         # -- Write buffer.
         write: 4096
 
-      # @schema
-      # required: false
-      # @schema
       timeouts:
-
-        # @schema
-        # required: false
-        # @schema
         # -- Read timeout.
         read: '6 seconds'
 
-        # @schema
-        # required: false
-        # @schema
         # -- Write timeout.
         write: '6 seconds'
 
-        # @schema
-        # required: false
-        # @schema
         # -- Idle timeout.
         idle: '30 seconds'
 
-      # @schema
-      # required: false
-      # @schema
       serviceMonitor:
-
-        # @schema
-        # required: false
-        # @schema
         # -- Enable generating a Prometheus ServiceMonitor.
         enabled: false
 
         # @schema
-        # required: false
         # additionalProperties: true
         # @schema
         # -- Extra annotations for the ServiceMonitor manifest.
         annotations: {}
 
         # @schema
-        # required: false
         # additionalProperties: true
         # @schema
         # -- Extra labels for the ServiceMonitor manifest.
         labels: {}
 
-  # @schema
-  # required: false
-  # @schema
   # -- Set the default 2FA method for new users and for when a user has a preferred method configured that has been
   # disabled. This setting must be a method that is enabled.
   # Options are totp, webauthn, mobile_push.
   default_2fa_method: ''
 
-  # @schema
-  # required: false
-  # @schema
   # -- Theme name to use for the frontend.
   theme: 'light'
 
-  # @schema
-  # required: false
-  # @schema
   definitions:
-
     # @schema
-    # required: false
     # patternProperties:
     #  ".*":
     #    anyOf:
@@ -1844,7 +1258,6 @@ configMap:
         # - '2001:db8:1234:5678::1'
 
     # @schema
-    # required: false
     # patternProperties:
     #  ".*":
     #    type: object
@@ -1866,833 +1279,451 @@ configMap:
       # access_level:
         # expression: '"admin" in groups ? 10 : 5'
 
-  # @schema
-  # required: false
-  # @schema
   identity_validation:
-
-    # @schema
-    # required: false
-    # @schema
-    # The Reset Password Identity Validation implementation ensures that users cannot perform a reset password flow
+    # -- The Reset Password Identity Validation implementation ensures that users cannot perform a reset password flow
     # without first ensuring the user is adequately identified. The settings below therefore can affect the level of
     # security Authelia provides to your users so they should be carefully considered.
     reset_password:
-
       # @schema
-      # type: [integer, string]
-      # required: false
+      # type: [string, integer]
       # @schema
       # -- The lifespan of the JSON Web Token after it’s initially generated after which it’s considered invalid.
       jwt_lifespan: '5 minutes'
 
-      # @schema
-      # required: false
-      # @schema
       # -- The JSON Web Token Algorithm used to sign the JWT. Must be HS256, HS384, or HS512.
       jwt_algorithm: 'HS256'
 
-      # @schema
-      # required: false
-      # @schema
-      ## The secret used with the HMAC algorithm to sign the JWT minted by Authelia.
+      # -- The secret used with the HMAC algorithm to sign the JWT minted by Authelia.
       secret:
-
-        # @schema
-        # required: false
-        # @schema
         # -- Disables this secret and leaves configuring it entirely up to you.
         disabled: false
 
-        # @schema
-        # required: false
-        # @schema
         # -- The secret name. The ~ name is special as it is the secret we generate either automatically or via the
         # secret_value option below.
         secret_name: ~
 
-        # @schema
-        # required: false
-        # @schema
         # -- The value of a generated secret when using the ~ secret_name.
         value: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
         # it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
         # value, '{secret_name}' is the secret_name above, and '{path}' is this value.
         path: 'identity_validation.reset_password.jwt.hmac.key'
 
-    # @schema
-    # required: false
-    # @schema
     ## The Elevated Session Identity Validation implementation ensures that users cannot perform actions which may
     ## adjust the security characteristics of their account without first ensuring the user is adequately identified.
     ## The settings below therefore can affect the level of security Authelia provides to your users so they should be
     ## carefully considered.
     elevated_session:
-
       # @schema
-      # type: [integer, string]
-      # required: false
+      # type: [string, integer]
       # @schema
       # -- The lifespan of the randomly generated One Time Code after which it’s considered invalid.
       code_lifespan: '5 minutes'
 
       # @schema
-      # type: [integer, string]
-      # required: false
+      # type: [string, integer]
       # @schema
       # -- The lifespan of the elevation after initially validating the One-Time Code before it expires.
       elevation_lifespan: '10 minutes'
 
-      # @schema
-      # required: false
-      # @schema
       # -- The number of characters the random One-Time Code has. Maximum value is currently 20, but we recommend keeping
       # it between 8 and 12. It’s strongly discouraged to reduce it below 8.
       characters: 8
 
-      # @schema
-      # required: false
-      # @schema
       # -- Requires second factor authentication for all protected actions in addition to the elevated session provided
       # the user has configured a second factor authentication method.
       require_second_factor: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- Skips the elevated session requirement if the user has performed second factor authentication. Can be combined
       # with the require_second_factor option to always (and only) require second factor authentication.
       skip_second_factor: false
 
 
-  # @schema
-  # required: false
-  # @schema
   totp:
-
-    # @schema
-    # required: false
-    # @schema
     # -- Disable TOTP.
     disable: false
 
-    # @schema
-    # required: false
-    # @schema
     # -- The issuer name displayed in the Authenticator application of your choice.
     # Defaults to 'Authelia'.
     issuer: 'Authelia'
 
-    # @schema
-    # required: false
-    # @schema
     # -- The skew controls number of one-time passwords either side of the current one that are valid.
     # Warning: before changing skew read the docs link below.
     # See: https://www.authelia.com/configuration/second-factor/time-based-one-time-password/#input-validation to read the documentation.
     skew: 1
 
-    # @schema
-    # required: false
-    # @schema
     # -- The size of the generated shared secrets. Default is 32 and is sufficient in most use cases, minimum is 20.
     secret_size: 32
 
-    # @schema
-    # required: false
-    # @schema
     # -- The TOTP algorithm to use.
     # It is CRITICAL you read the documentation before changing this option:
     # https://www.authelia.com/configuration/second-factor/time-based-one-time-password/#algorithm
     algorithm: 'SHA1'
 
-    # @schema
-    # required: false
-    # @schema
     # -- The number of digits a user has to input. Must either be 6 or 8.
     # Changing this option only affects newly generated TOTP configurations.
     # It is CRITICAL you read the documentation before changing this option:
     # https://www.authelia.com/configuration/second-factor/time-based-one-time-password/#digits
     digits: 6
 
-    # @schema
-    # required: false
-    # @schema
     # -- The period in seconds a one-time password is valid for.
     # Changing this option only affects newly generated TOTP configurations.
     period: 30
 
-    # @schema
-    # required: false
-    # @schema
     # -- Similar to algorithm with the same restrictions except this option allows users to pick from this list. This list
     # will always contain the value configured in the algorithm option.
     allowed_algorithms:
       - 'SHA1'
 
-    # @schema
-    # required: false
-    # @schema
     # -- Similar to digits with the same restrictions except this option allows users to pick from this list. This list
     # will always contain the value configured in the digits option.
     allowed_digits:
       - 6
 
-    # @schema
-    # required: false
-    # @schema
     # -- Similar to period with the same restrictions except this option allows users to pick from this list. This list
     # will always contain the value configured in the period option.
     allowed_periods:
       - 30
 
-  # @schema
-  # required: false
-  # @schema
   webauthn:
-
-    # @schema
-    # required: false
-    # @schema
     # -- Disable Webauthn.
     disable: false
 
-    # @schema
-    # required: false
-    # @schema
     # -- Enabled Passkey Logins.
     enable_passkey_login: false
 
     # @schema
-    # type: [integer, string]
-    # required: false
+    # type: [string, integer]
     # @schema
     # -- Adjust the interaction timeout for Webauthn dialogues.
     timeout: '60 seconds'
 
-    # @schema
-    # required: false
-    # @schema
     # -- The display name the browser should show the user for when using Webauthn to login/register.
     display_name: 'Authelia'
 
-    # @schema
-    # required: false
-    # @schema
     # -- Conveyance preference controls if we collect the attestation statement including the AAGUID from the device.
     # Options are none, indirect, direct.
     attestation_conveyance_preference: 'indirect'
 
-    # @schema
-    # required: false
-    # @schema
     filtering:
-
-      # @schema
-      # required: false
-      # @schema
       # -- A list of Authenticator Attestation GUID’s that are the only ones allowed to be registered. Useful if you have
       # a company policy that requires certain authenticators. Mutually exclusive with prohibited_aaguids.
       permitted_aaguids: []
 
-      # @schema
-      # required: false
-      # @schema
       # -- A list of Authenticator Attestation GUID’s that users will not be able to register. Useful if company policy
       # prevents certain authenticators. Mutually exclusive with permitted_aaguids.
       prohibited_aaguids: []
 
-      # @schema
-      # required: false
-      # @schema
       # -- Setting this value to true will ensure Authenticators which can export credentials will not be able to
       # register. This will likely prevent synchronized credentials from being registered.
       prohibit_backup_eligibility: false
 
-    # @schema
-    # required: false
-    # @schema
     selection_criteria:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Sets the attachment preference for newly created credentials.
       attachment: ''
 
-      # @schema
-      # required: false
-      # @schema
       # -- Sets the discoverability preference. May affect the creation of Passkeys.
       discoverability: 'preferred'
 
-      # @schema
-      # required: false
-      # @schema
       # -- Sets the user verification preference.
       user_verification: 'preferred'
 
-    # @schema
-    # required: false
-    # @schema
     metadata:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Enables metadata service validation of authenticators and credentials. This requires the download of the
       # metadata service blob which will utilize about 5MB of data in your configured storage backend.
       enabled: false
 
       # @schema
-      # required: false
-      # enum: [strict,relaxed]
+      # enum: ['strict', 'relaxed']
       # @schema
       # -- Allows adjusting the WebAuthn Metadata Cache Policy.
       cache_policy: 'strict'
 
-      # @schema
-      # required: false
-      # @schema
       # -- Enables validation of the attestation certificate against the Certificate Authority certificate in the
       # validated MDS3 blob. It’s recommended this value is always the default value.
       validate_trust_anchor: true
 
-      # @schema
-      # required: false
-      # @schema
       # -- Enables validation that an entry exists for the authenticator in the MDS3 blob. It’s recommended that this
       # option is the default value, however this may exclude some authenticators which DO NOT have FIDO compliance
       # certification or have otherwise not registered with the MDS3. The recommendation is based on the fact that the
       # authenticity of a particular authenticator cannot be validated without this.
       validate_entry: true
 
-      # @schema
-      # required: false
-      # @schema
       # -- Allows authenticators which have provided an empty Authenticator Attestation GUID. This may be required for
       # certain authenticators which DO NOT have FIDO compliance certification.
       validate_entry_permit_zero_aaguid: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- Enables validation of the attestation entry statuses. There is generally never a reason to disable this as the
       # authenticators excluded by default are likely compromised.
       validate_status: true
 
-      # @schema
-      # required: false
-      # @schema
       # -- A list of exclusively required statuses for an authenticator to pass validation.
       validate_status_permitted: []
 
-      # @schema
-      # required: false
-      # @schema
       # -- A list of authenticator statuses which for an authenticator that are prohibited from being registered.
       validate_status_prohibited: []
 
-  # @schema
-  # required: false
-  # @schema
   ntp:
-
-    # @schema
-    # required: false
-    # @schema
     # -- NTP server address.
     address: 'udp://time.cloudflare.com:123'
 
-    # @schema
-    # required: false
-    # @schema
     # -- NTP version.
     version: 4
 
     # @schema
-    # type: [integer, string]
-    # required: false
+    # type: [string, integer]
     # @schema
     # -- Maximum allowed time offset between the host and the NTP server.
     max_desync: '3 seconds'
 
-    # @schema
-    # required: false
-    # @schema
     # -- Disables the NTP check on startup entirely. This means Authelia will not contact a remote service at all if you
     # set this to true, and can operate in a truly offline mode.
     disable_startup_check: false
 
-    # @schema
-    # required: false
-    # @schema
     # -- The default of false will prevent startup only if we can contact the NTP server and the time is out of sync with
     # the NTP server more than the configured max_desync. If you set this to true, an error will be logged but startup
     # will continue regardless of results.
     disable_failure: false
 
-  # @schema
-  # required: false
-  # @schema
   duo_api:
-
-    # @schema
-    # required: false
-    # @schema
     # -- Enables Duo.
     enabled: false
 
-    # @schema
-    # required: false
-    # @schema
     # -- The Duo API hostname. This is provided in the Duo dashboard.
     hostname: ''
 
-    # @schema
-    # required: false
-    # @schema
     # -- The non-secret Duo integration key. Similar to a client identifier. This is provided in the Duo dashboard.
     integration_key: ''
 
-    # @schema
-    # required: false
-    # @schema
     # -- Enables Duo device self-enrollment from within the Authelia portal.
     enable_self_enrollment: false
 
-    # @schema
-    # required: false
-    # @schema
     secret:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Disables this secret and leaves configuring it entirely up to you.
       disabled: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- The secret name. The ~ name is special as it is the secret we generate either automatically or via the
       # secret_value option below.
       secret_name: ~
 
-      # @schema
-      # required: false
-      # @schema
       # -- The value of a generated secret when using the ~ secret_name.
       value: ''
 
-      # @schema
-      # required: false
-      # @schema
       # -- The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
       # it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
       # value, '{secret_name}' is the secret_name above, and '{path}' is this value.
       path: 'duo.key'
 
-  # @schema
-  # required: false
-  # @schema
   authentication_backend:
-
-    # @schema
-    # required: false
-    # @schema
     password_reset:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Disable both the HTML element and the API for reset password functionality.
       disable: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- External reset password url that redirects the user to an external reset portal. This disables the internal
       # reset functionality.
       custom_url: ''
 
-    # @schema
-    # required: false
-    # @schema
     password_change:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Disable both the HTML element and the API for change password functionality.
       disable: false
 
     # @schema
-    # type: [integer, string]
-    # required: false
+    # type: [string, integer]
     # @schema
     # -- The amount of time to wait before we refresh data from the authentication backend. Uses duration notation.
     refresh_interval: '5 minutes'
 
-    # @schema
-    # required: false
-    # @schema
     ldap:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Enable LDAP Backend.
       enabled: false
 
       # @schema
-      # required: false
+      # type: string
+      # enum: ['custom', 'activedirectory', 'rfc2307bis', 'freeipa', 'lldap', 'glauth']
+      # required: true
       # @schema
       # -- The LDAP implementation, this affects elements like the attribute utilised for resetting a password.
       implementation: 'activedirectory'
 
-      # @schema
-      # required: false
-      # @schema
       # -- The address for the ldap server. Format: <scheme>://<address>[:<port>].
       # Scheme can be ldap or ldaps in the format (port optional).
       address: ''
 
       # @schema
-      # type: [integer, string]
-      # required: false
+      # type: [string, integer]
       # @schema
       # -- Connection Timeout.
       timeout: '5 seconds'
 
-      # @schema
-      # required: false
-      # @schema
       # -- Use StartTLS with the LDAP connection.
       start_tls: false
 
-      # @schema
-      # required: false
-      # @schema
       tls:
-
-        # @schema
-        # required: false
-        # @schema
         # -- The server subject name to check the servers certificate against during the validation process.
         # This option is not required if the certificate has a SAN which matches the host portion of the url option.
         server_name: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- Skip verifying the server certificate entirely.
         skip_verify: false
 
-        # @schema
-        # required: false
-        # @schema
         # -- Minimum TLS version for the connection.
         minimum_version: 'TLS1.2'
 
-        # @schema
-        # required: false
-        # @schema
         # -- Maximum TLS version for the connection.
         maximum_version: 'TLS1.3'
 
-      # @schema
-      # required: false
-      # @schema
       pooling:
-
-        # @schema
-        # required: false
-        # @schema
         # -- Enables the connection pooling functionality.
         enable: false
 
-        # @schema
-        # required: false
-        # @schema
         # -- The number of open connections to be available in the pool at any given time.
         count: 5
 
-        # @schema
-        # required: false
-        # @schema
         # -- The number of attempts to obtain a free connecting that are made within the timeout period. This
         # effectively splits the timeout into chunks.
         retries: 2
 
         # @schema
-        # type: [integer, string]
-        # required: false
+        # type: [string, integer]
         # @schema
         # -- The amount of time that we wait for a connection to become free in the pool before giving up and failing
         # with an error.
         timeout: '10 seconds'
 
-      # @schema
-      # required: false
-      # @schema
       # -- The base dn for every LDAP query.
       base_dn: ''
 
-      # @schema
-      # required: false
-      # @schema
       # -- An additional dn to define the scope to all users.
       additional_users_dn: ''
 
-      # @schema
-      # required: false
-      # @schema
       # -- The users filter used in search queries to find the user profile based on input filled in login form.
       users_filter: ''
 
-      # @schema
-      # required: false
-      # @schema
       # -- An additional dn to define the scope of groups.
       additional_groups_dn: ''
 
-      # @schema
-      # required: false
-      # @schema
       # -- The groups filter used in search queries to find the groups of the user.
       groups_filter: ''
 
-      # @schema
-      # required: false
-      # @schema
       # -- Follow referrals returned by the server.
       # This is especially useful for environments where read-only servers exist. Only implemented for write operations.
       permit_referrals: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- Permits use of an unauthenticated bind. WARNING: This option is strongly discouraged. Please consider
       # disabling unauthenticated binding to your LDAP server and utilizing a service account.
       permit_unauthenticated_bind: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- This option is strongly discouraged. If enabled it will ignore errors looking up the RootDSE for supported
       # controls/extensions.
       permit_feature_detection_failure: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- The username of the admin user.
       user: ''
 
-      # @schema
-      # required: false
-      # @schema
       password:
-
-        # @schema
-        # required: false
-        # @schema
         # -- Disables this secret and leaves configuring it entirely up to you.
         disabled: false
 
-        # @schema
-        # required: false
-        # @schema
         # -- The secret name. The ~ name is special as it is the secret we generate either automatically or via the
         # secret_value option below.
         secret_name: ~
 
-        # @schema
-        # required: false
-        # @schema
         # -- The value of a generated secret when using the ~ secret_name.
         value: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
         # it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
         # value, '{secret_name}' is the secret_name above, and '{path}' is this value.
         path: 'authentication.ldap.password.txt'
 
-      # @schema
-      # required: false
-      # @schema
       attributes:
-
-        # @schema
-        # required: false
-        # @schema
         # -- The attribute holding the distinguished name of the user.
         distinguished_name: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The attribute holding the username of the user. This attribute is used to populate the username in the session
         # information.
         username: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The attribute holding the display name of the user. This will be used to greet an authenticated user.
         display_name: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The attribute holding the family name of the user.
         family_name: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The attribute holding the given name of the user.
         given_name: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The attribute holding the middle name of the user.
         middle_name: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The attribute holding the nickname of the user.
         nickname: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The attribute holding the gender of the user.
         gender: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The attribute holding the birthdate of the user.
         birthdate: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The attribute holding the website of the user.
         website: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The attribute holding the profile of the user.
         profile: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The attribute holding the picture URL of the user.
         picture: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The attribute holding the zoneinfo of the user.
         zoneinfo: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The attribute holding the locale of the user.
         locale: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The attribute holding the phone number of the user.
         phone_number: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The attribute holding the phone extension of the user.
         phone_extension: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The attribute holding the street address of the user.
         street_address: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The attribute holding the locality of the user.
         locality: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The attribute holding the region of the user.
         region: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The attribute holding the postal code of the user.
         postal_code: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The attribute holding the country of the user.
         country: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The attribute holding the mail address of the user. If multiple email addresses are defined for a user, only the
         # first one returned by the LDAP server is used.
         mail: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The attribute which represents the objects this user is a member of.
         member_of: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The attribute holding the name of the group.
         group_name: ''
 
         # @schema
-        # required: false
         # patternProperties:
         #   ".*":
         #     type: object
-        #     required: true
         #     properties:
         #       name:
         #         type: string
-        #         required: false
         #       value_type:
         #         type: string
-        #         enum: [string,integer,boolean]
+        #         enum: ['string','integer','boolean']
         #       multi_valued:
         #         type: boolean
-        #         required: false
         # @schema
         # -- The extra attributes for users.
         extra: {}
@@ -2702,61 +1733,35 @@ configMap:
           # multi_valued: false
         # value_type: 'string'
 
-    # @schema
-    # required: false
-    # @schema
     file:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Enable File Backend (Authentication).
       enabled: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- The path to the file with the user details list.
       path: '/config/users_database.yml'
 
-      # @schema
-      # required: false
-      # @schema
       # -- Enables reloading the database by watching it for changes.
       watch: false
 
-      # @schema
-      # required: false
-      # @schema
       search:
-
-        # @schema
-        # required: false
-        # @schema
         # -- Allows users to login using their email address. If enabled two users must not have the same emails and
         # their usernames must not be an email.
         email: false
 
-        # @schema
-        # required: false
-        # @schema
         # -- Enabling this search option allows users to login with their username regardless of case. If enabled users
         # must only have lowercase usernames.
         case_insensitive: false
 
       # @schema
-      # required: false
       # patternProperties:
       #   ".*":
       #     type: object
-      #     required: true
       #     properties:
       #       value_type:
       #         type: string
-      #         enum: [string,integer,boolean]
+      #         enum: ['string', 'integer', 'boolean']
       #       multi_valued:
       #         type: boolean
-      #         required: false
       # @schema
       # -- The extra attributes to load from the directory server. These extra attributes can be used in other areas of
       # Authelia such as OpenID Connect 1.0. It’s also recommended to check out the Attributes Reference Guide for more
@@ -2764,271 +1769,125 @@ configMap:
       extra_attributes: {}
 
       password:
-
-        # @schema
-        # required: false
-        # @schema
         # -- Controls the hashing algorithm used for hashing new passwords.
         algorithm: 'argon2'
 
-        # @schema
-        # required: false
-        # @schema
         argon2:
-
-          # @schema
-          # required: false
-          # @schema
           # -- Controls the variant when hashing passwords using Argon2. Recommended argon2id. Permitted values
           # argon2id, argon2i, argon2d.
           variant: 'argon2id'
 
-          # @schema
-          # required: false
-          # @schema
           # -- Controls the number of iterations when hashing passwords using Argon2.
           iterations: 3
 
-          # @schema
-          # required: false
-          # @schema
           # -- Controls the amount of memory in kibibytes when hashing passwords using Argon2.
           memory: 65536
 
-          # @schema
-          # required: false
-          # @schema
           # -- Controls the parallelism factor when hashing passwords using Argon2.
           parallelism: 4
 
-          # @schema
-          # required: false
-          # @schema
           # -- Controls the output key length when hashing passwords using Argon2.
           key_length: 32
 
-          # @schema
-          # required: false
-          # @schema
           # -- Controls the output salt length when hashing passwords using Argon2
           salt_length: 16
 
-        # @schema
-        # required: false
-        # @schema
         scrypt:
-
-          # @schema
-          # required: false
-          # @schema
           # -- Controls the variant when hashing passwords using Scrypt. Permitted values scrypt, yescrypt.
           variant: 'scrypt'
 
-          # @schema
-          # required: false
-          # @schema
           # -- Controls the number of iterations when hashing passwords using Scrypt.
           iterations: 16
 
-          # @schema
-          # required: false
-          # @schema
           # -- Controls the block size when hashing passwords using Scrypt.
           block_size: 8
 
-          # @schema
-          # required: false
-          # @schema
           # -- Controls the parallelism factor when hashing passwords using Scrypt.
           parallelism: 1
 
-          # @schema
-          # required: false
-          # @schema
           # -- Controls the output key length when hashing passwords using Scrypt.
           key_length: 32
 
-          # @schema
-          # required: false
-          # @schema
           # -- Controls the output salt length when hashing passwords using Scrypt.
           salt_length: 16
 
-        # @schema
-        # required: false
-        # @schema
         pbkdf2:
-
-          # @schema
-          # required: false
-          # @schema
           # -- Controls the variant when hashing passwords using PBKDF2. Recommended sha512. Permitted values sha1,
           # sha224, sha256, sha384, sha512.
           variant: 'sha512'
 
-          # @schema
-          # required: false
-          # @schema
           # -- Controls the number of iterations when hashing passwords using PBKDF2.
           iterations: 310000
 
-          # @schema
-          # required: false
-          # @schema
           # -- Controls the output salt length when hashing passwords using PBKDF2.
           salt_length: 16
 
-        # @schema
-        # required: false
-        # @schema
         sha2crypt:
-
-          # @schema
-          # required: false
-          # @schema
           # -- Controls the variant when hashing passwords using SHA2 Crypt. Recommended sha512. Permitted values
           # sha256, sha512.
           variant: 'sha512'
 
-          # @schema
-          # required: false
-          # @schema
           # -- Controls the number of iterations when hashing passwords using SHA2 Crypt.
           iterations: 50000
 
-          # @schema
-          # required: false
-          # @schema
           # -- Controls the output salt length when hashing passwords using SHA2 Crypt.
           salt_length: 16
 
-        # @schema
-        # required: false
-        # @schema
         bcrypt:
-
-          # @schema
-          # required: false
-          # @schema
           # -- Controls the variant when hashing passwords using Bcrypt. Recommended standard. Permitted values
           # standard, sha256.
           variant: 'standard'
 
-          # @schema
-          # required: false
-          # @schema
           # -- Controls the hashing cost when hashing passwords using Bcrypt.
           cost: 12
 
-  # @schema
-  # required: false
-  # @schema
   password_policy:
-
-    # @schema
-    # required: false
-    # @schema
     standard:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Enables standard password policy.
       enabled: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- Require a minimum length for passwords.
       min_length: 8
 
-      # @schema
-      # required: false
-      # @schema
       # -- Require a maximum length for passwords.
       max_length: 0
 
-      # @schema
-      # required: false
-      # @schema
       # -- Require uppercase characters.
       require_uppercase: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- Require lowercase characters.
       require_lowercase: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- Require numeric characters.
       require_number: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- Require special characters.
       require_special: false
 
-    # @schema
-    # required: false
-    # @schema
     ## zxcvbn is a well known and used password strength algorithm. It does not have tunable settings.
     zxcvbn:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Enables zxcvbn password policy.
       enabled: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- Configures the minimum score allowed.
       min_score: 0
 
-  # @schema
-  # required: false
-  # @schema
   access_control:
-
-    # @schema
-    # required: false
-    # @schema
     ## Configure the ACL as a Secret instead of part of the ConfigMap.
     secret:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Enables the ACL section being generated as a secret.
       enabled: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- The key in the secret which contains the file to mount.
       key: 'configuration.acl.yaml'
 
-      # @schema
-      # required: false
-      # @schema
       # -- An existingSecret name, if configured this will force the secret to be mounted using the key above.
       existingSecret: ''
 
-    # @schema
-    # required: false
-    # @schema
     # -- Default policy can either be 'bypass', 'one_factor', 'two_factor' or 'deny'. It is the policy applied to any
     # resource if there is no policy to be applied to the user.
     default_policy: 'deny'
 
-    # @schema
-    # required: false
-    # @schema
     # -- Access Control Rule list.
     rules: []
     # rules:
@@ -3076,73 +1935,46 @@ configMap:
     # - domain: '{user}.example.com'
     #   policy: 'bypass'
 
-  # @schema
-  # required: false
-  # @schema
   session:
-
-    # @schema
-    # required: false
-    # @schema
     # -- The name of the session cookie. (default: authelia_session).
     name: 'authelia_session'
 
     # @schema
-    # required: false
-    # enum: [lax,strict,none,'']
+    # enum: ['lax', 'strict', 'none', '']
     # @schema
     # -- Sets the Cookie SameSite value. Possible options are none, lax, or strict.
     # Please read https://www.authelia.com/configuration/session/introduction/#same_site
     same_site: 'lax'
 
     # @schema
-    # type: [integer, string]
-    # required: false
+    # type: [string, integer]
     # @schema
     # -- The time before the cookie expires and session is reset.
     expiration: '1 hour'
 
     # @schema
-    # type: [integer, string]
-    # required: false
+    # type: [string, integer]
     # @schema
     # -- The inactivity time before the session is reset.
     inactivity: '5 minutes'
 
     # @schema
-    # type: [integer, string]
-    # required: false
+    # type: [string, integer]
     # @schema
     # -- The remember me duration.
     remember_me: '1 month'
 
-    # @schema
-    # required: false
-    # @schema
     encryption_key:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Disables this secret and leaves configuring it entirely up to you.
       disabled: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- The secret name. The ~ name is special as it is the secret we generate either automatically or via the
       # secret_value option below.
       secret_name: ~
 
-      # @schema
-      # required: false
-      # @schema
       # -- The value of a generated secret when using the ~ secret_name.
       value: ''
 
-      # @schema
-      # required: false
-      # @schema
       # -- The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
       # it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
       # value, '{secret_name}' is the secret_name above, and '{path}' is this value.
@@ -3154,32 +1986,26 @@ configMap:
     # items:
     #   type: object
     #   additionalProperties: false
+    #   required: ['domain']
     #   properties:
     #     subdomain:
     #       type: string
-    #       required: false
     #     domain:
     #       type: string
     #     path:
     #       type: string
-    #       required: false
     #     default_redirection_url:
     #       type: string
     #       format: uri
-    #       required: false
     #     name:
     #       type: string
-    #       required: false
     #     same_site:
     #       type: string
-    #       required: false
-    #       enum: [lax,strict,none,'']
+    #       enum: ['lax', 'strict', 'none', '']
     #     expiration:
-    #       type: [integer, string]
-    #       required: false
+    #       type: [string, integer]
     #     inactivity:
-    #       type: [integer, string]
-    #       required: false
+    #       type: [string, integer]
     # @schema
     # -- Session Cookies list.
     cookies: []
@@ -3220,191 +2046,98 @@ configMap:
         ## more descriptive information about this value exists.
         # inactivity: ''
 
-    # @schema
-    # required: false
-    # @schema
     redis:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Enable the use of redis.
       enabled: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- Deploy the redis bitnami chart.
       deploy: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- The redis host or unix socket path. If utilising an IPv6 literal address it must be enclosed by square
       # brackets and quoted.
       host: 'redis.databases.svc.cluster.local'
 
-      # @schema
-      # required: false
-      # @schema
       # -- The port redis is listening on.
       port: 6379
 
-      # @schema
-      # required: false
-      # @schema
       # -- Optional username to be used with authentication.
       username: ''
 
-      # @schema
-      # required: false
-      # @schema
       password:
-
-        # @schema
-        # required: false
-        # @schema
         # -- Disables this secret and leaves configuring it entirely up to you.
         disabled: false
 
         # @schema
         # type: [string, null]
-        # required: false
         # @schema
         # -- (string) The secret name. The ~ name is special as it is the secret we generate either automatically or via the
         # secret_value option below.
         secret_name: ~
 
-        # @schema
-        # required: false
-        # @schema
         # -- The value of a generated secret when using the ~ secret_name.
         value: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
         # it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
         # value, '{secret_name}' is the secret_name above, and '{path}' is this value.
         path: 'session.redis.password.txt'
 
-      # @schema
-      # required: false
-      # @schema
       # -- This is the Redis DB Index https://redis.io/commands/select (sometimes referred to as database number, DB, etc).
       database_index: 0
 
-      # @schema
-      # required: false
-      # @schema
       # -- The maximum number of concurrent active connections to Redis.
       maximum_active_connections: 8
 
-      # @schema
-      # required: false
-      # @schema
       # -- The target number of idle connections to have open ready for work. Useful when opening connections is slow.
       minimum_idle_connections: 0
 
-      # @schema
-      # required: false
-      # @schema
       ## The Redis TLS configuration. If defined will require a TLS connection to the Redis instance(s).
       tls:
-
-        # @schema
-        # required: false
-        # @schema
         # -- Enables rendering this TLS config.
         enabled: false
 
-        # @schema
-        # required: false
-        # @schema
         # -- The server subject name to check the servers certificate against during the validation process.
         # This option is not required if the certificate has a SAN which matches the host option.
         server_name: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- Skip verifying the server certificate entirely.
         skip_verify: false
 
-        # @schema
-        # required: false
-        # @schema
         # -- Minimum TLS version for the connection.
         minimum_version: 'TLS1.2'
 
-        # @schema
-        # required: false
-        # @schema
         # -- Maximum TLS version for the connection.
         maximum_version: 'TLS1.3'
 
-      # @schema
-      # required: false
-      # @schema
       ## The Redis HA configuration options.
       ## This provides specific options to Redis Sentinel, sentinel_name must be defined (Master Name).
       high_availability:
-
-        # @schema
-        # required: false
-        # @schema
         # -- Enable the use of redis sentinel.
         enabled: false
 
-        # @schema
-        # required: false
-        # @schema
         # -- Sentinel Name / Master Name
         sentinel_name: 'mysentinel'
 
-        # @schema
-        # required: false
-        # @schema
         # -- The Redis Sentinel-specific username. If supplied, authentication will be done via Redis 6+ ACL-based
         # authentication. If left blank, authentication to sentinels will be done via `requirepass`.
         username: ''
 
-        # @schema
-        # required: false
-        # @schema
         password:
-
-          # @schema
-          # required: false
-          # @schema
           # -- Disables this secret and leaves configuring it entirely up to you.
           disabled: false
 
-          # @schema
-          # required: false
-          # @schema
           # -- The secret name. The ~ name is special as it is the secret we generate either automatically or via the
           # secret_value option below.
           secret_name: ~
 
-          # @schema
-          # required: false
-          # @schema
           # -- The value of a generated secret when using the ~ secret_name.
           value: ''
 
-          # @schema
-          # required: false
-          # @schema
           # -- The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
           # it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
           # value, '{secret_name}' is the secret_name above, and '{path}' is this value.
           path: 'session.redis.sentinel.password.txt'
 
-        # @schema
-        # required: false
-        # @schema
         # -- The additional nodes to pre-seed the redis provider with (for sentinel).
         # If the host in the above section is defined, it will be combined with this list to connect to sentinel.
         # For high availability to be used you must have either defined; the host above or at least one node below.
@@ -3415,41 +2148,24 @@ configMap:
         #   - host: 'sentinel-1.databases.svc.cluster.local'
         #     port: 26379
 
-        # @schema
-        # required: false
-        # @schema
         # -- Choose the host with the lowest latency.
         route_by_latency: false
 
-        # @schema
-        # required: false
-        # @schema
         # -- Choose the host randomly.
         route_randomly: false
 
-  # @schema
-  # required: false
-  # @schema
   regulation:
-
-    # @schema
-    # required: false
-    # @schema
     # -- The regulation modes to use. The active modes determines what is banned in the event of a regulation ban being
     # triggered as well as what logs to inspect to determine if a ban is needed. Default is just user, but ip is also
     # available.
     modes:
       - 'user'
 
-    # @schema
-    # required: false
-    # @schema
     # -- The number of failed login attempts before user is banned. Set it to 0 to disable regulation.
     max_retries: 3
 
     # @schema
-    # type: [integer, string]
-    # required: false
+    # type: [string, integer]
     # @schema
     # -- The time range during which the user can attempt login before being banned. The user is banned if the
     # authentication failed 'max_retries' times in a 'find_time' window. Find Time accepts duration notation.
@@ -3457,8 +2173,7 @@ configMap:
     find_time: '2 minutes'
 
     # @schema
-    # type: [integer, string]
-    # required: false
+    # type: [string, integer]
     # @schema
     # -- The length of time before a banned user can login again. Ban Time accepts duration notation.
     # See: https://www.authelia.com/configuration/prologue/common/#duration-notation-format
@@ -3468,194 +2183,96 @@ configMap:
   # required: true
   # @schema
   storage:
-
-    # @schema
-    # required: false
-    # @schema
     encryption_key:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Disables this secret and leaves configuring it entirely up to you.
       disabled: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- The secret name. The ~ name is special as it is the secret we generate either automatically or via the
       # secret_value option below.
       secret_name: ~
 
-      # @schema
-      # required: false
-      # @schema
       # -- The value of a generated secret when using the ~ secret_name.
       value: ''
 
-      # @schema
-      # required: false
-      # @schema
       # -- The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
       # it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
       # value, '{secret_name}' is the secret_name above, and '{path}' is this value.
       path: 'storage.encryption.key'
 
-    # @schema
-    # required: false
-    # @schema
     local:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Enable the Local Provider (Storage / SQL)
       enabled: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- Path to the SQLite3 database.
       path: '/config/db.sqlite3'
 
-    # @schema
-    # required: false
-    # @schema
     mysql:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Enable the MySQL Provider (Storage / SQL).
       enabled: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- Deploy the MySQL Chart.
       deploy: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- Configures the address for the MySQL/MariaDB Server. The address itself is a connector and the scheme must
       # either be the unix scheme or one of the tcp schemes.
       address: 'tcp://mysql.databases.svc.cluster.local:3306'
 
       # @schema
-      # type: [integer, string]
-      # required: false
+      # type: [string, integer]
       # @schema
       # -- The SQL connection timeout.
       timeout: '5 seconds'
 
-      # @schema
-      # required: false
-      # @schema
       # -- The database name on the database server that the assigned user has access to for the purpose of Authelia.
       database: 'authelia'
 
-      # @schema
-      # required: false
-      # @schema
       # -- The username paired with the password used to connect to the database.
       username: 'authelia'
 
-      # @schema
-      # required: false
-      # @schema
       password:
-
-        # @schema
-        # required: false
-        # @schema
         # -- Disables this secret and leaves configuring it entirely up to you.
         disabled: false
 
-        # @schema
-        # required: false
-        # @schema
         # -- The secret name. The ~ name is special as it is the secret we generate either automatically or via the
         # secret_value option below.
         secret_name: ~
 
-        # @schema
-        # required: false
-        # @schema
         # -- The value of a generated secret when using the ~ secret_name.
         value: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
         # it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
         # value, '{secret_name}' is the secret_name above, and '{path}' is this value.
         path: 'storage.mysql.password.txt'
 
-      # @schema
-      # required: false
-      # @schema
       tls:
-
-        # @schema
-        # required: false
-        # @schema
         # -- Enables rendering this TLS config.
         enabled: false
 
-        # @schema
-        # required: false
-        # @schema
         # -- The server subject name to check the servers certificate against during the validation process.
         # This option is not required if the certificate has a SAN which matches the host option.
         server_name: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- Skip verifying the server certificate entirely.
         skip_verify: false
 
-        # @schema
-        # required: false
-        # @schema
         # -- Minimum TLS version for the connection.
         minimum_version: 'TLS1.2'
 
-        # @schema
-        # required: false
-        # @schema
         # -- Maximum TLS version for the connection.
         maximum_version: 'TLS1.3'
 
-    # @schema
-    # required: false
-    # @schema
     postgres:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Enable the PostgreSQL Provider (Storage / SQL).
       enabled: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- Deploy the PostgreSQL Chart.
       deploy: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- Configures the address for the PostgreSQL Server. The address itself is a connector and the scheme must
       # either be the unix scheme or one of the tcp schemes.
       address: 'tcp://postgres.databases.svc.cluster.local:5432'
 
-      # @schema
-      # required: false
-      # @schema
       # -- This specifies a list of additional fallback PostgreSQL instances to use should issues occur with the primary
       # instance which is configured with the address and tls options.
       servers: []
@@ -3668,141 +2285,69 @@ configMap:
         #     server_name: 'postgres3.local'
 
       # @schema
-      # type: [integer, string]
-      # required: false
+      # type: [string, integer]
       # @schema
       # -- The SQL connection timeout.
       timeout: '5 seconds'
 
-      # @schema
-      # required: false
-      # @schema
       # -- The database name on the database server that the assigned user has access to for the purpose of Authelia.
       database: 'authelia'
 
-      # @schema
-      # required: false
-      # @schema
       # -- The database schema name to use on the database server that the assigned user has access to for the purpose
       # of Authelia. By default this is the public schema.
       schema: 'public'
 
-      # @schema
-      # required: false
-      # @schema
       # -- The username paired with the password used to connect to the database.
       username: 'authelia'
 
-      # @schema
-      # required: false
-      # @schema
       password:
-
-        # @schema
-        # required: false
-        # @schema
         # -- Disables this secret and leaves configuring it entirely up to you.
         disabled: false
 
-        # @schema
-        # required: false
-        # @schema
         # -- The secret name. The ~ name is special as it is the secret we generate either automatically or via the
         # secret_value option below.
         secret_name: ~
 
-        # @schema
-        # required: false
-        # @schema
         # -- The value of a generated secret when using the ~ secret_name.
         value: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
         # it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
         # value, '{secret_name}' is the secret_name above, and '{path}' is this value.
         path: 'storage.postgres.password.txt'
 
-      # @schema
-      # required: false
-      # @schema
       tls:
-
-        # @schema
-        # required: false
-        # @schema
         # -- Enables rendering this TLS config.
         enabled: false
 
-        # @schema
-        # required: false
-        # @schema
         # -- The server subject name to check the servers certificate against during the validation process.
         # This option is not required if the certificate has a SAN which matches the host option.
         server_name: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- Skip verifying the server certificate entirely.
         skip_verify: false
 
-        # @schema
-        # required: false
-        # @schema
         # -- Minimum TLS version for the connection.
         minimum_version: 'TLS1.2'
 
-        # @schema
-        # required: false
-        # @schema
         # -- Maximum TLS version for the connection.
         maximum_version: 'TLS1.3'
 
-  # @schema
-  # required: false
-  # @schema
   notifier:
-
-    # @schema
-    # required: false
-    # @schema
     # -- You can disable the notifier startup check by setting this to true.
     disable_startup_check: false
 
-    # @schema
-    # required: false
-    # @schema
     filesystem:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Enables the File System Provider (Notifier).
       enabled: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- The file to add email text to. If it doesn’t exist it will be created.
       filename: '/config/notification.txt'
 
-    # @schema
-    # required: false
-    # @schema
     smtp:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Enables the SMTP Provider (Notifier).
       enabled: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- Configures the address for the SMTP Server. The address itself is a connector and the scheme must be smtp,
       # submission, or submissions. The only difference between these schemes are the default ports and submissions
       # requires a TLS transport per SMTP Ports Security Measures, whereas submission and smtp use a standard TCP
@@ -3810,316 +2355,194 @@ configMap:
       address: 'submission://smtp.mail.svc.cluster.local:587'
 
       # @schema
-      # type: [integer, string]
-      # required: false
+      # type: [string, integer]
       # @schema
       # -- The SMTP connection timeout.
       timeout: '5 seconds'
 
-      # @schema
-      # required: false
-      # @schema
       # -- The sender is used to construct both the SMTP command MAIL FROM and to add the FROM header. This address must
       # be in RFC5322 format.
       sender: 'Authelia <admin@example.com>'
 
-      # @schema
-      # required: false
-      # @schema
       # -- HELO/EHLO Identifier. Some SMTP Servers may reject the default of localhost.
       identifier: 'localhost'
 
-      # @schema
-      # required: false
-      # @schema
       # -- Subject configuration of the emails sent.
       # {title} is replaced by the text from the notifier
       subject: '[Authelia] {title}'
 
-      # @schema
-      # required: false
-      # @schema
       # -- This address is used during the startup check to verify the email configuration is correct.
       # It's not important what it is except if your email server only allows local delivery.
       startup_check_address: 'test@authelia.com'
 
-      # @schema
-      # required: false
-      # @schema
       # -- Disables sending HTML formatted emails.
       disable_html_emails: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- By default we require some form of TLS. This disables this check though is not advised.
       disable_require_tls: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- Some SMTP servers ignore SMTP specifications and claim to support STARTTLS when they in fact do not. For
       # security reasons Authelia refuses to send messages to these servers. This option disables this measure and is
       # enabled AT YOUR OWN RISK.
       disable_starttls: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- The username sent for authentication with the SMTP server. Paired with the password.
       username: ''
 
-      # @schema
-      # required: false
-      # @schema
       password:
-
-        # @schema
-        # required: false
-        # @schema
         # -- Disables this secret and leaves configuring it entirely up to you.
         disabled: false
 
-        # @schema
-        # required: false
-        # @schema
         # -- The secret name. The ~ name is special as it is the secret we generate either automatically or via the
         # secret_value option below.
         secret_name: ~
 
-        # @schema
-        # required: false
-        # @schema
         # -- The value of a generated secret when using the ~ secret_name.
         value: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
         # it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
         # value, '{secret_name}' is the secret_name above, and '{path}' is this value.
         path: 'notifier.smtp.password.txt'
 
-      # @schema
-      # required: false
-      # @schema
       tls:
-
-        # @schema
-        # required: false
-        # @schema
         # -- The server subject name to check the servers certificate against during the validation process.
         # This option is not required if the certificate has a SAN which matches the host option.
         server_name: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- Skip verifying the server certificate entirely.
         skip_verify: false
 
-        # @schema
-        # required: false
-        # @schema
         # -- Minimum TLS version for the connection.
         minimum_version: 'TLS1.2'
 
-        # @schema
-        # required: false
-        # @schema
         # -- Maximum TLS version for the connection.
         maximum_version: 'TLS1.3'
 
-  # @schema
-  # required: false
-  # @schema
   identity_providers:
-
-    # @schema
-    # required: false
-    # @schema
     oidc:
-
-      # @schema
-      # required: false
-      # @schema
       # -- Enables this in the config map. Currently in beta stage.
       # See https://www.authelia.com/r/openid-connect/
       enabled: false
 
-      # @schema
-      # required: false
-      # @schema
       hmac_secret:
-
-        # @schema
-        # required: false
-        # @schema
         # -- Disables this secret and leaves configuring it entirely up to you.
         disabled: false
 
-        # @schema
-        # required: false
-        # @schema
         # -- The secret name. The ~ name is special as it is the secret we generate either automatically or via the
         # secret_value option below.
         secret_name: ~
 
-        # @schema
-        # required: false
-        # @schema
         # -- The value of a generated secret when using the ~ secret_name.
         value: ''
 
-        # @schema
-        # required: false
-        # @schema
         # -- The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise
         # it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath'
         # value, '{secret_name}' is the secret_name above, and '{path}' is this value.
         path: 'identity_providers.oidc.hmac.key'
 
-      # @schema
-      # required: false
-      # @schema
       lifespans:
-
         # @schema
-        # type: [integer, string]
-        # required: false
+        # type: [string, integer]
         # @schema
         # -- Default lifespan for Access Tokens.
         access_token: '1 hour'
 
         # @schema
-        # type: [integer, string]
-        # required: false
+        # type: [string, integer]
         # @schema
         # -- Default lifespan for Refresh Tokens.
         refresh_token: '1 hour and 30 minutes'
 
         # @schema
-        # type: [integer, string]
-        # required: false
+        # type: [string, integer]
         # @schema
         # -- Default lifespan for ID Tokens.
         id_token: '1 hour'
 
         # @schema
-        # type: [integer, string]
-        # required: false
+        # type: [string, integer]
         # @schema
         # -- Default lifespan for Authorize Codes.
         authorize_code: '1 minute'
 
         # @schema
-        # type: [integer, string]
-        # required: false
+        # type: [string, integer]
         # @schema
         # -- Default lifespan for Device Codes.
         device_code: '10 minutes'
 
         # @schema
-        # required: false
+        # type: object
         # patternProperties:
         #   ".*":
         #     type: object
         #     properties:
         #       access_token:
-        #         type: [string,integer]
-        #         required: false
+        #         type: [string, integer]
         #       refresh_token:
-        #         type: [string,integer]
-        #         required: false
+        #         type: [string, integer]
         #       id_token:
-        #         type: [string,integer]
-        #         required: false
+        #         type: [string, integer]
         #       authorize_code:
-        #         type: [string,integer]
-        #         required: false
+        #         type: [string, integer]
         #       device_code:
-        #         type: [string,integer]
-        #         required: false
+        #         type: [string, integer]
         #       grants:
         #         type: object
-        #         required: false
         #         properties:
         #           authorize_code:
         #             type: object
-        #             required: false
         #             properties:
         #               access_token:
-        #                 type: [string,integer]
-        #                 required: false
+        #                 type: [string, integer]
         #               refresh_token:
-        #                 type: [string,integer]
-        #                 required: false
+        #                 type: [string, integer]
         #               id_token:
-        #                 type: [string,integer]
-        #                 required: false
+        #                 type: [string, integer]
         #           device_code:
         #             type: object
-        #             required: false
         #             properties:
         #               access_token:
-        #                 type: [string,integer]
-        #                 required: false
+        #                 type: [string, integer]
         #               refresh_token:
-        #                 type: [string,integer]
-        #                 required: false
+        #                 type: [string, integer]
         #               id_token:
-        #                 type: [string,integer]
-        #                 required: false
+        #                 type: [string, integer]
         #           implicit:
         #             type: object
-        #             required: false
         #             properties:
         #               access_token:
-        #                 type: [string,integer]
-        #                 required: false
+        #                 type: [string, integer]
         #               refresh_token:
-        #                 type: [string,integer]
-        #                 required: false
+        #                 type: [string, integer]
         #               id_token:
-        #                 type: [string,integer]
-        #                 required: false
+        #                 type: [string, integer]
         #           client_credentials:
         #             type: object
-        #             required: false
         #             properties:
         #               access_token:
-        #                 type: [string,integer]
-        #                 required: false
+        #                 type: [string, integer]
         #               refresh_token:
-        #                 type: [string,integer]
-        #                 required: false
+        #                 type: [string, integer]
         #           refresh_token:
         #             type: object
-        #             required: false
         #             properties:
         #               access_token:
-        #                 type: [string,integer]
-        #                 required: false
+        #                 type: [string, integer]
         #               refresh_token:
-        #                 type: [string,integer]
-        #                 required: false
+        #                 type: [string, integer]
         #               id_token:
-        #                 type: [string,integer]
-        #                 required: false
+        #                 type: [string, integer]
         #           jwt_bearer:
         #             type: object
-        #             required: false
         #             properties:
         #               access_token:
-        #                 type: [string,integer]
-        #                 required: false
+        #                 type: [string, integer]
         #               refresh_token:
-        #                 type: [string,integer]
-        #                 required: false
+        #                 type: [string, integer]
         #               id_token:
-        #                 type: [string,integer]
-        #                 required: false
+        #                 type: [string, integer]
         #
         # @schema
         # -- The custom lifespan configuration allows customizing the lifespans per-client. The custom lifespans must be
@@ -4160,35 +2583,26 @@ configMap:
         #         id_token: '1 hour'
 
       # @schema
-      # required: false
       # patternProperties:
       #   ".*":
       #     type: object
-      #     required: false
       #     properties:
       #       id_token:
       #         type: array
-      #         required: false
       #         items:
       #           type: string
-      #           required: false
       #       access_token:
       #         type: array
-      #         required: false
       #         items:
       #           type: string
-      #           required: false
       #       custom_claims:
       #         type: object
-      #         required: false
       #         patternProperties:
       #           ".*":
       #             type: object
-      #             required: false
       #             properties:
       #               attribute:
       #                 type: string
-      #                 required: false
       # @schema
       # -- The claims policies are policies which allow customizing the behavior of claims and the available claims for
       # a particular client.
@@ -4203,18 +2617,14 @@ configMap:
               # attribute: 'attribute_name'
 
       # @schema
-      # required: false
       # patternProperties:
       #   ".*":
       #     type: object
-      #     required: false
       #     properties:
       #       claims:
       #         type: array
-      #         required: false
       #         items:
       #           type: string
-      #           required: false
       # @schema
       # -- A list of scope definitions available in addition to the standard ones.
       scopes: {}
@@ -4223,105 +2633,75 @@ configMap:
           # claims: []
 
       # @schema
-      # required: false
-      # enum: [public_clients_only,always,never,'']
+      # enum: ['public_clients_only', 'always', 'never', '']
       # @schema
       # -- Adjusts the PKCE enforcement. Options are always, public_clients_only, never.
       # For security reasons it's recommended this option is public_clients_only or always, however always is not
       # compatible with all clients.
       enforce_pkce: 'public_clients_only'
 
-      # @schema
-      # required: false
-      # @schema
       # -- Enables the plain PKCE challenge which is not recommended for security reasons but may be necessary for some clients.
       enable_pkce_plain_challenge: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- Enables introspecting JWT Profile Access Tokens using stateless checks. This is strongly discouraged.
       enable_jwt_access_token_stateless_introspection: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- The JSON Web Algorithm used for signing the discovery metadata.
       discovery_signed_response_alg: ''
 
-      # @schema
-      # required: false
-      # @schema
       # -- The JSON Web Key ID used for signing the discovery metadata.
       discovery_signed_response_key_id: ''
 
-      # @schema
-      # required: false
-      # @schema
       # -- Enables requiring all Authorization Requests to be initiated using a Pushed Authorization Request.
       require_pushed_authorization_requests: false
 
-      # @schema
-      # required: false
-      # @schema
       # -- Adjusts the parameter entropy requirements for nonce/state etc. SECURITY NOTICE: It's not recommended changing
       # this option, and highly discouraged to have it less than 8.
       minimum_parameter_entropy: 8
 
-      # @schema
-      # required: false
-      # @schema
       # -- Enables additional debug messages. SECURITY NOTICE: It's not recommended to use this in production as it
       # may leak configuration information to clients.
       enable_client_debug_messages: false
 
-      # @schema
-      # required: false
-      # @schema
       pushed_authorizations:
-
-        # @schema
-        # required: false
-        # @schema
         # -- Requires Pushed Authorization Requests for all Authorization Flows.
         enforce: false
 
         # @schema
-        # type: [integer, string]
-        # required: false
+        # type: [string, integer]
         # @schema
         # -- Adjusts the lifespan for a Pushed Authorization session / context.
         context_lifespan: '5 minutes'
 
       # @schema
-      # required: false
+      # type: object
       # patternProperties:
       #   ".*":
       #     type: object
       #     properties:
       #       default_policy:
       #         type: string
-      #         enum: [deny,two_factor,one_factor,'']
+      #         enum: ['deny', 'two_factor', 'one_factor', '']
       #       rules:
       #         type: array
-      #         required: false
       #         items:
       #           type: object
       #           properties:
       #             policy:
       #               type: string
-      #               required: false
-      #               enum: [deny,two_factor,one_factor,'']
+      #               enum: ['deny', 'two_factor', 'one_factor', '']
       #             subject:
-      #               required: false
       #               anyOf:
       #                 - type: string
       #                 - type: array
+      #                   items:
+      #                     type: string
       #             networks:
-      #               required: false
       #               anyOf:
       #                 - type: string
       #                 - type: array
+      #                   items:
+      #                     type: string
       # @schema
       # -- Authorization Policies configuration.
       authorization_policies: {}
@@ -4334,20 +2714,18 @@ configMap:
       #         subject: 'user:abc'
 
       # @schema
-      # required: false
+      # type: array
       # items:
       #   type: object
       #   properties:
       #     key_id:
       #       type: string
-      #       required: false
       #     use:
       #       type: string
-      #       required: false
-      #       enum: [sig,enc,'']
+      #       enum: ['sig', 'enc', '']
       #     algorithm:
       #       type: string
-      #       required: false
+      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'RSA1_5', 'RSA-OAEP', 'RSA-OAEP-256', 'ECDH-ES', 'ECDH-ES+A128KW', 'ECDH-ES+A192KW', 'ECDH-ES+A256KW']
       #     key:
       #       anyOf:
       #         - type: string
@@ -4355,22 +2733,17 @@ configMap:
       #           properties:
       #             value:
       #               type: string
-      #               required: false
       #             path:
       #               type: string
-      #               required: false
       #     certificate_chain:
-      #       required: false
       #       anyOf:
       #         - type: string
       #         - type: object
       #           properties:
       #             value:
       #               type: string
-      #               required: false
       #             path:
       #               type: string
-      #               required: false
       # @schema
       # -- The JWK's issuer option configures multiple JSON Web Keys. It's required that at least one of the JWK's
       # configured has the RS256 algorithm. For RSA keys (RS or PS) the minimum is a 2048 bit key.
@@ -4388,38 +2761,236 @@ configMap:
       #     certificate_chain:
       #       path: '/secrets.oidc.jwk.RS256.crt'
 
-      # @schema
-      # required: false
-      # @schema
       ## Cross-Origin Resource Sharing (CORS) settings.
       cors:
-
         # @schema
-        # required: false
         # type: array
         # items:
-        #   enum: [authorization,device-authorization,pushed-authorization-request,token,revocation,introspection,userinfo]
+        #   enum: ['authorization', 'device-authorization', 'pushed-authorization-request', 'token', 'revocation', 'introspection', 'userinfo']
         # @schema
         # -- List of endpoints in addition to the metadata endpoints to permit cross-origin requests on.
         endpoints: []
 
-        # @schema
-        # required: false
-        # @schema
         # -- List of allowed origins.
         # Any origin with https is permitted unless this option is configured or the
         # allowed_origins_from_client_redirect_uris option is enabled.
         allowed_origins: []
 
-        # @schema
-        # required: false
-        # @schema
         # -- Automatically adds the origin portion of all redirect URI's on all clients to the list of allowed_origins,
         # provided they have the scheme http or https and do not have the hostname of localhost.
         allowed_origins_from_client_redirect_uris: false
 
       # @schema
       # required: true
+      # type: array
+      # items:
+      #   type: object
+      #   additionalProperties: false
+      #   properties:
+      #     client_id:
+      #       type: string
+      #     client_secret:
+      #       anyOf:
+      #         - type: string
+      #         - type: object
+      #           properties:
+      #             value:
+      #               type: string
+      #             path:
+      #               type: string
+      #     client_name:
+      #       type: string
+      #     sector_identifier_uri:
+      #       type: string
+      #     redirect_uris:
+      #       type: array
+      #       items:
+      #         type: string
+      #     request_uris:
+      #       type: array
+      #       items:
+      #         type: string
+      #     audience:
+      #       type: array
+      #       items:
+      #         type: string
+      #     scopes:
+      #       type: array
+      #       items:
+      #         type: string
+      #     grant_types::
+      #       type: array
+      #       items:
+      #         type: string
+      #         enum: ['authorization_code', 'implicit', 'refresh_token', 'client_credentials', 'urn:ietf:params:oauth:grant-type:device_code', 'urn:ietf:params:oauth:grant-type:jwt-bearer']
+      #     response_types:
+      #       type: array
+      #       items:
+      #         type: string
+      #         enum: ['code', 'token', 'id_token', 'code token', 'code id_token', 'id_token token', 'code token id_token']
+      #     response_modes:
+      #       type: array
+      #       items:
+      #         type: string
+      #         enum: ['query', 'fragment', 'form_post', 'jwt', 'query.jwt', 'fragment.jwt', 'form_post.jwt']
+      #     authorization_policy:
+      #       type: string
+      #     lifespan:
+      #       type: string
+      #     claims_policy:
+      #       type: string
+      #     requested_audience_mode:
+      #       type: string
+      #       enum: ['explicit', 'implicit', '']
+      #     consent_mode:
+      #       type: string
+      #       enum: ['auto', 'explicit', 'implicit', 'pre-configured']
+      #     pre_configured_consent_duration:
+      #       type: [string, integer]
+      #     require_pushed_authorization_requests:
+      #       type: boolean
+      #     require_pkce:
+      #       type: boolean
+      #     pkce_challenge_method:
+      #       type: string
+      #       enum: ['plain', 'S256', '']
+      #     authorization_signed_response_key_id:
+      #       type: string
+      #     authorization_signed_response_alg:
+      #       type: string
+      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'none', '']
+      #     authorization_encrypted_response_key_id:
+      #       type: string
+      #     authorization_encrypted_response_alg:
+      #       type: string
+      #       enum: ['RSA1_5', 'RSA-OAEP', 'RSA-OAEP-256', 'A128KW', 'A192KW', 'A256KW', 'dir', 'ECDH-ES', 'ECDH-ES+A128KW', 'ECDH-ES+A192KW', 'ECDH-ES+A256KW', 'A128GCMKW', 'A192GCMKW', 'A256GCMKW', 'PBES2-HS256+A128KW', 'PBES2-HS384+A192KW', 'PBES2-HS512+A256KW', 'none', '']
+      #     authorization_encrypted_response_enc:
+      #       type: string
+      #       enum: ['A128CBC-HS256', 'A192CBC-HS384', 'A256CBC-HS512', 'A128GCM', 'A192GCM', 'A256GCM', 'none', '']
+      #     id_token_signed_response_key_id:
+      #       type: string
+      #     id_token_signed_response_alg:
+      #       type: string
+      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', '']
+      #     id_token_encrypted_response_key_id:
+      #       type: string
+      #     id_token_encrypted_response_alg:
+      #       type: string
+      #       enum: ['RSA1_5', 'RSA-OAEP', 'RSA-OAEP-256', 'A128KW', 'A192KW', 'A256KW', 'dir', 'ECDH-ES', 'ECDH-ES+A128KW', 'ECDH-ES+A192KW', 'ECDH-ES+A256KW', 'A128GCMKW', 'A192GCMKW', 'A256GCMKW', 'PBES2-HS256+A128KW', 'PBES2-HS384+A192KW', 'PBES2-HS512+A256KW', 'none', '']
+      #     id_token_encrypted_response_enc:
+      #       type: string
+      #       enum: ['A128CBC-HS256', 'A192CBC-HS384', 'A256CBC-HS512', 'A128GCM', 'A192GCM', 'A256GCM', 'none', '']
+      #     access_token_signed_response_key_id:
+      #       type: string
+      #     access_token_signed_response_alg:
+      #       type: string
+      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'none', '']
+      #     access_token_encrypted_response_key_id:
+      #       type: string
+      #     access_token_encrypted_response_alg:
+      #       type: string
+      #       enum: ['RSA1_5', 'RSA-OAEP', 'RSA-OAEP-256', 'A128KW', 'A192KW', 'A256KW', 'dir', 'ECDH-ES', 'ECDH-ES+A128KW', 'ECDH-ES+A192KW', 'ECDH-ES+A256KW', 'A128GCMKW', 'A192GCMKW', 'A256GCMKW', 'PBES2-HS256+A128KW', 'PBES2-HS384+A192KW', 'PBES2-HS512+A256KW', 'none', '']
+      #     access_token_encrypted_response_enc:
+      #       type: string
+      #       enum: ['A128CBC-HS256', 'A192CBC-HS384', 'A256CBC-HS512', 'A128GCM', 'A192GCM', 'A256GCM', 'none', '']
+      #     userinfo_signed_response_key_id:
+      #       type: string
+      #     userinfo_signed_response_alg:
+      #       type: string
+      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'none', '']
+      #     userinfo_encrypted_response_key_id:
+      #       type: string
+      #     userinfo_encrypted_response_alg:
+      #       type: string
+      #       enum: ['RSA1_5', 'RSA-OAEP', 'RSA-OAEP-256', 'A128KW', 'A192KW', 'A256KW', 'dir', 'ECDH-ES', 'ECDH-ES+A128KW', 'ECDH-ES+A192KW', 'ECDH-ES+A256KW', 'A128GCMKW', 'A192GCMKW', 'A256GCMKW', 'PBES2-HS256+A128KW', 'PBES2-HS384+A192KW', 'PBES2-HS512+A256KW', 'none', '']
+      #     userinfo_encrypted_response_enc:
+      #       type: string
+      #       enum: ['A128CBC-HS256', 'A192CBC-HS384', 'A256CBC-HS512', 'A128GCM', 'A192GCM', 'A256GCM', 'none', '']
+      #     introspection_signed_response_key_id:
+      #       type: string
+      #     introspection_signed_response_alg:
+      #       type: string
+      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'none', '']
+      #     introspection_encrypted_response_key_id:
+      #       type: string
+      #     introspection_encrypted_response_alg:
+      #       type: string
+      #       enum: ['RSA1_5', 'RSA-OAEP', 'RSA-OAEP-256', 'A128KW', 'A192KW', 'A256KW', 'dir', 'ECDH-ES', 'ECDH-ES+A128KW', 'ECDH-ES+A192KW', 'ECDH-ES+A256KW', 'A128GCMKW', 'A192GCMKW', 'A256GCMKW', 'PBES2-HS256+A128KW', 'PBES2-HS384+A192KW', 'PBES2-HS512+A256KW', 'none', '']
+      #     introspection_encrypted_response_enc:
+      #       type: string
+      #       enum: ['A128CBC-HS256', 'A192CBC-HS384', 'A256CBC-HS512', 'A128GCM', 'A192GCM', 'A256GCM', 'none', '']
+      #     request_object_signed_response_key_id:
+      #       type: string
+      #     request_object_signed_response_alg:
+      #       type: string
+      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'none', '']
+      #     request_object_encrypted_response_key_id:
+      #       type: string
+      #     request_object_encrypted_response_alg:
+      #       type: string
+      #       enum: ['RSA1_5', 'RSA-OAEP', 'RSA-OAEP-256', 'A128KW', 'A192KW', 'A256KW', 'dir', 'ECDH-ES', 'ECDH-ES+A128KW', 'ECDH-ES+A192KW', 'ECDH-ES+A256KW', 'A128GCMKW', 'A192GCMKW', 'A256GCMKW', 'PBES2-HS256+A128KW', 'PBES2-HS384+A192KW', 'PBES2-HS512+A256KW', 'none', '']
+      #     request_object_encrypted_response_enc:
+      #       type: string
+      #       enum: ['A128CBC-HS256', 'A192CBC-HS384', 'A256CBC-HS512', 'A128GCM', 'A192GCM', 'A256GCM', 'none', '']
+      #     token_endpoint_auth_method:
+      #       type: string
+      #       enum: ['client_secret_basic', 'client_secret_post', 'client_secret_jwt', 'private_key_jwt', 'none']
+      #     token_endpoint_auth_signing_alg:
+      #       type: string
+      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'none', '']
+      #     revocation_endpoint_auth_method:
+      #       type: string
+      #       enum: ['client_secret_basic', 'client_secret_post', 'client_secret_jwt', 'private_key_jwt', 'none']
+      #     revocation_endpoint_auth_signing_alg:
+      #       type: string
+      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'none', '']
+      #     introspection_endpoint_auth_method:
+      #       type: string
+      #       enum: ['client_secret_basic', 'client_secret_post', 'client_secret_jwt', 'private_key_jwt', 'none']
+      #     introspection_endpoint_auth_signing_alg:
+      #       type: string
+      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'none', '']
+      #     pushed_authorization_endpoint_auth_method:
+      #       type: string
+      #       enum: ['client_secret_basic', 'client_secret_post', 'client_secret_jwt', 'private_key_jwt', 'none']
+      #     pushed_authorization_endpoint_auth_signing_alg:
+      #       type: string
+      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'none', '']
+      #     allow_multiple_auth_methods:
+      #       type: boolean
+      #     jwks_uri:
+      #       type: string
+      #     jwks:
+      #       type: array
+      #       items:
+      #         type: object
+      #         properties:
+      #           key_id:
+      #             type: string
+      #           use:
+      #             type: string
+      #             enum: ['sig', 'enc']
+      #           algorithm:
+      #             type: string
+      #             enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'RSA1_5', 'RSA-OAEP', 'RSA-OAEP-256', 'ECDH-ES', 'ECDH-ES+A128KW', 'ECDH-ES+A192KW', 'ECDH-ES+A256KW']
+      #           key:
+      #             anyOf:
+      #               - type: string
+      #               - type: object
+      #                 properties:
+      #                   value:
+      #                     type: string
+      #                   path:
+      #                     type: string
+      #           certificate_chain:
+      #             anyOf:
+      #               - type: string
+      #               - type: object
+      #                 properties:
+      #                   value:
+      #                     type: string
+      #                   path:
+      #                     type: string
       # @schema
       # -- List of registered clients for this provider.
       clients: []
@@ -4547,40 +3118,25 @@ configMap:
           # pushed_authorization_request_endpoint_auth_method: 'client_secret_basic'
           # pushed_authorization_request_endpoint_auth_signing_alg: 'RS256'
 
-# @schema
-# required: false
-# @schema
 secret:
-
-  # @schema
-  # required: false
-  # @schema
   # -- Disable the Secret manifest functionality.
   disabled: false
 
-  # @schema
-  # required: false
-  # @schema
   # -- Name of an existing Secret manifest to mount instead of generating one.
   existingSecret: ''
 
   # @schema
-  # required: false
   # additionalProperties: true
   # @schema
   # -- Extra annotations for the Secret manifest.
   annotations: {}
 
   # @schema
-  # required: false
   # additionalProperties: true
   # @schema
   # -- Extra labels for the Secret manifest.
   labels: {}
 
-  # @schema
-  # required: false
-  # @schema
   # -- Pod path to mount the values of the Secret manifest.
   mountPath: '/secrets'
 
@@ -4592,26 +3148,21 @@ secret:
   ##
 
   # @schema
-  # required: false
   # patternProperties:
   #   ".*":
   #     type: object
   #     properties:
   #       path:
   #         type: string
-  #         required: false
   #       items:
   #         type: array
-  #         required: false
   #         items:
   #           type: object
   #           properties:
   #             key:
   #               type: string
-  #               required: false
   #             path:
   #               type: string
-  #               required: false
   # @schema
   # -- Additional secrets to mount to the Pod.
   additionalSecrets: {}
@@ -4624,34 +3175,22 @@ secret:
   #         path: 'path-example'
   #   example-without-items: {}
 
-# @schema
-# required: false
-# @schema
 certificates:
-
-  # @schema
-  # required: false
-  # @schema
   # -- Name of an existing Secret manifest to mount which contains trusted certificates.
   existingSecret: ''
 
   # @schema
-  # required: false
   # additionalProperties: true
   # @schema
   # -- Extra annotations for the Certificates Secret manifest.
   annotations: {}
 
   # @schema
-  # required: false
   # additionalProperties: true
   # @schema
   # -- Extra labels for the Certificates Secret manifest.
   labels: {}
 
-  # @schema
-  # required: false
-  # @schema
   # -- List of secret name value pairs to include in this Secret manifest.
   values: []
   # values:
@@ -4681,154 +3220,103 @@ certificates:
   #     WD9f
   #     -----END CERTIFICATE-----
 
-# @schema
-# required: false
-# @schema
 persistence:
-
-  # @schema
-  # required: false
-  # @schema
   # -- Enable the PersistentVolumeClaim features for Authelia.
   enabled: false
 
   # @schema
-  # required: false
   # additionalProperties: true
   # @schema
   # -- Extra annotations for the PersistentVolumeClaim related manifests.
   annotations: {}
 
   # @schema
-  # required: false
   # additionalProperties: true
   # @schema
   # -- Extra annotations for the PersistentVolumeClaim related manifests.
   labels: {}
 
-  # @schema
-  # required: false
-  # @schema
   # -- Mounts the PersistentVolumeClaim in read-only mode.
   readOnly: false
 
-  # @schema
-  # required: false
-  # @schema
   # -- Mounts specifically a subpath of the PersistentVolumeClaim.
   subPath: ''
 
-  # @schema
-  # required: false
-  # @schema
   # -- Uses an expression to mount a subpath of the PersistentVolumeClaim.
   subPathExpr: ''
 
   # @schema
-  # required: false
-  # enum: [None,HostToContainer,Bidirectional,'']
+  # enum: ['None', 'HostToContainer', 'Bidirectional', '']
   # @schema
   # -- Sets the mount propagation value for the PersistentVolumeClaim.
   mountPropagation: ''
 
-  # @schema
-  # required: false
-  # @schema
   # -- Mounts an existing PersistentVolumeClaim.
   existingClaim: ''
   # existingClaim: 'my-claim-name'
 
-  # @schema
-  # required: false
-  # @schema
   # -- Uses the specified storageClass for the PersistentVolumeClaim.
   storageClass: ''
 
-  # @schema
-  # required: false
-  # @schema
   # -- Persistent Volume Name. Useful if Persistent Volumes have been provisioned in advance and you want to use a
   # specific one.
   volumeName: ''
 
   # @schema
-  # required: false
   # items:
-  #   enum: [ReadWriteOnce,ReadOnlyMany,ReadWriteMany,ReadWriteOncePod]
+  #   enum: ['ReadWriteOnce', 'ReadOnlyMany', 'ReadWriteMany', 'ReadWriteOncePod']
   # @schema
   # -- PersistentVolumeClaim access modes.
   accessModes:
     - 'ReadWriteOnce'
 
-  # @schema
-  # required: false
-  # @schema
   # -- PersistentVolumeClaim volume size.
   size: '100Mi'
 
   # @schema
-  # required: false
   # additionalProperties: true
   # @schema
   selector: {}
 
   # @schema
-  # required: false
   # patternProperties:
   #   ".*":
   #     type: object
-  #     required: false
   #     properties:
   #       enabled:
   #         type: boolean
-  #         required: false
   #       annotations:
   #         type: object
-  #         required: false
   #         additionalProperties: true
   #       labels:
   #         type: object
-  #         required: false
   #         additionalProperties: true
   #       readOnly:
   #         type: boolean
-  #         required: false
   #       subPath:
   #         type: string
-  #         required: false
   #       subPathExpr:
   #         type: string
-  #         required: false
   #       mountPropagation:
   #         type: string
-  #         required: false
   #       existingClaim:
   #         type: string
-  #         required: false
   #       storageClass:
   #         type: string
-  #         required: false
   #       volumeName:
   #         type: string
-  #         required: false
   #       accessModes:
   #         type: array
-  #         required: false
   #         items:
-  #           enum: [ReadWriteOnce,ReadOnlyMany,ReadWriteMany,ReadWriteOncePod]
-  #           required: false
+  #           enum: ['ReadWriteOnce', 'ReadOnlyMany', 'ReadWriteMany', 'ReadWriteOncePod']
   #       size:
   #         type: string
-  #         required: false
   #       selector:
   #         type: object
-  #         required: false
   #         additionalProperties: true
   # @schema
   extraPersistentVolumeClaims:
-
     example:
-
       # -- Enable this extra PersistentVolumeClaim.
       enabled: false
 
@@ -4865,13 +3353,8 @@ persistence:
       accessModes:
         - 'ReadWriteOnce'
 
-      # @schema
-      # required: false
-      # @schema
       # -- PersistentVolumeClaim volume size.
       size: '100Mi'
 
-      # @schema
-      # required: false
-      # @schema
+      # -- Extra PersistentVolumeClaim selector.
       selector: {}

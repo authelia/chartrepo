@@ -13,12 +13,12 @@ clean:
 .PHONY: docs
 
 docs: install-helm-docs
-	helm-docs
+	helm-docs -c charts
 
 .PHONY: schema
 
 schema: install-helm-schema
-	helm-schema
+	helm-schema -c charts
 
 .PHONY: lint lint-chart lint-chart-package lint-chart-version lint-docs lint-schema
 
