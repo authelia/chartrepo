@@ -49,7 +49,11 @@ as indicated by the [Semantic Versioning Specification](https://semver.org/#spec
 {{ latest_chart.description }}
 
 ```console
-$ helm install {{ site.repo_name }}/{{ latest_chart.name }} --name myrelease --version {{ latest_chart.version }}
+$ helm install myrelease {{ site.repo_name }}/{{ latest_chart.name }} --version {{ latest_chart.version }}
+```
+
+```console
+$ helm install myrelease oci://ghcr.io/{{ site.repo_name }}/chartrepo/{{ latest_chart.name }} --version {{ latest_chart.version }}
 ```
 
 | Chart Version | App Version | [API Version](https://helm.sh/docs/topics/charts/#the-apiversion-field) | Date |
