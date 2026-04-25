@@ -8,7 +8,7 @@
 ## Repository: authelia https://charts.authelia.com
 ## Chart: authelia
 ##
-# -- This values file is a baseline for other values files.
+## This values file is a baseline for other values files.
 
 # -- Version Override allows changing some chart characteristics that render only on specific versions.
 # This does NOT affect the image used, please see the below image section instead for this.
@@ -28,7 +28,6 @@ kubeDNSDomainOverride: ''
 # -- This field can be used as a condition when authelia is a dependency. This definition is only a placeholder and not used directly by this chart. See https://helm.sh/docs/chart_best_practices/dependencies/#conditions-and-tags for more info
 enabled: false
 
-# -- Image configuration for the Authelia container.
 image:
   # -- The registry to use.
   registry: 'ghcr.io'
@@ -77,7 +76,6 @@ annotations: {}
 # associated with them.
 labels: {}
 
-# -- RBAC configuration for the Authelia deployment.
 rbac:
   # -- Enable RBAC. Turning this on associates Authelia with a service account.
   enabled: false
@@ -97,7 +95,6 @@ rbac:
   # -- Kubernetes service account name to generate.
   serviceAccountName: 'authelia'
 
-# -- Service configuration for the Authelia deployment.
 service:
   # -- The service type to generate for the Authelia pods.
   type: 'ClusterIP'
@@ -132,7 +129,6 @@ service:
   # -- (string) Use value Local to get external IP addresses.
   externalTrafficPolicy: ~
 
-# -- Ingress configuration for the Authelia deployment.
 ingress:
   # -- Enable generating ingress related resources.
   enabled: false
@@ -161,7 +157,6 @@ ingress:
   # -- Ingress Class Name for the Ingress manifests.
   className: ''
 
-  # -- TLS configuration for the Ingress manifests.
   tls:
     # -- Enable TLS for the Ingress.
     enabled: false
@@ -169,7 +164,6 @@ ingress:
     ## -- TLS Secret for Authelia.
     secret: 'authelia-tls'
 
-  # -- Configuration of the Gateway API.
   gatewayAPI:
     # -- Enable Gateway API HTTP Route generation.
     enabled: false
@@ -192,7 +186,6 @@ ingress:
     #    sectionName: example-lb-sn
     #    port: 80
 
-  # -- Configuration of the Traefik IngressRoute.
   traefikCRD:
     # -- Enable generating the Traefik 3.x CRD Middleware etc manifests.
     enabled: false
@@ -1019,9 +1012,7 @@ configMap:
       #       - 'Basic'
       #     - name: 'CookieSession'
 
-      # -- Configure the rate limits for various endpoints.
       rate_limits:
-        # -- Configure the rate limits for the reset password start endpoint.
         reset_password_start:
           # -- Enables this rate limit.
           enable: true
@@ -1040,7 +1031,6 @@ configMap:
           # -- List of rate limit buckets.
           buckets: []
 
-        # -- Configure the rate limits for the reset password finish endpoint.
         reset_password_finish:
           # -- Enables this rate limit.
           enable: true
@@ -1059,7 +1049,6 @@ configMap:
           # -- List of rate limit buckets.
           buckets: []
 
-        # -- Configure the rate limits for the second factor TOTP endpoint.
         second_factor_totp:
           # -- Enables this rate limit.
           enable: true
@@ -1078,7 +1067,6 @@ configMap:
           # -- List of rate limit buckets.
           buckets: []
 
-        # -- Configure the rate limits for the second factor DUO endpoint.
         second_factor_duo:
           # -- Enables this rate limit.
           enable: true
@@ -1097,7 +1085,6 @@ configMap:
           # -- List of rate limit buckets.
           buckets: []
 
-        # -- Configure the rate limits for the session elevation start endpoint.
         session_elevation_start:
           # -- Enables this rate limit.
           enable: true
@@ -1116,7 +1103,6 @@ configMap:
           # -- List of rate limit buckets.
           buckets: []
 
-        # -- Configure the rate limits for the session elevation finish endpoint.
         session_elevation_finish:
           # -- Enables this rate limit.
           enable: true
@@ -1135,7 +1121,6 @@ configMap:
           # -- List of rate limit buckets.
           buckets: []
 
-        # -- Configure the rate limits for the OpenID Connect 1.0 Token endpoint.
         openid_connect_token:
           # -- Enables this rate limit.
           enable: true
@@ -1154,7 +1139,6 @@ configMap:
           # -- List of rate limit buckets.
           buckets: []
 
-        # -- Configure the rate limits for the OpenID Connect 1.0 Pushed Authorization Request endpoint.
         openid_connect_pushed_authorization_request:
           # -- Enables this rate limit.
           enable: true
@@ -1280,9 +1264,6 @@ configMap:
         # expression: '"admin" in groups ? 10 : 5'
 
   identity_validation:
-    # -- The Reset Password Identity Validation implementation ensures that users cannot perform a reset password flow
-    # without first ensuring the user is adequately identified. The settings below therefore can affect the level of
-    # security Authelia provides to your users so they should be carefully considered.
     reset_password:
       # @schema
       # type: [string, integer]
@@ -1293,7 +1274,6 @@ configMap:
       # -- The JSON Web Token Algorithm used to sign the JWT. Must be HS256, HS384, or HS512.
       jwt_algorithm: 'HS256'
 
-      # -- The secret used with the HMAC algorithm to sign the JWT minted by Authelia.
       secret:
         # -- Disables this secret and leaves configuring it entirely up to you.
         disabled: false
@@ -1310,10 +1290,6 @@ configMap:
         # value, '{secret_name}' is the secret_name above, and '{path}' is this value.
         path: 'identity_validation.reset_password.jwt.hmac.key'
 
-    ## The Elevated Session Identity Validation implementation ensures that users cannot perform actions which may
-    ## adjust the security characteristics of their account without first ensuring the user is adequately identified.
-    ## The settings below therefore can affect the level of security Authelia provides to your users so they should be
-    ## carefully considered.
     elevated_session:
       # @schema
       # type: [string, integer]
@@ -2789,6 +2765,8 @@ configMap:
       #   properties:
       #     client_id:
       #       type: string
+      #     client_name:
+      #       type: string
       #     client_secret:
       #       anyOf:
       #         - type: string
@@ -2798,10 +2776,10 @@ configMap:
       #               type: string
       #             path:
       #               type: string
-      #     client_name:
-      #       type: string
       #     sector_identifier_uri:
       #       type: string
+      #     public:
+      #       type: boolean
       #     redirect_uris:
       #       type: array
       #       items:
