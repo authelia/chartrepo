@@ -36,21 +36,27 @@ steps:
 - key: 'package'
   label: ':package: Package Chart (Chart Releaser)'
   artifact_paths:
-  - '.cr-release-packages/*'
+    - '.cr-release-packages/*'
   if: 'build.branch == "master" && build.env("CHART_CHANGES") == "true"'
   command: 'make release-package'
 
 - key: 'upload'
   label: ':github: Deploy Artifacts (Chart Releaser)'
   depends_on:
-  - step: 'package'
+    - step: 'package'
   if: 'build.branch == "master" && build.env("CHART_CHANGES") == "true"'
   command: 'make release-upload'
-
 
 - key: 'index'
   label: ':k8s: Publish Chart Index (Chart Releaser)'
   depends_on:
-  - step: 'upload'
+    - step: 'upload'
   if: 'build.branch == "master" && build.env("CHART_CHANGES") == "true"'
   command: 'make release-index'
+
+- key: 'release-oci'
+  label: ':docker: Deploy OCI Artifacts (Chart Releaser)'
+  depends_on:
+    - step: 'package'
+  if: 'build.branch == "master" && build.env("CHART_CHANGES") == "true"'
+  command: 'make release-oci'
