@@ -57,6 +57,6 @@ steps:
   - key: 'release-oci'
     label: ':docker: Deploy OCI Artifacts (Chart Releaser)'
     depends_on:
-      - step: 'package'
+      - step: 'index'
     if: 'build.branch == "master" && build.env("CHART_CHANGES") == "true"'
     command: 'make release-oci'

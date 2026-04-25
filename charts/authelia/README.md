@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.11.0](https://img.shields.io/badge/Version-0.11.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.19](https://img.shields.io/badge/AppVersion-4.39.19-informational?style=flat-square)
+![Version: 0.11.1](https://img.shields.io/badge/Version-0.11.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.19](https://img.shields.io/badge/AppVersion-4.39.19-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -1393,6 +1393,24 @@ false
 			<td>Skips the elevated session requirement if the user has performed second factor authentication. Can be combined with the require_second_factor option to always (and only) require second factor authentication.</td>
 		</tr>
 		<tr>
+			<td>configMap.identity_validation.reset_password</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "jwt_algorithm": "HS256",
+  "jwt_lifespan": "5 minutes",
+  "secret": {
+    "disabled": false,
+    "path": "identity_validation.reset_password.jwt.hmac.key",
+    "secret_name": null,
+    "value": ""
+  }
+}
+</pre>
+</td>
+			<td>The Reset Password Identity Validation implementation ensures that users cannot perform a reset password flow without first ensuring the user is adequately identified. The settings below therefore can affect the level of security Authelia provides to your users so they should be carefully considered.</td>
+		</tr>
+		<tr>
 			<td>configMap.identity_validation.reset_password.jwt_algorithm</td>
 			<td>string</td>
 			<td><pre lang="json">
@@ -1409,6 +1427,20 @@ false
 </pre>
 </td>
 			<td>The lifespan of the JSON Web Token after it’s initially generated after which it’s considered invalid.</td>
+		</tr>
+		<tr>
+			<td>configMap.identity_validation.reset_password.secret</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "disabled": false,
+  "path": "identity_validation.reset_password.jwt.hmac.key",
+  "secret_name": null,
+  "value": ""
+}
+</pre>
+</td>
+			<td>The secret used with the HMAC algorithm to sign the JWT minted by Authelia.</td>
 		</tr>
 		<tr>
 			<td>configMap.identity_validation.reset_password.secret.disabled</td>
@@ -3303,6 +3335,21 @@ false
 			<td>This field can be used as a condition when authelia is a dependency. This definition is only a placeholder and not used directly by this chart. See https://helm.sh/docs/chart_best_practices/dependencies/#conditions-and-tags for more info</td>
 		</tr>
 		<tr>
+			<td>image</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "pullPolicy": "IfNotPresent",
+  "pullSecrets": [],
+  "registry": "ghcr.io",
+  "repository": "authelia/authelia",
+  "tag": ""
+}
+</pre>
+</td>
+			<td>Image configuration for the Authelia container.</td>
+		</tr>
+		<tr>
 			<td>image.pullPolicy</td>
 			<td>string</td>
 			<td><pre lang="json">
@@ -3348,6 +3395,82 @@ appVersion
 			<td>The tag to use from the registry.</td>
 		</tr>
 		<tr>
+			<td>ingress</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "annotations": {},
+  "certManager": false,
+  "className": "",
+  "enabled": false,
+  "gatewayAPI": {
+    "enabled": false,
+    "hostnamesOverride": [],
+    "parentRefs": []
+  },
+  "labels": {},
+  "rulesOverride": [],
+  "tls": {
+    "enabled": false,
+    "secret": "authelia-tls"
+  },
+  "traefikCRD": {
+    "apiGroupOverride": "",
+    "apiVersionOverride": "",
+    "disableIngressRoute": false,
+    "enabled": false,
+    "entryPoints": [],
+    "matchOverride": "",
+    "middlewares": {
+      "auth": {
+        "authResponseHeaders": [
+          "Remote-User",
+          "Remote-Name",
+          "Remote-Email",
+          "Remote-Groups"
+        ],
+        "enableMaxResponseBodySize": false,
+        "endpointOverride": "",
+        "nameOverride": ""
+      },
+      "chains": {
+        "auth": {
+          "after": [],
+          "before": [],
+          "nameOverride": ""
+        },
+        "ingressRoute": {
+          "after": [],
+          "before": []
+        }
+      }
+    },
+    "priority": 500,
+    "responseForwardingFlushInterval": "100ms",
+    "sticky": false,
+    "stickyCookieNameOverride": "",
+    "strategy": "RoundRobin",
+    "tls": {
+      "certResolver": "",
+      "disableTLSOptions": false,
+      "domainsOverride": [],
+      "options": {
+        "cipherSuites": [],
+        "curvePreferences": [],
+        "maxVersion": "VersionTLS13",
+        "minVersion": "VersionTLS12",
+        "nameOverride": "",
+        "sniStrict": false
+      }
+    },
+    "weight": 10
+  }
+}
+</pre>
+</td>
+			<td>Ingress configuration for the Authelia deployment.</td>
+		</tr>
+		<tr>
 			<td>ingress.annotations</td>
 			<td>object</td>
 			<td><pre lang="json">
@@ -3382,6 +3505,19 @@ false
 </pre>
 </td>
 			<td>Enable generating ingress related resources.</td>
+		</tr>
+		<tr>
+			<td>ingress.gatewayAPI</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "enabled": false,
+  "hostnamesOverride": [],
+  "parentRefs": []
+}
+</pre>
+</td>
+			<td>Configuration of the Gateway API.</td>
 		</tr>
 		<tr>
 			<td>ingress.gatewayAPI.enabled</td>
@@ -3429,6 +3565,18 @@ false
 			<td>Override to the rules values for the Ingress type manifest.</td>
 		</tr>
 		<tr>
+			<td>ingress.tls</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "enabled": false,
+  "secret": "authelia-tls"
+}
+</pre>
+</td>
+			<td>TLS configuration for the Ingress manifests.</td>
+		</tr>
+		<tr>
 			<td>ingress.tls.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
@@ -3438,13 +3586,63 @@ false
 			<td>Enable TLS for the Ingress.</td>
 		</tr>
 		<tr>
-			<td>ingress.tls.secret</td>
-			<td>string</td>
+			<td>ingress.traefikCRD</td>
+			<td>object</td>
 			<td><pre lang="json">
-"authelia-tls"
+{
+  "apiGroupOverride": "",
+  "apiVersionOverride": "",
+  "disableIngressRoute": false,
+  "enabled": false,
+  "entryPoints": [],
+  "matchOverride": "",
+  "middlewares": {
+    "auth": {
+      "authResponseHeaders": [
+        "Remote-User",
+        "Remote-Name",
+        "Remote-Email",
+        "Remote-Groups"
+      ],
+      "enableMaxResponseBodySize": false,
+      "endpointOverride": "",
+      "nameOverride": ""
+    },
+    "chains": {
+      "auth": {
+        "after": [],
+        "before": [],
+        "nameOverride": ""
+      },
+      "ingressRoute": {
+        "after": [],
+        "before": []
+      }
+    }
+  },
+  "priority": 500,
+  "responseForwardingFlushInterval": "100ms",
+  "sticky": false,
+  "stickyCookieNameOverride": "",
+  "strategy": "RoundRobin",
+  "tls": {
+    "certResolver": "",
+    "disableTLSOptions": false,
+    "domainsOverride": [],
+    "options": {
+      "cipherSuites": [],
+      "curvePreferences": [],
+      "maxVersion": "VersionTLS13",
+      "minVersion": "VersionTLS12",
+      "nameOverride": "",
+      "sniStrict": false
+    }
+  },
+  "weight": 10
+}
 </pre>
 </td>
-			<td></td>
+			<td>Configuration of the Traefik IngressRoute.</td>
 		</tr>
 		<tr>
 			<td>ingress.traefikCRD.apiGroupOverride</td>
@@ -3923,7 +4121,7 @@ false
 {}
 </pre>
 </td>
-			<td></td>
+			<td>Extra PersistentVolumeClaim selector.</td>
 		</tr>
 		<tr>
 			<td>persistence.extraPersistentVolumeClaims.example.size</td>
@@ -4547,6 +4745,20 @@ false
 			<td>Minimum available value for the PodDisruptionBudget manifest.</td>
 		</tr>
 		<tr>
+			<td>rbac</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "annotations": {},
+  "enabled": false,
+  "labels": {},
+  "serviceAccountName": "authelia"
+}
+</pre>
+</td>
+			<td>RBAC configuration for the Authelia deployment.</td>
+		</tr>
+		<tr>
 			<td>rbac.annotations</td>
 			<td>object</td>
 			<td><pre lang="json">
@@ -4635,6 +4847,23 @@ false
 </pre>
 </td>
 			<td>Pod path to mount the values of the Secret manifest.</td>
+		</tr>
+		<tr>
+			<td>service</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "annotations": {},
+  "clusterIP": null,
+  "externalTrafficPolicy": null,
+  "labels": {},
+  "nodePort": 30091,
+  "port": 80,
+  "type": "ClusterIP"
+}
+</pre>
+</td>
+			<td>Service configuration for the Authelia deployment.</td>
 		</tr>
 		<tr>
 			<td>service.annotations</td>
