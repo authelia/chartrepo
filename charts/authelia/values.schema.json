@@ -1640,6 +1640,9 @@
                           "integer"
                         ]
                       },
+                      "public": {
+                        "type": "boolean"
+                      },
                       "pushed_authorization_endpoint_auth_method": {
                         "enum": [
                           "client_secret_basic",
@@ -2495,7 +2498,6 @@
           "properties": {
             "elevated_session": {
               "additionalProperties": false,
-              "description": "# The Elevated Session Identity Validation implementation ensures that users cannot perform actions which may\n# adjust the security characteristics of their account without first ensuring the user is adequately identified.\n# The settings below therefore can affect the level of security Authelia provides to your users so they should be\n# carefully considered.",
               "properties": {
                 "characters": {
                   "default": 8,
@@ -2546,7 +2548,6 @@
             },
             "reset_password": {
               "additionalProperties": false,
-              "description": "The Reset Password Identity Validation implementation ensures that users cannot perform a reset password flow\nwithout first ensuring the user is adequately identified. The settings below therefore can affect the level of\nsecurity Authelia provides to your users so they should be carefully considered.",
               "properties": {
                 "jwt_algorithm": {
                   "default": "HS256",
@@ -2566,7 +2567,6 @@
                 },
                 "secret": {
                   "additionalProperties": false,
-                  "description": "The secret used with the HMAC algorithm to sign the JWT minted by Authelia.",
                   "properties": {
                     "disabled": {
                       "default": false,
@@ -3189,11 +3189,9 @@
                 },
                 "rate_limits": {
                   "additionalProperties": false,
-                  "description": "Configure the rate limits for various endpoints.",
                   "properties": {
                     "openid_connect_pushed_authorization_request": {
                       "additionalProperties": false,
-                      "description": "Configure the rate limits for the OpenID Connect 1.0 Pushed Authorization Request endpoint.",
                       "properties": {
                         "buckets": {
                           "description": "List of rate limit buckets.",
@@ -3234,7 +3232,6 @@
                     },
                     "openid_connect_token": {
                       "additionalProperties": false,
-                      "description": "Configure the rate limits for the OpenID Connect 1.0 Token endpoint.",
                       "properties": {
                         "buckets": {
                           "description": "List of rate limit buckets.",
@@ -3275,7 +3272,6 @@
                     },
                     "reset_password_finish": {
                       "additionalProperties": false,
-                      "description": "Configure the rate limits for the reset password finish endpoint.",
                       "properties": {
                         "buckets": {
                           "description": "List of rate limit buckets.",
@@ -3316,7 +3312,6 @@
                     },
                     "reset_password_start": {
                       "additionalProperties": false,
-                      "description": "Configure the rate limits for the reset password start endpoint.",
                       "properties": {
                         "buckets": {
                           "description": "List of rate limit buckets.",
@@ -3357,7 +3352,6 @@
                     },
                     "second_factor_duo": {
                       "additionalProperties": false,
-                      "description": "Configure the rate limits for the second factor DUO endpoint.",
                       "properties": {
                         "buckets": {
                           "description": "List of rate limit buckets.",
@@ -3398,7 +3392,6 @@
                     },
                     "second_factor_totp": {
                       "additionalProperties": false,
-                      "description": "Configure the rate limits for the second factor TOTP endpoint.",
                       "properties": {
                         "buckets": {
                           "description": "List of rate limit buckets.",
@@ -3439,7 +3432,6 @@
                     },
                     "session_elevation_finish": {
                       "additionalProperties": false,
-                      "description": "Configure the rate limits for the session elevation finish endpoint.",
                       "properties": {
                         "buckets": {
                           "description": "List of rate limit buckets.",
@@ -3480,7 +3472,6 @@
                     },
                     "session_elevation_start": {
                       "additionalProperties": false,
-                      "description": "Configure the rate limits for the session elevation start endpoint.",
                       "properties": {
                         "buckets": {
                           "description": "List of rate limit buckets.",
@@ -4824,7 +4815,6 @@
     },
     "image": {
       "additionalProperties": false,
-      "description": "Image configuration for the Authelia container.",
       "properties": {
         "pullPolicy": {
           "default": "IfNotPresent",
@@ -4870,7 +4860,6 @@
     },
     "ingress": {
       "additionalProperties": false,
-      "description": "Ingress configuration for the Authelia deployment.",
       "properties": {
         "annotations": {
           "additionalProperties": true,
@@ -4898,7 +4887,6 @@
         },
         "gatewayAPI": {
           "additionalProperties": false,
-          "description": "Configuration of the Gateway API.",
           "properties": {
             "enabled": {
               "default": false,
@@ -4946,7 +4934,6 @@
         },
         "tls": {
           "additionalProperties": false,
-          "description": "TLS configuration for the Ingress manifests.",
           "properties": {
             "enabled": {
               "default": false,
@@ -4970,7 +4957,6 @@
         },
         "traefikCRD": {
           "additionalProperties": false,
-          "description": "Configuration of the Traefik IngressRoute.",
           "properties": {
             "apiGroupOverride": {
               "default": "",
@@ -6368,7 +6354,6 @@
     },
     "rbac": {
       "additionalProperties": false,
-      "description": "RBAC configuration for the Authelia deployment.",
       "properties": {
         "annotations": {
           "additionalProperties": true,
@@ -6478,7 +6463,6 @@
     },
     "service": {
       "additionalProperties": false,
-      "description": "Service configuration for the Authelia deployment.",
       "properties": {
         "annotations": {
           "additionalProperties": true,
