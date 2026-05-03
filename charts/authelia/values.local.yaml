@@ -4878,6 +4878,7 @@ persistence:
       # required: false
       # @schema
       selector: {}
+
 # @schema
 # required: false
 # additionalProperties: true

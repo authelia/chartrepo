@@ -48,7 +48,8 @@ annotations:
       description: Missing type definition for several values.
    - kind: added
      description: Additional objects.
-    - name: authelia/authelia
+  artifacthub.io/images: |
+   - name: authelia/authelia
       image: ghcr.io/authelia/authelia:4.39.19
       whitelisted: false
       platforms:
