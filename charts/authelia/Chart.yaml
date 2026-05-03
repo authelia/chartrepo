@@ -44,8 +44,6 @@ deprecated: false
 annotations:
   artifacthub.io/category: security
   artifacthub.io/changes: |
-    - kind: fixed
-      description: Missing type definition for several values.
    - kind: added
      description: Additional objects.
   artifacthub.io/images: |
