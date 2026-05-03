@@ -4884,4 +4884,3 @@ persistence:
 # additionalProperties: true
 # @schema
 extraObjects: []
->>>>>>> bc2e6f3 (feat(authelia): Additional objects)
