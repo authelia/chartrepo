@@ -4841,6 +4841,15 @@
       "title": "enabled",
       "type": "boolean"
     },
+    "extraObjects": {
+      "additionalProperties": true,
+      "description": "This field can include any extra objects to include in the rendered\nmanifest. The allowed contents can be either string or yaml objects. String\nobjects will be templated with tpl.",
+      "items": {
+        "required": []
+      },
+      "required": [],
+      "title": "extraObjects"
+    },
     "global": {
       "description": "Global values are values that can be accessed from any chart or subchart by exactly the same name.",
       "required": [],

@@ -3378,3 +3378,12 @@ persistence:
 
       # -- Extra PersistentVolumeClaim selector.
       selector: {}
+
+# @schema
+# required: false
+# additionalProperties: true
+# @schema
+# -- This field can include any extra objects to include in the rendered
+# manifest. The allowed contents can be either string or yaml objects. String
+# objects will be templated with tpl.
+extraObjects: []

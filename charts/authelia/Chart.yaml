@@ -1,6 +1,6 @@
 apiVersion: v2
 name: authelia
-version: 0.11.4
+version: 0.11.5
 kubeVersion: ">= 1.30.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
@@ -44,8 +44,8 @@ deprecated: false
 annotations:
   artifacthub.io/category: security
   artifacthub.io/changes: |
-    - kind: fixed
-      description: Missing type definition for several values.
+    - kind: added
+      description: Additional objects.
   artifacthub.io/images: |
     - name: authelia/authelia
       image: ghcr.io/authelia/authelia:4.39.19
