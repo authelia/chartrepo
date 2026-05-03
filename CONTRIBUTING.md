@@ -112,13 +112,17 @@ also be documented in the chart's `BREAKING.md` where applicable.
 
 Before opening a PR, please confirm:
 
+- [ ] The [Code of Conduct](https://www.authelia.com/policies/code-of-conduct/) Has been read and is agreed to by the PR
+  author.
 - [ ] `Chart.yaml` `version` has been bumped for every chart you modified.
-- [ ] `Chart.yaml` `artifacthub.io/changes` annotation describes your change.
+- [ ] `Chart.yaml` `artifacthub.io/changes` annotation has been updated and describes your change.
 - [ ] `README.md` was **not** edited directly; `README.md.gotmpl` and/or `values.yaml` were edited instead.
 - [ ] `values.schema.json` was **not** edited directly; `values.yaml` `# @schema` annotations were edited instead.
 - [ ] `make docs schema` has been run and the regenerated files are committed.
 - [ ] `make lint` passes locally.
 - [ ] Commit messages and PR title follow Conventional Commits.
+- [ ] All usage of Generative AI is fully disclosed in the PR description in complete compliance with the
+  [Generative AI Guidelines](https://www.authelia.com/contributing/guidelines/introduction/#generative-ai-guidelines).
 
 ## Reporting Issues
 
