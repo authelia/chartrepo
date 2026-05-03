@@ -4,7 +4,8 @@ Thank you for your interest in contributing to the Authelia chart repository! Th
 conventions you should follow when proposing changes.
 
 If you have not already, please also read the [Authelia Code of Conduct](https://www.authelia.com/policies/code-of-conduct/)
-and the [Authelia Contributing Guide](https://www.authelia.com/contributing/prologue/introduction/).
+and the [Authelia Contributing Guide](https://www.authelia.com/contributing/prologue/introduction/). Compliance with
+these policies is required for all contributions.
 
 ## Getting Started
 
