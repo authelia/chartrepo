@@ -49,7 +49,7 @@ annotations:
    - kind: added
      description: Additional objects.
   artifacthub.io/images: |
-   - name: authelia/authelia
+    - name: authelia/authelia
       image: ghcr.io/authelia/authelia:4.39.19
       whitelisted: false
       platforms:
