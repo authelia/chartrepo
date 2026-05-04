@@ -489,7 +489,10 @@ pod:
       # -- RollingUpdate partition value.
       partition: 0
 
-      # -- RollingUpdate max surge value.
+      # -- RollingUpdate max surge value. Any value greater than 0 means the controller will briefly run more pods than
+      # the desired replica count during a rollout. This is unsafe with backends that cannot tolerate two pods running
+      # concurrently (e.g. SQLite local storage, in-memory sessions, or ReadWriteOnce PVCs). For those backends set
+      # this to '0%' and maxUnavailable to '100%'. Not used when pod.kind is StatefulSet.
       maxSurge: '25%'
 
       # -- RollingUpdate max unavailable value.
