@@ -3209,6 +3209,46 @@
                 "rate_limits": {
                   "additionalProperties": false,
                   "properties": {
+                    "openid_connect_introspection": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "buckets": {
+                          "description": "List of rate limit buckets.",
+                          "items": {
+                            "properties": {
+                              "limit": {
+                                "type": "integer"
+                              },
+                              "period": {
+                                "required": [],
+                                "type": [
+                                  "string",
+                                  "integer"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "period",
+                              "limit"
+                            ],
+                            "type": "object"
+                          },
+                          "title": "buckets",
+                          "type": "array"
+                        },
+                        "enable": {
+                          "default": true,
+                          "description": "Enables this rate limit.",
+                          "title": "enable",
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "enable"
+                      ],
+                      "title": "openid_connect_introspection",
+                      "type": "object"
+                    },
                     "openid_connect_pushed_authorization_request": {
                       "additionalProperties": false,
                       "properties": {
@@ -3249,6 +3289,46 @@
                       "title": "openid_connect_pushed_authorization_request",
                       "type": "object"
                     },
+                    "openid_connect_revocation": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "buckets": {
+                          "description": "List of rate limit buckets.",
+                          "items": {
+                            "properties": {
+                              "limit": {
+                                "type": "integer"
+                              },
+                              "period": {
+                                "required": [],
+                                "type": [
+                                  "string",
+                                  "integer"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "period",
+                              "limit"
+                            ],
+                            "type": "object"
+                          },
+                          "title": "buckets",
+                          "type": "array"
+                        },
+                        "enable": {
+                          "default": true,
+                          "description": "Enables this rate limit.",
+                          "title": "enable",
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "enable"
+                      ],
+                      "title": "openid_connect_revocation",
+                      "type": "object"
+                    },
                     "openid_connect_token": {
                       "additionalProperties": false,
                       "properties": {
@@ -3287,6 +3367,46 @@
                         "enable"
                       ],
                       "title": "openid_connect_token",
+                      "type": "object"
+                    },
+                    "openid_connect_userinfo": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "buckets": {
+                          "description": "List of rate limit buckets.",
+                          "items": {
+                            "properties": {
+                              "limit": {
+                                "type": "integer"
+                              },
+                              "period": {
+                                "required": [],
+                                "type": [
+                                  "string",
+                                  "integer"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "period",
+                              "limit"
+                            ],
+                            "type": "object"
+                          },
+                          "title": "buckets",
+                          "type": "array"
+                        },
+                        "enable": {
+                          "default": true,
+                          "description": "Enables this rate limit.",
+                          "title": "enable",
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "enable"
+                      ],
+                      "title": "openid_connect_userinfo",
                       "type": "object"
                     },
                     "reset_password_finish": {
@@ -3538,7 +3658,10 @@
                     "session_elevation_start",
                     "session_elevation_finish",
                     "openid_connect_token",
-                    "openid_connect_pushed_authorization_request"
+                    "openid_connect_pushed_authorization_request",
+                    "openid_connect_userinfo",
+                    "openid_connect_introspection",
+                    "openid_connect_revocation"
                   ],
                   "title": "rate_limits",
                   "type": "object"

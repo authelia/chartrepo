@@ -1165,6 +1165,60 @@ configMap:
           # -- List of rate limit buckets.
           buckets: []
 
+        openid_connect_userinfo:
+          # -- Enables this rate limit.
+          enable: true
+
+          # @schema
+          # type: array
+          # items:
+          #   type: object
+          #   required: ['period', 'limit']
+          #   properties:
+          #     period:
+          #       type: [string, integer]
+          #     limit:
+          #       type: integer
+          # @schema
+          # -- List of rate limit buckets.
+          buckets: []
+
+        openid_connect_introspection:
+          # -- Enables this rate limit.
+          enable: true
+
+          # @schema
+          # type: array
+          # items:
+          #   type: object
+          #   required: ['period', 'limit']
+          #   properties:
+          #     period:
+          #       type: [string, integer]
+          #     limit:
+          #       type: integer
+          # @schema
+          # -- List of rate limit buckets.
+          buckets: []
+
+        openid_connect_revocation:
+          # -- Enables this rate limit.
+          enable: true
+
+          # @schema
+          # type: array
+          # items:
+          #   type: object
+          #   required: ['period', 'limit']
+          #   properties:
+          #     period:
+          #       type: [string, integer]
+          #     limit:
+          #       type: integer
+          # @schema
+          # -- List of rate limit buckets.
+          buckets: []
+
   log:
     # @schema
     # enum: ['error','warn','info','debug','trace']

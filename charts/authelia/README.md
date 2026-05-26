@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.11.6](https://img.shields.io/badge/Version-0.11.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.20](https://img.shields.io/badge/AppVersion-4.39.20-informational?style=flat-square)
+![Version: 0.11.7](https://img.shields.io/badge/Version-0.11.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.20](https://img.shields.io/badge/AppVersion-4.39.20-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -300,10 +300,16 @@ Kubernetes: `>= 1.30.0-0`
 | configMap.server.endpoints.automatic_authz_implementations | list | `[]` | A list of automatically configured authz implementations if you don't wish to manually configure each one. Important Note: If you configure the 'authz' section this is completely ignored. |
 | configMap.server.endpoints.enable_expvars | bool | `false` | Enable the developer expvars handlers. |
 | configMap.server.endpoints.enable_pprof | bool | `false` | Enable the developer pprof handlers. |
+| configMap.server.endpoints.rate_limits.openid_connect_introspection.buckets | list | `[]` | List of rate limit buckets. |
+| configMap.server.endpoints.rate_limits.openid_connect_introspection.enable | bool | `true` | Enables this rate limit. |
 | configMap.server.endpoints.rate_limits.openid_connect_pushed_authorization_request.buckets | list | `[]` | List of rate limit buckets. |
 | configMap.server.endpoints.rate_limits.openid_connect_pushed_authorization_request.enable | bool | `true` | Enables this rate limit. |
+| configMap.server.endpoints.rate_limits.openid_connect_revocation.buckets | list | `[]` | List of rate limit buckets. |
+| configMap.server.endpoints.rate_limits.openid_connect_revocation.enable | bool | `true` | Enables this rate limit. |
 | configMap.server.endpoints.rate_limits.openid_connect_token.buckets | list | `[]` | List of rate limit buckets. |
 | configMap.server.endpoints.rate_limits.openid_connect_token.enable | bool | `true` | Enables this rate limit. |
+| configMap.server.endpoints.rate_limits.openid_connect_userinfo.buckets | list | `[]` | List of rate limit buckets. |
+| configMap.server.endpoints.rate_limits.openid_connect_userinfo.enable | bool | `true` | Enables this rate limit. |
 | configMap.server.endpoints.rate_limits.reset_password_finish.buckets | list | `[]` | List of rate limit buckets. |
 | configMap.server.endpoints.rate_limits.reset_password_finish.enable | bool | `true` | Enables this rate limit. |
 | configMap.server.endpoints.rate_limits.reset_password_start.buckets | list | `[]` | List of rate limit buckets. |
