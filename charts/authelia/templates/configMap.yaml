@@ -115,6 +115,35 @@ data:
             {{- end }}
           {{- end }}
         {{- end }}
+        {{- if (semverCompare ">=4.39.20" (include "authelia.version" $)) }}
+          openid_connect_userinfo:
+            enable: {{ .Values.configMap.server.endpoints.rate_limits.openid_connect_userinfo.enable }}
+            {{- if gt (len .Values.configMap.server.endpoints.rate_limits.openid_connect_userinfo.buckets) 0 }}
+            buckets:
+            {{- range .Values.configMap.server.endpoints.rate_limits.openid_connect_userinfo.buckets }}
+              - period: {{ include "authelia.func.dquote" .period }}
+                requests: {{ .requests }}
+            {{- end }}
+            {{- end }}
+          openid_connect_introspection:
+            enable: {{ .Values.configMap.server.endpoints.rate_limits.openid_connect_introspection.enable }}
+            {{- if gt (len .Values.configMap.server.endpoints.rate_limits.openid_connect_introspection.buckets) 0 }}
+            buckets:
+            {{- range .Values.configMap.server.endpoints.rate_limits.openid_connect_introspection.buckets }}
+              - period: {{ include "authelia.func.dquote" .period }}
+                requests: {{ .requests }}
+            {{- end }}
+            {{- end }}
+          openid_connect_revocation:
+            enable: {{ .Values.configMap.server.endpoints.rate_limits.openid_connect_revocation.enable }}
+            {{- if gt (len .Values.configMap.server.endpoints.rate_limits.openid_connect_revocation.buckets) 0 }}
+            buckets:
+            {{- range .Values.configMap.server.endpoints.rate_limits.openid_connect_revocation.buckets }}
+              - period: {{ include "authelia.func.dquote" .period }}
+                requests: {{ .requests }}
+            {{- end }}
+            {{- end }}
+        {{- end }}
     log:
       level: {{ .Values.configMap.log.level | default "info" | squote }}
       format: {{ .Values.configMap.log.format | default "text" | squote }}
