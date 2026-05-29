@@ -1,0 +1,14 @@
+configMap:
+  session:
+    cookies:
+      - domain: example.com
+        subdomain: auth
+        port: 8443
+ingress:
+  enabled: true
+  tls:
+    enabled: true
+  traefikCRD:
+    enabled: true
+    tls:
+      certResolver: default
