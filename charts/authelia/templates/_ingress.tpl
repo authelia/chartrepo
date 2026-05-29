@@ -1,8 +1,8 @@
 {{- define "authelia.ingress.uri" -}}
     {{- if .Path }}
-    {{- printf "https://%s/%s" (include "authelia.ingress.host" .) .Path }}
+    {{- printf "https://%s/%s" (include "authelia.ingress.authority" .) .Path }}
     {{- else }}
-    {{- printf "https://%s" (include "authelia.ingress.host" .) }}
+    {{- printf "https://%s" (include "authelia.ingress.authority" .) }}
     {{- end }}
 {{- end -}}
 
@@ -14,6 +14,26 @@
     {{- printf "%s.%s" .SubDomain .Domain }}
     {{- else }}
     {{- .Domain }}
+    {{- end }}
+{{- end }}
+
+{{/*
+    Returns the ingress authority value including the optional port.
+*/}}
+{{- define "authelia.ingress.authority" -}}
+    {{- $port := int (default 0 .Port) -}}
+    {{- if .SubDomain }}
+        {{- if gt $port 0 }}
+            {{- printf "%s.%s:%d" .SubDomain .Domain $port }}
+        {{- else }}
+            {{- printf "%s.%s" .SubDomain .Domain }}
+        {{- end }}
+    {{- else }}
+        {{- if gt $port 0 }}
+            {{- printf "%s:%d" .Domain $port }}
+        {{- else }}
+            {{- .Domain }}
+        {{- end }}
     {{- end }}
 {{- end }}
 
