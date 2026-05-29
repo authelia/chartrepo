@@ -3658,6 +3658,11 @@
                   "path": {
                     "type": "string"
                   },
+                  "port": {
+                    "maximum": 65535,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
                   "same_site": {
                     "enum": [
                       "lax",

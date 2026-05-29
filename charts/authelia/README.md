@@ -53,11 +53,12 @@ It is expected you will configure at least the following sections/values:
   in [the documentation](https://www.authelia.com/configuration))
   - The `configMap.session.cookies` section contains the domain configuration for the Authelia portal and session
     cookies:
-    - The full Authelia URL will be in the format of `https://[<subdomain>.]<domain>[/<subpath>]` (part within the square braces is
+    - The full Authelia URL will be in the format of `https://[<subdomain>.]<domain>[:<port>][/<subpath>]` (part within the square braces is
       omitted if not configured) i.e. `domain` of `example.com` and `subdomain` empty yields `https://example.com` and
-      `subdomain` of `auth` yields `https://auth.example.com`. The `subpath` is also optionally included.
+      `subdomain` of `auth` yields `https://auth.example.com`. The `port` and `subpath` are also optionally included.
     - The `domain` option is required.
     - The `subdomain` option is generally required.
+    - The `port` option is optional and only affects the generated Authelia URL. It does not affect the cookie domain.
     - The `path` option is generally **_NOT_** required or recommended. Every domain that has this option configured
       MUST have the same value i.e. you can have one blank and one configured but all those that are configured must be
       the same, and in addition if configured at all the `configMap.server.path` option must have the same value.
@@ -594,4 +595,3 @@ Kubernetes: `>= 1.30.0-0`
 | service.port | int | `80` | Port for the Authelia service manifest. |
 | service.type | string | `"ClusterIP"` | The service type to generate for the Authelia pods. |
 | versionOverride | string | `""` | Version Override allows changing some chart characteristics that render only on specific versions. This does NOT affect the image used, please see the below image section instead for this. If this value is not specified, it's assumed the appVersion of the chart is the version. The format of this value  is x.x.x, for example 4.100.0. Minimum value is 4.38.0, and support is not guaranteed. |
-

@@ -3163,6 +3163,10 @@ configMap:
     #       required: false
     #     domain:
     #       type: string
+    #     port:
+    #       type: integer
+    #       minimum: 1
+    #       maximum: 65535
     #     path:
     #       type: string
     #       required: false
@@ -3194,6 +3198,9 @@ configMap:
 
         ## The domain for cookie and to build the Authelia URL.
         # domain: ''
+
+        ## The port to suffix the generated Authelia URL with. This option does not affect the cookie domain.
+        # port: 443
 
         ## The path to suffix the domain with. For example using `domain` value `example.com` and `subdomain` value
         ## `auth` and `path` value `auth` should yield the URL `https://auth.example.com/auth`.
