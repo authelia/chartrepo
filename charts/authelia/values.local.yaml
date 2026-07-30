@@ -3778,6 +3778,12 @@ configMap:
     # @schema
     # required: false
     # @schema
+    # -- Path for custom templates for notifications.
+    template_path: ''
+
+    # @schema
+    # required: false
+    # @schema
     filesystem:
 
       # @schema
