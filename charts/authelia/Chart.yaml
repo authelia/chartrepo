@@ -1,6 +1,6 @@
 apiVersion: v2
 name: authelia
-version: 0.11.6
+version: 0.11.7
 kubeVersion: ">= 1.30.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
@@ -45,7 +45,7 @@ annotations:
   artifacthub.io/category: security
   artifacthub.io/changes: |
     - kind: added
-      description: Update to Authelia 4.39.20.
+      description: Notifier template path.
   artifacthub.io/images: |
     - name: authelia/authelia
       image: ghcr.io/authelia/authelia:4.39.20

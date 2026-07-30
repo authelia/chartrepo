@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.11.6](https://img.shields.io/badge/Version-0.11.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.20](https://img.shields.io/badge/AppVersion-4.39.20-informational?style=flat-square)
+![Version: 0.11.7](https://img.shields.io/badge/Version-0.11.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.20](https://img.shields.io/badge/AppVersion-4.39.20-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -275,6 +275,7 @@ Kubernetes: `>= 1.30.0-0`
 | configMap.notifier.smtp.tls.server_name | string | `""` | The server subject name to check the servers certificate against during the validation process. This option is not required if the certificate has a SAN which matches the host option. |
 | configMap.notifier.smtp.tls.skip_verify | bool | `false` | Skip verifying the server certificate entirely. |
 | configMap.notifier.smtp.username | string | `""` | The username sent for authentication with the SMTP server. Paired with the password. |
+| configMap.notifier.template_path | string | `""` | Path for custom templates for notifications. Not configured by default which uses the embedded templates. The path must exist within the container when configured. See https://www.authelia.com/reference/guides/notification-templates/ |
 | configMap.ntp.address | string | `"udp://time.cloudflare.com:123"` | NTP server address. |
 | configMap.ntp.disable_failure | bool | `false` | The default of false will prevent startup only if we can contact the NTP server and the time is out of sync with the NTP server more than the configured max_desync. If you set this to true, an error will be logged but startup will continue regardless of results. |
 | configMap.ntp.disable_startup_check | bool | `false` | Disables the NTP check on startup entirely. This means Authelia will not contact a remote service at all if you set this to true, and can operate in a truly offline mode. |

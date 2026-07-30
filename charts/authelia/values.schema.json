@@ -2884,10 +2884,17 @@
               ],
               "title": "smtp",
               "type": "object"
+            },
+            "template_path": {
+              "default": "",
+              "description": "Path for custom templates for notifications. Not configured by default which uses the embedded templates. The\npath must exist within the container when configured.\nSee https://www.authelia.com/reference/guides/notification-templates/",
+              "title": "template_path",
+              "type": "string"
             }
           },
           "required": [
             "disable_startup_check",
+            "template_path",
             "filesystem",
             "smtp"
           ],

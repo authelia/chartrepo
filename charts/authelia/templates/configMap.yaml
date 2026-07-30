@@ -515,6 +515,9 @@ data:
     {{- with $notifier := .Values.configMap.notifier }}
     notifier:
       disable_startup_check: {{ $.Values.configMap.notifier.disable_startup_check }}
+    {{- with $notifier.template_path }}
+      template_path: {{ . | squote }}
+    {{- end }}
     {{- if $notifier.filesystem.enabled }}
       filesystem:
         filename: {{ $notifier.filesystem.filename | squote }}
