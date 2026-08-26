@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.11.17](https://img.shields.io/badge/Version-0.11.17-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.20](https://img.shields.io/badge/AppVersion-4.39.20-informational?style=flat-square)
+![Version: 0.11.18](https://img.shields.io/badge/Version-0.11.18-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.20](https://img.shields.io/badge/AppVersion-4.39.20-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -427,9 +427,9 @@ Kubernetes: `>= 1.30.0-0`
 | configMap.webauthn.disable | bool | `false` | Disable Webauthn. |
 | configMap.webauthn.display_name | string | `"Authelia"` | The display name the browser should show the user for when using Webauthn to login/register. |
 | configMap.webauthn.enable_passkey_login | bool | `false` | Enabled Passkey Logins. |
-| configMap.webauthn.filtering.permitted_aaguids | list | `[]` | A list of Authenticator Attestation GUID’s that are the only ones allowed to be registered. Useful if you have a company policy that requires certain authenticators. Mutually exclusive with prohibited_aaguids. |
+| configMap.webauthn.filtering.permitted_aaguids | list | `[]` | A list of Authenticator Attestation GUID’s that are the only ones allowed to be registered. Useful if you have @schema type: array items:   type: string   pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$' @schema a company policy that requires certain authenticators. Mutually exclusive with prohibited_aaguids. |
 | configMap.webauthn.filtering.prohibit_backup_eligibility | bool | `false` | Setting this value to true will ensure Authenticators which can export credentials will not be able to register. This will likely prevent synchronized credentials from being registered. |
-| configMap.webauthn.filtering.prohibited_aaguids | list | `[]` | A list of Authenticator Attestation GUID’s that users will not be able to register. Useful if company policy prevents certain authenticators. Mutually exclusive with permitted_aaguids. |
+| configMap.webauthn.filtering.prohibited_aaguids | list | `[]` | A list of Authenticator Attestation GUID’s that users will not be able to register. Useful if company policy @schema type: array items:   type: string   pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$' @schema prevents certain authenticators. Mutually exclusive with permitted_aaguids. |
 | configMap.webauthn.metadata.cache_policy | string | `"strict"` | Allows adjusting the WebAuthn Metadata Cache Policy. |
 | configMap.webauthn.metadata.enabled | bool | `false` | Enables metadata service validation of authenticators and credentials. This requires the download of the metadata service blob which will utilize about 5MB of data in your configured storage backend. |
 | configMap.webauthn.metadata.validate_entry | bool | `true` | Enables validation that an entry exists for the authenticator in the MDS3 blob. It’s recommended that this option is the default value, however this may exclude some authenticators which DO NOT have FIDO compliance certification or have otherwise not registered with the MDS3. The recommendation is based on the fact that the authenticity of a particular authenticator cannot be validated without this. |

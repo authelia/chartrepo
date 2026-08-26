@@ -196,8 +196,22 @@ data:
       timeout: {{ include "authelia.func.dquote" (.Values.configMap.webauthn.timeout | default "1 minute") }}
       {{- if semverCompare ">=4.39.0" (include "authelia.version" $) }}
       filtering:
+        {{- if and .Values.configMap.webauthn.filtering.permitted_aaguids (gt (len .Values.configMap.webauthn.filtering.permitted_aaguids) 0) }}
+        permitted_aaguids:
+        {{- range .Values.configMap.webauthn.filtering.permitted_aaguids }}
+        - {{ . | squote }}
+        {{- end }}
+        {{- else }}
         permitted_aaguids: []
+        {{- end }}
+        {{- if and .Values.configMap.webauthn.filtering.prohibited_aaguids (gt (len .Values.configMap.webauthn.filtering.prohibited_aaguids) 0) }}
+        prohibited_aaguids:
+        {{- range .Values.configMap.webauthn.filtering.prohibited_aaguids }}
+        - {{ . | squote }}
+        {{- end }}
+        {{- else }}
         prohibited_aaguids: []
+        {{- end }}
         prohibit_backup_eligibility: {{ .Values.configMap.webauthn.filtering.prohibit_backup_eligibility | default false }}
       selection_criteria:
         attachment: {{ .Values.configMap.webauthn.selection_criteria.attachment | default "" | squote }}
