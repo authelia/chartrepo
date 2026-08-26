@@ -514,6 +514,13 @@ Usage:
 {{- end -}}
 
 {{/*
+Returns the port the Authelia daemon listens on.
+*/}}
+{{- define "authelia.server.port" -}}
+    {{- .Values.configMap.server.port | default 9091 -}}
+{{- end -}}
+
+{{/*
 Returns the service port.
 */}}
 {{- define "authelia.service.port" -}}

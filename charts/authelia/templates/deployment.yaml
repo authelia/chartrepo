@@ -220,7 +220,7 @@ spec:
         {{- end }}
         ports:
         - name: http
-          containerPort: {{ .Values.configMap.port | default 9091 }}
+          containerPort: {{ include "authelia.server.port" . }}
           protocol: TCP
         {{- if .Values.configMap.telemetry.metrics.enabled }}
         - name: metrics
