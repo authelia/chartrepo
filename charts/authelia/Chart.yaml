@@ -1,6 +1,6 @@
 apiVersion: v2
 name: authelia
-version: 0.11.12
+version: 0.11.13
 kubeVersion: ">= 1.30.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
@@ -45,7 +45,7 @@ annotations:
   artifacthub.io/category: security
   artifacthub.io/changes: |
     - kind: fixed
-      description: The container port ignored 'configMap.server.port' so the declared port and the probes did not follow the port Authelia listens on.
+      description: Configuring the removed 'configMap.webauthn.user_verification' reported no guidance, and its replacement now applies to every supported version.
   artifacthub.io/images: |
     - name: authelia/authelia
       image: ghcr.io/authelia/authelia:4.39.20

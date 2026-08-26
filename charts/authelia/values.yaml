@@ -1393,6 +1393,13 @@ configMap:
     # Options are none, indirect, direct.
     attestation_conveyance_preference: 'indirect'
 
+    # @schema
+    # type: [string, null]
+    # @schema
+    # -- Removed. Use 'configMap.webauthn.selection_criteria.user_verification' instead, which applies to every
+    # supported version. Configuring this value is an error.
+    user_verification: ~
+
     filtering:
       # -- A list of Authenticator Attestation GUID’s that are the only ones allowed to be registered. Useful if you have
       # a company policy that requires certain authenticators. Mutually exclusive with prohibited_aaguids.
