@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.11.16](https://img.shields.io/badge/Version-0.11.16-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.20](https://img.shields.io/badge/AppVersion-4.39.20-informational?style=flat-square)
+![Version: 0.11.17](https://img.shields.io/badge/Version-0.11.17-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.20](https://img.shields.io/badge/AppVersion-4.39.20-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -112,6 +112,7 @@ Kubernetes: `>= 1.30.0-0`
 | configMap.access_control.secret.existingSecret | string | `""` | An existingSecret name, if configured this will force the secret to be mounted using the key above. |
 | configMap.access_control.secret.key | string | `"configuration.acl.yaml"` | The key in the secret which contains the file to mount. |
 | configMap.annotations | object | `{}` | Extra annotations for the ConfigMap manifest. |
+| configMap.authentication_backend.disable_reset_password | string | `nil` | Removed. Use 'configMap.authentication_backend.password_reset.disable' instead. Configuring this value is an error. |
 | configMap.authentication_backend.file.enabled | bool | `false` | Enable File Backend (Authentication). |
 | configMap.authentication_backend.file.extra_attributes | object | `{}` | The extra attributes to load from the directory server. These extra attributes can be used in other areas of Authelia such as OpenID Connect 1.0. It’s also recommended to check out the Attributes Reference Guide for more information. |
 | configMap.authentication_backend.file.password.algorithm | string | `"argon2"` | Controls the hashing algorithm used for hashing new passwords. |
@@ -195,6 +196,7 @@ Kubernetes: `>= 1.30.0-0`
 | configMap.authentication_backend.password_reset.disable | bool | `false` | Disable both the HTML element and the API for reset password functionality. |
 | configMap.authentication_backend.refresh_interval | string | `"5 minutes"` | The amount of time to wait before we refresh data from the authentication backend. Uses duration notation. |
 | configMap.default_2fa_method | string | `""` | Set the default 2FA method for new users and for when a user has a preferred method configured that has been disabled. This setting must be a method that is enabled. Options are totp, webauthn, mobile_push. |
+| configMap.default_redirection_url | string | `nil` | Removed. Use the 'default_redirection_url' of the relevant 'configMap.session.cookies' entry instead. Configuring this value is an error. |
 | configMap.definitions.network | object | `{}` | The network section configures named network lists. |
 | configMap.definitions.user_attributes | object | `{}` | The user attributes section allows you to define custom attributes for your users using Common Expression Language (CEL). |
 | configMap.disabled | bool | `false` | Disable the configMap source for the Authelia config. If this is false you need to provide a volumeMount via PV/PVC or other means that mounts to /config. |
@@ -226,6 +228,8 @@ Kubernetes: `>= 1.30.0-0`
 | configMap.identity_providers.oidc.hmac_secret.path | string | `"identity_providers.oidc.hmac.key"` | The path to the secret. If it has a '/' prefix it's assumed to be an absolute path within the pod. Otherwise it uses the format '{mountPath}/{secret_name}/{path}' where '{mountPath}' refers to the 'secret.mountPath' value, '{secret_name}' is the secret_name above, and '{path}' is this value. |
 | configMap.identity_providers.oidc.hmac_secret.secret_name | string | `nil` | The secret name. The ~ name is special as it is the secret we generate either automatically or via the secret_value option below. |
 | configMap.identity_providers.oidc.hmac_secret.value | string | `""` | The value of a generated secret when using the ~ secret_name. |
+| configMap.identity_providers.oidc.issuer_certificate_chain | string | `nil` | Removed. Use 'configMap.identity_providers.oidc.jwks' instead. Configuring this value is an error. |
+| configMap.identity_providers.oidc.issuer_private_key | string | `nil` | Removed. Use 'configMap.identity_providers.oidc.jwks' instead. Configuring this value is an error. |
 | configMap.identity_providers.oidc.jwks | list | `[]` | The JWK's issuer option configures multiple JSON Web Keys. It's required that at least one of the JWK's configured has the RS256 algorithm. For RSA keys (RS or PS) the minimum is a 2048 bit key. |
 | configMap.identity_providers.oidc.lifespans.access_token | string | `"1 hour"` | Default lifespan for Access Tokens. |
 | configMap.identity_providers.oidc.lifespans.authorize_code | string | `"1 minute"` | Default lifespan for Authorize Codes. |
