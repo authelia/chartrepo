@@ -17,6 +17,13 @@
 {{ end }}
 
 {{/*
+    Validate the WebAuthn filtering config.
+*/}}
+{{ if and (gt (len .Values.configMap.webauthn.filtering.permitted_aaguids) 0) (gt (len .Values.configMap.webauthn.filtering.prohibited_aaguids) 0) }}
+{{ fail "The values 'configMap.webauthn.filtering.permitted_aaguids' and 'configMap.webauthn.filtering.prohibited_aaguids' are mutually exclusive" }}
+{{ end }}
+
+{{/*
     Validate the Storage config.
 */}}
 {{ if and (not .Values.configMap.storage.postgres) (not .Values.configMap.storage.mysql) (not .Values.configMap.storage.local) }}

@@ -1548,10 +1548,22 @@ configMap:
 
     filtering:
       # -- A list of Authenticator Attestation GUID’s that are the only ones allowed to be registered. Useful if you have
+      # @schema
+      # type: array
+      # items:
+      #   type: string
+      #   pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+      # @schema
       # a company policy that requires certain authenticators. Mutually exclusive with prohibited_aaguids.
       permitted_aaguids: []
 
       # -- A list of Authenticator Attestation GUID’s that users will not be able to register. Useful if company policy
+      # @schema
+      # type: array
+      # items:
+      #   type: string
+      #   pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+      # @schema
       # prevents certain authenticators. Mutually exclusive with permitted_aaguids.
       prohibited_aaguids: []
 
