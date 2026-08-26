@@ -134,6 +134,21 @@ service:
   # -- (string) Use value Local to get external IP addresses.
   externalTrafficPolicy: ~
 
+  # @schema
+  # type: string
+  # enum: ['None','ClientIP','']
+  # @schema
+  # -- Session Affinity for the Authelia service manifest.
+  sessionAffinity: 'None'
+
+  # @schema
+  # type: array
+  # items:
+  #   type: string
+  # @schema
+  # -- External IPs for the Authelia service manifest.
+  externalIPs: []
+
 ingress:
   # -- Enable generating ingress related resources.
   enabled: false
@@ -237,6 +252,13 @@ ingress:
     # -- Defines the Response Forwarding Flush Interval for the IngressRoute.
     responseForwardingFlushInterval: '100ms'
 
+    # @schema
+    # type: string
+    # enum: ['http','https','h2c','']
+    # @schema
+    # -- Defines the scheme the IngressRoute uses to reach the Authelia service.
+    scheme: 'http'
+
     middlewares:
       auth:
         # -- Overrides the ForwardAuth Middleware (auth) name.
@@ -334,9 +356,21 @@ ingress:
     tls:
       # -- Disables inclusion of the IngressRoute TLSOptions.
       disableTLSOptions: false
-      #   existingOptions:
-      #     name: 'default-traefik-options'
-      #     namespace: 'default'
+
+      # @schema
+      # type: [object, null]
+      # properties:
+      #   name:
+      #     type: string
+      #   namespace:
+      #     type: string
+      # required: ['name']
+      # @schema
+      # -- (object) An existing TLSOption to reference instead of generating one.
+      existingOptions: ~
+      # existingOptions:
+      #   name: 'default-traefik-options'
+      #   namespace: 'default'
 
       # -- Name of the Certificate Resolver to use.
       certResolver: ''
@@ -405,6 +439,14 @@ pod:
   # -- The Pod Kind to use. Must be Deployment, DaemonSet, or StatefulSet.
   kind: 'DaemonSet'
 
+  # @schema
+  # type: string
+  # enum: ['OrderedReady','Parallel','']
+  # @schema
+  # -- The Pod management policy for the StatefulSet kind. Ignored for a configuration which requires a single pod as
+  # that always uses Parallel.
+  managementPolicy: 'Parallel'
+
   # -- Normally when a change is detected via helm install to something that only indirectly affects the pod, the pod
   # will restart. This setting allows disabling this behavior.
   disableRestartOnChanges: false
@@ -455,6 +497,16 @@ pod:
 
   # -- The revision history limit.
   revisionHistoryLimit: 5
+
+  # -- The governing Service name for the StatefulSet kind. Defaults to the name of this release.
+  serviceName: ''
+
+  # -- The minimum seconds a new Pod must be ready before it is considered available. Only applies to the Deployment
+  # and DaemonSet kinds.
+  minReadySeconds: 0
+
+  # -- Injects the Services in the same namespace into the Pod as environment variables.
+  enableServiceLinks: false
 
   # -- The priority class name for the Pod spec.
   priorityClassName: ''

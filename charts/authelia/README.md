@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.11.14](https://img.shields.io/badge/Version-0.11.14-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.20](https://img.shields.io/badge/AppVersion-4.39.20-informational?style=flat-square)
+![Version: 0.11.15](https://img.shields.io/badge/Version-0.11.15-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.20](https://img.shields.io/badge/AppVersion-4.39.20-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -474,12 +474,14 @@ Kubernetes: `>= 1.30.0-0`
 | ingress.traefikCRD.middlewares.chains.ingressRoute.before | list | `[]` | List of Middlewares to apply before the middleware in the IngressRoute chain. |
 | ingress.traefikCRD.priority | int | `500` | Defines the rule priority for the IngressRoute. |
 | ingress.traefikCRD.responseForwardingFlushInterval | string | `"100ms"` | Defines the Response Forwarding Flush Interval for the IngressRoute. |
+| ingress.traefikCRD.scheme | string | `"http"` | Defines the scheme the IngressRoute uses to reach the Authelia service. |
 | ingress.traefikCRD.sticky | bool | `false` | Defines the sticky value for the IngressRoute. |
 | ingress.traefikCRD.stickyCookieNameOverride | string | `""` | Overrides the default sticky cookie name for the IngressRoute. |
 | ingress.traefikCRD.strategy | string | `"RoundRobin"` | Defines the IngressRoute service strategy. |
 | ingress.traefikCRD.tls.certResolver | string | `""` | Name of the Certificate Resolver to use. |
 | ingress.traefikCRD.tls.disableTLSOptions | bool | `false` | Disables inclusion of the IngressRoute TLSOptions. |
 | ingress.traefikCRD.tls.domainsOverride | list | `[]` | Override the domains values for TLS operations. |
+| ingress.traefikCRD.tls.existingOptions | object | `nil` | An existing TLSOption to reference instead of generating one. |
 | ingress.traefikCRD.tls.options.cipherSuites | list | `[]` | Override the default Cipher Suites. |
 | ingress.traefikCRD.tls.options.curvePreferences | list | `[]` | Override the default Curve Preferences. |
 | ingress.traefikCRD.tls.options.maxVersion | string | `"VersionTLS13"` | Maximum TLS Version. |
@@ -531,6 +533,7 @@ Kubernetes: `>= 1.30.0-0`
 | pod.autoscaling.labels | object | `{}` | Extra labels for the HorizontalPodAutoscaler manifest. |
 | pod.command | list | `[]` | Modifies the command. Useful for debugging. |
 | pod.disableRestartOnChanges | bool | `false` | Normally when a change is detected via helm install to something that only indirectly affects the pod, the pod will restart. This setting allows disabling this behavior. |
+| pod.enableServiceLinks | bool | `false` | Injects the Services in the same namespace into the Pod as environment variables. |
 | pod.env | list | `[]` | List of additional environment variables for the Pod. |
 | pod.extraContainers | list | `[]` | Extra containers to add to the Pod spec. |
 | pod.extraVolumeMounts | list | `[]` | Extra Volume Mounts. |
@@ -538,6 +541,8 @@ Kubernetes: `>= 1.30.0-0`
 | pod.initContainers | list | `[]` | The list of custom initialization containers. |
 | pod.kind | string | `"DaemonSet"` | The Pod Kind to use. Must be Deployment, DaemonSet, or StatefulSet. |
 | pod.labels | object | `{}` | Extra labels for the Pod spec. |
+| pod.managementPolicy | string | `"Parallel"` | The Pod management policy for the StatefulSet kind. Ignored for a configuration which requires a single pod as that always uses Parallel. |
+| pod.minReadySeconds | int | `0` | The minimum seconds a new Pod must be ready before it is considered available. Only applies to the Deployment and DaemonSet kinds. |
 | pod.priorityClassName | string | `""` | The priority class name for the Pod spec. |
 | pod.probes.liveness.failureThreshold | int | `5` | Liveness Probe failure threshold. |
 | pod.probes.liveness.initialDelaySeconds | int | `0` | Liveness Probe initial delay seconds. |
@@ -568,6 +573,7 @@ Kubernetes: `>= 1.30.0-0`
 | pod.selectors.affinity.podAntiAffinity | object | `{}` | Pod anti-affinity selector. |
 | pod.selectors.nodeName | string | `""` | Specific node name selector. |
 | pod.selectors.nodeSelector | object | `{}` | Node selector. |
+| pod.serviceName | string | `""` | The governing Service name for the StatefulSet kind. Defaults to the name of this release. |
 | pod.strategy.rollingUpdate.maxSurge | string | `"25%"` | RollingUpdate max surge value. |
 | pod.strategy.rollingUpdate.maxUnavailable | string | `"25%"` | RollingUpdate max unavailable value. |
 | pod.strategy.rollingUpdate.partition | int | `0` | RollingUpdate partition value. |
@@ -590,10 +596,12 @@ Kubernetes: `>= 1.30.0-0`
 | secret.mountPath | string | `"/secrets"` | Pod path to mount the values of the Secret manifest. |
 | service.annotations | object | `{}` | Extra annotations for service manifest. |
 | service.clusterIP | string | `nil` | Cluster IP for the Authelia service manifest. |
+| service.externalIPs | list | `[]` | External IPs for the Authelia service manifest. |
 | service.externalTrafficPolicy | string | `nil` | Use value Local to get external IP addresses. |
 | service.labels | object | `{}` | Extra labels for service manifest. |
 | service.nodePort | int | `30091` | Node Port for the Authelia service manifest. |
 | service.port | int | `80` | Port for the Authelia service manifest. |
+| service.sessionAffinity | string | `"None"` | Session Affinity for the Authelia service manifest. |
 | service.type | string | `"ClusterIP"` | The service type to generate for the Authelia pods. |
 | versionOverride | string | `""` | Version Override allows changing some chart characteristics that render only on specific versions. This does NOT affect the image used, please see the below image section instead for this. If this value is not specified, it's assumed the appVersion of the chart is the version. The format of this value  is x.x.x, for example 4.100.0. Minimum value is 4.38.0, and support is not guaranteed. |
 
