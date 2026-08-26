@@ -225,7 +225,7 @@ data:
         validate_status_prohibited: []
         {{- end }}
       {{- else }}
-      user_verification: {{ .Values.configMap.webauthn.user_verification | default "preferred" | squote  }}
+      user_verification: {{ .Values.configMap.webauthn.selection_criteria.user_verification | default "preferred" | squote }}
       {{- end }}
     {{- if include "authelia.configured.duo" . }}
     duo_api:

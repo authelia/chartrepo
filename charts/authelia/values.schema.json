@@ -4792,6 +4792,16 @@
                 "string",
                 "integer"
               ]
+            },
+            "user_verification": {
+              "default": "~",
+              "description": "Removed. Use 'configMap.webauthn.selection_criteria.user_verification' instead, which applies to every\nsupported version. Configuring this value is an error.",
+              "required": [],
+              "title": "user_verification",
+              "type": [
+                "string",
+                "null"
+              ]
             }
           },
           "required": [
