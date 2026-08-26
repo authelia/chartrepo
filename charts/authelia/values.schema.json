@@ -5223,6 +5223,18 @@
               "title": "responseForwardingFlushInterval",
               "type": "string"
             },
+            "scheme": {
+              "default": "http",
+              "description": "Defines the scheme the IngressRoute uses to reach the Authelia service.",
+              "enum": [
+                "http",
+                "https",
+                "h2c",
+                ""
+              ],
+              "title": "scheme",
+              "type": "string"
+            },
             "sticky": {
               "default": false,
               "description": "Defines the sticky value for the IngressRoute.",
@@ -5281,6 +5293,26 @@
                   },
                   "title": "domainsOverride",
                   "type": "array"
+                },
+                "existingOptions": {
+                  "default": "~",
+                  "description": "(object) An existing TLSOption to reference instead of generating one.",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "namespace": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ],
+                  "title": "existingOptions",
+                  "type": [
+                    "object",
+                    "null"
+                  ]
                 },
                 "options": {
                   "additionalProperties": false,
@@ -5718,6 +5750,12 @@
           "title": "disableRestartOnChanges",
           "type": "boolean"
         },
+        "enableServiceLinks": {
+          "default": false,
+          "description": "Injects the Services in the same namespace into the Pod as environment variables.",
+          "title": "enableServiceLinks",
+          "type": "boolean"
+        },
         "env": {
           "description": "List of additional environment variables for the Pod.",
           "items": {
@@ -5786,6 +5824,23 @@
           "description": "Extra labels for the Pod spec.",
           "required": [],
           "title": "labels"
+        },
+        "managementPolicy": {
+          "default": "Parallel",
+          "description": "The Pod management policy for the StatefulSet kind. Ignored for a configuration which requires a single pod as\nthat always uses Parallel.",
+          "enum": [
+            "OrderedReady",
+            "Parallel",
+            ""
+          ],
+          "title": "managementPolicy",
+          "type": "string"
+        },
+        "minReadySeconds": {
+          "default": 0,
+          "description": "The minimum seconds a new Pod must be ready before it is considered available. Only applies to the Deployment\nand DaemonSet kinds.",
+          "title": "minReadySeconds",
+          "type": "integer"
         },
         "priorityClassName": {
           "default": "",
@@ -6282,6 +6337,12 @@
           "title": "selectors",
           "type": "object"
         },
+        "serviceName": {
+          "default": "",
+          "description": "The governing Service name for the StatefulSet kind. Defaults to the name of this release.",
+          "title": "serviceName",
+          "type": "string"
+        },
         "strategy": {
           "additionalProperties": false,
           "properties": {
@@ -6362,6 +6423,9 @@
         "disableRestartOnChanges",
         "replicas",
         "revisionHistoryLimit",
+        "serviceName",
+        "minReadySeconds",
+        "enableServiceLinks",
         "priorityClassName",
         "autoscaling",
         "strategy",
@@ -6546,6 +6610,14 @@
             "null"
           ]
         },
+        "externalIPs": {
+          "description": "External IPs for the Authelia service manifest.",
+          "items": {
+            "type": "string"
+          },
+          "title": "externalIPs",
+          "type": "array"
+        },
         "externalTrafficPolicy": {
           "default": "~",
           "description": "(string) Use value Local to get external IP addresses.",
@@ -6573,6 +6645,17 @@
           "description": "Port for the Authelia service manifest.",
           "title": "port",
           "type": "integer"
+        },
+        "sessionAffinity": {
+          "default": "None",
+          "description": "Session Affinity for the Authelia service manifest.",
+          "enum": [
+            "None",
+            "ClientIP",
+            ""
+          ],
+          "title": "sessionAffinity",
+          "type": "string"
         },
         "type": {
           "default": "ClusterIP",
