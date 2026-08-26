@@ -11,9 +11,17 @@
 */}}
 {{- define "authelia.ingress.host" -}}
     {{- if .SubDomain }}
-    {{- printf "%s.%s" .SubDomain .Domain }}
+        {{- if gt (int .Port) 0 }}
+            {{- printf "%s.%s:%d" .SubDomain .Domain (int .Port) }}
+        {{- else }}
+            {{- printf "%s.%s" .SubDomain .Domain }}
+        {{- end }}
     {{- else }}
-    {{- .Domain }}
+        {{- if gt (int .Port) 0 }}
+            {{- printf "%s:%d" .Domain (int .Port) }}
+        {{- else }}
+            {{- .Domain }}
+        {{- end }}
     {{- end }}
 {{- end }}
 
