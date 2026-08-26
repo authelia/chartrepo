@@ -277,9 +277,10 @@ Returns the rollingUpdate spec
             {{- end -}}
         {{- end -}}
     {{- else if eq "DaemonSet" (include "authelia.pod.kind" .) -}}
-        {{ $result = dict "maxUnavailable" "25%" }}
+        {{ $result = dict "maxSurge" "25%" "maxUnavailable" "25%" }}
         {{- if .Values.pod.strategy -}}
             {{- if .Values.pod.strategy.rollingUpdate -}}
+                {{- $_ := set $result "maxSurge" (.Values.pod.strategy.rollingUpdate.maxSurge | default "25%") -}}
                 {{- $_ := set $result "maxUnavailable" (.Values.pod.strategy.rollingUpdate.maxUnavailable | default "25%") -}}
             {{- end -}}
         {{- end -}}
