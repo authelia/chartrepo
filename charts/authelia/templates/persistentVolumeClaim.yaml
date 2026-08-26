@@ -54,8 +54,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: {{ printf "%s-%s" (include "authelia.name" $) $name }}
   namespace: {{ template "authelia.namespace" $ }}
-  labels: {{ include "authelia.labels" (merge (dict "Labels" (mergeOverwrite $.Values.persistence.labels $pvc.labels)) $) | nindent 4 }}
-  {{- with $annotations := include "authelia.annotations" (merge (dict "Annotations" (mergeOverwrite $.Values.persistence.annotations $pvc.annotations)) $) }}
+  labels: {{ include "authelia.labels" (merge (dict "Labels" (merge (dict) ($pvc.labels | default (dict)) ($.Values.persistence.labels | default (dict)))) $) | nindent 4 }}
+  {{- with $annotations := include "authelia.annotations" (merge (dict "Annotations" (merge (dict) ($pvc.annotations | default (dict)) ($.Values.persistence.annotations | default (dict)))) $) }}
   annotations: {{ $annotations | nindent 4 }}
   {{- end }}
 spec:
