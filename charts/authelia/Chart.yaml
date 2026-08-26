@@ -1,6 +1,6 @@
 apiVersion: v2
 name: authelia
-version: 0.11.16
+version: 0.11.17
 kubeVersion: ">= 1.30.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
@@ -45,7 +45,7 @@ annotations:
   artifacthub.io/category: security
   artifacthub.io/changes: |
     - kind: fixed
-      description: The HorizontalPodAutoscaler could not be configured as its replica bounds and metrics were rejected by the schema and every metric type but ContainerResource failed to render.
+      description: Configuring a removed option reported no guidance as the schema rejected it before the validation which names its replacement could run.
   artifacthub.io/images: |
     - name: authelia/authelia
       image: ghcr.io/authelia/authelia:4.39.20

@@ -1369,6 +1369,13 @@ configMap:
   # -- Theme name to use for the frontend.
   theme: 'light'
 
+  # @schema
+  # type: [string, null]
+  # @schema
+  # -- Removed. Use the 'default_redirection_url' of the relevant 'configMap.session.cookies' entry instead.
+  # Configuring this value is an error.
+  default_redirection_url: ~
+
   definitions:
     # @schema
     # patternProperties:
@@ -1652,6 +1659,13 @@ configMap:
       path: 'duo.key'
 
   authentication_backend:
+    # @schema
+    # type: [boolean, null]
+    # @schema
+    # -- Removed. Use 'configMap.authentication_backend.password_reset.disable' instead. Configuring this value is an
+    # error.
+    disable_reset_password: ~
+
     password_reset:
       # -- Disable both the HTML element and the API for reset password functionality.
       disable: false
@@ -2879,6 +2893,18 @@ configMap:
       #     rules:
       #       - policy: 'two_factor'
       #         subject: 'user:abc'
+
+      # @schema
+      # type: [string, null]
+      # @schema
+      # -- Removed. Use 'configMap.identity_providers.oidc.jwks' instead. Configuring this value is an error.
+      issuer_private_key: ~
+
+      # @schema
+      # type: [string, null]
+      # @schema
+      # -- Removed. Use 'configMap.identity_providers.oidc.jwks' instead. Configuring this value is an error.
+      issuer_certificate_chain: ~
 
       # @schema
       # type: array
