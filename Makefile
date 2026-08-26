@@ -4,6 +4,9 @@ OCI_REGISTRY       ?= ghcr.io
 OCI_REGISTRY_OWNER ?= authelia
 OCI_REGISTRY_REPO  ?= chartrepo
 
+HELM_DOCS_VERSION   ?= v1.14.2
+HELM_SCHEMA_VERSION ?= 0.23.4
+
 OCI_TARGET = oci://$(OCI_REGISTRY)/$(OCI_REGISTRY_OWNER)/$(OCI_REGISTRY_REPO)
 
 .PHONY: clean
@@ -53,10 +56,10 @@ lint-schema: schema
 install: install-helm-docs install-helm-schema
 
 install-helm-docs:
-	$(GO) install github.com/norwoodj/helm-docs/cmd/helm-docs@latest
+	$(GO) install github.com/norwoodj/helm-docs/cmd/helm-docs@$(HELM_DOCS_VERSION)
 
 install-helm-schema:
-	$(GO) install github.com/dadav/helm-schema/cmd/helm-schema@latest
+	$(GO) install github.com/dadav/helm-schema/cmd/helm-schema@$(HELM_SCHEMA_VERSION)
 
 .PHONY: release release-package release-upload release-index release-oci release-oci-login release-oci-push
 
