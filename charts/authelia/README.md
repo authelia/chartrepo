@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.11.13](https://img.shields.io/badge/Version-0.11.13-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.20](https://img.shields.io/badge/AppVersion-4.39.20-informational?style=flat-square)
+![Version: 0.11.14](https://img.shields.io/badge/Version-0.11.14-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.20](https://img.shields.io/badge/AppVersion-4.39.20-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -106,6 +106,7 @@ Kubernetes: `>= 1.30.0-0`
 | certificates.labels | object | `{}` | Extra labels for the Certificates Secret manifest. |
 | certificates.values | list | `[]` | List of secret name value pairs to include in this Secret manifest. |
 | configMap.access_control.default_policy | string | `"deny"` | Default policy can either be 'bypass', 'one_factor', 'two_factor' or 'deny'. It is the policy applied to any resource if there is no policy to be applied to the user. |
+| configMap.access_control.networks | string | `nil` | Removed. Use 'configMap.definitions.network' instead, which applies to every supported version. Configuring this value is an error. |
 | configMap.access_control.rules | list | `[]` | Access Control Rule list. |
 | configMap.access_control.secret.enabled | bool | `false` | Enables the ACL section being generated as a secret. |
 | configMap.access_control.secret.existingSecret | string | `""` | An existingSecret name, if configured this will force the secret to be mounted using the key above. |

@@ -1,14 +1,14 @@
 access_control:
   default_policy: {{ include "authelia.accessControl.defaultPolicy" . | trim | squote }}
-  {{- if and .Values.configMap.access_control.networks (semverCompare "<4.39.0" (include "authelia.version" $)) }}
+  {{- if and (semverCompare "<4.39.0" (include "authelia.version" $)) .Values.configMap.definitions .Values.configMap.definitions.network (gt (len .Values.configMap.definitions.network) 0) }}
   networks:
-  {{- range $network := .Values.configMap.access_control.networks }}
-    - name: {{ $network.name }}
+  {{- range $name, $networks := .Values.configMap.definitions.network }}
+    - name: {{ $name }}
       networks:
-    {{- if kindIs "string" $network.networks }}
-        - {{ $network.networks | squote }}
+    {{- if kindIs "string" $networks }}
+        - {{ $networks | squote }}
     {{- else }}
-    {{- range $value := $network.networks }}
+    {{- range $value := $networks }}
         - {{ $value | squote }}
     {{- end }}
     {{- end }}
