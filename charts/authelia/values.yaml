@@ -516,6 +516,93 @@ pod:
     enabled: false
 
     # @schema
+    # type: [integer, null]
+    # minimum: 1
+    # @schema
+    # -- (int) The minimum number of replicas. Defaults to the 'pod.replicas' value.
+    minReplicas: ~
+
+    # @schema
+    # type: [integer, null]
+    # minimum: 1
+    # @schema
+    # -- (int) The maximum number of replicas. Defaults to one above the minimum.
+    maxReplicas: ~
+
+    # @schema
+    # type: array
+    # items:
+    #   type: object
+    #   required: ['type']
+    #   properties:
+    #     type:
+    #       type: string
+    #       enum: ['ContainerResource','External','Object','Pods','Resource']
+    #     resource:
+    #       type: object
+    #       required: ['name','target']
+    #       properties:
+    #         name: {type: string}
+    #         target: &autoscalingMetricTarget
+    #           type: object
+    #           required: ['type']
+    #           properties:
+    #             type:
+    #               type: string
+    #               enum: ['Utilization','Value','AverageValue']
+    #             value: {type: [string, integer]}
+    #             averageValue: {type: [string, integer]}
+    #             averageUtilization: {type: integer}
+    #     containerResource:
+    #       type: object
+    #       required: ['name','container','target']
+    #       properties:
+    #         name: {type: string}
+    #         container: {type: string}
+    #         target: *autoscalingMetricTarget
+    #     pods:
+    #       type: object
+    #       required: ['metric','target']
+    #       properties:
+    #         metric: &autoscalingMetricIdentifier
+    #           type: object
+    #           required: ['name']
+    #           properties:
+    #             name: {type: string}
+    #             selector:
+    #               $ref: https://charts.authelia.com/definitions.json#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector
+    #         target: *autoscalingMetricTarget
+    #     object:
+    #       type: object
+    #       required: ['describedObject','metric','target']
+    #       properties:
+    #         describedObject:
+    #           type: object
+    #           required: ['kind','name']
+    #           properties:
+    #             kind: {type: string}
+    #             name: {type: string}
+    #             apiVersion: {type: string}
+    #         metric: *autoscalingMetricIdentifier
+    #         target: *autoscalingMetricTarget
+    #     external:
+    #       type: object
+    #       required: ['metric','target']
+    #       properties:
+    #         metric: *autoscalingMetricIdentifier
+    #         target: *autoscalingMetricTarget
+    # @schema
+    # -- The metrics which determine the scaling. At least one metric must be configured for scaling to occur.
+    metrics: []
+    # metrics:
+    #   - type: 'Resource'
+    #     resource:
+    #       name: 'cpu'
+    #       target:
+    #         type: 'Utilization'
+    #         averageUtilization: 80
+
+    # @schema
     # additionalProperties: true
     # @schema
     # -- Extra annotations for the HorizontalPodAutoscaler manifest.

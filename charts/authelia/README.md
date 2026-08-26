@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.11.15](https://img.shields.io/badge/Version-0.11.15-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.20](https://img.shields.io/badge/AppVersion-4.39.20-informational?style=flat-square)
+![Version: 0.11.16](https://img.shields.io/badge/Version-0.11.16-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.20](https://img.shields.io/badge/AppVersion-4.39.20-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -531,6 +531,9 @@ Kubernetes: `>= 1.30.0-0`
 | pod.autoscaling.behavior | object | `{}` | Configuration of the autoscaling behavior. |
 | pod.autoscaling.enabled | bool | `false` | Enable the HorizontalPodAutoscaler which requires the in cluster metrics server. |
 | pod.autoscaling.labels | object | `{}` | Extra labels for the HorizontalPodAutoscaler manifest. |
+| pod.autoscaling.maxReplicas | int | `nil` | The maximum number of replicas. Defaults to one above the minimum. |
+| pod.autoscaling.metrics | list | `[]` | The metrics which determine the scaling. At least one metric must be configured for scaling to occur. |
+| pod.autoscaling.minReplicas | int | `nil` | The minimum number of replicas. Defaults to the 'pod.replicas' value. |
 | pod.command | list | `[]` | Modifies the command. Useful for debugging. |
 | pod.disableRestartOnChanges | bool | `false` | Normally when a change is detected via helm install to something that only indirectly affects the pod, the pod will restart. This setting allows disabling this behavior. |
 | pod.enableServiceLinks | bool | `false` | Injects the Services in the same namespace into the Pod as environment variables. |
