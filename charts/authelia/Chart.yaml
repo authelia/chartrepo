@@ -1,6 +1,6 @@
 apiVersion: v2
 name: authelia
-version: 0.11.9
+version: 0.11.10
 kubeVersion: ">= 1.30.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
@@ -45,7 +45,7 @@ annotations:
   artifacthub.io/category: security
   artifacthub.io/changes: |
     - kind: fixed
-      description: Secrets configured with an absolute path rendered an empty environment variable and an invalid Secret volume item.
+      description: The 'ingress.rulesOverride' path validation was inverted so it rejected an omitted path and accepted every configured path.
   artifacthub.io/images: |
     - name: authelia/authelia
       image: ghcr.io/authelia/authelia:4.39.20
