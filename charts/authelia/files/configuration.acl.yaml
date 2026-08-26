@@ -44,6 +44,19 @@ access_control:
       {{- end }}
       {{- end }}
       {{- end }}
+      {{- if .query }}
+      query:
+      {{- range $outer := .query }}
+        -
+        {{- range $rule := $outer }}
+          - operator: {{ $rule.operator | squote }}
+            key: {{ $rule.key | squote }}
+            {{- if $rule.value }}
+            value: {{ $rule.value | squote }}
+            {{- end }}
+        {{- end }}
+      {{- end }}
+      {{- end }}
       {{- if .subject }}
       subject:
       {{- if kindIs "string" .subject }}

@@ -53,6 +53,7 @@
   {{- if .Client.requested_audience_mode }}
   requested_audience_mode: {{ .Client.requested_audience_mode | squote }}
   {{- end }}
+  allow_multiple_auth_methods: {{ .Client.allow_multiple_auth_methods | default false }}
   consent_mode: {{ .Client.consent_mode | default "auto" | squote }}
   {{- if .Client.pre_configured_consent_duration }}
   pre_configured_consent_duration: {{ .Client.pre_configured_consent_duration | squote }}

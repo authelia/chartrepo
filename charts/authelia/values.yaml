@@ -1304,6 +1304,60 @@ configMap:
           # -- List of rate limit buckets.
           buckets: []
 
+        openid_connect_userinfo:
+          # -- Enables this rate limit.
+          enable: true
+
+          # @schema
+          # type: array
+          # items:
+          #   type: object
+          #   required: ['period', 'requests']
+          #   properties:
+          #     period:
+          #       type: [string, integer]
+          #     requests:
+          #       type: integer
+          # @schema
+          # -- List of rate limit buckets.
+          buckets: []
+
+        openid_connect_introspection:
+          # -- Enables this rate limit.
+          enable: true
+
+          # @schema
+          # type: array
+          # items:
+          #   type: object
+          #   required: ['period', 'requests']
+          #   properties:
+          #     period:
+          #       type: [string, integer]
+          #     requests:
+          #       type: integer
+          # @schema
+          # -- List of rate limit buckets.
+          buckets: []
+
+        openid_connect_revocation:
+          # -- Enables this rate limit.
+          enable: true
+
+          # @schema
+          # type: array
+          # items:
+          #   type: object
+          #   required: ['period', 'requests']
+          #   properties:
+          #     period:
+          #       type: [string, integer]
+          #     requests:
+          #       type: integer
+          # @schema
+          # -- List of rate limit buckets.
+          buckets: []
+
   log:
     # @schema
     # enum: ['error','warn','info','debug','trace']
@@ -1368,6 +1422,16 @@ configMap:
 
   # -- Theme name to use for the frontend.
   theme: 'light'
+
+  privacy_policy:
+    # -- Enables the Privacy Policy display including the link in the frontend.
+    enabled: false
+
+    # -- Requires the user accept the Privacy Policy before they can login.
+    require_user_acceptance: false
+
+    # -- The URL of the Privacy Policy. Required when enabled and must be an absolute https URL.
+    policy_url: ''
 
   # @schema
   # type: [string, null]
@@ -1504,6 +1568,9 @@ configMap:
     # Changing this option only affects newly generated TOTP configurations.
     period: 30
 
+    # -- Disables the security policy which prevents a one-time password being used more than once.
+    disable_reuse_security_policy: false
+
     # -- Similar to algorithm with the same restrictions except this option allows users to pick from this list. This list
     # will always contain the value configured in the algorithm option.
     allowed_algorithms:
@@ -1525,6 +1592,14 @@ configMap:
 
     # -- Enabled Passkey Logins.
     enable_passkey_login: false
+
+    # -- Enables upgrading a WebAuthn credential to a Passkey where the authenticator supports it. Experimental, and
+    # only rendered for 4.39.2 and above.
+    experimental_enable_passkey_upgrade: false
+
+    # -- Enables treating a Passkey which performed user verification as two factors. Experimental, and only rendered
+    # for 4.39.0 and above.
+    experimental_enable_passkey_uv_two_factors: false
 
     # @schema
     # type: [string, integer]
@@ -2524,6 +2599,10 @@ configMap:
     # -- You can disable the notifier startup check by setting this to true.
     disable_startup_check: false
 
+    # -- The path to a directory of custom notification templates. The directory must be mounted into the Pod, which
+    # the 'pod.extraVolumes' and 'pod.extraVolumeMounts' values can do.
+    template_path: ''
+
     filesystem:
       # -- Enables the File System Provider (Notifier).
       enabled: false
@@ -2646,6 +2725,12 @@ configMap:
         # @schema
         # -- Default lifespan for Refresh Tokens.
         refresh_token: '1 hour and 30 minutes'
+
+        # @schema
+        # type: [string, integer]
+        # @schema
+        # -- Default lifespan for JWT Secured Authorization Response Mode responses.
+        jwt_secured_authorization: '5 minutes'
 
         # @schema
         # type: [string, integer]

@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.11.19](https://img.shields.io/badge/Version-0.11.19-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.20](https://img.shields.io/badge/AppVersion-4.39.20-informational?style=flat-square)
+![Version: 0.11.20](https://img.shields.io/badge/Version-0.11.20-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.20](https://img.shields.io/badge/AppVersion-4.39.20-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -236,6 +236,7 @@ Kubernetes: `>= 1.30.0-0`
 | configMap.identity_providers.oidc.lifespans.custom | object | `{}` | The custom lifespan configuration allows customizing the lifespans per-client. The custom lifespans must be utilized with the client lifespan option which applies those settings to that client. Custom lifespans can be configured in a very granular way, either solely by the token type, or by the token type for each grant type. |
 | configMap.identity_providers.oidc.lifespans.device_code | string | `"10 minutes"` | Default lifespan for Device Codes. |
 | configMap.identity_providers.oidc.lifespans.id_token | string | `"1 hour"` | Default lifespan for ID Tokens. |
+| configMap.identity_providers.oidc.lifespans.jwt_secured_authorization | string | `"5 minutes"` | Default lifespan for JWT Secured Authorization Response Mode responses. |
 | configMap.identity_providers.oidc.lifespans.refresh_token | string | `"1 hour and 30 minutes"` | Default lifespan for Refresh Tokens. |
 | configMap.identity_providers.oidc.minimum_parameter_entropy | int | `8` | Adjusts the parameter entropy requirements for nonce/state etc. SECURITY NOTICE: It's not recommended changing this option, and highly discouraged to have it less than 8. |
 | configMap.identity_providers.oidc.pushed_authorizations.context_lifespan | string | `"5 minutes"` | Adjusts the lifespan for a Pushed Authorization session / context. |
@@ -280,6 +281,7 @@ Kubernetes: `>= 1.30.0-0`
 | configMap.notifier.smtp.tls.server_name | string | `""` | The server subject name to check the servers certificate against during the validation process. This option is not required if the certificate has a SAN which matches the host option. |
 | configMap.notifier.smtp.tls.skip_verify | bool | `false` | Skip verifying the server certificate entirely. |
 | configMap.notifier.smtp.username | string | `""` | The username sent for authentication with the SMTP server. Paired with the password. |
+| configMap.notifier.template_path | string | `""` | The path to a directory of custom notification templates. The directory must be mounted into the Pod, which the 'pod.extraVolumes' and 'pod.extraVolumeMounts' values can do. |
 | configMap.ntp.address | string | `"udp://time.cloudflare.com:123"` | NTP server address. |
 | configMap.ntp.disable_failure | bool | `false` | The default of false will prevent startup only if we can contact the NTP server and the time is out of sync with the NTP server more than the configured max_desync. If you set this to true, an error will be logged but startup will continue regardless of results. |
 | configMap.ntp.disable_startup_check | bool | `false` | Disables the NTP check on startup entirely. This means Authelia will not contact a remote service at all if you set this to true, and can operate in a truly offline mode. |
@@ -294,6 +296,9 @@ Kubernetes: `>= 1.30.0-0`
 | configMap.password_policy.standard.require_uppercase | bool | `false` | Require uppercase characters. |
 | configMap.password_policy.zxcvbn.enabled | bool | `false` | Enables zxcvbn password policy. |
 | configMap.password_policy.zxcvbn.min_score | int | `0` | Configures the minimum score allowed. |
+| configMap.privacy_policy.enabled | bool | `false` | Enables the Privacy Policy display including the link in the frontend. |
+| configMap.privacy_policy.policy_url | string | `""` | The URL of the Privacy Policy. Required when enabled and must be an absolute https URL. |
+| configMap.privacy_policy.require_user_acceptance | bool | `false` | Requires the user accept the Privacy Policy before they can login. |
 | configMap.regulation.ban_time | string | `"5 minutes"` | The length of time before a banned user can login again. Ban Time accepts duration notation. See: https://www.authelia.com/configuration/prologue/common/#duration-notation-format |
 | configMap.regulation.find_time | string | `"2 minutes"` | The time range during which the user can attempt login before being banned. The user is banned if the authentication failed 'max_retries' times in a 'find_time' window. Find Time accepts duration notation. See: https://www.authelia.com/configuration/prologue/common/#duration-notation-format |
 | configMap.regulation.max_retries | int | `3` | The number of failed login attempts before user is banned. Set it to 0 to disable regulation. |
@@ -305,10 +310,16 @@ Kubernetes: `>= 1.30.0-0`
 | configMap.server.endpoints.automatic_authz_implementations | list | `[]` | A list of automatically configured authz implementations if you don't wish to manually configure each one. Important Note: If you configure the 'authz' section this is completely ignored. |
 | configMap.server.endpoints.enable_expvars | bool | `false` | Enable the developer expvars handlers. |
 | configMap.server.endpoints.enable_pprof | bool | `false` | Enable the developer pprof handlers. |
+| configMap.server.endpoints.rate_limits.openid_connect_introspection.buckets | list | `[]` | List of rate limit buckets. |
+| configMap.server.endpoints.rate_limits.openid_connect_introspection.enable | bool | `true` | Enables this rate limit. |
 | configMap.server.endpoints.rate_limits.openid_connect_pushed_authorization_request.buckets | list | `[]` | List of rate limit buckets. |
 | configMap.server.endpoints.rate_limits.openid_connect_pushed_authorization_request.enable | bool | `true` | Enables this rate limit. |
+| configMap.server.endpoints.rate_limits.openid_connect_revocation.buckets | list | `[]` | List of rate limit buckets. |
+| configMap.server.endpoints.rate_limits.openid_connect_revocation.enable | bool | `true` | Enables this rate limit. |
 | configMap.server.endpoints.rate_limits.openid_connect_token.buckets | list | `[]` | List of rate limit buckets. |
 | configMap.server.endpoints.rate_limits.openid_connect_token.enable | bool | `true` | Enables this rate limit. |
+| configMap.server.endpoints.rate_limits.openid_connect_userinfo.buckets | list | `[]` | List of rate limit buckets. |
+| configMap.server.endpoints.rate_limits.openid_connect_userinfo.enable | bool | `true` | Enables this rate limit. |
 | configMap.server.endpoints.rate_limits.reset_password_finish.buckets | list | `[]` | List of rate limit buckets. |
 | configMap.server.endpoints.rate_limits.reset_password_finish.enable | bool | `true` | Enables this rate limit. |
 | configMap.server.endpoints.rate_limits.reset_password_start.buckets | list | `[]` | List of rate limit buckets. |
@@ -419,6 +430,7 @@ Kubernetes: `>= 1.30.0-0`
 | configMap.totp.allowed_periods | list | `[30]` | Similar to period with the same restrictions except this option allows users to pick from this list. This list will always contain the value configured in the period option. |
 | configMap.totp.digits | int | `6` | The number of digits a user has to input. Must either be 6 or 8. Changing this option only affects newly generated TOTP configurations. It is CRITICAL you read the documentation before changing this option: https://www.authelia.com/configuration/second-factor/time-based-one-time-password/#digits |
 | configMap.totp.disable | bool | `false` | Disable TOTP. |
+| configMap.totp.disable_reuse_security_policy | bool | `false` | Disables the security policy which prevents a one-time password being used more than once. |
 | configMap.totp.issuer | string | `"Authelia"` | The issuer name displayed in the Authenticator application of your choice. Defaults to 'Authelia'. |
 | configMap.totp.period | int | `30` | The period in seconds a one-time password is valid for. Changing this option only affects newly generated TOTP configurations. |
 | configMap.totp.secret_size | int | `32` | The size of the generated shared secrets. Default is 32 and is sufficient in most use cases, minimum is 20. |
@@ -427,6 +439,8 @@ Kubernetes: `>= 1.30.0-0`
 | configMap.webauthn.disable | bool | `false` | Disable Webauthn. |
 | configMap.webauthn.display_name | string | `"Authelia"` | The display name the browser should show the user for when using Webauthn to login/register. |
 | configMap.webauthn.enable_passkey_login | bool | `false` | Enabled Passkey Logins. |
+| configMap.webauthn.experimental_enable_passkey_upgrade | bool | `false` | Enables upgrading a WebAuthn credential to a Passkey where the authenticator supports it. Experimental, and only rendered for 4.39.2 and above. |
+| configMap.webauthn.experimental_enable_passkey_uv_two_factors | bool | `false` | Enables treating a Passkey which performed user verification as two factors. Experimental, and only rendered for 4.39.0 and above. |
 | configMap.webauthn.filtering.permitted_aaguids | list | `[]` | A list of Authenticator Attestation GUID’s that are the only ones allowed to be registered. Useful if you have @schema type: array items:   type: string   pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$' @schema a company policy that requires certain authenticators. Mutually exclusive with prohibited_aaguids. |
 | configMap.webauthn.filtering.prohibit_backup_eligibility | bool | `false` | Setting this value to true will ensure Authenticators which can export credentials will not be able to register. This will likely prevent synchronized credentials from being registered. |
 | configMap.webauthn.filtering.prohibited_aaguids | list | `[]` | A list of Authenticator Attestation GUID’s that users will not be able to register. Useful if company policy @schema type: array items:   type: string   pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$' @schema prevents certain authenticators. Mutually exclusive with permitted_aaguids. |
