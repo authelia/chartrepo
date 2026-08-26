@@ -5728,6 +5728,335 @@
               "description": "Extra labels for the HorizontalPodAutoscaler manifest.",
               "required": [],
               "title": "labels"
+            },
+            "maxReplicas": {
+              "default": "~",
+              "description": "(int) The maximum number of replicas. Defaults to one above the minimum.",
+              "minimum": 1,
+              "required": [],
+              "title": "maxReplicas",
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "metrics": {
+              "description": "The metrics which determine the scaling. At least one metric must be configured for scaling to occur.",
+              "items": {
+                "properties": {
+                  "containerResource": {
+                    "properties": {
+                      "container": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "target": {
+                        "properties": {
+                          "averageUtilization": {
+                            "type": "integer"
+                          },
+                          "averageValue": {
+                            "required": [],
+                            "type": [
+                              "string",
+                              "integer"
+                            ]
+                          },
+                          "type": {
+                            "enum": [
+                              "Utilization",
+                              "Value",
+                              "AverageValue"
+                            ],
+                            "type": "string"
+                          },
+                          "value": {
+                            "required": [],
+                            "type": [
+                              "string",
+                              "integer"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ],
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "container",
+                      "target"
+                    ],
+                    "type": "object"
+                  },
+                  "external": {
+                    "properties": {
+                      "metric": {
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "selector": {
+                            "$ref": "https://charts.authelia.com/definitions.json#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector",
+                            "required": []
+                          }
+                        },
+                        "required": [
+                          "name"
+                        ],
+                        "type": "object"
+                      },
+                      "target": {
+                        "properties": {
+                          "averageUtilization": {
+                            "type": "integer"
+                          },
+                          "averageValue": {
+                            "required": [],
+                            "type": [
+                              "string",
+                              "integer"
+                            ]
+                          },
+                          "type": {
+                            "enum": [
+                              "Utilization",
+                              "Value",
+                              "AverageValue"
+                            ],
+                            "type": "string"
+                          },
+                          "value": {
+                            "required": [],
+                            "type": [
+                              "string",
+                              "integer"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ],
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "metric",
+                      "target"
+                    ],
+                    "type": "object"
+                  },
+                  "object": {
+                    "properties": {
+                      "describedObject": {
+                        "properties": {
+                          "apiVersion": {
+                            "type": "string"
+                          },
+                          "kind": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "name"
+                        ],
+                        "type": "object"
+                      },
+                      "metric": {
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "selector": {
+                            "$ref": "https://charts.authelia.com/definitions.json#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector",
+                            "required": []
+                          }
+                        },
+                        "required": [
+                          "name"
+                        ],
+                        "type": "object"
+                      },
+                      "target": {
+                        "properties": {
+                          "averageUtilization": {
+                            "type": "integer"
+                          },
+                          "averageValue": {
+                            "required": [],
+                            "type": [
+                              "string",
+                              "integer"
+                            ]
+                          },
+                          "type": {
+                            "enum": [
+                              "Utilization",
+                              "Value",
+                              "AverageValue"
+                            ],
+                            "type": "string"
+                          },
+                          "value": {
+                            "required": [],
+                            "type": [
+                              "string",
+                              "integer"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ],
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "describedObject",
+                      "metric",
+                      "target"
+                    ],
+                    "type": "object"
+                  },
+                  "pods": {
+                    "properties": {
+                      "metric": {
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "selector": {
+                            "$ref": "https://charts.authelia.com/definitions.json#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector",
+                            "required": []
+                          }
+                        },
+                        "required": [
+                          "name"
+                        ],
+                        "type": "object"
+                      },
+                      "target": {
+                        "properties": {
+                          "averageUtilization": {
+                            "type": "integer"
+                          },
+                          "averageValue": {
+                            "required": [],
+                            "type": [
+                              "string",
+                              "integer"
+                            ]
+                          },
+                          "type": {
+                            "enum": [
+                              "Utilization",
+                              "Value",
+                              "AverageValue"
+                            ],
+                            "type": "string"
+                          },
+                          "value": {
+                            "required": [],
+                            "type": [
+                              "string",
+                              "integer"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ],
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "metric",
+                      "target"
+                    ],
+                    "type": "object"
+                  },
+                  "resource": {
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "target": {
+                        "properties": {
+                          "averageUtilization": {
+                            "type": "integer"
+                          },
+                          "averageValue": {
+                            "required": [],
+                            "type": [
+                              "string",
+                              "integer"
+                            ]
+                          },
+                          "type": {
+                            "enum": [
+                              "Utilization",
+                              "Value",
+                              "AverageValue"
+                            ],
+                            "type": "string"
+                          },
+                          "value": {
+                            "required": [],
+                            "type": [
+                              "string",
+                              "integer"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ],
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "target"
+                    ],
+                    "type": "object"
+                  },
+                  "type": {
+                    "enum": [
+                      "ContainerResource",
+                      "External",
+                      "Object",
+                      "Pods",
+                      "Resource"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "type"
+                ],
+                "type": "object"
+              },
+              "title": "metrics",
+              "type": "array"
+            },
+            "minReplicas": {
+              "default": "~",
+              "description": "(int) The minimum number of replicas. Defaults to the 'pod.replicas' value.",
+              "minimum": 1,
+              "required": [],
+              "title": "minReplicas",
+              "type": [
+                "integer",
+                "null"
+              ]
             }
           },
           "required": [
