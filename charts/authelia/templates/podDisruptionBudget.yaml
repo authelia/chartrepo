@@ -6,14 +6,14 @@ metadata:
   name: {{ template "authelia.name" . }}
   namespace: {{ template "authelia.namespace" . }}
   labels: {{ include "authelia.labels" (merge (dict "Labels" .Values.podDisruptionBudget.labels) .) | nindent 4 }}
-  {{- with $annotations := include "authelia.annotations" (merge (dict "Labels" .Values.podDisruptionBudget.annotations) .) }}
+  {{- with $annotations := include "authelia.annotations" (merge (dict "Annotations" .Values.podDisruptionBudget.annotations) .) }}
   annotations: {{ $annotations | nindent 4 }}
   {{- end }}
 spec:
   {{- if .Values.podDisruptionBudget.minAvailable }}
   minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
   {{- else if .Values.podDisruptionBudget.maxUnavailable }}
-  maxUnavailable: {{ .Values.podDisruptionBudget.minAvailable }}
+  maxUnavailable: {{ .Values.podDisruptionBudget.maxUnavailable }}
   {{- else }}
   minAvailable: 1
   {{- end }}
