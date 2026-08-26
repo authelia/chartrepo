@@ -114,12 +114,49 @@ data:
             {{- end }}
             {{- end }}
           {{- end }}
+          {{- if (semverCompare ">=4.39.20" (include "authelia.version" $)) }}
+          openid_connect_userinfo:
+            enable: {{ .Values.configMap.server.endpoints.rate_limits.openid_connect_userinfo.enable }}
+            {{- if gt (len .Values.configMap.server.endpoints.rate_limits.openid_connect_userinfo.buckets) 0 }}
+            buckets:
+            {{- range .Values.configMap.server.endpoints.rate_limits.openid_connect_userinfo.buckets }}
+              - period: {{ include "authelia.func.dquote" .period }}
+                requests: {{ .requests }}
+            {{- end }}
+            {{- end }}
+          openid_connect_introspection:
+            enable: {{ .Values.configMap.server.endpoints.rate_limits.openid_connect_introspection.enable }}
+            {{- if gt (len .Values.configMap.server.endpoints.rate_limits.openid_connect_introspection.buckets) 0 }}
+            buckets:
+            {{- range .Values.configMap.server.endpoints.rate_limits.openid_connect_introspection.buckets }}
+              - period: {{ include "authelia.func.dquote" .period }}
+                requests: {{ .requests }}
+            {{- end }}
+            {{- end }}
+          openid_connect_revocation:
+            enable: {{ .Values.configMap.server.endpoints.rate_limits.openid_connect_revocation.enable }}
+            {{- if gt (len .Values.configMap.server.endpoints.rate_limits.openid_connect_revocation.buckets) 0 }}
+            buckets:
+            {{- range .Values.configMap.server.endpoints.rate_limits.openid_connect_revocation.buckets }}
+              - period: {{ include "authelia.func.dquote" .period }}
+                requests: {{ .requests }}
+            {{- end }}
+            {{- end }}
+          {{- end }}
         {{- end }}
     log:
       level: {{ .Values.configMap.log.level | default "info" | squote }}
       format: {{ .Values.configMap.log.format | default "text" | squote }}
       file_path: {{ .Values.configMap.log.file_path | default "" | squote }}
       keep_stdout: true
+    {{- with $policy := .Values.configMap.privacy_policy }}
+    {{- if $policy.enabled }}
+    privacy_policy:
+      enabled: true
+      require_user_acceptance: {{ $policy.require_user_acceptance | default false }}
+      policy_url: {{ $policy.policy_url | default "" | squote }}
+    {{- end }}
+    {{- end }}
     telemetry:
       metrics:
         enabled: {{ .Values.configMap.telemetry.metrics.enabled | default false }}
@@ -174,6 +211,7 @@ data:
       algorithm: {{ .Values.configMap.totp.algorithm | default "SHA1" | squote }}
       digits: {{ .Values.configMap.totp.digits | default 6 }}
       period: {{ .Values.configMap.totp.period | default 30 }}
+      disable_reuse_security_policy: {{ .Values.configMap.totp.disable_reuse_security_policy | default false }}
       allowed_algorithms:
       {{- range $algorithm := (.Values.configMap.totp.allowed_algorithms | default (list "SHA1")) }}
         - {{ $algorithm | squote }}
@@ -190,6 +228,10 @@ data:
       disable: {{ .Values.configMap.webauthn.disable | default false }}
       {{- if semverCompare ">=4.39.0" (include "authelia.version" $) }}
       enable_passkey_login: {{ .Values.configMap.webauthn.enable_passkey_login | default false }}
+      experimental_enable_passkey_uv_two_factors: {{ .Values.configMap.webauthn.experimental_enable_passkey_uv_two_factors | default false }}
+      {{- end }}
+      {{- if semverCompare ">=4.39.2" (include "authelia.version" $) }}
+      experimental_enable_passkey_upgrade: {{ .Values.configMap.webauthn.experimental_enable_passkey_upgrade | default false }}
       {{- end }}
       display_name: {{ .Values.configMap.webauthn.display_name | default "Authelia" | squote }}
       attestation_conveyance_preference: {{ .Values.configMap.webauthn.attestation_conveyance_preference | default "indirect" | squote }}
@@ -533,6 +575,9 @@ data:
     {{- with $notifier := .Values.configMap.notifier }}
     notifier:
       disable_startup_check: {{ $.Values.configMap.notifier.disable_startup_check }}
+      {{- with $path := $notifier.template_path }}
+      template_path: {{ $path | squote }}
+      {{- end }}
     {{- if $notifier.filesystem.enabled }}
       filesystem:
         filename: {{ $notifier.filesystem.filename | squote }}
@@ -566,6 +611,7 @@ data:
           authorize_code: {{ include "authelia.func.dquote" (.Values.configMap.identity_providers.oidc.lifespans.authorize_code | default "1 minute") }}
           {{- if semverCompare ">=4.39.2" (include "authelia.version" $) }}
           device_code: {{ include "authelia.func.dquote" (.Values.configMap.identity_providers.oidc.lifespans.device_code | default "10 minutes") }}
+          jwt_secured_authorization: {{ include "authelia.func.dquote" (.Values.configMap.identity_providers.oidc.lifespans.jwt_secured_authorization | default "5 minutes") }}
           {{- end }}
         {{- if .Values.configMap.identity_providers.oidc.lifespans.custom }}
           custom:

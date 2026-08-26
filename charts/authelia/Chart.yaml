@@ -1,6 +1,6 @@
 apiVersion: v2
 name: authelia
-version: 0.11.19
+version: 0.11.20
 kubeVersion: ">= 1.30.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
@@ -44,8 +44,8 @@ deprecated: false
 annotations:
   artifacthub.io/category: security
   artifacthub.io/changes: |
-    - kind: fixed
-      description: The 'configMap.identity_validation.reset_password.jwt_lifespan' value was ignored as the configuration read a value which does not exist.
+    - kind: added
+      description: Support for the privacy policy, the OpenID Connect 1.0 userinfo, introspection and revocation rate limits, custom notification templates, access control rule query matching, the JWT secured authorization lifespan, the experimental passkey options, TOTP reuse policy, and the client option to allow multiple authentication methods.
   artifacthub.io/images: |
     - name: authelia/authelia
       image: ghcr.io/authelia/authelia:4.39.20
