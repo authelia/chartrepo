@@ -139,8 +139,12 @@ data:
       network:
       {{- range $network_name, $networks := .Values.configMap.definitions.network }}
         {{ $network_name }}:
+        {{- if kindIs "string" $networks }}
+        - {{ $networks | squote }}
+        {{- else }}
         {{- range $networks }}
         - {{ . | squote }}
+        {{- end }}
         {{- end }}
       {{- end }}
       {{- end }}

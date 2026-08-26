@@ -1884,6 +1884,13 @@ configMap:
       # -- An existingSecret name, if configured this will force the secret to be mounted using the key above.
       existingSecret: ''
 
+    # @schema
+    # type: [array, null]
+    # @schema
+    # -- Removed. Use 'configMap.definitions.network' instead, which applies to every supported version. Configuring
+    # this value is an error.
+    networks: ~
+
     # -- Default policy can either be 'bypass', 'one_factor', 'two_factor' or 'deny'. It is the policy applied to any
     # resource if there is no policy to be applied to the user.
     default_policy: 'deny'

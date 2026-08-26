@@ -68,6 +68,16 @@
               "title": "default_policy",
               "type": "string"
             },
+            "networks": {
+              "default": "~",
+              "description": "Removed. Use 'configMap.definitions.network' instead, which applies to every supported version. Configuring\nthis value is an error.",
+              "required": [],
+              "title": "networks",
+              "type": [
+                "array",
+                "null"
+              ]
+            },
             "rules": {
               "description": "Access Control Rule list.",
               "items": {
