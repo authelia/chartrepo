@@ -32,7 +32,7 @@ Returns the value of .SecretValue or a randomly generated one
 
 {{- define "authelia.secret.env.path" -}}
     {{- if (hasPrefix "/" .SecretPath) }}
-        {{ .path | squote }}
+        {{- .SecretPath | squote }}
     {{- else }}
         {{- (printf "%s/%s/%s" .MountPath (.SecretName | default "internal") .SecretPath) | squote }}
     {{- end }}

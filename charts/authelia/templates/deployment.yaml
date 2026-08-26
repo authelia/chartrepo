@@ -342,67 +342,67 @@ spec:
           secretName: {{ .Values.secret.existingSecret | default (include "authelia.name" .) }}
           items:
           {{- with $secret := .Values.configMap.identity_validation.reset_password.secret }}
-          {{- if and (not $secret.disabled) (not $secret.secret_name) }}
+          {{- if and (include "authelia.secret.generate" $secret) }}
           - key: {{ include "authelia.secret.path.reset_password.jwt" $ }}
             path: {{ include "authelia.secret.path.reset_password.jwt" $ }}
           {{- end }}
           {{- end }}
           {{- with $secret := .Values.configMap.session.encryption_key }}
-          {{- if and (not $secret.disabled) (not $secret.secret_name) }}
+          {{- if and (include "authelia.secret.generate" $secret) }}
           - key: {{ include "authelia.secret.path.session.encryption_key" $ }}
             path: {{ include "authelia.secret.path.session.encryption_key" $ }}
           {{- end }}
           {{- end }}
           {{- with $secret := .Values.configMap.session.redis.password }}
-          {{- if and (not $secret.disabled) (not $secret.secret_name) $.Values.configMap.session.redis.enabled }}
+          {{- if and (include "authelia.secret.generate" $secret) $.Values.configMap.session.redis.enabled }}
           - key: {{ include "authelia.secret.path.redis.password" $ }}
             path: {{ include "authelia.secret.path.redis.password" $ }}
           {{- end }}
           {{- end }}
           {{- with $secret := .Values.configMap.session.redis.high_availability.password }}
-          {{- if and (not $secret.disabled) (not $secret.secret_name) $.Values.configMap.session.redis.high_availability.enabled }}
+          {{- if and (include "authelia.secret.generate" $secret) $.Values.configMap.session.redis.high_availability.enabled }}
           - key: {{ include "authelia.secret.path.redis.sentinel.password" $ }}
             path: {{ include "authelia.secret.path.redis.sentinel.password" $ }}
           {{- end }}
           {{- end }}
           {{- with $secret := .Values.configMap.authentication_backend.ldap.password }}
-          {{- if and (not $secret.disabled) (not $secret.secret_name) $.Values.configMap.authentication_backend.ldap.enabled }}
+          {{- if and (include "authelia.secret.generate" $secret) $.Values.configMap.authentication_backend.ldap.enabled }}
           - key: {{ include "authelia.secret.path.ldap.password" $ }}
             path: {{ include "authelia.secret.path.ldap.password" $ }}
           {{- end }}
           {{- end }}
           {{- with $secret := .Values.configMap.notifier.smtp.password }}
-          {{- if and (not $secret.disabled) (not $secret.secret_name) $.Values.configMap.notifier.smtp.enabled }}
+          {{- if and (include "authelia.secret.generate" $secret) $.Values.configMap.notifier.smtp.enabled }}
           - key: {{ include "authelia.secret.path.smtp.password" $ }}
             path: {{ include "authelia.secret.path.smtp.password" $ }}
           {{- end }}
           {{- end }}
           {{- with $secret := .Values.configMap.storage.encryption_key }}
-          {{- if and (not $secret.disabled) (not $secret.secret_name) }}
+          {{- if and (include "authelia.secret.generate" $secret) }}
           - key: {{ include "authelia.secret.path.storage.encryption_key" $ }}
             path: {{ include "authelia.secret.path.storage.encryption_key" $ }}
           {{- end }}
           {{- end }}
           {{- with $secret := .Values.configMap.storage.postgres.password }}
-          {{- if and (not $secret.disabled) (not $secret.secret_name) $.Values.configMap.storage.postgres.enabled }}
+          {{- if and (include "authelia.secret.generate" $secret) $.Values.configMap.storage.postgres.enabled }}
           - key: {{ include "authelia.secret.path.postgres.password" $ }}
             path: {{ include "authelia.secret.path.postgres.password" $ }}
           {{- end }}
           {{- end }}
           {{- with $secret := .Values.configMap.storage.mysql.password }}
-          {{- if and (not $secret.disabled) (not $secret.secret_name) $.Values.configMap.storage.mysql.enabled }}
+          {{- if and (include "authelia.secret.generate" $secret) $.Values.configMap.storage.mysql.enabled }}
           - key: {{ include "authelia.secret.path.mysql.password" $ }}
             path: {{ include "authelia.secret.path.mysql.password" $ }}
           {{- end }}
           {{- end }}
           {{- with $secret := .Values.configMap.duo_api.secret }}
-          {{- if and (not $secret.disabled) (not $secret.secret_name) $.Values.configMap.duo_api.enabled }}
+          {{- if and (include "authelia.secret.generate" $secret) $.Values.configMap.duo_api.enabled }}
           - key: {{ include "authelia.secret.path.duo" $ }}
             path: {{ include "authelia.secret.path.duo" $ }}
           {{- end }}
           {{- end }}
           {{- with $secret := .Values.configMap.identity_providers.oidc.hmac_secret }}
-          {{- if and (not $secret.disabled) (not $secret.secret_name) $.Values.configMap.identity_providers.oidc.enabled }}
+          {{- if and (include "authelia.secret.generate" $secret) $.Values.configMap.identity_providers.oidc.enabled }}
           - key: {{ include "authelia.secret.path.oidc.hmac_key" $ }}
             path: {{ include "authelia.secret.path.oidc.hmac_key" $ }}
           {{- end }}
