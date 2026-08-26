@@ -1,6 +1,6 @@
 apiVersion: v2
 name: authelia
-version: 0.11.18
+version: 0.11.19
 kubeVersion: ">= 1.30.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
@@ -45,7 +45,7 @@ annotations:
   artifacthub.io/category: security
   artifacthub.io/changes: |
     - kind: fixed
-      description: The WebAuthn permitted and prohibited AAGUID filtering values were ignored as the configuration always rendered them empty.
+      description: The 'configMap.identity_validation.reset_password.jwt_lifespan' value was ignored as the configuration read a value which does not exist.
   artifacthub.io/images: |
     - name: authelia/authelia
       image: ghcr.io/authelia/authelia:4.39.20

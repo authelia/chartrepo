@@ -164,7 +164,7 @@ data:
         require_second_factor: {{ .Values.configMap.identity_validation.elevated_session.require_second_factor | default false }}
         skip_second_factor: {{ .Values.configMap.identity_validation.elevated_session.skip_second_factor | default false }}
       reset_password:
-        jwt_lifespan: {{ include "authelia.func.dquote" (.Values.configMap.identity_validation.reset_password.expiration | default "5 minutes") }}
+        jwt_lifespan: {{ include "authelia.func.dquote" (.Values.configMap.identity_validation.reset_password.jwt_lifespan | default "5 minutes") }}
         jwt_algorithm: {{ .Values.configMap.identity_validation.reset_password.jwt_algorithm | default "HS256" | squote }}
     totp:
       disable: {{ .Values.configMap.totp.disable | default false }}
