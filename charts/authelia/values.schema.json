@@ -1287,6 +1287,11 @@
                           "ES256",
                           "ES384",
                           "ES512",
+                          "Ed25519",
+                          "EdDSA",
+                          "ML-DSA-44",
+                          "ML-DSA-65",
+                          "ML-DSA-87",
                           "none",
                           ""
                         ],
@@ -1361,6 +1366,11 @@
                           "ES256",
                           "ES384",
                           "ES512",
+                          "Ed25519",
+                          "EdDSA",
+                          "ML-DSA-44",
+                          "ML-DSA-65",
+                          "ML-DSA-87",
                           "none",
                           ""
                         ],
@@ -1475,6 +1485,11 @@
                           "ES256",
                           "ES384",
                           "ES512",
+                          "Ed25519",
+                          "EdDSA",
+                          "ML-DSA-44",
+                          "ML-DSA-65",
+                          "ML-DSA-87",
                           ""
                         ],
                         "type": "string"
@@ -1546,6 +1561,11 @@
                           "ES256",
                           "ES384",
                           "ES512",
+                          "Ed25519",
+                          "EdDSA",
+                          "ML-DSA-44",
+                          "ML-DSA-65",
+                          "ML-DSA-87",
                           "none",
                           ""
                         ],
@@ -1565,6 +1585,11 @@
                           "ES256",
                           "ES384",
                           "ES512",
+                          "Ed25519",
+                          "EdDSA",
+                          "ML-DSA-44",
+                          "ML-DSA-65",
+                          "ML-DSA-87",
                           "none",
                           ""
                         ],
@@ -1590,6 +1615,11 @@
                                 "ES256",
                                 "ES384",
                                 "ES512",
+                                "Ed25519",
+                                "EdDSA",
+                                "ML-DSA-44",
+                                "ML-DSA-65",
+                                "ML-DSA-87",
                                 "RSA1_5",
                                 "RSA-OAEP",
                                 "RSA-OAEP-256",
@@ -1704,6 +1734,11 @@
                           "ES256",
                           "ES384",
                           "ES512",
+                          "Ed25519",
+                          "EdDSA",
+                          "ML-DSA-44",
+                          "ML-DSA-65",
+                          "ML-DSA-87",
                           "none",
                           ""
                         ],
@@ -1770,6 +1805,11 @@
                           "ES256",
                           "ES384",
                           "ES512",
+                          "Ed25519",
+                          "EdDSA",
+                          "ML-DSA-44",
+                          "ML-DSA-65",
+                          "ML-DSA-87",
                           "none",
                           ""
                         ],
@@ -1853,6 +1893,11 @@
                           "ES256",
                           "ES384",
                           "ES512",
+                          "Ed25519",
+                          "EdDSA",
+                          "ML-DSA-44",
+                          "ML-DSA-65",
+                          "ML-DSA-87",
                           "none",
                           ""
                         ],
@@ -1892,6 +1937,11 @@
                           "ES256",
                           "ES384",
                           "ES512",
+                          "Ed25519",
+                          "EdDSA",
+                          "ML-DSA-44",
+                          "ML-DSA-65",
+                          "ML-DSA-87",
                           "none",
                           ""
                         ],
@@ -1951,6 +2001,11 @@
                           "ES256",
                           "ES384",
                           "ES512",
+                          "Ed25519",
+                          "EdDSA",
+                          "ML-DSA-44",
+                          "ML-DSA-65",
+                          "ML-DSA-87",
                           "none",
                           ""
                         ],
@@ -2135,6 +2190,11 @@
                           "ES256",
                           "ES384",
                           "ES512",
+                          "Ed25519",
+                          "EdDSA",
+                          "ML-DSA-44",
+                          "ML-DSA-65",
+                          "ML-DSA-87",
                           "RSA1_5",
                           "RSA-OAEP",
                           "RSA-OAEP-256",
@@ -3626,6 +3686,46 @@
                       "title": "second_factor_duo",
                       "type": "object"
                     },
+                    "second_factor_password": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "buckets": {
+                          "description": "List of rate limit buckets.",
+                          "items": {
+                            "properties": {
+                              "period": {
+                                "required": [],
+                                "type": [
+                                  "string",
+                                  "integer"
+                                ]
+                              },
+                              "requests": {
+                                "type": "integer"
+                              }
+                            },
+                            "required": [
+                              "period",
+                              "requests"
+                            ],
+                            "type": "object"
+                          },
+                          "title": "buckets",
+                          "type": "array"
+                        },
+                        "enable": {
+                          "default": true,
+                          "description": "Enables this rate limit.",
+                          "title": "enable",
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "enable"
+                      ],
+                      "title": "second_factor_password",
+                      "type": "object"
+                    },
                     "second_factor_totp": {
                       "additionalProperties": false,
                       "properties": {
@@ -3751,6 +3851,7 @@
                     "reset_password_start",
                     "reset_password_finish",
                     "second_factor_totp",
+                    "second_factor_password",
                     "second_factor_duo",
                     "session_elevation_start",
                     "session_elevation_finish",

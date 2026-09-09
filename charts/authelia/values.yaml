@@ -1214,6 +1214,24 @@ configMap:
           # -- List of rate limit buckets.
           buckets: []
 
+        second_factor_password:
+          # -- Enables this rate limit.
+          enable: true
+
+          # @schema
+          # type: array
+          # items:
+          #   type: object
+          #   required: ['period', 'requests']
+          #   properties:
+          #     period:
+          #       type: [string, integer]
+          #     requests:
+          #       type: integer
+          # @schema
+          # -- List of rate limit buckets.
+          buckets: []
+
         second_factor_duo:
           # -- Enables this rate limit.
           enable: true
@@ -3015,7 +3033,7 @@ configMap:
       #       enum: ['sig', 'enc', '']
       #     algorithm:
       #       type: string
-      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'RSA1_5', 'RSA-OAEP', 'RSA-OAEP-256', 'ECDH-ES', 'ECDH-ES+A128KW', 'ECDH-ES+A192KW', 'ECDH-ES+A256KW']
+      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'Ed25519', 'EdDSA', 'ML-DSA-44', 'ML-DSA-65', 'ML-DSA-87', 'RSA1_5', 'RSA-OAEP', 'RSA-OAEP-256', 'ECDH-ES', 'ECDH-ES+A128KW', 'ECDH-ES+A192KW', 'ECDH-ES+A256KW']
       #     key:
       #       anyOf:
       #         - type: string
@@ -3153,7 +3171,7 @@ configMap:
       #       type: string
       #     authorization_signed_response_alg:
       #       type: string
-      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'none', '']
+      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'Ed25519', 'EdDSA', 'ML-DSA-44', 'ML-DSA-65', 'ML-DSA-87', 'none', '']
       #     authorization_encrypted_response_key_id:
       #       type: string
       #     authorization_encrypted_response_alg:
@@ -3166,7 +3184,7 @@ configMap:
       #       type: string
       #     id_token_signed_response_alg:
       #       type: string
-      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', '']
+      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'Ed25519', 'EdDSA', 'ML-DSA-44', 'ML-DSA-65', 'ML-DSA-87', '']
       #     id_token_encrypted_response_key_id:
       #       type: string
       #     id_token_encrypted_response_alg:
@@ -3179,7 +3197,7 @@ configMap:
       #       type: string
       #     access_token_signed_response_alg:
       #       type: string
-      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'none', '']
+      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'Ed25519', 'EdDSA', 'ML-DSA-44', 'ML-DSA-65', 'ML-DSA-87', 'none', '']
       #     access_token_encrypted_response_key_id:
       #       type: string
       #     access_token_encrypted_response_alg:
@@ -3192,7 +3210,7 @@ configMap:
       #       type: string
       #     userinfo_signed_response_alg:
       #       type: string
-      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'none', '']
+      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'Ed25519', 'EdDSA', 'ML-DSA-44', 'ML-DSA-65', 'ML-DSA-87', 'none', '']
       #     userinfo_encrypted_response_key_id:
       #       type: string
       #     userinfo_encrypted_response_alg:
@@ -3205,7 +3223,7 @@ configMap:
       #       type: string
       #     introspection_signed_response_alg:
       #       type: string
-      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'none', '']
+      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'Ed25519', 'EdDSA', 'ML-DSA-44', 'ML-DSA-65', 'ML-DSA-87', 'none', '']
       #     introspection_encrypted_response_key_id:
       #       type: string
       #     introspection_encrypted_response_alg:
@@ -3218,7 +3236,7 @@ configMap:
       #       type: string
       #     request_object_signed_response_alg:
       #       type: string
-      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'none', '']
+      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'Ed25519', 'EdDSA', 'ML-DSA-44', 'ML-DSA-65', 'ML-DSA-87', 'none', '']
       #     request_object_encrypted_response_key_id:
       #       type: string
       #     request_object_encrypted_response_alg:
@@ -3232,25 +3250,25 @@ configMap:
       #       enum: ['client_secret_basic', 'client_secret_post', 'client_secret_jwt', 'private_key_jwt', 'none']
       #     token_endpoint_auth_signing_alg:
       #       type: string
-      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'none', '']
+      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'Ed25519', 'EdDSA', 'ML-DSA-44', 'ML-DSA-65', 'ML-DSA-87', 'none', '']
       #     revocation_endpoint_auth_method:
       #       type: string
       #       enum: ['client_secret_basic', 'client_secret_post', 'client_secret_jwt', 'private_key_jwt', 'none']
       #     revocation_endpoint_auth_signing_alg:
       #       type: string
-      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'none', '']
+      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'Ed25519', 'EdDSA', 'ML-DSA-44', 'ML-DSA-65', 'ML-DSA-87', 'none', '']
       #     introspection_endpoint_auth_method:
       #       type: string
       #       enum: ['client_secret_basic', 'client_secret_post', 'client_secret_jwt', 'private_key_jwt', 'none']
       #     introspection_endpoint_auth_signing_alg:
       #       type: string
-      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'none', '']
+      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'Ed25519', 'EdDSA', 'ML-DSA-44', 'ML-DSA-65', 'ML-DSA-87', 'none', '']
       #     pushed_authorization_endpoint_auth_method:
       #       type: string
       #       enum: ['client_secret_basic', 'client_secret_post', 'client_secret_jwt', 'private_key_jwt', 'none']
       #     pushed_authorization_endpoint_auth_signing_alg:
       #       type: string
-      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'none', '']
+      #       enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'Ed25519', 'EdDSA', 'ML-DSA-44', 'ML-DSA-65', 'ML-DSA-87', 'none', '']
       #     allow_multiple_auth_methods:
       #       type: boolean
       #     jwks_uri:
@@ -3267,7 +3285,7 @@ configMap:
       #             enum: ['sig', 'enc']
       #           algorithm:
       #             type: string
-      #             enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'RSA1_5', 'RSA-OAEP', 'RSA-OAEP-256', 'ECDH-ES', 'ECDH-ES+A128KW', 'ECDH-ES+A192KW', 'ECDH-ES+A256KW']
+      #             enum: ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'PS256', 'PS384', 'PS512', 'ES256', 'ES384', 'ES512', 'Ed25519', 'EdDSA', 'ML-DSA-44', 'ML-DSA-65', 'ML-DSA-87', 'RSA1_5', 'RSA-OAEP', 'RSA-OAEP-256', 'ECDH-ES', 'ECDH-ES+A128KW', 'ECDH-ES+A192KW', 'ECDH-ES+A256KW']
       #           key:
       #             anyOf:
       #               - type: string

@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.11.20](https://img.shields.io/badge/Version-0.11.20-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.20](https://img.shields.io/badge/AppVersion-4.39.20-informational?style=flat-square)
+![Version: 0.11.21](https://img.shields.io/badge/Version-0.11.21-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.24](https://img.shields.io/badge/AppVersion-4.39.24-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -326,6 +326,8 @@ Kubernetes: `>= 1.30.0-0`
 | configMap.server.endpoints.rate_limits.reset_password_start.enable | bool | `true` | Enables this rate limit. |
 | configMap.server.endpoints.rate_limits.second_factor_duo.buckets | list | `[]` | List of rate limit buckets. |
 | configMap.server.endpoints.rate_limits.second_factor_duo.enable | bool | `true` | Enables this rate limit. |
+| configMap.server.endpoints.rate_limits.second_factor_password.buckets | list | `[]` | List of rate limit buckets. |
+| configMap.server.endpoints.rate_limits.second_factor_password.enable | bool | `true` | Enables this rate limit. |
 | configMap.server.endpoints.rate_limits.second_factor_totp.buckets | list | `[]` | List of rate limit buckets. |
 | configMap.server.endpoints.rate_limits.second_factor_totp.enable | bool | `true` | Enables this rate limit. |
 | configMap.server.endpoints.rate_limits.session_elevation_finish.buckets | list | `[]` | List of rate limit buckets. |
