@@ -1,6 +1,6 @@
 apiVersion: v2
 name: authelia
-version: 0.11.20
+version: 0.11.21
 kubeVersion: ">= 1.30.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
@@ -39,16 +39,18 @@ maintainers:
     email: james-d-elliott@users.noreply.github.com
     url: https://github.com/james-d-elliott
 icon: https://avatars2.githubusercontent.com/u/59122411?s=200&v=4
-appVersion: 4.39.20
+appVersion: 4.39.24
 deprecated: false
 annotations:
   artifacthub.io/category: security
   artifacthub.io/changes: |
+    - kind: changed
+      description: Update to Authelia 4.39.24.
     - kind: added
-      description: Support for the privacy policy, the OpenID Connect 1.0 userinfo, introspection and revocation rate limits, custom notification templates, access control rule query matching, the JWT secured authorization lifespan, the experimental passkey options, TOTP reuse policy, and the client option to allow multiple authentication methods.
+      description: Support for the second factor password rate limit, and the Ed25519, EdDSA and ML-DSA JSON Web Algorithms for the OpenID Connect 1.0 signing options.
   artifacthub.io/images: |
     - name: authelia/authelia
-      image: ghcr.io/authelia/authelia:4.39.20
+      image: ghcr.io/authelia/authelia:4.39.24
       whitelisted: false
       platforms:
         - linux/amd64
