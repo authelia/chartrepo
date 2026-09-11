@@ -669,6 +669,16 @@
                   "title": "enabled",
                   "type": "boolean"
                 },
+                "group_search_mode": {
+                  "default": "filter",
+                  "description": "The group search mode used to find the groups of the user; either filter or memberof. The memberof mode\nrelies on the member_of attribute. See:\nhttps://www.authelia.com/configuration/first-factor/ldap/#group_search_mode",
+                  "enum": [
+                    "filter",
+                    "memberof"
+                  ],
+                  "required": [],
+                  "title": "group_search_mode"
+                },
                 "groups_filter": {
                   "default": "",
                   "description": "The groups filter used in search queries to find the groups of the user.",
