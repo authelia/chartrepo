@@ -1,6 +1,6 @@
 # authelia
 
-![Version: 0.11.21](https://img.shields.io/badge/Version-0.11.21-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.24](https://img.shields.io/badge/AppVersion-4.39.24-informational?style=flat-square)
+![Version: 0.11.22](https://img.shields.io/badge/Version-0.11.22-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.39.24](https://img.shields.io/badge/AppVersion-4.39.24-informational?style=flat-square)
 
 Authelia is a Single Sign-On Multi-Factor portal for web apps
 
@@ -170,6 +170,7 @@ Kubernetes: `>= 1.30.0-0`
 | configMap.authentication_backend.ldap.attributes.zoneinfo | string | `""` | The attribute holding the zoneinfo of the user. |
 | configMap.authentication_backend.ldap.base_dn | string | `""` | The base dn for every LDAP query. |
 | configMap.authentication_backend.ldap.enabled | bool | `false` | Enable LDAP Backend. |
+| configMap.authentication_backend.ldap.group_search_mode | string | `"filter"` | The group search mode used to find the groups of the user; either filter or memberof. The memberof mode relies on the member_of attribute. See: https://www.authelia.com/configuration/first-factor/ldap/#group_search_mode |
 | configMap.authentication_backend.ldap.groups_filter | string | `""` | The groups filter used in search queries to find the groups of the user. |
 | configMap.authentication_backend.ldap.implementation | string | `"activedirectory"` | The LDAP implementation, this affects elements like the attribute utilised for resetting a password. |
 | configMap.authentication_backend.ldap.password.disabled | bool | `false` | Disables this secret and leaves configuring it entirely up to you. |

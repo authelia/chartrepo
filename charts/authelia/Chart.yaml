@@ -1,6 +1,6 @@
 apiVersion: v2
 name: authelia
-version: 0.11.21
+version: 0.11.22
 kubeVersion: ">= 1.30.0-0"
 description: Authelia is a Single Sign-On Multi-Factor portal for web apps
 type: application
@@ -44,10 +44,8 @@ deprecated: false
 annotations:
   artifacthub.io/category: security
   artifacthub.io/changes: |
-    - kind: changed
-      description: Update to Authelia 4.39.24.
-    - kind: added
-      description: Support for the second factor password rate limit, and the Ed25519, EdDSA and ML-DSA JSON Web Algorithms for the OpenID Connect 1.0 signing options.
+    - kind: fixed
+      description: The 'configMap.authentication_backend.ldap.group_search_mode' value could not be configured as it was missing from the values and schema.
   artifacthub.io/images: |
     - name: authelia/authelia
       image: ghcr.io/authelia/authelia:4.39.24

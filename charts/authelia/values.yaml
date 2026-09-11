@@ -1861,6 +1861,14 @@ configMap:
       # -- The groups filter used in search queries to find the groups of the user.
       groups_filter: ''
 
+      # @schema
+      # enum: ['filter', 'memberof']
+      # @schema
+      # -- The group search mode used to find the groups of the user; either filter or memberof. The memberof mode
+      # relies on the member_of attribute. See:
+      # https://www.authelia.com/configuration/first-factor/ldap/#group_search_mode
+      group_search_mode: 'filter'
+
       # -- Follow referrals returned by the server.
       # This is especially useful for environments where read-only servers exist. Only implemented for write operations.
       permit_referrals: false
