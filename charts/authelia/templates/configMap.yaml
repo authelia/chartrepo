@@ -501,6 +501,10 @@ data:
           skip_verify: {{ $session.redis.tls.skip_verify | default false }}
           minimum_version: {{ $session.redis.tls.minimum_version | default "TLS1.2" | squote }}
           maximum_version: {{ $session.redis.tls.maximum_version | default "TLS1.3" | squote }}
+          {{- if and $session.redis.tls.certificate_chain.path $session.redis.tls.key.path }}
+          certificate_chain: {{ (include "authelia.secrets.template" (dict "Path" $session.redis.tls.certificate_chain.path "Indent" (add 8 .Indent))) }}
+          private_key: {{ (include "authelia.secrets.template" (dict "Path" $session.redis.tls.key.path "Indent" (add 8 .Indent))) }}
+          {{- end }}
         {{- end }}
         {{- if $session.redis.high_availability.enabled }}
         high_availability:
