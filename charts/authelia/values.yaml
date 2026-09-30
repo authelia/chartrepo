@@ -2385,6 +2385,14 @@ configMap:
         # -- Maximum TLS version for the connection.
         maximum_version: 'TLS1.3'
 
+        # -- Optional tls client private key
+        key:
+          path: ''
+
+        # -- Optional tls client certificate
+        certificate_chain:
+          path: ''
+
       ## The Redis HA configuration options.
       ## This provides specific options to Redis Sentinel, sentinel_name must be defined (Master Name).
       high_availability:

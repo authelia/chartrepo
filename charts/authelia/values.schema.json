@@ -4290,6 +4290,26 @@
                       "description": "Skip verifying the server certificate entirely.",
                       "title": "skip_verify",
                       "type": "boolean"
+                    },
+                    "certificate_chain": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "path": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["path"],
+                      "type": "object"
+                    },
+                    "key": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "path": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["path"],
+                      "type": "object"
                     }
                   },
                   "required": [
